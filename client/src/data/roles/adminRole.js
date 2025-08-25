@@ -4,9 +4,9 @@ export const adminRole = {
   id: "admin",
   title: "Admin / Public Health",
   icon: Shield,
-  gradient: "from-indigo-500 via-indigo-600 to-indigo-700",
-  bgColor: "bg-indigo-500",
-  ringColor: "focus:ring-indigo-500",
+  gradient: "from-amber-500 via-orange-600 to-red-700",
+  bgColor: "bg-amber-500",
+  ringColor: "focus:ring-amber-500",
   description:
     "Analytics dashboards, outbreak monitoring, system administration",
   features: [
@@ -15,6 +15,7 @@ export const adminRole = {
     "System-wide administration",
     "Population health insights",
   ],
-  buttonColor: "bg-indigo-500 hover:bg-indigo-600 focus:ring-indigo-500",
+  buttonColor:
+    "bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700",
   demo: "Full system administration access",
 };

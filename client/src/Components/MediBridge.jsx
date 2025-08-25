@@ -4,6 +4,11 @@ import AuthForm from "./forms/AuthForm";
 import Header from "./layout/Header";
 import { roles } from "../data/roles";
 import { validateForm } from "../utils/validation";
+import PatientDashboard from "./RoleDashboards/patientDashboard";
+import DoctorDashBoard from "./RoleDashboards/doctorDashBoard";
+import FWLDashboard from "./RoleDashboards/fwlDashboard";
+import AdminDashborad from "./RoleDashboards/adminDashborad";
+
 // Simple API imports
 import {
   loginUser,
@@ -12,6 +17,7 @@ import {
   isLoggedIn,
   getCurrentUser,
 } from "../utils/api";
+import StatsSection from "./layout/Stats";
 
 const MediBridge = () => {
   const [currentView, setCurrentView] = useState("roleSelection");
@@ -230,7 +236,7 @@ const MediBridge = () => {
   // If user is logged in, show dashboard
   if (user && currentView === "dashboard") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <div className="min-h-screen bg-[#292929]">
         <Header onLogoClick={() => setCurrentView("roleSelection")} />
 
         <main className="py-16 px-4">
@@ -246,137 +252,13 @@ const MediBridge = () => {
 
             {/* Role-specific dashboard content */}
             <div className="grid gap-6">
-              {user.role === "patient" && (
-                <div className="bg-white rounded-lg shadow-lg p-6">
-                  <h2 className="text-2xl font-semibold mb-4 text-blue-700">
-                    Patient Dashboard
-                  </h2>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="bg-blue-50 p-4 rounded-lg">
-                      <h3 className="font-semibold mb-2">Book Appointment</h3>
-                      <p className="text-sm text-gray-600 mb-3">
-                        Schedule a consultation with a doctor
-                      </p>
-                      <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                        Book Now
-                      </button>
-                    </div>
-                    <div className="bg-blue-50 p-4 rounded-lg">
-                      <h3 className="font-semibold mb-2">Medical History</h3>
-                      <p className="text-sm text-gray-600 mb-3">
-                        View your past consultations
-                      </p>
-                      <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                        View History
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
+              {user.role === "patient" && <PatientDashboard />}
 
-              {user.role === "doctor" && (
-                <div className="bg-white rounded-lg shadow-lg p-6">
-                  <h2 className="text-2xl font-semibold mb-4 text-green-700">
-                    Doctor Dashboard
-                  </h2>
-                  <div className="grid md:grid-cols-3 gap-4">
-                    <div className="bg-green-50 p-4 rounded-lg">
-                      <h3 className="font-semibold mb-2">My Patients</h3>
-                      <p className="text-sm text-gray-600 mb-3">
-                        Manage your patient list
-                      </p>
-                      <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-                        View Patients
-                      </button>
-                    </div>
-                    <div className="bg-green-50 p-4 rounded-lg">
-                      <h3 className="font-semibold mb-2">Appointments</h3>
-                      <p className="text-sm text-gray-600 mb-3">
-                        Today's schedule
-                      </p>
-                      <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-                        View Schedule
-                      </button>
-                    </div>
-                    <div className="bg-green-50 p-4 rounded-lg">
-                      <h3 className="font-semibold mb-2">Consultations</h3>
-                      <p className="text-sm text-gray-600 mb-3">
-                        Start video consultation
-                      </p>
-                      <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-                        Start Session
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
+              {user.role === "doctor" && <DoctorDashBoard />}
 
-              {user.role === "frontlineWorker" && (
-                <div className="bg-white rounded-lg shadow-lg p-6">
-                  <h2 className="text-2xl font-semibold mb-4 text-purple-700">
-                    Frontline Worker Dashboard
-                  </h2>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="bg-purple-50 p-4 rounded-lg">
-                      <h3 className="font-semibold mb-2">
-                        Patient Registration
-                      </h3>
-                      <p className="text-sm text-gray-600 mb-3">
-                        Register new patients
-                      </p>
-                      <button className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">
-                        Register Patient
-                      </button>
-                    </div>
-                    <div className="bg-purple-50 p-4 rounded-lg">
-                      <h3 className="font-semibold mb-2">Health Screening</h3>
-                      <p className="text-sm text-gray-600 mb-3">
-                        Conduct basic health checks
-                      </p>
-                      <button className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">
-                        Start Screening
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
+              {user.role === "frontlineWorker" && <FWLDashboard />}
 
-              {user.role === "admin" && (
-                <div className="bg-white rounded-lg shadow-lg p-6">
-                  <h2 className="text-2xl font-semibold mb-4 text-red-700">
-                    Admin Dashboard
-                  </h2>
-                  <div className="grid md:grid-cols-3 gap-4">
-                    <div className="bg-red-50 p-4 rounded-lg">
-                      <h3 className="font-semibold mb-2">User Management</h3>
-                      <p className="text-sm text-gray-600 mb-3">
-                        Manage all users
-                      </p>
-                      <button className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
-                        Manage Users
-                      </button>
-                    </div>
-                    <div className="bg-red-50 p-4 rounded-lg">
-                      <h3 className="font-semibold mb-2">System Reports</h3>
-                      <p className="text-sm text-gray-600 mb-3">
-                        View system analytics
-                      </p>
-                      <button className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
-                        View Reports
-                      </button>
-                    </div>
-                    <div className="bg-red-50 p-4 rounded-lg">
-                      <h3 className="font-semibold mb-2">Settings</h3>
-                      <p className="text-sm text-gray-600 mb-3">
-                        System configuration
-                      </p>
-                      <button className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
-                        Settings
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
+              {user.role === "admin" && <PatientDashboard />}
 
               {/* User Info Card */}
               <div className="bg-white rounded-lg shadow-lg p-6">
@@ -431,19 +313,25 @@ const MediBridge = () => {
   // Role Selection View
   if (currentView === "roleSelection") {
     return (
-      <div className="h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <div className="min-h-screen bg-[#1c1c1c]">
         <Header onLogoClick={() => setCurrentView("roleSelection")} />
-
+        <StatsSection
+          patients={1021}
+          doctors={345}
+          hospitals={45}
+          treatments={1158}
+        />
         <main className="flex-1 py-16 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
-              <h1 className="text-5xl font-bold text-slate-900 mb-6 leading-tight">
+              <h1 className="text-5xl font-bold bg-gradient-to-r from-emerald-400 via-teal-300 to-sky-400 bg-clip-text text-transparent mb-6 leading-tight">
                 Choose Your{" "}
-                <span className="bg-gradient-to-r from-teal-600 to-blue-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-sky-400 to-emerald-400 bg-clip-text text-transparent">
                   Healthcare Role
                 </span>
               </h1>
-              <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+
+              <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
                 Access personalized healthcare tools and features designed
                 specifically for your professional needs and patient care
                 requirements.

@@ -7,7 +7,7 @@ const RoleCard = ({ role, onRoleSelect, isAnimating, index }) => {
   return (
     <div
       key={role.id}
-      className={`group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl border border-slate-200/60 p-8 transition-all duration-500 hover:-translate-y-2 ${
+      className={`group relative bg-[#7c7c7c] rounded-2xl shadow-lg hover:shadow-2xl border border-gray-600/50 p-8 transition-all duration-500 hover:-translate-y-2 ${
         isAnimating ? "opacity-0 translate-y-8" : "opacity-100 translate-y-0"
       }`}
       style={{
@@ -17,7 +17,7 @@ const RoleCard = ({ role, onRoleSelect, isAnimating, index }) => {
     >
       {/* Gradient Background Effect */}
       <div
-        className={`absolute inset-0 bg-gradient-to-br ${role.gradient} opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity duration-500`}
+        className={`absolute inset-0 bg-gradient-to-br ${role.gradient} opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity duration-500`}
       ></div>
 
       {/* Icon */}
@@ -29,17 +29,15 @@ const RoleCard = ({ role, onRoleSelect, isAnimating, index }) => {
 
       {/* Content */}
       <div className="relative">
-        <h3 className="text-2xl font-bold text-slate-900 mb-3 group-hover:text-slate-800 transition-colors">
+        <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-emerald-300 transition-colors">
           {role.title}
         </h3>
-        <p className="text-slate-600 mb-6 leading-relaxed">
-          {role.description}
-        </p>
+        <p className="text-gray-200 mb-6 leading-relaxed">{role.description}</p>
 
         {/* Features List */}
         <ul className="space-y-3 mb-8">
           {role.features.map((feature, idx) => (
-            <li key={idx} className="flex items-start text-sm text-slate-700">
+            <li key={idx} className="flex items-start text-sm text-gray-100">
               <div className="w-2 h-2 bg-gradient-to-r from-teal-500 to-teal-600 rounded-full mr-3 mt-2 flex-shrink-0"></div>
               <span className="leading-relaxed">{feature}</span>
             </li>
@@ -47,9 +45,9 @@ const RoleCard = ({ role, onRoleSelect, isAnimating, index }) => {
         </ul>
 
         {/* Demo Info */}
-        <div className="mb-6 p-3 bg-slate-50 rounded-lg border border-slate-200">
-          <p className="text-xs text-slate-600 font-medium">
-            <span className="text-teal-600">Demo:</span> {role.demo}
+        <div className="mb-6 p-3 bg-[#6b6b6b] rounded-lg border border-gray-500/60">
+          <p className="text-xs text-gray-200 font-medium">
+            <span className="text-teal-400">Demo:</span> {role.demo}
           </p>
         </div>
 

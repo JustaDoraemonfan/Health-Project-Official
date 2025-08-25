@@ -4,7 +4,7 @@ export const doctorRole = {
   id: "doctor",
   title: "Doctor",
   icon: Stethoscope,
-  gradient: "from-emerald-500 via-emerald-600 to-emerald-700",
+  gradient: "from-emerald-500 via-teal-600 to-cyan-700",
   bgColor: "bg-emerald-500",
   ringColor: "focus:ring-emerald-500",
   description:
@@ -15,6 +15,7 @@ export const doctorRole = {
     "Digital prescription writing",
     "Complete patient history access",
   ],
-  buttonColor: "bg-emerald-500 hover:bg-emerald-600 focus:ring-emerald-500",
+  buttonColor:
+    "bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700",
   demo: "Register with specialization required",
 };
