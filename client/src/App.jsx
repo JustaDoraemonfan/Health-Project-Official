@@ -10,16 +10,18 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import LandingPage from "./pages/LandingPage";
 // import Dashboard from "./pages/Dashboard";
 // import ProtectedRoute from "./components/ProtectedRoute";
-import LoadingSpinner from "./components/LoadingSpinner";
+// import LoadingSpinner from "./components/LoadingSpinner";
+import {
+  PatietntDashboard,
+  DoctorDashboard,
+  FWLDashboard,
+  AdminDashboard,
+} from "./pages/Dahsboards/Dashboard";
 import "./App.css";
 
 // Component to handle routing logic
 const AppRoutes = () => {
-  const { isAuthenticated, loading, user } = useAuth();
-
-  if (loading) {
-    return <LoadingSpinner />;
-  }
+  const { isAuthenticated, user } = useAuth();
 
   return (
     <Routes>
@@ -34,6 +36,14 @@ const AppRoutes = () => {
           )
         }
       />
+      {/* Dashboards */}
+      <Route path="/patient/dashboard" element={<PatietntDashboard />} />
+      <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
+      <Route path="/frontlineWorker/dashboard" element={<FWLDashboard />} />
+      <Route path="/admin/dashboard" element={<AdminDashboard />} />
+
+      {/* Catch-all for unknown routes */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };

@@ -10,8 +10,10 @@ import {
   Loader2,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export const LoginSection = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("patient");
   const [formData, setFormData] = useState({
     email: "",
@@ -89,16 +91,10 @@ export const LoginSection = () => {
 
     if (result.success) {
       // Redirect based on user role
-      const userRole = result.data.role;
-      console.log(`Login successful for ${userRole}:`, result.data);
+      const userRole = result.data.data.role;
+      console.log(`Login successful for ${userRole}:`, result.data.data);
 
-      // You can implement navigation here
-      // For example: navigate(`/${userRole}/dashboard`);
-
-      // For now, we'll just log success
-      alert(
-        `Welcome ${result.data.name}! Redirecting to ${userRole} dashboard...`
-      );
+      navigate(`/${userRole}/dashboard`);
     } else {
       setShowError(true);
     }
