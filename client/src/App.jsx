@@ -8,9 +8,8 @@ import {
 } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import LandingPage from "./pages/LandingPage";
-// import Dashboard from "./pages/Dashboard";
-// import ProtectedRoute from "./components/ProtectedRoute";
-// import LoadingSpinner from "./components/LoadingSpinner";
+import ProtectedRoute from "./components/ProtectedRoute";
+import LoadingSpinner from "./components/LoadingSpinner";
 import {
   PatietntDashboard,
   DoctorDashboard,
@@ -21,8 +20,10 @@ import "./App.css";
 
 // Component to handle routing logic
 const AppRoutes = () => {
-  const { isAuthenticated, user } = useAuth();
-
+  const { isAuthenticated, isLoading, user } = useAuth();
+  if (isLoading) {
+    <LoadingSpinner />;
+  }
   return (
     <Routes>
       {/* Public route - Landing page with login/register */}
@@ -37,10 +38,38 @@ const AppRoutes = () => {
         }
       />
       {/* Dashboards */}
-      <Route path="/patient/dashboard" element={<PatietntDashboard />} />
-      <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
-      <Route path="/frontlineWorker/dashboard" element={<FWLDashboard />} />
-      <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      <Route
+        path="/patient/dashboard"
+        element={
+          <ProtectedRoute allowedRoles={["patient"]}>
+            <PatietntDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/doctor/dashboard"
+        element={
+          <ProtectedRoute allowedRoles={["doctor"]}>
+            <DoctorDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/frontlineWorker/dashboard"
+        element={
+          <ProtectedRoute allowedRoles={["frontlineWorker"]}>
+            <FWLDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/dashboard"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Catch-all for unknown routes */}
       <Route path="*" element={<Navigate to="/" replace />} />
