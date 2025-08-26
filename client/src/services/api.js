@@ -72,78 +72,121 @@ export const authAPI = {
 
 // Patient API endpoints
 export const patientAPI = {
-  // Get patient profile
-  getProfile: () => {
-    return apiClient.get("/patients/profile");
+  // Create a new patient (admin/frontline only)
+  createPatient: (patientData) => {
+    return apiClient.post("/patients", patientData);
+  },
+
+  // Get all patients (admin/doctor only)
+  getPatients: () => {
+    return apiClient.get("/patients");
+  },
+
+  // Get single patient by ID
+  getPatient: (patientId) => {
+    return apiClient.get(`/patients/${patientId}`);
   },
 
   // Update patient profile
-  updateProfile: (data) => {
-    return apiClient.put("/patients/profile", data);
+  updatePatient: (patientId, data) => {
+    return apiClient.put(`/patients/${patientId}`, data);
   },
 
-  // Get medical history
-  getMedicalHistory: () => {
-    return apiClient.get("/patients/medical-history");
-  },
-
-  // Add medical record
-  addMedicalRecord: (record) => {
-    return apiClient.post("/patients/medical-history", record);
+  // Delete patient (admin only)
+  deletePatient: (patientId) => {
+    return apiClient.delete(`/patients/${patientId}`);
   },
 };
 
 // Doctor API endpoints
 export const doctorAPI = {
-  // Get doctor profile
-  getProfile: () => {
-    return apiClient.get("/doctors/profile");
+  // Create doctor (admin only)
+  createDoctor: (doctorData) => {
+    return apiClient.post("/doctors", doctorData);
   },
 
-  // Update doctor profile
-  updateProfile: (data) => {
-    return apiClient.put("/doctors/profile", data);
+  // Get all doctors (admin only)
+  getDoctors: () => {
+    return apiClient.get("/doctors");
   },
 
-  // Get assigned patients
-  getPatients: () => {
-    return apiClient.get("/doctors/patients");
+  // Get single doctor by ID
+  getDoctor: (doctorId) => {
+    return apiClient.get(`/doctors/${doctorId}`);
   },
 
-  // Get doctor availability
-  getAvailability: () => {
-    return apiClient.get("/doctors/availability");
+  // Update doctor (admin only)
+  updateDoctor: (doctorId, data) => {
+    return apiClient.put(`/doctors/${doctorId}`, data);
   },
 
-  // Update availability
-  updateAvailability: (availability) => {
-    return apiClient.put("/doctors/availability", availability);
+  // Delete doctor (admin only)
+  deleteDoctor: (doctorId) => {
+    return apiClient.delete(`/doctors/${doctorId}`);
+  },
+
+  // Assign patient to doctor
+  assignPatient: (assignmentData) => {
+    return apiClient.post("/doctors/assign", assignmentData);
+  },
+
+  // Unassign patient from doctor
+  unassignPatient: (unassignmentData) => {
+    return apiClient.post("/doctors/unassign", unassignmentData);
+  },
+
+  // Get patients assigned to a doctor
+  getDoctorPatients: (doctorData) => {
+    return apiClient.post("/doctors/get-patients", doctorData);
   },
 };
 
 // Frontline Worker API endpoints
 export const frontlineAPI = {
-  // Get frontline worker profile
-  getProfile: () => {
-    return apiClient.get("/frontline/profile");
+  // Create frontline worker (admin only)
+  createFrontlineWorker: (fwlData) => {
+    return apiClient.post("/frontline", fwlData);
   },
 
-  // Update frontline worker profile
-  updateProfile: (data) => {
-    return apiClient.put("/frontline/profile", data);
+  // Get all frontline workers (admin only)
+  getFrontlineWorkers: () => {
+    return apiClient.get("/frontline");
+  },
+
+  // Get frontline worker by ID
+  getFrontlineWorker: (fwlId) => {
+    return apiClient.get(`/frontline/${fwlId}`);
+  },
+
+  // Delete frontline worker (admin only)
+  deleteFrontlineWorker: (fwlId) => {
+    return apiClient.delete(`/frontline/${fwlId}`);
   },
 };
 
 // Dashboard API endpoints
 export const dashboardAPI = {
-  // Get dashboard data based on user role
-  getDashboardData: () => {
-    return apiClient.get("/dashboard");
+  //Get Stats for Stats Section
+  getStats: () => apiClient.get("/stats"),
+
+  // Get patient dashboard data
+  getPatientDashboard: () => {
+    return apiClient.get("/dashboard/patient");
   },
 
-  // Get user statistics
-  getStats: () => {
-    return apiClient.get("/dashboard/stats");
+  // Get doctor dashboard data
+  getDoctorDashboard: () => {
+    return apiClient.get("/dashboard/doctor");
+  },
+
+  // Get frontline worker dashboard data
+  getFrontlineDashboard: () => {
+    return apiClient.get("/dashboard/frontline");
+  },
+
+  // Get admin dashboard data
+  getAdminDashboard: () => {
+    return apiClient.get("/dashboard/admin");
   },
 };
 

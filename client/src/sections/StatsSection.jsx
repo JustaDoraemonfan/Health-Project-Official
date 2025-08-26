@@ -1,28 +1,47 @@
+import { useEffect, useState } from "react";
 import { Users, Stethoscope, Building2 } from "lucide-react";
+import { dashboardAPI } from "../services/api";
 
 export const StatsSection = () => {
+  const [statsData, setStatsData] = useState({
+    patients: 0,
+    doctors: 0,
+    frontline: 0,
+  });
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await dashboardAPI.getStats();
+        setStatsData(response.data.data);
+      } catch (err) {
+        console.error("Failed to fetch stats:", err);
+      }
+    };
+
+    fetchStats();
+  }, []);
   const stats = [
     {
       icon: <Users className="w-6 h-6 text-blue-500" />,
-      number: "10,000+",
+      number: statsData.patients,
       label: "Registered Patients",
       metric: "Patients",
     },
     {
       icon: <Users className="w-6 h-6 text-green-500" />,
-      number: "1,200+",
+      number: statsData.doctors,
       label: "Verified Doctors",
       metric: "Doctors",
     },
     {
       icon: <Stethoscope className="w-6 h-6 text-purple-500" />,
-      number: "800+",
+      number: statsData.frontline,
       label: "Frontline Workers",
       metric: "FWL",
     },
     {
       icon: <Building2 className="w-6 h-6 text-red-500" />,
-      number: "500+",
+      number: 500,
       label: "Partner Hospitals",
       metric: "Hospitals",
     },

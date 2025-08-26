@@ -4,6 +4,7 @@ import { LoginSection } from "../sections/LoginSection";
 import { RegisterSection } from "../sections/RegisterSection";
 import Header from "../components/Header";
 import HeroSection from "../sections/HeroSection";
+import { Footer } from "../components/Footer";
 
 export default function LandingPage() {
   return (
@@ -13,6 +14,7 @@ export default function LandingPage() {
       <StatsSection />
       <LoginSection />
       <RegisterSection />
+      <Footer />
     </div>
   );
 }

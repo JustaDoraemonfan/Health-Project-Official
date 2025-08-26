@@ -13,6 +13,7 @@ import dashboardRoutes from "./routes/dashboardRoutes.js";
 import patientRoutes from "./routes/patientRoutes.js";
 import doctorRoutes from "./routes/doctorRoutes.js";
 import frontlineRoutes from "./routes/frontlineRoutes.js";
+import statsRoutes from "./routes/statsRoutes.js";
 // import appointmentRoutes from "./routes/appointmentRoutes.js";
 // import symptomRoutes from "./routes/symptomRoutes.js";
 
@@ -38,6 +39,7 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/patients", patientRoutes);
 app.use("/api/doctors", doctorRoutes);
 app.use("/api/frontline", frontlineRoutes);
+app.use("/api", statsRoutes);
 // app.use("/api/appointments", appointmentRoutes);
 // app.use("/api/symptoms", symptomRoutes);
 
