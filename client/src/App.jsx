@@ -11,7 +11,7 @@ import LandingPage from "./pages/LandingPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LoadingSpinner from "./components/LoadingSpinner";
 import {
-  PatietntDashboard,
+  PatientDashboard,
   DoctorDashboard,
   FWLDashboard,
   AdminDashboard,
@@ -20,52 +20,77 @@ import "./App.css";
 
 // Component to handle routing logic
 const AppRoutes = () => {
-  const { isAuthenticated, isLoading, user } = useAuth();
-  if (isLoading) {
-    <LoadingSpinner />;
+  const { isAuthenticated, user, initialized, error } = useAuth();
+
+  // Show spinner only during initial load, not during all loading states
+  if (!initialized) {
+    return <LoadingSpinner />;
   }
+
+  // If there's an auth error and we're not authenticated,
+  // we might want to handle this gracefully
+  if (error && !isAuthenticated) {
+    console.log("Auth error occurred:", error);
+    // You could show an error page or just proceed to landing
+  }
+
   return (
     <Routes>
       {/* Public route - Landing page with login/register */}
       <Route
         path="/"
         element={
-          isAuthenticated ? (
-            <Navigate to={`/${user.role}/dashboard`} replace />
+          isAuthenticated && user ? (
+            <Navigate
+              to={
+                user.role === "patient"
+                  ? "/patient/dashboard"
+                  : user.role === "doctor"
+                  ? "/doctor/dashboard"
+                  : user.role === "fwl"
+                  ? "/fwl/dashboard"
+                  : "/admin/dashboard"
+              }
+              replace
+            />
           ) : (
             <LandingPage />
           )
         }
       />
+
       {/* Dashboards */}
       <Route
         path="/patient/dashboard"
         element={
-          <ProtectedRoute allowedRoles={["patient"]}>
-            <PatietntDashboard />
+          <ProtectedRoute>
+            <PatientDashboard />
           </ProtectedRoute>
         }
       />
+
       <Route
         path="/doctor/dashboard"
         element={
-          <ProtectedRoute allowedRoles={["doctor"]}>
+          <ProtectedRoute>
             <DoctorDashboard />
           </ProtectedRoute>
         }
       />
+
       <Route
-        path="/frontlineWorker/dashboard"
+        path="/fwl/dashboard"
         element={
-          <ProtectedRoute allowedRoles={["frontlineWorker"]}>
+          <ProtectedRoute>
             <FWLDashboard />
           </ProtectedRoute>
         }
       />
+
       <Route
         path="/admin/dashboard"
         element={
-          <ProtectedRoute allowedRoles={["admin"]}>
+          <ProtectedRoute>
             <AdminDashboard />
           </ProtectedRoute>
         }
@@ -79,13 +104,13 @@ const AppRoutes = () => {
 
 function App() {
   return (
-    <div style={{ minHeight: "100vh" }}>
-      <AuthProvider>
-        <Router>
+    <Router>
+      <div className="App">
+        <AuthProvider>
           <AppRoutes />
-        </Router>
-      </AuthProvider>
-    </div>
+        </AuthProvider>
+      </div>
+    </Router>
   );
 }
 

@@ -10,7 +10,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export const LoginSection = () => {
   const navigate = useNavigate();
@@ -22,7 +22,8 @@ export const LoginSection = () => {
   });
   const [showError, setShowError] = useState(false);
 
-  const { login, loading, error, clearError, isAuthenticated } = useAuth();
+  const { login, loading, error, clearError, isAuthenticated, user } =
+    useAuth();
 
   const userTypes = [
     {
@@ -111,19 +112,8 @@ export const LoginSection = () => {
   };
 
   // Don't show login if already authenticated
-  if (isAuthenticated) {
-    return (
-      <section id="login" className="py-20 bg-[#161515]">
-        <div className="container mx-auto px-6 text-center">
-          <h2 className="text-4xl font-mono font-bold text-gray-100 mb-4">
-            You're already logged in!
-          </h2>
-          <p className="text-slate-50 font-mono">
-            Welcome back to <span className="text-blue-400">HealthyMe</span>
-          </p>
-        </div>
-      </section>
-    );
+  if (isAuthenticated && user) {
+    return <Navigate to={`/${user.role}/dashboard`} replace />;
   }
 
   return (
