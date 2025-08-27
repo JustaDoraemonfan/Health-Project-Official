@@ -45,24 +45,35 @@ Step 3:
 Setup environment variables
 
 Backend (/server)
+
 PORT=5000
+
 MONGO_URI=your_mongodb_connection_string
+
 JWT_SECRET=your_jwt_secret
+
 NODE_ENV=development
+
 CLIENT_URL=http://localhost:5173
 
 Frontend (/client)
+
 VITE_API_URL=http://localhost:5000
 
 Step 4:
+
 Run the project
 
 Option 1 – Separate terminals:
+
 Backend
+
 npm run server
 
 Frontend
+
 cd client
+
 npm run dev
 
 Option 2 – Single command (root folder)
@@ -70,10 +81,15 @@ Option 2 – Single command (root folder)
 Add this to package.json in the root folder:
 
 "scripts": {
+
 "dev": "concurrently "npm run dev --prefix client" "npm run server --prefix server"",
+
 "client": "npm run dev --prefix client",
+
 "server": "npm run server --prefix server"
+
 }
 
 Then run:
+
 npm run dev
