@@ -15,7 +15,7 @@ const generateToken = (user) => {
 
   return jwt.sign(
     {
-      id: user._id,
+      id: user.id,
       role: user.role,
     },
     process.env.JWT_SECRET,
@@ -88,7 +88,7 @@ export const registerUser = asyncHandler(async (req, res) => {
   if (userRole === "patient") {
     const { age, gender } = req.body;
     await Patient.create({
-      userId: user._id,
+      userId: user.id,
       age: age ? parseInt(age) : null,
       gender: gender || "other",
       assignedDoctor: null,
@@ -96,7 +96,7 @@ export const registerUser = asyncHandler(async (req, res) => {
   } else if (userRole === "doctor") {
     const { specialization } = req.body;
     await Doctor.create({
-      userId: user._id,
+      userId: user.id,
       specialization: specialization || "",
       patients: [],
     });
@@ -110,14 +110,14 @@ export const registerUser = asyncHandler(async (req, res) => {
       );
     }
     await FrontlineWorker.create({
-      userId: user._id,
+      userId: user.id,
       phone,
       location,
     });
   }
 
   const userResponse = {
-    _id: user._id,
+    id: user.id,
     name: user.name,
     email: user.email,
     role: user.role,
@@ -155,7 +155,7 @@ export const loginUser = asyncHandler(async (req, res) => {
   }
 
   const userResponse = {
-    _id: user._id,
+    id: user.id,
     name: user.name,
     email: user.email,
     role: user.role,
@@ -173,7 +173,7 @@ export const getUserProfile = asyncHandler(async (req, res) => {
   }
 
   return successResponse(res, {
-    _id: user._id,
+    id: user.id,
     name: user.name,
     email: user.email,
     role: user.role,

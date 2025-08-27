@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import {
@@ -19,15 +19,40 @@ import {
 } from "lucide-react";
 import StatusBar from "./PatientComponents/StatusBar";
 import QuickAction from "./PatientComponents/QuickAction";
-import Header from "../../components/Header";
+// import Header from "../../components/Header";
+import { dashboardAPI } from "../../services/api";
 import Footer from "./PatientComponents/Footer";
 
 const PatientDashboard = () => {
-  const [user] = useState({
-    name: "John Doe",
-    role: "patient",
-    email: "john.doe@email.com",
+  const [user, setUser] = useState({
+    id: "",
+    name: "",
+    email: "",
+    role: "",
   });
+  const [patient, setPatient] = useState({
+    gender: "",
+    age: "",
+    medicalHistory: "",
+  });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await dashboardAPI.getPatientDashboard();
+        const data = response.data.data;
+        console.log(data.user);
+        console.log(data.patient);
+
+        setUser(data.user);
+        setPatient(data.patient);
+      } catch (err) {
+        console.error("Failed to fetch stats:", err);
+      }
+    };
+
+    fetchStats();
+  }, []);
   const { logout } = useAuth();
   const navigate = useNavigate();
 
