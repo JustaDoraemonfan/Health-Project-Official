@@ -43,10 +43,10 @@ export default function QuickAction() {
                 </div>
                 <div>
                   <h4 className="text-slate-50 font-mono font-semibold text-sm">
-                    Insurance Info
+                    Manage your profile
                   </h4>
                   <p className="text-gray-400 font-mono text-xs">
-                    View coverage details
+                    View profile details
                   </p>
                 </div>
               </div>

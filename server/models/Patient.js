@@ -9,6 +9,7 @@ const patientSchema = new mongoose.Schema(
       unique: true,
     },
     age: { type: Number },
+    location: { type: String },
     gender: { type: String, enum: ["male", "female", "other"] },
     medicalHistory: [{ type: String }], // past diseases or conditions
     assignedDoctor: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // reference to doctor

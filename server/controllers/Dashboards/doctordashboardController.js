@@ -5,7 +5,7 @@ import { successResponse, errorResponse } from "../../utils/response.js";
 
 // Doctor Dashboard
 const getDoctorDashboard = asyncHandler(async (req, res) => {
-  const doctor = await Doctor.findOne({ email: req.user.email });
+  const doctor = await Doctor.findOne({ userId: req.user.id });
 
   if (!doctor) {
     return errorResponse(res, "Doctor record not found", 404);

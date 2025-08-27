@@ -73,3 +73,24 @@ export const deleteDoctor = asyncHandler(async (req, res) => {
 
   return successResponse(res, doctor, "Doctor deleted successfully");
 });
+
+// Get doctors by location (patient search)
+export const getDoctorsByLocation = asyncHandler(async (req, res) => {
+  const { location } = req.query;
+
+  if (!location) {
+    return errorResponse(res, "Location is required", 400);
+  }
+
+  const doctors = await Doctor.find({
+    location: { $regex: new RegExp(location, "i") }, // case-insensitive partial match
+  }).populate("userId", "name email");
+  // .populate("patients", "name email") // optional, only if you want to show linked patients
+  // .lean();
+
+  if (doctors.length === 0) {
+    return errorResponse(res, "No doctors found in this location", 404);
+  }
+
+  return successResponse(res, doctors, "Doctors fetched successfully");
+});

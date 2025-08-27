@@ -139,6 +139,13 @@ export const doctorAPI = {
   getDoctorPatients: (doctorData) => {
     return apiClient.post("/doctors/get-patients", doctorData);
   },
+
+  // 🔍 Search doctors by location
+  searchDoctors: (location) => {
+    return apiClient.get(
+      `/doctors/search?location=${encodeURIComponent(location)}`
+    );
+  },
 };
 
 // Frontline Worker API endpoints

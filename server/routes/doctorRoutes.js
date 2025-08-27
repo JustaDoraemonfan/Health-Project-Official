@@ -9,6 +9,7 @@ import {
   getDoctor,
   updateDoctor,
   deleteDoctor,
+  getDoctorsByLocation, // ✅ Import new controller
 } from "../controllers/doctorController.js";
 import {
   assignPatientToDoctor,
@@ -23,6 +24,14 @@ router
   .route("/")
   .post(authMiddleware, authorizeRoles("admin"), createDoctor)
   .get(authMiddleware, authorizeRoles("admin"), getDoctors);
+
+// Search doctors by location (accessible to patients too)
+router.get(
+  "/search",
+  authMiddleware,
+  authorizeRoles("patient", "admin", "doctor"),
+  getDoctorsByLocation
+);
 
 router
   .route("/:id")

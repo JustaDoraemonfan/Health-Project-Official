@@ -16,6 +16,7 @@ import {
   FWLDashboard,
   AdminDashboard,
 } from "./pages/Dahsboards/Dashboard";
+import BookConsultation from "./pages/Dahsboards/Components/BookConsultation";
 import "./App.css";
 
 // Component to handle routing logic
@@ -92,6 +93,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/book-consultant"
+        element={
+          <ProtectedRoute>
+            <BookConsultation />
           </ProtectedRoute>
         }
       />
