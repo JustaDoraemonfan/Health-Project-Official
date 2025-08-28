@@ -10,15 +10,18 @@ import {
   Calendar,
   Phone,
   DollarSign,
+  ChevronDown,
+  ChevronUp,
+  Mail,
 } from "lucide-react";
 import { doctorAPI } from "../../../services/api";
-
 const BookConsultation = () => {
   const [location, setLocation] = useState("");
   const [searchPerformed, setSearchPerformed] = useState(false);
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [expandedCards, setExpandedCards] = useState(new Set());
 
   // Load all doctors initially
   useEffect(() => {
@@ -76,6 +79,7 @@ const BookConsultation = () => {
   const handleReset = async () => {
     setLocation("");
     setSearchPerformed(false);
+    setExpandedCards(new Set()); // Reset expanded cards
 
     try {
       setSearchLoading(true);
@@ -95,6 +99,16 @@ const BookConsultation = () => {
 
   const handleCall = (phone) => {
     window.open(`tel:${phone}`);
+  };
+
+  const toggleCardExpansion = (doctorId) => {
+    const newExpandedCards = new Set(expandedCards);
+    if (expandedCards.has(doctorId)) {
+      newExpandedCards.delete(doctorId);
+    } else {
+      newExpandedCards.add(doctorId);
+    }
+    setExpandedCards(newExpandedCards);
   };
 
   // Get availability status styling
@@ -202,163 +216,191 @@ const BookConsultation = () => {
         {/* Doctors Grid */}
         {!isLoadingState && (
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-            {doctors.map((doc) => (
-              <div
-                key={doc.id}
-                className="bg-gray-900 border border-gray-800 rounded-lg p-6 transition-all duration-200 hover:border-gray-600 hover:shadow-lg hover:shadow-gray-900/30 group"
-              >
-                {/* Doctor Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center">
-                    <div className="w-12 h-12 bg-amber-600 rounded-full flex items-center justify-center mr-3 group-hover:bg-amber-500 transition-colors">
-                      <User className="w-6 h-6 text-white" />
+            {doctors.map((doc) => {
+              const isExpanded = expandedCards.has(doc.id);
+
+              return (
+                <div
+                  key={doc.id}
+                  className="bg-gray-900 border border-gray-800 rounded-lg p-6 transition-all duration-200 hover:border-gray-600 hover:shadow-lg hover:shadow-gray-900/30 group"
+                >
+                  {/* Doctor Header - Always Visible */}
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center">
+                      <div className="w-12 h-12 bg-amber-600 rounded-full flex items-center justify-center mr-3 group-hover:bg-amber-500 transition-colors">
+                        <User className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-100">
+                          {doc.userId?.name}
+                        </h3>
+                        <div className="flex items-center mt-1 text-gray-300">
+                          <Mail className="w-4 h-4 mr-1" />
+                          <span className="text-sm">{doc.userId?.email}</span>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-100">
-                        {doc.userId?.name}
-                      </h3>
-                      <div className="flex items-center mt-1">
-                        <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                        <span className="text-yellow-400 ml-1 text-sm font-medium">
+                    {/* Availability Badge - Always Visible */}
+                    <div
+                      className={`px-3 py-1 rounded-md text-xs font-medium ${getAvailabilityStyle(
+                        doc.isAvailable
+                      )} shadow-md whitespace-nowrap`}
+                    >
+                      {doc.isAvailable ? "Available" : "Busy"}
+                    </div>
+                  </div>
+
+                  {/* Expand/Collapse Button */}
+                  <button
+                    onClick={() => toggleCardExpansion(doc.id)}
+                    className="w-full flex items-center justify-center gap-2 py-2 mb-4 text-gray-400 hover:text-gray-300 transition-colors border border-gray-700 hover:border-gray-600 rounded-md"
+                  >
+                    <span className="text-sm">
+                      {isExpanded ? "Hide Details" : "View Details"}
+                    </span>
+                    {isExpanded ? (
+                      <ChevronUp className="w-4 h-4" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4" />
+                    )}
+                  </button>
+
+                  {/* Expandable Content */}
+                  {isExpanded && (
+                    <div className="space-y-3 mb-4">
+                      <div className="flex items-center text-gray-300">
+                        <Star className="w-4 h-4 text-yellow-400 fill-current mr-2" />
+                        <span className="text-yellow-400 font-medium">
                           {doc.rating}
                         </span>
                         <span className="text-gray-400 ml-2 text-xs">
                           ({doc.reviewCount} reviews)
                         </span>
                       </div>
-                    </div>
-                  </div>
-                  {/* Availability Badge */}
-                  <div
-                    className={`px-3 py-1 rounded-md text-xs font-medium ${getAvailabilityStyle(
-                      doc.isAvailable
-                    )} shadow-md whitespace-nowrap`}
-                  >
-                    {doc.isAvailable ? "Available" : "Busy"}
-                  </div>
-                </div>
 
-                {/* Doctor Info */}
-                <div className="space-y-3 mb-4">
-                  <div className="flex items-center text-gray-300">
-                    <span className="font-medium">Specialty:</span>
-                    <span
-                      className={`ml-2 ${getSpecialtyColor(
-                        doc.specialization
-                      )}`}
+                      <div className="flex items-center text-gray-300">
+                        <span className="font-medium">Specialty:</span>
+                        <span
+                          className={`ml-2 ${getSpecialtyColor(
+                            doc.specialization
+                          )}`}
+                        >
+                          {doc.specialization}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center text-gray-300">
+                        <Clock className="w-4 h-4 mr-2" />
+                        <span className="text-gray-400 text-sm">
+                          {doc.experience} years experience
+                        </span>
+                      </div>
+
+                      <div className="flex items-center text-gray-300">
+                        <MapPin className="w-4 h-4 mr-2" />
+                        <span className="text-gray-400 text-sm">
+                          {doc.location}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center text-gray-300">
+                        <GraduationCap className="w-4 h-4 mr-2" />
+                        <span className="text-gray-400 text-sm">
+                          {doc.education}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center text-gray-300">
+                        <DollarSign className="w-4 h-4 mr-2" />
+                        <span className="text-gray-400 text-sm">
+                          ${doc.consultationFee} consultation
+                        </span>
+                      </div>
+
+                      <div className="flex items-center text-gray-300">
+                        <Calendar className="w-4 h-4 mr-2" />
+                        <span className="text-gray-400 text-sm">
+                          Next: {doc.nextAvailable}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center text-gray-300">
+                        <Phone className="w-4 h-4 mr-2" />
+                        <span className="text-gray-400 text-sm">
+                          {doc.phone}
+                        </span>
+                      </div>
+
+                      {doc.languages && doc.languages.length > 0 && (
+                        <div className="mt-3">
+                          <div className="text-xs text-gray-500 mb-1">
+                            Languages:
+                          </div>
+                          <div className="flex flex-wrap gap-1">
+                            {doc.languages.map((lang, index) => (
+                              <span
+                                key={index}
+                                className="px-2 py-1 bg-gray-800 text-gray-300 text-xs rounded border border-gray-700"
+                              >
+                                {lang}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {doc.certifications && doc.certifications.length > 0 && (
+                        <div className="mt-3">
+                          <div className="text-xs text-gray-500 mb-1">
+                            Certifications:
+                          </div>
+                          <div className="flex flex-wrap gap-1">
+                            {doc.certifications.map((cert, index) => (
+                              <span
+                                key={index}
+                                className="px-2 py-1 bg-blue-900/30 text-blue-300 text-xs rounded border border-blue-800"
+                              >
+                                <Award className="w-3 h-3 inline mr-1" />
+                                {cert}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {doc.about && (
+                        <div className="mt-3 p-3 bg-gray-800/50 rounded border border-gray-700">
+                          <p className="text-gray-400 text-sm leading-relaxed">
+                            {doc.about}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Action Buttons - Always Visible */}
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleBookNow(doc.userId?.name)}
+                      disabled={!doc.isAvailable}
+                      className={`flex-1 py-2 px-4 rounded-md font-medium transition-all duration-200 ${
+                        doc.isAvailable
+                          ? "bg-slate-100 hover:bg-slate-200 border border-slate-300 hover:border-slate-400 text-black hover:shadow-md"
+                          : "bg-gray-800 border border-gray-700 text-gray-500 cursor-not-allowed"
+                      }`}
                     >
-                      {doc.specialization}
-                    </span>
+                      {doc.isAvailable ? "Book Now" : "Not Available"}
+                    </button>
+                    <button
+                      onClick={() => handleCall(doc.phone)}
+                      className="px-3 py-2 bg-green-800 hover:bg-green-700 border border-green-700 hover:border-green-600 rounded-md text-green-100 transition-all duration-200 hover:shadow-md"
+                    >
+                      <Phone className="w-4 h-4" />
+                    </button>
                   </div>
-
-                  <div className="flex items-center text-gray-300">
-                    <Clock className="w-4 h-4 mr-2" />
-                    <span className="text-gray-400 text-sm">
-                      {doc.experience} years experience
-                    </span>
-                  </div>
-
-                  <div className="flex items-center text-gray-300">
-                    <MapPin className="w-4 h-4 mr-2" />
-                    <span className="text-gray-400 text-sm">
-                      {doc.location}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center text-gray-300">
-                    <GraduationCap className="w-4 h-4 mr-2" />
-                    <span className="text-gray-400 text-sm">
-                      {doc.education}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center text-gray-300">
-                    <DollarSign className="w-4 h-4 mr-2" />
-                    <span className="text-gray-400 text-sm">
-                      ${doc.consultationFee} consultation
-                    </span>
-                  </div>
-
-                  <div className="flex items-center text-gray-300">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    <span className="text-gray-400 text-sm">
-                      Next: {doc.nextAvailable}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center text-gray-300">
-                    <Phone className="w-4 h-4 mr-2" />
-                    <span className="text-gray-400 text-sm">{doc.phone}</span>
-                  </div>
-
-                  {doc.languages && doc.languages.length > 0 && (
-                    <div className="mt-3">
-                      <div className="text-xs text-gray-500 mb-1">
-                        Languages:
-                      </div>
-                      <div className="flex flex-wrap gap-1">
-                        {doc.languages.map((lang, index) => (
-                          <span
-                            key={index}
-                            className="px-2 py-1 bg-gray-800 text-gray-300 text-xs rounded border border-gray-700"
-                          >
-                            {lang}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {doc.certifications && doc.certifications.length > 0 && (
-                    <div className="mt-3">
-                      <div className="text-xs text-gray-500 mb-1">
-                        Certifications:
-                      </div>
-                      <div className="flex flex-wrap gap-1">
-                        {doc.certifications.map((cert, index) => (
-                          <span
-                            key={index}
-                            className="px-2 py-1 bg-blue-900/30 text-blue-300 text-xs rounded border border-blue-800"
-                          >
-                            <Award className="w-3 h-3 inline mr-1" />
-                            {cert}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {doc.about && (
-                    <div className="mt-3 p-3 bg-gray-800/50 rounded border border-gray-700">
-                      <p className="text-gray-400 text-sm leading-relaxed">
-                        {doc.about}
-                      </p>
-                    </div>
-                  )}
                 </div>
-
-                {/* Action Buttons */}
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleBookNow(doc.userId?.name)}
-                    disabled={!doc.isAvailable}
-                    className={`flex-1 py-2 px-4 rounded-md font-medium transition-all duration-200 ${
-                      doc.isAvailable
-                        ? "bg-slate-100 hover:bg-slate-200 border border-slate-300 hover:border-slate-400 text-black hover:shadow-md"
-                        : "bg-gray-800 border border-gray-700 text-gray-500 cursor-not-allowed"
-                    }`}
-                  >
-                    {doc.isAvailable ? "Book Now" : "Not Available"}
-                  </button>
-                  <button
-                    onClick={() => handleCall(doc.phone)}
-                    className="px-3 py-2 bg-green-800 hover:bg-green-700 border border-green-700 hover:border-green-600 rounded-md text-green-100 transition-all duration-200 hover:shadow-md"
-                  >
-                    <Phone className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 

@@ -1,7 +1,10 @@
 import React from "react";
 import { Stethoscope, ChevronRight, CreditCard } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function QuickAction() {
+  const navigate = useNavigate();
+
   return (
     <section>
       {/* Quick Actions Section */}
@@ -16,6 +19,7 @@ export default function QuickAction() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Emergency Contact */}
           <button className="bg-gradient-to-r from-stone-900 to-slate-900 rounded-lg p-4 border border-gray-700 hover:border-gray-600 transition-all duration-200 transform hover:scale-[1.02] text-left">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -35,7 +39,11 @@ export default function QuickAction() {
             </div>
           </button>
 
-          <button className="bg-gradient-to-r from-stone-900 to-slate-900 rounded-lg p-4 border border-gray-700 hover:border-gray-600 transition-all duration-200 transform hover:scale-[1.02] text-left">
+          {/* Manage Profile */}
+          <button
+            onClick={() => navigate("/update-profile")}
+            className="bg-gradient-to-r from-stone-900 to-slate-900 rounded-lg p-4 border border-gray-700 hover:border-gray-600 transition-all duration-200 transform hover:scale-[1.02] text-left"
+          >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
@@ -46,7 +54,7 @@ export default function QuickAction() {
                     Manage your profile
                   </h4>
                   <p className="text-gray-400 font-mono text-xs">
-                    View profile details
+                    View & update profile details
                   </p>
                 </div>
               </div>

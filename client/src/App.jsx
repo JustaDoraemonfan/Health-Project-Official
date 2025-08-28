@@ -17,6 +17,7 @@ import {
   AdminDashboard,
 } from "./pages/Dahsboards/Dashboard";
 import BookConsultation from "./pages/Dahsboards/Components/BookConsultation";
+import UpdateProfile from "./pages/Dahsboards/Components/UpdateProfile";
 import "./App.css";
 
 // Component to handle routing logic
@@ -101,6 +102,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <BookConsultation />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/update-profile"
+        element={
+          <ProtectedRoute>
+            <UpdateProfile />
           </ProtectedRoute>
         }
       />

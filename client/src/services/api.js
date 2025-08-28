@@ -220,6 +220,14 @@ export const appointmentAPI = {
   },
 };
 
+// Profile
+export const profileAPI = {
+  //Get user profile
+  getProfile: () => {
+    return apiClient.get("/profile");
+  },
+};
+
 // Generic API helper functions
 export const apiHelpers = {
   // Handle API errors

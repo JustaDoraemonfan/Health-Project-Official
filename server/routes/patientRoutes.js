@@ -21,7 +21,11 @@ router
 router
   .route("/:id")
   .get(authMiddleware, authorizeRoles("admin", "doctor"), getPatient)
-  .put(authMiddleware, authorizeRoles("admin", "frontline"), updatePatient)
+  .put(
+    authMiddleware,
+    authorizeRoles("patient", "admin", "frontline"),
+    updatePatient
+  )
   .delete(authMiddleware, authorizeRoles("admin"), deletePatient);
 
 export default router;
