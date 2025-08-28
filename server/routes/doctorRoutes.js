@@ -23,7 +23,7 @@ const router = express.Router();
 router
   .route("/")
   .post(authMiddleware, authorizeRoles("admin"), createDoctor)
-  .get(authMiddleware, authorizeRoles("admin"), getDoctors);
+  .get(authMiddleware, authorizeRoles("admin", "patient"), getDoctors);
 
 // Search doctors by location (accessible to patients too)
 router.get(

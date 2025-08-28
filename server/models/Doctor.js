@@ -8,15 +8,38 @@ const doctorSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+
     specialization: { type: String, required: true },
+    experience: { type: Number, default: 0 }, // years of experience
     location: { type: String },
+    isAvailable: { type: Boolean, default: true },
+
+    rating: { type: Number, default: 0 },
+    reviewCount: { type: Number, default: 0 },
+
+    education: { type: String },
+    languages: [{ type: String }],
+
+    consultationFee: { type: Number, default: 0 },
+    nextAvailable: { type: String }, // e.g. "Today, 4:15 PM"
+
+    certifications: [{ type: String }],
+    about: { type: String },
+    phone: { type: String },
+
     availability: [
       {
-        day: String, // "Monday"
-        slots: [String], // ["9:00 AM", "10:30 AM"]
+        day: String, // e.g. "Monday"
+        slots: [String], // e.g. ["9:00 AM", "10:30 AM"]
       },
     ],
-    isAvailable: { type: Boolean, default: true },
+
+    patients: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User", // patients are also users
+      },
+    ],
   },
   { timestamps: true }
 );

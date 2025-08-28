@@ -22,7 +22,10 @@ export const createDoctor = asyncHandler(async (req, res) => {
 
 // Get all doctors (admin only)
 export const getDoctors = asyncHandler(async (req, res) => {
-  const doctors = await Doctor.find().populate("patients", "name email").lean();
+  const doctors = await Doctor.find()
+    .populate("patients", "name email") // patients -> name, email
+    .populate("userId", "name email") // doctor (userId) -> name, email
+    .lean();
 
   return successResponse(res, doctors, "Doctors fetched successfully");
 });

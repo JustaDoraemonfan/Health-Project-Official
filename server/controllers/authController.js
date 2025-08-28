@@ -94,9 +94,10 @@ export const registerUser = asyncHandler(async (req, res) => {
       assignedDoctor: null,
     });
   } else if (userRole === "doctor") {
-    const { location, specialization } = req.body;
+    const { phone, location, specialization } = req.body;
     await Doctor.create({
       userId: user.id,
+      phone: phone,
       location: location,
       specialization: specialization || "",
       patients: [],
