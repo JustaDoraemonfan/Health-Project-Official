@@ -10,18 +10,18 @@ import { successResponse, errorResponse } from "../utils/response.js";
 // @access  Private (Patient/Doctor/Admin)
 export const createAppointment = asyncHandler(async (req, res) => {
   try {
-    // Validate that doctor and patient exist
     const doctor = await Doctor.findOne({ userId: req.body.doctor });
     const patient = await Patient.findOne({ userId: req.body.patient });
 
-    if (!doctor) {
-      return errorResponse(res, "Doctor not found", 404);
-    }
-    if (!patient) {
-      return errorResponse(res, "Patient not found", 404);
-    }
+    if (!doctor) return errorResponse(res, "Doctor not found", 404);
+    if (!patient) return errorResponse(res, "Patient not found", 404);
 
-    const appointment = new Appointment(req.body);
+    // ✅ Set doctorProfile explicitly
+    const appointment = new Appointment({
+      ...req.body,
+      doctorProfile: doctor._id,
+    });
+
     await appointment.save();
 
     // Add to doctor's appointments
@@ -54,7 +54,8 @@ export const getAppointments = asyncHandler(async (req, res) => {
   try {
     const appointments = await Appointment.find()
       .populate("patient", "name email")
-      .populate("doctor", "name specialization email");
+      .populate("doctor", "name  email")
+      .populate("doctorProfile", " specialization ");
 
     return successResponse(
       res,
@@ -174,8 +175,10 @@ export const getUpcomingAppointments = asyncHandler(async (req, res) => {
     }
 
     const appointments = await Appointment.find(query)
-      .populate("patient", "userId name email")
-      .populate("doctor", "userId name specialization email")
+      .populate("patient", "name email role")
+      .populate("doctor", "name email role")
+      .populate("doctorProfile", "specialization experience")
+
       .sort({ appointmentDate: 1 });
 
     return successResponse(
@@ -376,8 +379,9 @@ export const getAppointmentsByDateRange = asyncHandler(async (req, res) => {
     // Admin can see all appointments (no additional filter)
 
     const appointments = await Appointment.find(query)
-      .populate("patient", "userId name email")
-      .populate("doctor", "userId name specialization email")
+      .populate("patient", "name email role")
+      .populate("doctor", "name email role")
+      .populate("doctorProfile", "specialization")
       .sort({ appointmentDate: 1 });
 
     return successResponse(

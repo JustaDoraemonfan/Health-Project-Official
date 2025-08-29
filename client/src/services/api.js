@@ -197,27 +197,55 @@ export const dashboardAPI = {
   },
 };
 
-// Appointment API endpoints (for future use)
+// Appointment API endpoints
 export const appointmentAPI = {
-  // Get user appointments
-  getAppointments: () => {
-    return apiClient.get("/appointments");
-  },
+  // Get all appointments (admin/doctor)
+  getAppointments: () => apiClient.get("/appointments"),
 
-  // Book appointment
-  bookAppointment: (appointmentData) => {
-    return apiClient.post("/appointments", appointmentData);
-  },
+  // Book appointment (patient/doctor/admin)
+  bookAppointment: (appointmentData) =>
+    apiClient.post("/appointments", appointmentData),
 
-  // Cancel appointment
-  cancelAppointment: (appointmentId) => {
-    return apiClient.delete(`/appointments/${appointmentId}`);
-  },
+  // Get single appointment
+  getAppointment: (appointmentId) =>
+    apiClient.get(`/appointments/${appointmentId}`),
 
   // Update appointment
-  updateAppointment: (appointmentId, data) => {
-    return apiClient.put(`/appointments/${appointmentId}`, data);
-  },
+  updateAppointment: (appointmentId, data) =>
+    apiClient.put(`/appointments/${appointmentId}`, data),
+
+  // Delete appointment (admin/doctor)
+  deleteAppointment: (appointmentId) =>
+    apiClient.delete(`/appointments/${appointmentId}`),
+
+  // Cancel appointment
+  cancelAppointment: (appointmentId) =>
+    apiClient.patch(`/appointments/${appointmentId}/cancel`),
+
+  // Confirm appointment (doctor/admin)
+  confirmAppointment: (appointmentId) =>
+    apiClient.patch(`/appointments/${appointmentId}/confirm`),
+
+  // Complete appointment (doctor/admin)
+  completeAppointment: (appointmentId, notes) =>
+    apiClient.patch(`/appointments/${appointmentId}/complete`, { notes }),
+
+  // Get upcoming appointments
+  getUpcomingAppointments: () => apiClient.get("/appointments/upcoming"),
+
+  // Get past appointments
+  getPastAppointments: () => apiClient.get("/appointments/past"),
+
+  // Get appointments in a date range
+  getAppointmentsByDateRange: (startDate, endDate) =>
+    apiClient.get(
+      `/appointments/date-range?startDate=${encodeURIComponent(
+        startDate
+      )}&endDate=${encodeURIComponent(endDate)}`
+    ),
+
+  // Get appointment statistics (admin/doctor)
+  getAppointmentStats: () => apiClient.get("/appointments/stats"),
 };
 
 // Profile

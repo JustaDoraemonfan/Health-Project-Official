@@ -18,6 +18,7 @@ import {
 } from "./pages/Dahsboards/Dashboard";
 import BookConsultation from "./pages/Dahsboards/Components/BookConsultation";
 import UpdateProfile from "./pages/Dahsboards/Components/UpdateProfile";
+import AppointmentDashboard from "./pages/Dahsboards/Components/Appointment";
 import "./App.css";
 
 // Component to handle routing logic
@@ -110,6 +111,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <UpdateProfile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/appointment"
+        element={
+          <ProtectedRoute>
+            <AppointmentDashboard />
           </ProtectedRoute>
         }
       />
