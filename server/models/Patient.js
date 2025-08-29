@@ -62,6 +62,12 @@ const patientSchema = new mongoose.Schema(
       policyNumber: String,
       validTill: Date,
     },
+    appointments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Appointment", // reference to the Appointment model
+      },
+    ],
   },
   { timestamps: true }
 );

@@ -12,20 +12,77 @@ const appointmentSchema = new mongoose.Schema(
       ref: "Doctor",
       required: true,
     },
-    appointmentDate: { type: Date, required: true },
-    appointmentTime: { type: String, required: true }, // "2:00 PM"
+
+    // Date & Time
+    appointmentDate: {
+      type: Date,
+      required: true,
+      validate: {
+        validator: function (value) {
+          return value >= new Date(); // No past appointments allowed
+        },
+        message: "Appointment date must be in the future.",
+      },
+    },
+    appointmentTime: {
+      type: String,
+      required: true,
+      match: /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]\s?(AM|PM)?$/, // 24hr or AM/PM format
+    },
+
+    // Appointment Details
     type: {
       type: String,
-      enum: ["consultation", "follow-up", "check-up"],
+      enum: ["consultation", "follow-up", "check-up", "emergency"],
       default: "consultation",
     },
     status: {
       type: String,
-      enum: ["scheduled", "completed", "cancelled"],
+      enum: ["scheduled", "confirmed", "completed", "cancelled", "no-show"],
       default: "scheduled",
     },
-    location: { type: String },
-    notes: { type: String },
+    reasonForVisit: {
+      type: String,
+      trim: true,
+      minlength: 5,
+      maxlength: 200,
+    },
+    notes: {
+      type: String,
+      maxlength: 500,
+      trim: true,
+    },
+
+    // Logistics
+    location: {
+      type: String,
+      trim: true,
+      default: "Clinic",
+    },
+    mode: {
+      type: String,
+      enum: ["in-person", "online"],
+      default: "in-person",
+    },
+
+    // Tracking
+    createdBy: {
+      type: String,
+      enum: ["patient", "doctor", "admin"],
+      required: true,
+    },
+    lastUpdatedBy: {
+      type: String,
+      enum: ["patient", "doctor", "admin"],
+    },
+    isPaid: {
+      type: Boolean,
+      default: false,
+    },
+    paymentReference: {
+      type: String,
+      trim: true,
+    },
   },
   { timestamps: true }
 );

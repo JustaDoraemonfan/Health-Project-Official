@@ -40,6 +40,12 @@ const doctorSchema = new mongoose.Schema(
         ref: "User", // patients are also users
       },
     ],
+    appointments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Appointment", // reference to the Appointment model
+      },
+    ],
   },
   { timestamps: true }
 );
