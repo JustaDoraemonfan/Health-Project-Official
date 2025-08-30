@@ -1,18 +1,24 @@
 // components/consultation/BookConsultation.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SearchSection from "../../bookConfig/SearchSection";
 import DoctorGrid from "../../bookConfig/DoctorGrid";
 import LoadingState from "../../bookConfig/LoadingState";
 import EmptyState from "../../bookConfig/EmptyStates";
 import { useDoctors } from "../../hooks/useDoctors";
+import { appointmentAPI } from "../../services/api";
+import { useAuth } from "../../context/AuthContext";
 
 const BookConsultation = () => {
   const [location, setLocation] = useState("");
   const [searchPerformed, setSearchPerformed] = useState(false);
   const [expandedCards, setExpandedCards] = useState(new Set());
+  const { user } = useAuth();
 
   const { doctors, loading, searchLoading, searchDoctors, resetSearch } =
     useDoctors();
+  useEffect(() => {
+    console.log(user._id);
+  }, []);
 
   const isLoadingState = loading || searchLoading;
 
@@ -28,8 +34,21 @@ const BookConsultation = () => {
     await resetSearch();
   };
 
-  const handleBookNow = (doctorName) => {
-    alert(`Booking consultation with ${doctorName}`);
+  const handleBookNow = async (data) => {
+    try {
+      const payload = {
+        ...data,
+        patient: user._id,
+        createdBy: "patient",
+      };
+      console.log(payload);
+
+      await appointmentAPI.bookAppointment(payload);
+      alert("Appointment booked successfully!");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to book appointment. Please try again.");
+    }
   };
 
   const handleCall = (phone) => {

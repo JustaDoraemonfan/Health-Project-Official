@@ -1,4 +1,5 @@
 // components/consultation/DoctorCard.jsx - Clean Professional Version
+import { useState } from "react";
 import {
   User,
   Clock,
@@ -14,6 +15,7 @@ import {
   MapPin,
 } from "lucide-react";
 import { getSpecialtyColor, getDoctorName } from "../utils/doctorHelpers";
+import BookingModal from "./BookingModal";
 
 const DoctorCard = ({
   doctor,
@@ -24,6 +26,7 @@ const DoctorCard = ({
 }) => {
   const doc = doctor;
   const doctorName = getDoctorName(doc);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <div className="bg-gray-900 border border-gray-800 rounded-lg hover:border-gray-700 hover:shadow-lg transition-all duration-200">
@@ -177,11 +180,18 @@ const DoctorCard = ({
           )}
         </div>
       )}
+      {isModalOpen && (
+        <BookingModal
+          doctor={doctor}
+          onClose={() => setIsModalOpen(false)}
+          onConfirm={onBookNow}
+        />
+      )}
 
       {/* Action Buttons */}
       <div className="p-5 flex gap-3">
         <button
-          onClick={() => onBookNow(doctorName)}
+          onClick={() => setIsModalOpen(true)}
           disabled={!doc.isAvailable}
           className={`flex-1 py-2.5 px-4 rounded-md font-medium transition-all duration-200 ${
             doc.isAvailable

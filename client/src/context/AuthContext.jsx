@@ -207,10 +207,10 @@ export const AuthProvider = ({ children }) => {
       console.log("Loading user...");
       dispatch({ type: AUTH_ACTIONS.LOAD_USER_START });
       const response = await authAPI.getCurrentUser();
-      console.log("User loaded successfully:", response.data.data);
+      console.log("User loaded successfully:", response.data);
       dispatch({
         type: AUTH_ACTIONS.LOAD_USER_SUCCESS,
-        payload: response.data.data,
+        payload: response.data,
       });
     } catch (error) {
       console.error("Load user error:", error);
