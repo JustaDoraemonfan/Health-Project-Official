@@ -1,8 +1,8 @@
 // AppointmentDashboard.js
 import React, { useState } from "react";
-import DashboardView from "../../../appointmetConfigs/DashboardView";
-import DetailedView from "../../../appointmetConfigs/DetailedView";
-import { useAppointments } from "../../../hooks/useAppointments";
+import DashboardView from "../../appointmetConfigs/DashboardView";
+import DetailedView from "../../appointmetConfigs/DetailedView";
+import { useAppointments } from "../../hooks/useAppointments";
 
 const AppointmentDashboard = () => {
   const [currentView, setCurrentView] = useState("dashboard");
@@ -13,7 +13,6 @@ const AppointmentDashboard = () => {
     loading,
     error,
     findAppointmentById,
-    confirmAppointment,
     rescheduleAppointment,
     cancelAppointment,
   } = useAppointments();

@@ -16,9 +16,9 @@ import {
   FWLDashboard,
   AdminDashboard,
 } from "./pages/Dahsboards/Dashboard";
-import BookConsultation from "./pages/Dahsboards/Components/BookConsultation";
+import BookConsultation from "./pages/Dahsboards/BookConsultation";
 import UpdateProfile from "./pages/Dahsboards/Components/UpdateProfile";
-import AppointmentDashboard from "./pages/Dahsboards/Components/Appointment";
+import AppointmentDashboard from "./pages/Dahsboards/Appointment";
 import "./App.css";
 
 // Component to handle routing logic
