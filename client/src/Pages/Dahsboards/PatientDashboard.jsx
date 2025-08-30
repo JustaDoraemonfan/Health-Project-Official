@@ -7,6 +7,7 @@ import QuickAction from "./Components/QuickAction";
 import { dashboardAPI } from "../../services/api";
 import { dashboardSections } from "../../config/dashboardSection";
 import Footer from "./Components/Footer";
+import Header from "../../components/Header";
 
 const PatientDashboard = () => {
   const [user, setUser] = useState({
@@ -46,34 +47,39 @@ const PatientDashboard = () => {
     logout();
     navigate("/login"); // redirect to login after logout
   };
-  return (
-    <section className="min-h-screen bg-[#161515] py-8">
-      <div className="container mx-auto px-6">
-        {/* Header Section */}
-        <StatusBar name={user.name} email={user.email} />
 
-        {/* Dashboard Grid */}
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {sections.map((section) => (
-              <DashboardCard
-                key={section.id}
-                title={section.title}
-                description={section.description}
-                icon={section.icon}
-                color={section.color}
-                onClick={section.onClick}
-                badge={section.badge}
-              />
-            ))}
+  return (
+    <>
+      <Header />
+      <section className="min-h-screen bg-[#161515] py-8 pt-20">
+        <div className="container mx-auto px-6">
+          {/* Header Section */}
+
+          <StatusBar name={user.name} email={user.email} />
+
+          {/* Dashboard Grid */}
+          <div className="max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {sections.map((section) => (
+                <DashboardCard
+                  key={section.id}
+                  title={section.title}
+                  description={section.description}
+                  icon={section.icon}
+                  color={section.color}
+                  onClick={section.onClick}
+                  badge={section.badge}
+                />
+              ))}
+            </div>
           </div>
+          {/* Quick Actions Section */}
+          <QuickAction />
+          {/* Footer */}
+          <Footer />
         </div>
-        {/* Quick Actions Section */}
-        <QuickAction />
-        {/* Footer */}
-        <Footer handleLogout={handleLogout} />
-      </div>
-    </section>
+      </section>
+    </>
   );
 };
 

@@ -1,5 +1,5 @@
 // components/consultation/BookConsultation.jsx
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import SearchSection from "../../bookConfig/SearchSection";
 import DoctorGrid from "../../bookConfig/DoctorGrid";
 import LoadingState from "../../bookConfig/LoadingState";
@@ -16,9 +16,6 @@ const BookConsultation = () => {
 
   const { doctors, loading, searchLoading, searchDoctors, resetSearch } =
     useDoctors();
-  useEffect(() => {
-    console.log(user._id);
-  }, []);
 
   const isLoadingState = loading || searchLoading;
 
@@ -76,6 +73,7 @@ const BookConsultation = () => {
     >
       <div className="max-w-6xl mx-auto">
         {/* Header */}
+
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-100 mb-2">
             Book Consultation

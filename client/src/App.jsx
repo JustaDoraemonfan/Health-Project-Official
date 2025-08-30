@@ -17,7 +17,7 @@ import {
   AdminDashboard,
 } from "./pages/Dahsboards/Dashboard";
 import BookConsultation from "./pages/Dahsboards/BookConsultation";
-import UpdateProfile from "./pages/Dahsboards/Components/UpdateProfile";
+import UpdateProfile from "./pages/Dahsboards/UpdateProfile";
 import AppointmentDashboard from "./pages/Dahsboards/Appointment";
 import "./App.css";
 
