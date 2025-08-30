@@ -6,14 +6,6 @@ const AppointmentActions = ({ onConfirm, onReschedule, onCancel }) => {
   return (
     <div className="flex flex-wrap gap-2 mt-6 mb-6">
       <button
-        className="flex items-center gap-2 px-4 py-2 bg-green-700 hover:bg-green-600 text-white rounded-md transition-colors"
-        onClick={onConfirm}
-      >
-        <CheckIcon />
-        Confirm Appointment
-      </button>
-
-      <button
         className="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white rounded-md transition-colors"
         onClick={onReschedule}
       >

@@ -11,43 +11,69 @@ const AppointmentDetails = ({ appointment }) => {
 
   return (
     <>
+      {/* Header */}
+      <div className="mb-6">
+        <h2 className="text-xl font-semibold text-white mb-1">
+          Appointment Details
+        </h2>
+        <div className="h-px bg-slate-600 w-16"></div>
+      </div>
+
       {/* Main Details Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div className="bg-slate-200 border border-slate-700 rounded-md p-4">
-          <div className="text-slate-400 text-sm mb-1">Date & Time</div>
-          <div className="text-black font-semibold">
-            {formatDate(appointment.appointmentDate)} at{" "}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        <div className="bg-slate-700/50 border border-slate-600 rounded-lg p-4 hover:bg-slate-700/70 transition-colors duration-200">
+          <div className="text-slate-300 text-xs uppercase tracking-wider font-medium mb-2">
+            Date & Time
+          </div>
+          <div className="text-white font-semibold text-lg">
+            {formatDate(appointment.appointmentDate)}
+          </div>
+          <div className="text-slate-300 text-sm mt-1">
             {appointment.appointmentTime}
           </div>
         </div>
 
-        <div className="bg-slate-200 border border-slate-700 rounded-md p-4">
-          <div className="text-slate-400 text-sm mb-1">Doctor</div>
-          <div className="text-black font-semibold">
+        <div className="bg-slate-700/50 border border-slate-600 rounded-lg p-4 hover:bg-slate-700/70 transition-colors duration-200">
+          <div className="text-slate-300 text-xs uppercase tracking-wider font-medium mb-2">
+            Doctor
+          </div>
+          <div className="text-white font-semibold text-lg">
             {appointment.doctor?.name || "Not Assigned"}
           </div>
         </div>
 
-        <div className="bg-slate-200 border border-slate-700 rounded-md p-4">
-          <div className="text-slate-400 text-sm mb-1">Specialization</div>
-          <div className="text-black font-semibold">
+        <div className="bg-slate-700/50 border border-slate-600 rounded-lg p-4 hover:bg-slate-700/70 transition-colors duration-200">
+          <div className="text-slate-300 text-xs uppercase tracking-wider font-medium mb-2">
+            Specialization
+          </div>
+          <div className="text-white font-semibold">
             {appointment.doctorProfile?.specialization || "N/A"}
           </div>
         </div>
 
-        <div className="bg-slate-200 border border-slate-700 rounded-md p-4">
-          <div className="text-slate-400 text-sm mb-1">Type</div>
-          <div className="text-black font-semibold">
+        <div className="bg-slate-700/50 border border-slate-600 rounded-lg p-4 hover:bg-slate-700/70 transition-colors duration-200">
+          <div className="text-slate-300 text-xs uppercase tracking-wider font-medium mb-2">
+            Type
+          </div>
+          <div className="text-white font-semibold">
             {appointment.type || "Consultation"}
           </div>
         </div>
       </div>
 
       {/* Preparation Notes */}
-      <div className="mt-6">
-        <h3 className="text-amber-50 font-semibold mb-3">Preparation Notes</h3>
-        <div className="bg-slate-200 border border-slate-700 rounded-md p-4 text-gray-950 text-sm leading-relaxed">
-          {appointment.notes || "No special preparation notes."}
+      <div className="mt-8">
+        <div className="flex items-center gap-3 mb-4">
+          <h3 className="text-white font-semibold text-lg">
+            Preparation Notes
+          </h3>
+          <div className="flex-1 h-px bg-slate-600"></div>
+        </div>
+        <div className="bg-slate-700/30 border border-slate-600 rounded-lg p-5">
+          <div className="text-slate-200 text-sm leading-relaxed">
+            {appointment.notes ||
+              "No special preparation notes required for this appointment."}
+          </div>
         </div>
       </div>
     </>
@@ -58,34 +84,36 @@ export const AppointmentSidebar = ({ appointment }) => {
   if (!appointment) return null;
 
   return (
-    <div className="bg-gradient-to-r from-stone-900 to-slate-900 border border-slate-700 rounded-md p-4 h-fit">
+    <div className="bg-slate-800 border border-slate-700 rounded-lg p-6 h-fit space-y-6">
       {/* Status */}
-      <div className="mb-5">
-        <div className="text-amber-50 font-semibold text-md mb-2">Status</div>
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-white font-semibold">Status</h3>
+        </div>
         <span
-          className={`inline-flex items-center px-2 py-1 rounded-xl text-xs font-medium border ${getStatusClass(
+          className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium border ${getStatusClass(
             appointment.status
           )}`}
         >
-          {appointment.status}
+          <div className="w-1.5 h-1.5 rounded-full bg-current mr-2"></div>
+          {appointment.status?.charAt(0).toUpperCase() +
+            appointment.status?.slice(1)}
         </span>
       </div>
 
       {/* Patient Information */}
-      <div className="mb-5">
-        <div className="text-amber-50 font-semibold text-md mb-2">
-          Patient Information
-        </div>
-        <div className="space-y-1">
-          <div className="flex justify-start items-center py-1 text-sm">
-            <span className="text-slate-400">Patient ID:</span>
-            <span className="text-amber-50 font-medium font-mono">
+      <div className="border-t border-slate-700 pt-6">
+        <h3 className="text-white font-semibold mb-4">Patient Information</h3>
+        <div className="space-y-3">
+          <div className="flex justify-between items-start">
+            <span className="text-slate-400 text-sm">Patient ID</span>
+            <span className="text-white font-mono text-sm bg-slate-700 px-2 py-1 rounded">
               {getShortId(appointment.patient?._id)}
             </span>
           </div>
-          <div className="flex justify-start items-center py-1 text-sm">
-            <span className="text-slate-400">Email:</span>
-            <span className="text-amber-50 font-medium text-xs">
+          <div className="flex justify-between items-start">
+            <span className="text-slate-400 text-sm">Email</span>
+            <span className="text-white text-sm text-right max-w-[140px] truncate">
               {appointment.patient?.email || "N/A"}
             </span>
           </div>
@@ -93,26 +121,24 @@ export const AppointmentSidebar = ({ appointment }) => {
       </div>
 
       {/* Appointment Details */}
-      <div>
-        <div className="ttext-amber-50 font-semibold text-md mb-2">
-          Appointment Details
-        </div>
-        <div className="space-y-1">
-          <div className="flex justify-start items-center py-1 text-sm">
-            <span className="text-slate-400">Mode:</span>
-            <span className="text-amber-50 font-medium capitalize">
+      <div className="border-t border-slate-700 pt-6">
+        <h3 className="text-white font-semibold mb-4">Additional Details</h3>
+        <div className="space-y-3">
+          <div className="flex justify-between items-center">
+            <span className="text-slate-400 text-sm">Mode</span>
+            <span className="text-white font-medium capitalize bg-slate-700 px-2 py-1 rounded text-sm">
               {appointment.mode || "In-person"}
             </span>
           </div>
-          <div className="flex justify-start items-center py-1 text-sm">
-            <span className="text-slate-400">Location:</span>
-            <span className="text-amber-50 font-medium">
+          <div className="flex justify-between items-start">
+            <span className="text-slate-400 text-sm">Location</span>
+            <span className="text-white text-sm text-right max-w-[120px]">
               {appointment.location || "TBA"}
             </span>
           </div>
-          <div className="flex justify-start items-center py-1 text-sm">
-            <span className="text-slate-400">Reason:</span>
-            <span className="text-amber-50 font-medium text-xs">
+          <div className="flex flex-col gap-1">
+            <span className="text-slate-400 text-sm">Reason</span>
+            <span className="text-white text-sm bg-slate-700/50 p-2 rounded text-right">
               {appointment.reasonForVisit || "General consultation"}
             </span>
           </div>

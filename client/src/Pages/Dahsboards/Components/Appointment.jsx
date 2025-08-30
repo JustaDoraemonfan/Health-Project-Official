@@ -31,11 +31,6 @@ const AppointmentDashboard = () => {
     setSelectedAppointment(null);
   };
 
-  const handleConfirmAppointment = (appointment) => {
-    confirmAppointment(appointment);
-    // You might want to show a success message or update the UI
-  };
-
   const handleRescheduleAppointment = (appointment) => {
     rescheduleAppointment(appointment);
     // You might want to open a reschedule modal or navigate to a reschedule page
@@ -62,9 +57,9 @@ const AppointmentDashboard = () => {
     <DetailedView
       selectedAppointment={selectedAppointment}
       onBackToDashboard={showDashboard}
-      onConfirmAppointment={handleConfirmAppointment}
       onRescheduleAppointment={handleRescheduleAppointment}
       onCancelAppointment={handleCancelAppointment}
+      appointmentStatus={appointments.status}
     />
   );
 };

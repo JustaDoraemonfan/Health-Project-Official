@@ -1,4 +1,3 @@
-// hooks/useAppointments.js
 import { useState, useEffect } from "react";
 import { appointmentAPI } from "../services/api";
 
@@ -57,7 +56,7 @@ export const useAppointments = () => {
   const cancelAppointment = async (appointment) => {
     try {
       // Add API call to cancel appointment
-      console.log("Cancelling appointment:", appointment._id);
+      await appointmentAPI.cancelAppointment(appointment._id);
       // await appointmentAPI.cancelAppointment(appointment._id);
       // fetchAppointments(); // Refresh the list
     } catch (err) {
