@@ -20,6 +20,7 @@ import BookConsultation from "./pages/Dahsboards/BookConsultation";
 import UpdateProfile from "./pages/Dahsboards/UpdateProfile";
 import AppointmentDashboard from "./pages/Dahsboards/Appointment";
 import "./App.css";
+import DoctorAppointment from "./pages/Dahsboards/DoctorAppointment";
 
 // Component to handle routing logic
 const AppRoutes = () => {
@@ -62,71 +63,82 @@ const AppRoutes = () => {
         }
       />
 
-      {/* Dashboards */}
+      {/* Patient Dashboard - Only patients can access */}
       <Route
         path="/patient/dashboard"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["patient"]}>
             <PatientDashboard />
           </ProtectedRoute>
         }
       />
+
+      {/* Doctor Dashboard - Only doctors can access */}
       <Route
         path="/doctor/dashboard"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["doctor"]}>
             <DoctorDashboard />
           </ProtectedRoute>
         }
       />
 
-      <Route
-        path="/doctor/dashboard"
-        element={
-          <ProtectedRoute>
-            <DoctorDashboard />
-          </ProtectedRoute>
-        }
-      />
-
+      {/* FWL Dashboard - Only FWL users can access */}
       <Route
         path="/fwl/dashboard"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["fwl"]}>
             <FWLDashboard />
           </ProtectedRoute>
         }
       />
 
+      {/* Admin Dashboard - Only admins can access */}
       <Route
         path="/admin/dashboard"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin"]}>
             <AdminDashboard />
           </ProtectedRoute>
         }
       />
+
+      {/* Book Consultation - Patients and potentially FWL users */}
       <Route
         path="/book-consultant"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["patient", "fwl"]}>
             <BookConsultation />
           </ProtectedRoute>
         }
       />
+
+      {/* Update Profile - All authenticated users */}
       <Route
         path="/update-profile"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["patient", "doctor", "fwl", "admin"]}>
             <UpdateProfile />
           </ProtectedRoute>
         }
       />
+
+      {/* Patient Appointments - Only patients */}
       <Route
-        path="/appointment"
+        path="/patient/appointment"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["patient"]}>
             <AppointmentDashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Doctor Appointments - Only doctors */}
+      <Route
+        path="/doctor/appointment"
+        element={
+          <ProtectedRoute allowedRoles={["doctor"]}>
+            <DoctorAppointment />
           </ProtectedRoute>
         }
       />

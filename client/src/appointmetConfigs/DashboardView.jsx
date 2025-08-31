@@ -108,7 +108,7 @@ const DashboardView = ({
         {/* ========================================
             DASHBOARD HEADER & STATS
             ======================================== */}
-        <div className="mb-10">
+        <div className="mb-10 ">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent mb-2">
@@ -215,7 +215,6 @@ const DashboardView = ({
           </div>
 
           {/* Decorative separator line */}
-          <div className="h-px bg-gradient-to-r from-slate-600 via-slate-500 to-transparent"></div>
         </div>
 
         {/* ========================================

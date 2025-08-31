@@ -203,7 +203,7 @@ export const RegisterSection = () => {
           )}
 
           <form onSubmit={handleRegister}>
-            <div className="bg-gradient-to-r from-stone-900 to-slate-900 border border-gray-700 rounded-lg overflow-hidden">
+            <div className="bg-gradient-to-b from-slate-900 to-slate-800 border border-gray-700 rounded-lg overflow-hidden">
               {/* Form Header */}
               <div className="flex items-center justify-between px-4 py-3 bg-amber-50 border-b border-gray-700">
                 <div className="text-black text-sm font-mono">

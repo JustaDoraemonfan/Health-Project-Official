@@ -45,7 +45,7 @@ export const dashboardSections = (navigate) => [
     icon: Clock,
     color: "amber",
     badge: "2 upcoming",
-    onClick: () => navigate("/appointment"),
+    onClick: () => navigate("/patient/appointment"),
   },
   {
     id: "prescriptions",

@@ -27,7 +27,7 @@ export const doctorDashboardSections = (navigate) => [
     color: "blue",
     stats: "12 today",
     badge: "3 urgent",
-    onClick: () => navigate("/doctor/appointments"),
+    onClick: () => navigate("/doctor/appointment"),
   },
   {
     id: "patients",

@@ -11,7 +11,7 @@ const TopBar = ({ selectedAppointment, currentPatient }) => {
   const initials = getInitials(patientName);
 
   return (
-    <header className="relative bg-slate-900 border-b border-slate-700/50 px-8 py-6 overflow-hidden">
+    <header className="relative bg-zinc-900/50 border-b border-slate-700/50 px-8 py-6 overflow-hidden">
       {/* Subtle background pattern */}
       <div className="absolute inset-0 opacity-[0.02]">
         <div

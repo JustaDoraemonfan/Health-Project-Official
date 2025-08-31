@@ -1,0 +1,225 @@
+import { Clock, User, Phone } from "lucide-react";
+
+const AppointmentCard = ({ appointment, onCardClick }) => {
+  const getStatusColor = (status) => {
+    switch (status?.toLowerCase()) {
+      case "confirmed":
+      case "scheduled":
+        return "bg-green-900/20 text-green-300 border-green-800";
+      case "pending":
+        return "bg-yellow-900/20 text-yellow-300 border-yellow-800";
+      case "completed":
+        return "bg-blue-900/20 text-blue-300 border-blue-800";
+      case "cancelled":
+        return "bg-red-900/20 text-red-300 border-red-800";
+      default:
+        return "bg-gray-800/50 text-gray-300 border-gray-600";
+    }
+  };
+
+  const getTypeColor = (type) => {
+    switch (type) {
+      case "Consultation":
+        return "bg-blue-900/30 text-blue-300 border-blue-700";
+      case "Physical Exam":
+        return "bg-purple-900/30 text-purple-300 border-purple-700";
+      case "Follow-up":
+        return "bg-cyan-900/30 text-cyan-300 border-cyan-700";
+      case "Lab Results":
+        return "bg-orange-900/30 text-orange-300 border-orange-700";
+      default:
+        return "bg-slate-700/50 text-slate-300 border-slate-600";
+    }
+  };
+
+  // Get icon colors based on status and context
+  const getUserIconColor = (status) => {
+    switch (status?.toLowerCase()) {
+      case "confirmed":
+      case "scheduled":
+        return "text-emerald-400";
+      case "pending":
+        return "text-amber-400";
+      case "completed":
+        return "text-blue-400";
+      case "cancelled":
+        return "text-red-400";
+      default:
+        return "text-indigo-400";
+    }
+  };
+
+  const getClockIconColor = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "text-orange-400"; // Morning - sunrise colors
+    if (hour < 17) return "text-yellow-400"; // Afternoon - sun colors
+    return "text-purple-400"; // Evening - twilight colors
+  };
+
+  const getPhoneIconColor = () => "text-cyan-400";
+
+  const getDoctorIconColor = () => "text-rose-400";
+
+  const getUserAvatarBg = (status) => {
+    switch (status?.toLowerCase()) {
+      case "confirmed":
+      case "scheduled":
+        return "bg-emerald-500/20 border-emerald-500/30";
+      case "pending":
+        return "bg-amber-500/20 border-amber-500/30";
+      case "completed":
+        return "bg-blue-500/20 border-blue-500/30";
+      case "cancelled":
+        return "bg-red-500/20 border-red-500/30";
+      default:
+        return "bg-indigo-500/20 border-indigo-500/30";
+    }
+  };
+
+  const formatTime = (timeStr) => {
+    if (timeStr) return timeStr;
+    // If appointment has a date, format it
+    if (appointment.appointmentDate) {
+      return new Date(appointment.appointmentDate).toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
+    return "Time TBD";
+  };
+
+  return (
+    <div
+      className="group relative bg-zinc-750/50 border border-slate-700 rounded-xl p-6 hover:bg-slate-800/70 hover:border-slate-600 transition-all duration-300 cursor-pointer transform hover:scale-[1.02]"
+      onClick={() => onCardClick && onCardClick(appointment)}
+    >
+      {/* Gradient overlay on hover */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl pointer-events-none"></div>
+
+      {/* Card Header */}
+      <div className="relative z-10 flex items-start justify-between mb-4">
+        <div className="flex items-center space-x-3">
+          <div
+            className={`w-12 h-12 ${getUserAvatarBg(
+              appointment.status
+            )} border rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-300`}
+          >
+            <User
+              className={`w-6 h-6 ${getUserIconColor(
+                appointment.status
+              )} group-hover:scale-110 transition-all duration-300`}
+            />
+          </div>
+          <div>
+            <h3 className="text-white font-semibold font-mono text-lg group-hover:text-slate-100 transition-colors">
+              {appointment.patient?.name ||
+                appointment.patientName ||
+                "Unknown Patient"}
+            </h3>
+            <div className="flex items-center space-x-2 text-sm text-slate-400">
+              <Clock
+                className={`w-4 h-4 ${getClockIconColor()} group-hover:scale-110 transition-all duration-300`}
+              />
+              <span className="font-mono">{formatTime(appointment.time)}</span>
+              {appointment.duration && (
+                <>
+                  <span className="text-slate-500">•</span>
+                  <span className="font-mono">{appointment.duration}</span>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Status Badge */}
+        <div className="flex flex-col items-end space-y-2">
+          <span
+            className={`px-3 py-1 rounded-full text-xs font-mono border ${getStatusColor(
+              appointment.status
+            )} group-hover:scale-105 transition-transform duration-300`}
+          >
+            {appointment.status || "pending"}
+          </span>
+        </div>
+      </div>
+
+      {/* Card Body */}
+      <div className="relative z-10 space-y-3">
+        {/* Appointment Type */}
+        {appointment.type && (
+          <div className="flex items-center justify-between">
+            <span
+              className={`px-3 py-1.5 rounded-lg text-sm font-mono border ${getTypeColor(
+                appointment.type
+              )} group-hover:scale-105 transition-transform duration-300`}
+            >
+              {appointment.type}
+            </span>
+          </div>
+        )}
+
+        {/* Contact Information */}
+        <div className="flex items-center justify-between text-sm">
+          <div className="flex items-center text-slate-400">
+            <Phone
+              className={`w-4 h-4 mr-2 ${getPhoneIconColor()} group-hover:scale-110 transition-all duration-300`}
+            />
+            <span className="font-mono">
+              {appointment.patient?.email ||
+                appointment.phone ||
+                "No contact info"}
+            </span>
+          </div>
+        </div>
+
+        {/* Doctor Information (if viewing as patient) */}
+        {appointment.doctor && (
+          <div className="flex items-center text-sm text-slate-400">
+            <User
+              className={`w-4 h-4 mr-2 ${getDoctorIconColor()} group-hover:scale-110 transition-all duration-300`}
+            />
+            <span className="font-mono">Dr. {appointment.doctor.name}</span>
+            {appointment.doctorProfile?.specialization && (
+              <span className="ml-2 text-slate-500">
+                • {appointment.doctorProfile.specialization}
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Notes Section */}
+        {appointment.notes && (
+          <div className="bg-slate-900/50 border border-slate-600 rounded-lg p-3 mt-3">
+            <p className="text-sm text-slate-300 font-mono leading-relaxed">
+              {appointment.notes}
+            </p>
+          </div>
+        )}
+
+        {/* Appointment Date (if different from time) */}
+        {appointment.appointmentDate && (
+          <div className="text-xs text-slate-500 font-mono pt-2 border-t border-slate-700">
+            {new Date(appointment.appointmentDate).toLocaleDateString("en-US", {
+              weekday: "short",
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Hover indicator */}
+      <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <div
+          className={`w-2 h-2 ${getUserIconColor(appointment.status).replace(
+            "text-",
+            "bg-"
+          )} rounded-full animate-pulse`}
+        ></div>
+      </div>
+    </div>
+  );
+};
+
+export default AppointmentCard;

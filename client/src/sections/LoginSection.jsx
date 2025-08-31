@@ -166,22 +166,22 @@ export const LoginSection = () => {
             </div>
           </div>
 
-          {/* Login Form */}
+          {/* Professional Login Form */}
           <form onSubmit={handleLogin}>
-            <div className="bg-gradient-to-r from-stone-900 to-slate-900 rounded-lg overflow-hidden">
-              {/* Form Header */}
-              <div className="flex items-center justify-between px-4 py-3 bg-amber-50 border-b border-gray-700">
-                <div className="text-black text-sm font-mono">
-                  {userTypes.find((t) => t.id === activeTab)?.label} Login
-                </div>
-                <div className="w-12"></div>
+            <div className="bg-gradient-to-b from-slate-900 to-slate-800 rounded-lg border border-slate-600 shadow-xl">
+              {/* Header */}
+              <div className="px-6 py-4 bg-slate-100 border-b border-slate-300">
+                <h2 className="text-slate-900 text-sm font-mono font-semibold">
+                  {userTypes.find((t) => t.id === activeTab)?.label}{" "}
+                  Authentication
+                </h2>
               </div>
 
-              {/* Form Content */}
-              <div className="p-6 space-y-6 font-mono">
+              {/* Form Fields */}
+              <div className="p-6 space-y-6">
                 <div>
-                  <label className="block text-slate-50 text-sm mb-2">
-                    Email Address *
+                  <label className="block text-slate-200 text-sm font-mono mb-2">
+                    Email Address <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="email"
@@ -189,15 +189,15 @@ export const LoginSection = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     disabled={loading}
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 font-mono text-sm transition-all duration-200 disabled:opacity-50"
-                    placeholder="Enter your email"
+                    className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 font-mono text-sm transition-colors disabled:opacity-50"
+                    placeholder="Enter email address"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-50 text-sm mb-2">
-                    Password *
+                  <label className="block text-slate-200 text-sm font-mono mb-2">
+                    Password <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="password"
@@ -205,8 +205,8 @@ export const LoginSection = () => {
                     value={formData.password}
                     onChange={handleInputChange}
                     disabled={loading}
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 font-mono text-sm transition-all duration-200 disabled:opacity-50"
-                    placeholder="Enter your password"
+                    className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 font-mono text-sm transition-colors disabled:opacity-50"
+                    placeholder="Enter password"
                     required
                   />
                 </div>
@@ -220,29 +220,27 @@ export const LoginSection = () => {
                   }
                   className={`w-full py-3 px-4 bg-gradient-to-r ${getColorClasses(
                     userTypes.find((t) => t.id === activeTab)?.color
-                  )} text-white font-mono rounded-md hover:opacity-90 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:transform-none disabled:hover:opacity-50`}
+                  )} text-white font-mono font-medium rounded-md hover:opacity-90 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed`}
                 >
                   {loading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 inline mr-2 animate-spin" />
-                      Logging in...
-                    </>
+                    <span className="flex items-center justify-center">
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Authenticating
+                    </span>
                   ) : (
-                    <>
-                      <Lock className="w-4 h-4 inline mr-2" />
-                      Login as{" "}
-                      {userTypes.find((t) => t.id === activeTab)?.label}
-                    </>
+                    <span className="flex items-center justify-center">
+                      <Lock className="w-4 h-4 mr-2" />
+                      Sign In
+                    </span>
                   )}
                 </button>
 
-                <div className="text-gray-500 text-sm">
-                  Secure login. Please enter your details.
-                </div>
+                <p className="text-slate-400 text-xs font-mono text-center">
+                  Secure authentication required
+                </p>
               </div>
             </div>
           </form>
-
           <div className="mt-6 text-center">
             <a
               href="#register"
