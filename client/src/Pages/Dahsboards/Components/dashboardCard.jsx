@@ -1,4 +1,5 @@
 import { ChevronRight } from "lucide-react";
+
 const DashboardCard = ({
   title,
   description,
@@ -6,9 +7,10 @@ const DashboardCard = ({
   color,
   onClick,
   badge = null,
+  stats = null, // Add this missing prop
   isLarge = false,
 }) => {
-  // Color classes function from LoginSection
+  // Color classes function - need to add missing colors
   const getColorClasses = (color) => {
     const colors = {
       blue: "from-blue-500 to-blue-600 border-blue-500",
@@ -16,8 +18,10 @@ const DashboardCard = ({
       purple: "from-purple-500 to-purple-600 border-purple-500",
       red: "from-red-500 to-red-600 border-red-500",
       amber: "from-amber-500 to-amber-600 border-amber-500",
+      teal: "from-teal-500 to-teal-600 border-teal-500", // Add missing color
+      indigo: "from-indigo-500 to-indigo-600 border-indigo-500", // Add missing color
     };
-    return colors[color];
+    return colors[color] || colors.blue; // Fallback to blue if color not found
   };
 
   return (
@@ -39,11 +43,19 @@ const DashboardCard = ({
             {title}
           </span>
         </div>
-        {badge && (
-          <span className="bg-amber-50 bg-opacity-20 text-red-950 text-xs font-mono px-2 py-1 rounded-full">
-            {badge}
-          </span>
-        )}
+        <div className="flex items-center gap-2">
+          {/* Add stats display */}
+          {stats && (
+            <span className="bg-white bg-opacity-20 text-white text-xs font-mono px-2 py-1 rounded-full">
+              {stats}
+            </span>
+          )}
+          {badge && (
+            <span className="bg-red-100 bg-opacity-90 text-red-800 text-xs font-mono px-2 py-1 rounded-full">
+              {badge}
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Card Content */}
@@ -66,4 +78,5 @@ const DashboardCard = ({
     </div>
   );
 };
+
 export default DashboardCard;

@@ -36,7 +36,7 @@ router.get(
 router
   .route("/:id")
   .get(authMiddleware, authorizeRoles("admin", "doctor"), getDoctor)
-  .put(authMiddleware, authorizeRoles("admin"), updateDoctor)
+  .put(authMiddleware, authorizeRoles("admin", "doctor"), updateDoctor)
   .delete(authMiddleware, authorizeRoles("admin"), deleteDoctor);
 
 // Assign and unassign patients

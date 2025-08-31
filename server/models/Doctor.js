@@ -12,7 +12,11 @@ const doctorSchema = new mongoose.Schema(
     specialization: { type: String, required: true },
     experience: { type: Number, default: 0 }, // years of experience
     location: { type: String },
-    isAvailable: { type: Boolean, default: true },
+    isAvailable: {
+      type: String,
+      enum: ["Available", "Busy", "In Surgery", "On Break", "Offline"],
+      default: "Available",
+    },
 
     rating: { type: Number, default: 0 },
     reviewCount: { type: Number, default: 0 },

@@ -15,35 +15,36 @@ const Header = () => {
 
         {/* Nav Links */}
         <div className="hidden md:flex space-x-8 items-center">
-          <a
-            href="#home"
-            className="text-gray-300 hover:text-blue-400 transition-colors duration-200 font-mono text-sm"
-          >
-            ~/home
-          </a>
-          <a
-            href="#stats"
-            className="text-gray-300 hover:text-blue-400 transition-colors duration-200 font-mono text-sm"
-          >
-            ~/analytics
-          </a>
-
           {/* ✅ Logout Button */}
           {isAuthenticated ? (
             <button
               onClick={logout}
-              className="flex items-center gap-1 px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white text-sm rounded-md font-mono transition-colors duration-200"
+              className="flex items-center gap-1 hover:cursor-pointer px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white text-sm rounded-md font-mono transition-colors duration-200"
             >
               <LogOut className="w-4 h-4" />
               logout
             </button>
           ) : (
-            <a
-              href="#login"
-              className="text-gray-300 hover:text-blue-400 transition-colors duration-200 font-mono text-sm"
-            >
-              ~/login
-            </a>
+            <>
+              <a
+                href="#home"
+                className="text-gray-300 hover:text-blue-400 hover:cursor-pointer transition-colors duration-200 font-mono text-sm"
+              >
+                ~/home
+              </a>
+              <a
+                href="#stats"
+                className="text-gray-300 hover:text-blue-400 hover:cursor-pointer transition-colors duration-200 font-mono text-sm"
+              >
+                ~/analytics
+              </a>
+              <a
+                href="#login"
+                className="text-gray-300 hover:text-blue-400 hover:cursor-pointer transition-colors duration-200 font-mono text-sm"
+              >
+                ~/login
+              </a>
+            </>
           )}
         </div>
       </nav>
