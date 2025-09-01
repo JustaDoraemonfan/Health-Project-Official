@@ -18,28 +18,25 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
   };
 
   const getTypeColor = (type) => {
-    switch (type) {
-      case "Consultation":
-        return "bg-blue-900/30 text-blue-300 border-blue-700";
-      case "Physical Exam":
-        return "bg-purple-900/30 text-purple-300 border-purple-700";
-      case "Follow-up":
-        return "bg-cyan-900/30 text-cyan-300 border-cyan-700";
-      case "Lab Results":
-        return "bg-orange-900/30 text-orange-300 border-orange-700";
+    switch ((type || "").toLowerCase()) {
+      case "consultation":
+        return "bg-teal-100 text-teal-800 border-teal-300";
+      case "emergency":
+        return "bg-red-600 text-black border-black";
+      case "follow-up":
+        return "bg-blue-100 text-emerald-800 border-emerald-300";
+      case "check-up":
+        return "bg-amber-100 text-amber-800 border-amber-300";
       default:
-        return "bg-slate-700/50 text-slate-300 border-slate-600";
+        return "bg-gray-100 text-gray-700 border-gray-300";
     }
   };
 
   // Get icon colors based on status and context
   const getUserIconColor = (status) => {
     switch (status?.toLowerCase()) {
-      case "confirmed":
       case "scheduled":
         return "text-emerald-400";
-      case "pending":
-        return "text-amber-400";
       case "completed":
         return "text-blue-400";
       case "cancelled":
@@ -62,11 +59,8 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
 
   const getUserAvatarBg = (status) => {
     switch (status?.toLowerCase()) {
-      case "confirmed":
       case "scheduled":
         return "bg-emerald-500/20 border-emerald-500/30";
-      case "pending":
-        return "bg-amber-500/20 border-amber-500/30";
       case "completed":
         return "bg-blue-500/20 border-blue-500/30";
       case "cancelled":
@@ -90,7 +84,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
 
   return (
     <div
-      className="group relative bg-zinc-750/50 border border-slate-700 rounded-xl p-6 hover:bg-slate-800/70 hover:border-slate-600 transition-all duration-300 cursor-pointer transform hover:scale-[1.02]"
+      className="group relative bg-zinc-700/50 border border-slate-700 rounded-xl p-6 hover:bg-slate-800/70 hover:border-slate-600 transition-all duration-300 cursor-pointer transform hover:scale-[1.02]"
       onClick={() => onCardClick && onCardClick(appointment)}
     >
       {/* Gradient overlay on hover */}
@@ -116,7 +110,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
                 appointment.patientName ||
                 "Unknown Patient"}
             </h3>
-            <div className="flex items-center space-x-2 text-sm text-slate-400">
+            <div className="flex items-center space-x-2 text-sm text-white">
               <Clock
                 className={`w-4 h-4 ${getClockIconColor()} group-hover:scale-110 transition-all duration-300`}
               />
@@ -160,7 +154,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
 
         {/* Contact Information */}
         <div className="flex items-center justify-between text-sm">
-          <div className="flex items-center text-slate-400">
+          <div className="flex items-center text-white">
             <Phone
               className={`w-4 h-4 mr-2 ${getPhoneIconColor()} group-hover:scale-110 transition-all duration-300`}
             />
@@ -174,7 +168,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
 
         {/* Doctor Information (if viewing as patient) */}
         {appointment.doctor && (
-          <div className="flex items-center text-sm text-slate-400">
+          <div className="flex items-center text-sm text-white">
             <User
               className={`w-4 h-4 mr-2 ${getDoctorIconColor()} group-hover:scale-110 transition-all duration-300`}
             />

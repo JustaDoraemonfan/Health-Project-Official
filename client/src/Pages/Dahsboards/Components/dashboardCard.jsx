@@ -7,7 +7,7 @@ const DashboardCard = ({
   color,
   onClick,
   badge = null,
-  stats = null, // Add this missing prop
+  stats = null,
   isLarge = false,
 }) => {
   // Color classes function - need to add missing colors

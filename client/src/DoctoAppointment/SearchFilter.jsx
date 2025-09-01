@@ -29,8 +29,7 @@ const SearchFilter = ({
             className="bg-zinc-900/50 border border-zinc-700/50 rounded-xl px-4 py-3 text-white font-mono focus:outline-none focus:ring-1 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-200 cursor-pointer"
           >
             <option value="all">All Status</option>
-            <option value="confirmed">Confirmed</option>
-            <option value="pending">Pending</option>
+            <option value="scheduled">Scheduled</option>
             <option value="completed">Completed</option>
             <option value="cancelled">Cancelled</option>
           </select>

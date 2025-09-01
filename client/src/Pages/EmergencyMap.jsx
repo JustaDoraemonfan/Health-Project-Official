@@ -9,6 +9,8 @@ import {
   AlertTriangle,
   Menu,
   X,
+  Clock,
+  Users,
 } from "lucide-react";
 
 export default function EmergencyMap() {
@@ -16,28 +18,53 @@ export default function EmergencyMap() {
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [map, setMap] = useState(null);
-  const [locationStatus, setLocationStatus] = useState("idle"); // idle, loading, success, error
+  const [locationStatus, setLocationStatus] = useState("idle");
   const [locationError, setLocationError] = useState("");
   const [userMarker, setUserMarker] = useState(null);
+  const [hospitalMarkers, setHospitalMarkers] = useState([]);
+  const [initialLocationSet, setInitialLocationSet] = useState(false);
 
   const emergencyServices = [
-    { name: "Police", icon: Shield, number: "100", color: "text-blue-400" },
-    { name: "Fire", icon: Zap, number: "101", color: "text-red-400" },
-    { name: "Medical", icon: Activity, number: "102", color: "text-green-400" },
+    {
+      name: "Police",
+      icon: Shield,
+      number: "100",
+      color: "text-blue-400",
+      bg: "bg-blue-900/20",
+      border: "border-blue-500/30",
+    },
+    {
+      name: "Fire",
+      icon: Zap,
+      number: "101",
+      color: "text-red-400",
+      bg: "bg-red-900/20",
+      border: "border-red-500/30",
+    },
+    {
+      name: "Medical",
+      icon: Activity,
+      number: "102",
+      color: "text-green-400",
+      bg: "bg-green-900/20",
+      border: "border-green-500/30",
+    },
     {
       name: "Disaster",
       icon: AlertTriangle,
       number: "108",
-      color: "text-yellow-400",
+      color: "text-amber-400",
+      bg: "bg-amber-900/20",
+      border: "border-amber-500/30",
     },
   ];
 
   const getLocationErrorMessage = (error) => {
     switch (error.code) {
       case error.PERMISSION_DENIED:
-        return "Location access denied. Please enable location permissions in your browser settings.";
+        return "Location access denied. Please enable location permissions.";
       case error.POSITION_UNAVAILABLE:
-        return "Location information unavailable. Please check your GPS/WiFi connection.";
+        return "Location information unavailable. Check your connection.";
       case error.TIMEOUT:
         return "Location request timed out. Please try again.";
       default:
@@ -46,18 +73,134 @@ export default function EmergencyMap() {
   };
 
   const checkLocationPermission = async () => {
-    if (!navigator.permissions) {
-      return "unknown";
-    }
-
+    if (!navigator.permissions) return "unknown";
     try {
       const permission = await navigator.permissions.query({
         name: "geolocation",
       });
-      return permission.state; // 'granted', 'denied', or 'prompt'
-    } catch (error) {
+      return permission.state;
+    } catch {
       return "unknown";
     }
+  };
+
+  const setUserLocationAndHospitals = (position, isInitialLoad = false) => {
+    const userLocation = {
+      lat: position.coords.latitude,
+      lng: position.coords.longitude,
+    };
+
+    if (userMarker) userMarker.setMap(null);
+    hospitalMarkers.forEach((m) => m.setMap(null));
+
+    map.setCenter(userLocation);
+    map.setZoom(15);
+
+    const marker = new window.google.maps.Marker({
+      position: userLocation,
+      map,
+      title: `You are here (±${Math.round(position.coords.accuracy)}m)`,
+      icon: {
+        path: window.google.maps.SymbolPath.CIRCLE,
+        scale: 12,
+        fillColor: "#3b82f6",
+        fillOpacity: 1,
+        strokeColor: "#ffffff",
+        strokeWeight: 3,
+      },
+    });
+
+    new window.google.maps.Circle({
+      strokeColor: "#3b82f6",
+      strokeOpacity: 0.3,
+      strokeWeight: 2,
+      fillColor: "#3b82f6",
+      fillOpacity: 0.1,
+      map,
+      center: userLocation,
+      radius: position.coords.accuracy,
+    });
+
+    setUserMarker(marker);
+    setLocationStatus("success");
+
+    const service = new window.google.maps.places.PlacesService(map);
+    service.nearbySearch(
+      {
+        location: userLocation,
+        radius: 3000,
+        type: ["hospital"],
+      },
+      (results, status) => {
+        if (
+          status === window.google.maps.places.PlacesServiceStatus.OK &&
+          results
+        ) {
+          const markers = results.map((place) => {
+            const hospitalMarker = new window.google.maps.Marker({
+              position: place.geometry.location,
+              map,
+              title: place.name,
+              icon: {
+                path: window.google.maps.SymbolPath.CIRCLE,
+                scale: 8,
+                fillColor: "#ef4444",
+                fillOpacity: 1,
+                strokeColor: "#ffffff",
+                strokeWeight: 2,
+              },
+            });
+
+            const infowindow = new window.google.maps.InfoWindow({
+              content: `<div style="color:#000; padding: 8px;"><strong style="color:#ef4444;">${place.name}</strong><br><span style="color:#666;">${place.vicinity}</span></div>`,
+            });
+
+            hospitalMarker.addListener("click", () =>
+              infowindow.open(map, hospitalMarker)
+            );
+
+            return hospitalMarker;
+          });
+          setHospitalMarkers(markers);
+        }
+      }
+    );
+
+    if (isInitialLoad) {
+      setInitialLocationSet(true);
+    }
+
+    setTimeout(() => setLocationStatus("idle"), 3000);
+  };
+
+  const getUserLocationAutomatically = async () => {
+    if (!navigator.geolocation) {
+      setLocationError("Geolocation is not supported by your browser.");
+      setLocationStatus("error");
+      return;
+    }
+
+    const permissionStatus = await checkLocationPermission();
+    if (permissionStatus === "denied") {
+      setLocationError("Location access denied. Please enable permissions.");
+      setLocationStatus("error");
+      return;
+    }
+
+    setLocationStatus("loading");
+    setLocationError("");
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserLocationAndHospitals(position, true);
+      },
+      (error) => {
+        setLocationError(getLocationErrorMessage(error));
+        setLocationStatus("error");
+        setTimeout(() => setLocationStatus("idle"), 5000);
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 300000 }
+    );
   };
 
   const handleLocateMe = async () => {
@@ -67,12 +210,9 @@ export default function EmergencyMap() {
       return;
     }
 
-    // Check permission status first
     const permissionStatus = await checkLocationPermission();
     if (permissionStatus === "denied") {
-      setLocationError(
-        "Location access denied. Please enable location permissions in your browser settings."
-      );
+      setLocationError("Location access denied. Please enable permissions.");
       setLocationStatus("error");
       return;
     }
@@ -80,128 +220,41 @@ export default function EmergencyMap() {
     setLocationStatus("loading");
     setLocationError("");
 
-    const options = {
-      enableHighAccuracy: true,
-      timeout: 15000, // 15 seconds
-      maximumAge: 300000, // 5 minutes
-    };
-
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const userLocation = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
-
-        // Remove previous user marker if it exists
-        if (userMarker) {
-          userMarker.setMap(null);
-        }
-
-        // Center the map
-        map.setCenter(userLocation);
-        map.setZoom(15);
-
-        // Add a marker for user location
-        const marker = new window.google.maps.Marker({
-          position: userLocation,
-          map,
-          title: `You are here (Accuracy: ±${Math.round(
-            position.coords.accuracy
-          )}m)`,
-          icon: {
-            path: window.google.maps.SymbolPath.CIRCLE,
-            scale: 10,
-            fillColor: "#3b82f6",
-            fillOpacity: 0.9,
-            strokeColor: "#000000",
-            strokeWeight: 3,
-          },
-        });
-
-        // Add accuracy circle
-        new window.google.maps.Circle({
-          strokeColor: "#3b82f6",
-          strokeOpacity: 0.8,
-          strokeWeight: 2,
-          fillColor: "#3b82f6",
-          fillOpacity: 0.15,
-          map,
-          center: userLocation,
-          radius: position.coords.accuracy,
-        });
-
-        setUserMarker(marker);
-        setLocationStatus("success");
-
-        // Auto-hide success message after 3 seconds
-        setTimeout(() => {
-          setLocationStatus("idle");
-        }, 3000);
+        setUserLocationAndHospitals(position);
       },
       (error) => {
-        const errorMessage = getLocationErrorMessage(error);
-        setLocationError(errorMessage);
+        setLocationError(getLocationErrorMessage(error));
         setLocationStatus("error");
-
-        // Auto-hide error message after 5 seconds
-        setTimeout(() => {
-          setLocationStatus("idle");
-        }, 5000);
+        setTimeout(() => setLocationStatus("idle"), 5000);
       },
-      options
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 300000 }
     );
   };
 
   useEffect(() => {
     const initMap = () => {
       if (window.google && window.google.maps) {
-        const map = new window.google.maps.Map(mapRef.current, {
+        const mapInstance = new window.google.maps.Map(mapRef.current, {
           center: { lat: 28.6139, lng: 77.209 },
           zoom: 12,
-          styles: [
-            {
-              featureType: "all",
-              elementType: "geometry",
-              // stylers: [{ color: "#2d3748" }],
-            },
-            {
-              featureType: "all",
-              elementType: "labels.text.fill",
-              stylers: [{ color: "#000000" }],
-            },
-            {
-              featureType: "water",
-              elementType: "geometry",
-              // stylers: [{ color: "#1a365d" }],
-            },
-            {
-              featureType: "road",
-              elementType: "geometry",
-              // stylers: [{ color: "#4a5568" }],
-            },
-          ],
           disableDefaultUI: true,
           zoomControl: true,
-          mapTypeControl: false,
-          streetViewControl: false,
-          fullscreenControl: false,
+          styles: [
+            {
+              featureType: "poi.business",
+              stylers: [{ visibility: "off" }],
+            },
+            {
+              featureType: "poi.park",
+              elementType: "labels.text",
+              stylers: [{ visibility: "off" }],
+            },
+          ],
         });
 
-        new window.google.maps.Marker({
-          position: { lat: 28.6139, lng: 77.209 },
-          map,
-          title: "Emergency Center",
-          icon: {
-            path: window.google.maps.SymbolPath.CIRCLE,
-            scale: 8,
-            fillColor: "#ef4444",
-            fillOpacity: 1,
-            strokeColor: "#000000",
-            strokeWeight: 2,
-          },
-        });
-        setMap(map);
+        setMap(mapInstance);
         setIsMapLoaded(true);
       }
     };
@@ -209,181 +262,186 @@ export default function EmergencyMap() {
     if (window.google && window.google.maps) {
       initMap();
     } else {
-      const script = document.createElement("script");
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.VITE_GOOGLE_MAPS_API_KEY}&callback=initMap`;
-      script.async = true;
-      script.defer = true;
       window.initMap = initMap;
-      document.head.appendChild(script);
     }
   }, []);
 
+  useEffect(() => {
+    if (map && isMapLoaded && !initialLocationSet) {
+      setTimeout(() => {
+        getUserLocationAutomatically();
+      }, 100);
+    }
+  }, [map, isMapLoaded, initialLocationSet]);
+
   return (
-    <div className="relative h-screen overflow-hidden">
-      {/* Full Screen Map */}
-      <div ref={mapRef} className="w-full h-full bg-gray-900"></div>
-
-      {!isMapLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-900">
-          <div className="text-center">
-            <div className="w-12 h-12 border-3 border-red-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-white font-light">Loading emergency map...</p>
-          </div>
-        </div>
-      )}
-
-      {/* Location Status Messages */}
-      {locationStatus !== "idle" && (
-        <div
-          className={`absolute top-24 right-4 max-w-sm p-4 rounded-lg shadow-lg border transition-all duration-300 z-50 ${
-            locationStatus === "loading"
-              ? "bg-blue-900/90 border-blue-600"
-              : locationStatus === "success"
-              ? "bg-green-900/90 border-green-600"
-              : "bg-red-900/90 border-red-600"
-          }`}
-        >
-          <div className="flex items-start space-x-3">
-            {locationStatus === "loading" && (
-              <div className="w-5 h-5 border-2 border-blue-400 border-t-transparent rounded-full animate-spin flex-shrink-0 mt-0.5"></div>
-            )}
-            {locationStatus === "success" && (
-              <Navigation className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-            )}
-            {locationStatus === "error" && (
-              <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
-            )}
-            <div className="flex-1">
-              <p
-                className={`text-sm font-medium ${
-                  locationStatus === "loading"
-                    ? "text-blue-100"
-                    : locationStatus === "success"
-                    ? "text-green-100"
-                    : "text-red-100"
-                }`}
-              >
-                {locationStatus === "loading" && "Getting your location..."}
-                {locationStatus === "success" && "Location found successfully!"}
-                {locationStatus === "error" && "Location Error"}
-              </p>
-              {locationStatus === "loading" && (
-                <p className="text-blue-200 text-xs mt-1">
-                  This may take a few seconds
-                </p>
-              )}
-              {locationStatus === "error" && (
-                <p className="text-red-200 text-xs mt-1">{locationError}</p>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Top Header Bar */}
-      <div className="absolute top-0 left-0 right-0 bg-black/80 backdrop-blur-sm border-b border-gray-700">
-        <div className="flex items-center justify-between p-4">
-          <div className="flex items-center space-x-3">
-            <MapPin className="w-6 h-6 text-red-400" />
-            <div>
-              <h1 className="text-lg font-semibold text-white">
-                Emergency Response Center
-              </h1>
-              <p className="text-gray-400 text-sm">New Delhi, India</p>
-            </div>
-          </div>
-
+    <div className="min-h-screen bg-slate-900 overflow-hidden">
+      {/* Header */}
+      <div className="bg-zinc-950/50 border-b border-slate-600 shadow-2xl">
+        <div className="flex items-center justify-between px-6 py-4">
           <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-              <span className="text-green-400 text-sm font-medium">Live</span>
+            <div className="bg-red-600/20 backdrop-blur-sm rounded-xl p-3 border border-red-500/30">
+              <Activity className="w-6 h-6 text-red-400" />
             </div>
+            <div>
+              <h1 className="text-2xl font-bold text-white">Emergency Map</h1>
+              <p className="text-slate-300 flex items-center space-x-1 text-sm">
+                <MapPin className="w-4 h-4" />
+                <span>Find help nearby</span>
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => setIsPanelOpen(!isPanelOpen)}
+            className="bg-slate-700/50 backdrop-blur-sm hover:bg-slate-600/50 p-3 rounded-xl text-slate-300 hover:text-white transition-all duration-200 border border-slate-600"
+          >
+            {isPanelOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Content Container */}
+      <div className="relative flex h-[calc(100vh-80px)]">
+        {/* Emergency Services Panel */}
+        <div
+          className={`${
+            isPanelOpen ? "w-80" : "w-0"
+          } transition-all duration-300 overflow-hidden bg-zinc-900 border-r border-slate-700`}
+        >
+          <div className="p-6 h-full overflow-y-auto">
+            <h2 className="text-xl font-bold text-white mb-6 flex items-center space-x-2">
+              <Phone className="w-5 h-5 text-red-400" />
+              <span>Emergency Services</span>
+            </h2>
+
+            <div className="space-y-4">
+              {emergencyServices.map((service) => (
+                <div
+                  key={service.name}
+                  className={`${service.bg} ${service.border} rounded-xl p-4 border backdrop-blur-sm hover:bg-opacity-30 transition-all duration-200`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="bg-slate-700/50 rounded-lg p-2">
+                        <service.icon className={`w-5 h-5 ${service.color}`} />
+                      </div>
+                      <div>
+                        <span className="font-semibold text-white">
+                          {service.name}
+                        </span>
+                        <p className="text-xs text-slate-400">
+                          Emergency hotline
+                        </p>
+                      </div>
+                    </div>
+                    <a
+                      href={`tel:${service.number}`}
+                      className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-all duration-200 hover:scale-105 shadow-lg"
+                    >
+                      <Phone className="w-4 h-4" />
+                      <span className="font-medium">{service.number}</span>
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-8 p-4 bg-amber-900/20 rounded-xl border border-amber-500/30 backdrop-blur-sm">
+              <div className="flex items-center space-x-2 mb-2">
+                <Clock className="w-4 h-4 text-amber-400" />
+                <span className="font-medium text-amber-300">Quick Tip</span>
+              </div>
+              <p className="text-sm text-amber-200">
+                In medical emergencies, call 102 first. If no response, try 108
+                or local hospital numbers.
+              </p>
+            </div>
+
+            <div className="mt-6 p-4 bg-slate-700/30 rounded-xl border border-slate-600">
+              <h3 className="font-semibold text-white mb-3 flex items-center space-x-2">
+                <Users className="w-4 h-4" />
+                <span>Map Legend</span>
+              </h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex items-center space-x-3">
+                  <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                  <span className="text-slate-300">Your location</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                  <span className="text-slate-300">Hospitals nearby</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Map Container */}
+        <div className="flex-1 relative bg-slate-900">
+          <div ref={mapRef} className="w-full h-full"></div>
+
+          {/* Status Messages */}
+          {locationStatus === "loading" && (
+            <div className="absolute top-4 left-4 right-4 bg-blue-600/90 backdrop-blur-sm text-white p-4 rounded-xl shadow-lg flex items-center space-x-3 border border-blue-500/50">
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <span className="font-medium">Locating you...</span>
+            </div>
+          )}
+
+          {locationStatus === "error" && locationError && (
+            <div className="absolute top-4 left-4 right-4 bg-red-600/90 backdrop-blur-sm text-white p-4 rounded-xl shadow-lg border border-red-500/50">
+              <div className="flex items-center space-x-2">
+                <AlertTriangle className="w-5 h-5" />
+                <span className="font-medium text-sm">{locationError}</span>
+              </div>
+            </div>
+          )}
+
+          {locationStatus === "success" && (
+            <div className="absolute top-4 left-4 right-4 bg-green-600/90 backdrop-blur-sm text-white p-4 rounded-xl shadow-lg border border-green-500/50">
+              <div className="flex items-center space-x-2">
+                <MapPin className="w-5 h-5" />
+                <span className="font-medium text-sm">
+                  Location found! Showing nearby hospitals.
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Action Buttons */}
+          <div className="absolute bottom-6 right-6 flex flex-col space-y-3">
             <button
-              onClick={() => setIsPanelOpen(!isPanelOpen)}
-              className="p-2 bg-gray-800 rounded-lg border border-gray-600 hover:bg-gray-700 transition-colors"
+              onClick={handleLocateMe}
+              disabled={locationStatus === "loading"}
+              className={`w-14 h-14 rounded-full shadow-xl flex items-center justify-center text-white transition-all duration-200 backdrop-blur-sm border ${
+                locationStatus === "loading"
+                  ? "bg-slate-600/80 cursor-not-allowed border-slate-500"
+                  : "bg-blue-600/90 hover:bg-blue-700/90 hover:scale-110 border-blue-500/50"
+              }`}
+              title="Find my location"
             >
-              {isPanelOpen ? (
-                <X className="w-5 h-5 text-white" />
+              {locationStatus === "loading" ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
-                <Menu className="w-5 h-5 text-white" />
+                <Navigation className="w-6 h-6" />
               )}
             </button>
+
+            <a
+              href="tel:112"
+              className="bg-red-600/90 hover:bg-red-700/90 backdrop-blur-sm text-white px-5 py-3 rounded-full shadow-xl flex items-center space-x-2 transition-all duration-200 hover:scale-105 border border-red-500/50"
+              title="Emergency Call"
+            >
+              <Phone className="w-5 h-5" />
+              <span className="font-bold">112</span>
+            </a>
           </div>
         </div>
       </div>
-
-      {/* Emergency Services Panel */}
-      <div
-        className={`absolute top-20 left-4 w-80 bg-black/90 backdrop-blur-md rounded-lg border border-gray-700 transition-all duration-300 ${
-          isPanelOpen
-            ? "opacity-100 translate-x-0"
-            : "opacity-0 -translate-x-full pointer-events-none"
-        }`}
-      >
-        <div className="p-6">
-          <h2 className="text-xl font-semibold text-white mb-4">
-            Emergency Services
-          </h2>
-          <div className="grid grid-cols-2 gap-3">
-            {emergencyServices.map((service) => {
-              const Icon = service.icon;
-              return (
-                <a
-                  key={service.name}
-                  href={`tel:${service.number}`}
-                  className="bg-gray-800/80 rounded-lg p-3 border border-gray-600 hover:border-gray-500 transition-colors cursor-pointer block"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <Icon className={`w-5 h-5 ${service.color}`} />
-                    <Phone className="w-4 h-4 text-gray-500" />
-                  </div>
-                  <h3 className="text-white font-medium text-sm mb-1">
-                    {service.name}
-                  </h3>
-                  <p className="text-lg font-bold text-white">
-                    {service.number}
-                  </p>
-                </a>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-      {/* Bottom Stats Bar */}
-      <div className="absolute bottom-0 left-0 right-0 bg-black/80 backdrop-blur-sm border-t border-gray-700">
-        <div className="grid grid-cols-3 gap-6 p-4 text-center">
-          <div>
-            <div className="text-xl font-bold text-white mb-1">24/7</div>
-            <div className="text-gray-400 text-sm">Available</div>
-          </div>
-          <div>
-            <div className="text-xl font-bold text-white mb-1">&lt;5min</div>
-            <div className="text-gray-400 text-sm">Response Time</div>
-          </div>
-          <div>
-            <div className="text-xl font-bold text-white mb-1">GPS</div>
-            <div className="text-gray-400 text-sm">Enabled</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Floating Action Button - Locate Me */}
-      <button
-        onClick={handleLocateMe}
-        disabled={locationStatus === "loading"}
-        className={`absolute bottom-24 right-4 w-12 h-12 rounded-full shadow-lg flex items-center justify-center text-white transition-all duration-200 ${
-          locationStatus === "loading"
-            ? "bg-gray-500 cursor-not-allowed"
-            : "bg-blue-500 hover:bg-blue-600 hover:scale-105"
-        }`}
-      >
-        {locationStatus === "loading" ? (
-          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-        ) : (
-          <Navigation className="w-5 h-5" />
-        )}
-      </button>
     </div>
   );
 }
