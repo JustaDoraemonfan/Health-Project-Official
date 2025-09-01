@@ -21,6 +21,7 @@ import UpdateProfile from "./pages/Dahsboards/UpdateProfile";
 import AppointmentDashboard from "./pages/Dahsboards/Appointment";
 import "./App.css";
 import DoctorAppointment from "./pages/Dahsboards/DoctorAppointment";
+import EmergencyMap from "./pages/EmergencyMap";
 
 // Component to handle routing logic
 const AppRoutes = () => {
@@ -119,6 +120,16 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute allowedRoles={["patient", "doctor", "fwl", "admin"]}>
             <UpdateProfile />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Emergency Page - Accessible to all authenticated users */}
+      <Route
+        path="/emergency"
+        element={
+          <ProtectedRoute allowedRoles={["patient", "doctor", "fwl", "admin"]}>
+            <EmergencyMap />
           </ProtectedRoute>
         }
       />
