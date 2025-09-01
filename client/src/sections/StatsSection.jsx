@@ -48,8 +48,23 @@ export const StatsSection = () => {
   ];
 
   return (
-    <section id="stats" className="py-20 bg-[#161515]">
+    <section id="stats" className="py-20 bg-[#27272A]">
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 opacity-5">
+          <div
+            className="w-full h-full"
+            style={{
+              backgroundImage: `
+              linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px)
+            `,
+              backgroundSize: "50px 50px",
+            }}
+          ></div>
+        </div>
+      </div>
       <div className="container mx-auto px-6">
+        {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl font-mono font-bold text-gray-100 mb-4">
             Platform Analytics
@@ -58,21 +73,28 @@ export const StatsSection = () => {
             Real-time insights about our platform
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {stats.map((stat, index) => (
             <div key={index} className="group">
-              <div className="bg-gradient-to-r from-stone-900 to-slate-900 border border-gray-700 rounded-lg p-6 hover:border-blue-500/50 transition-all duration-300 transform hover:scale-105">
-                <div className="font-mono text-sm text-gray-500 mb-2">
+              <div className="bg-gradient-to-br from-[#2F2F32] to-[#1F1F22] border border-gray-700 rounded-xl p-6 hover:border-blue-500/50 transition-all duration-300 transform hover:-translate-y-1">
+                {/* Metric */}
+                <div className="font-mono text-xs uppercase tracking-wider text-gray-400 mb-2">
                   {stat.metric}
                 </div>
-                <div className="flex items-center mb-3">
-                  <div className="text-blue-400 mr-3 group-hover:scale-110 transition-transform duration-300">
+
+                {/* Icon + Number */}
+                <div className="flex items-center mb-4">
+                  <div className="text-blue-400 mr-3 text-xl group-hover:scale-110 transition-transform duration-300">
                     {stat.icon}
                   </div>
-                  <div className="text-2xl font-mono font-bold text-white">
+                  <div className="text-3xl font-mono font-bold text-white">
                     {stat.number}
                   </div>
                 </div>
+
+                {/* Label */}
                 <div className="text-gray-400 font-mono text-sm">
                   {stat.label}
                 </div>

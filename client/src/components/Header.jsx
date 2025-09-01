@@ -8,7 +8,7 @@ const Header = () => {
   const navigate = useNavigate();
 
   return (
-    <header className="fixed top-0 w-full bg-[#292929] backdrop-blur-md border-b border-gray-700/50 z-50">
+    <header className="fixed top-0 w-full bg-zinc-950/50 backdrop-blur-md border-b border-gray-700/50 z-50">
       <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
         {/* Logo */}
         <div className="flex items-center space-x-3">
@@ -19,24 +19,25 @@ const Header = () => {
 
         {/* Nav Links */}
         <div className="hidden md:flex space-x-8 items-center">
-          {/* 🚨 Emergency Link */}
-          <button
-            onClick={() => navigate("/emergency")}
-            className="flex items-center gap-1 px-3 py-1.5 bg-red-700 hover:bg-red-600 text-white text-sm rounded-md font-mono transition-colors duration-200"
-          >
-            <MapPin className="w-4 h-4" />
-            emergency
-          </button>
-
           {/* ✅ Logout Button */}
           {isAuthenticated ? (
-            <button
-              onClick={logout}
-              className="flex items-center gap-1 hover:cursor-pointer px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-md font-mono transition-colors duration-200"
-            >
-              <LogOut className="w-4 h-4" />
-              logout
-            </button>
+            <>
+              <button
+                onClick={logout}
+                className="flex items-center gap-1 hover:cursor-pointer px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-md font-mono transition-colors duration-200"
+              >
+                <LogOut className="w-4 h-4" />
+                logout
+              </button>
+              {/* 🚨 Emergency Link */}
+              <button
+                onClick={() => navigate("/emergency")}
+                className="flex items-center gap-1 px-3 py-1.5 bg-red-700 hover:bg-red-600 text-white text-sm rounded-md font-mono transition-colors duration-200"
+              >
+                <MapPin className="w-4 h-4" />
+                emergency
+              </button>
+            </>
           ) : (
             <>
               <a

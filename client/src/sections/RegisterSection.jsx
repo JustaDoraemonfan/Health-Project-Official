@@ -147,7 +147,7 @@ export const RegisterSection = () => {
   // Don't show register form if already authenticated
   if (isAuthenticated) {
     return (
-      <section id="register" className="py-20 bg-[#161515]">
+      <section id="register" className="py-20 bg-zinc-700/50">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-4xl font-mono font-bold text-gray-100 mb-4">
             You're already registered!
@@ -161,7 +161,7 @@ export const RegisterSection = () => {
   }
 
   return (
-    <section id="register" className="py-20 bg-[#161515]">
+    <section id="register" className="py-20 bg-[#27272A]">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-mono font-bold text-gray-100 mb-4">

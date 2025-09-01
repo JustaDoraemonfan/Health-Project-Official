@@ -117,7 +117,7 @@ export const LoginSection = () => {
   }
 
   return (
-    <section id="login" className="py-20 bg-[#161515]">
+    <section id="login" className="py-20 bg-[#27272A]">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-mono font-bold text-gray-100 mb-4">
