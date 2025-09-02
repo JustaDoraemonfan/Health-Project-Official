@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import DashboardCard from "./Components/dashboardCard";
 import StatusBar from "./Components/StatusBar";
 import QuickAction from "./Components/QuickAction";
+import UpdateSymptomModal from "../../patientConfig/UpdateSymptomModal";
 import { dashboardAPI } from "../../services/api";
 import { dashboardSections } from "../../config/dashboardSection";
 import Footer from "./Components/Footer";
@@ -22,6 +22,11 @@ const PatientDashboard = () => {
     medicalHistory: "",
   });
 
+  // Modal state management
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedSymptom, setSelectedSymptom] = useState(null);
+  const [symptoms, setSymptoms] = useState([]); // Store symptoms data
+
   useEffect(() => {
     const fetchStats = async () => {
       try {
@@ -32,6 +37,9 @@ const PatientDashboard = () => {
 
         setUser(data.user);
         setPatient(data.patient);
+
+        // If you have symptoms data from API, set it here
+        // setSymptoms(data.symptoms || []);
       } catch (err) {
         console.error("Failed to fetch stats:", err);
       }
@@ -39,13 +47,67 @@ const PatientDashboard = () => {
 
     fetchStats();
   }, []);
-  const { logout } = useAuth();
-  const navigate = useNavigate();
-  const sections = dashboardSections(navigate);
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login"); // redirect to login after logout
+  const navigate = useNavigate();
+
+  // Enhanced sections with modal trigger
+  const sections = dashboardSections(navigate, {
+    onSymptomsClick: () => {
+      // Open modal for new symptom entry
+      setSelectedSymptom(null);
+      setModalOpen(true);
+    },
+    onEditSymptom: (symptom) => {
+      // Open modal for editing existing symptom
+      setSelectedSymptom(symptom);
+      setModalOpen(true);
+    },
+  });
+
+  // Handle symptom form submission
+  const handleSymptomSubmit = async (formData) => {
+    try {
+      if (selectedSymptom) {
+        // Update existing symptom
+        console.log("Updating symptom:", formData);
+        // Add your API call here
+        // await symptomsAPI.updateSymptom(selectedSymptom.id, formData);
+
+        // Update local state
+        setSymptoms((prev) =>
+          prev.map((symptom) =>
+            symptom.id === selectedSymptom.id
+              ? { ...symptom, ...formData }
+              : symptom
+          )
+        );
+      } else {
+        // Create new symptom
+        console.log("Creating new symptom:", formData);
+        // Add your API call here
+        // const response = await symptomsAPI.createSymptom(formData);
+
+        // Update local state with new symptom
+        const newSymptom = {
+          id: Date.now(), // Replace with actual ID from API response
+          ...formData,
+          createdAt: new Date().toISOString(),
+        };
+        setSymptoms((prev) => [...prev, newSymptom]);
+      }
+
+      // Show success message
+      alert(`Symptom ${selectedSymptom ? "updated" : "created"} successfully!`);
+    } catch (error) {
+      console.error("Error saving symptom:", error);
+      alert("Error saving symptom. Please try again.");
+    }
+  };
+
+  // Handle modal close
+  const handleModalClose = () => {
+    setSelectedSymptom(null);
+    setModalOpen(false);
   };
 
   return (
@@ -53,8 +115,6 @@ const PatientDashboard = () => {
       <Header />
       <section className="min-h-screen bg-[#161515] py-8 pt-20">
         <div className="container mx-auto px-6">
-          {/* Header Section */}
-
           <StatusBar name={user.name} email={user.email} />
 
           {/* Dashboard Grid */}
@@ -69,16 +129,25 @@ const PatientDashboard = () => {
                   color={section.color}
                   onClick={section.onClick}
                   badge={section.badge}
+                  stats={section.stats}
                 />
               ))}
             </div>
           </div>
-          {/* Quick Actions Section */}
+
           <QuickAction />
-          {/* Footer */}
           <Footer />
         </div>
       </section>
+
+      {/* Modal */}
+      <UpdateSymptomModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        onSubmit={handleSymptomSubmit}
+        onClose={handleModalClose}
+        initialData={selectedSymptom || {}}
+      />
     </>
   );
 };

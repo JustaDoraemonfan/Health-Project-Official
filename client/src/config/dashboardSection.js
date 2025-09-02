@@ -10,7 +10,7 @@ import {
   Bell,
 } from "lucide-react";
 
-export const dashboardSections = (navigate) => [
+export const dashboardSections = (navigate, modalHandlers = {}) => [
   {
     id: "consultation",
     title: "Book Consultation",
@@ -27,7 +27,14 @@ export const dashboardSections = (navigate) => [
       "Record and track your current symptoms with detailed descriptions.",
     icon: Plus,
     color: "green",
-    onClick: () => console.log("Update symptoms clicked"),
+    onClick: () => {
+      // Trigger symptom modal instead of navigation
+      if (modalHandlers.onSymptomsClick) {
+        modalHandlers.onSymptomsClick();
+      } else {
+        navigate("/symptoms");
+      }
+    },
   },
   {
     id: "records",
