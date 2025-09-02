@@ -117,7 +117,7 @@ const UpdateSymptomModal = ({
   const [formData, setFormData] = useState({
     description: "",
     severity: "",
-    dateOfOnset: "",
+    onsetDate: "",
     notes: "",
     category: "",
     attachments: [],
@@ -131,7 +131,7 @@ const UpdateSymptomModal = ({
       setFormData({
         description: initialData.description || "",
         severity: initialData.severity || "",
-        dateOfOnset: initialData.dateOfOnset || "",
+        onsetDate: initialData.onsetDate || "",
         notes: initialData.notes || "",
         category: initialData.category || "",
         attachments: initialData.attachments || [],
@@ -140,7 +140,7 @@ const UpdateSymptomModal = ({
       setFormData({
         description: "",
         severity: "",
-        dateOfOnset: "",
+        onsetDate: "",
         notes: "",
         category: "",
         attachments: [],
@@ -149,9 +149,9 @@ const UpdateSymptomModal = ({
   }, [initialData, open]);
 
   const severityOptions = [
-    { value: "mild", label: "🟢 Mild", color: "text-green-600" },
-    { value: "moderate", label: "🟡 Moderate", color: "text-yellow-600" },
-    { value: "severe", label: "🔴 Severe", color: "text-red-600" },
+    { value: "Mild", label: "🟢 Mild", color: "text-green-600" },
+    { value: "Moderate", label: "🟡 Moderate", color: "text-yellow-600" },
+    { value: "Severe", label: "🔴 Severe", color: "text-red-600" },
   ];
 
   const categoryOptions = [
@@ -203,7 +203,7 @@ const UpdateSymptomModal = ({
   };
 
   const isFormValid =
-    formData.description.trim() && formData.severity && formData.dateOfOnset;
+    formData.description.trim() && formData.severity && formData.onsetDate;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -262,17 +262,15 @@ const UpdateSymptomModal = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="dateOfOnset" className="flex items-center gap-1">
+              <Label htmlFor="onsetDate" className="flex items-center gap-1">
                 <Calendar className="h-4 w-4" />
                 Date of Onset <span className="text-red-500">*</span>
               </Label>
               <Input
-                id="dateOfOnset"
+                id="onsetDate"
                 type="date"
-                value={formData.dateOfOnset}
-                onChange={(e) =>
-                  handleInputChange("dateOfOnset", e.target.value)
-                }
+                value={formData.onsetDate}
+                onChange={(e) => handleInputChange("onsetDate", e.target.value)}
                 required
               />
             </div>
@@ -284,7 +282,7 @@ const UpdateSymptomModal = ({
             <Select
               value={formData.category}
               onValueChange={(value) => handleInputChange("category", value)}
-              placeholder="Select category (optional)"
+              placeholder="Select Category (optional)"
             >
               {categoryOptions.map((category) => (
                 <SelectItem key={category} value={category.toLowerCase()}>

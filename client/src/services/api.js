@@ -248,6 +248,34 @@ export const appointmentAPI = {
   getAppointmentStats: () => apiClient.get("/appointments/stats"),
 };
 
+// Symptom API endpoints
+export const symptomAPI = {
+  // Add a new symptom (patient)
+  addSymptom: (symptomData) => {
+    return apiClient.post("/symptoms", symptomData);
+  },
+
+  // Update an existing symptom
+  updateSymptom: (symptomId, updates) => {
+    return apiClient.put(`/symptoms/${symptomId}`, updates);
+  },
+
+  // Get all symptoms for current patient
+  getSymptoms: () => {
+    return apiClient.get("/symptoms");
+  },
+
+  // Get single symptom by ID
+  getSymptomById: (symptomId) => {
+    return apiClient.get(`/symptoms/${symptomId}`);
+  },
+
+  // Delete a symptom
+  deleteSymptom: (symptomId) => {
+    return apiClient.delete(`/symptoms/${symptomId}`);
+  },
+};
+
 // Profile
 export const profileAPI = {
   //Get user profile

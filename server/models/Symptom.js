@@ -2,26 +2,54 @@ import mongoose from "mongoose";
 
 const symptomSchema = new mongoose.Schema(
   {
-    patientId: {
+    patient: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Patient",
+      ref: "Patient", // reference Patient model
       required: true,
     },
-    symptoms: [
+    description: {
+      type: String,
+      required: [true, "Symptom description is required"],
+      trim: true,
+    },
+    severity: {
+      type: String,
+      enum: ["Mild", "Moderate", "Severe"],
+      required: [true, "Severity is required"],
+    },
+    onsetDate: {
+      type: Date,
+      default: Date.now,
+    },
+    notes: {
+      type: String,
+      trim: true,
+    },
+    category: {
+      type: String,
+      enum: [
+        "neurological",
+        "respiratory",
+        "digestive",
+        "cardiovascular",
+        "musculoskeletal",
+        "dermatological",
+        "other",
+      ],
+      default: "Other",
+    },
+    attachments: [
       {
-        name: { type: String, required: true },
-        severity: {
-          type: String,
-          enum: ["mild", "moderate", "severe"],
-          default: "mild",
-        },
-        duration: { type: String },
-        notes: { type: String },
+        fileName: String,
+        fileUrl: String,
       },
     ],
   },
-  { timestamps: true }
+  {
+    timestamps: true, // adds createdAt and updatedAt
+  }
 );
 
 const Symptom = mongoose.model("Symptom", symptomSchema);
+
 export default Symptom;

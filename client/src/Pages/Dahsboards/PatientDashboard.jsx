@@ -8,6 +8,7 @@ import { dashboardAPI } from "../../services/api";
 import { dashboardSections } from "../../config/dashboardSection";
 import Footer from "./Components/Footer";
 import Header from "../../components/Header";
+import { symptomAPI } from "../../services/api";
 
 const PatientDashboard = () => {
   const [user, setUser] = useState({
@@ -32,12 +33,11 @@ const PatientDashboard = () => {
       try {
         const response = await dashboardAPI.getPatientDashboard();
         const data = response.data.data;
-        console.log(data.user);
-        console.log(data.patient);
+        const symptomResp = await symptomAPI.getSymptoms();
 
         setUser(data.user);
         setPatient(data.patient);
-
+        setSymptoms(symptomResp.data.data || []);
         // If you have symptoms data from API, set it here
         // setSymptoms(data.symptoms || []);
       } catch (err) {
@@ -67,43 +67,29 @@ const PatientDashboard = () => {
   // Handle symptom form submission
   const handleSymptomSubmit = async (formData) => {
     try {
+      // Debug: Check if token exists
+      const token = localStorage.getItem("token");
+      console.log("Token exists:", !!token);
+      console.log("Form data being sent:", formData);
+
       if (selectedSymptom) {
-        // Update existing symptom
-        console.log("Updating symptom:", formData);
-        // Add your API call here
-        // await symptomsAPI.updateSymptom(selectedSymptom.id, formData);
-
-        // Update local state
-        setSymptoms((prev) =>
-          prev.map((symptom) =>
-            symptom.id === selectedSymptom.id
-              ? { ...symptom, ...formData }
-              : symptom
-          )
+        console.log("Updating symptom:", selectedSymptom._id);
+        const response = await symptomAPI.updateSymptom(
+          selectedSymptom._id,
+          formData
         );
+        console.log("Update response:", response);
       } else {
-        // Create new symptom
-        console.log("Creating new symptom:", formData);
-        // Add your API call here
-        // const response = await symptomsAPI.createSymptom(formData);
-
-        // Update local state with new symptom
-        const newSymptom = {
-          id: Date.now(), // Replace with actual ID from API response
-          ...formData,
-          createdAt: new Date().toISOString(),
-        };
-        setSymptoms((prev) => [...prev, newSymptom]);
+        console.log("Creating new symptom");
+        const response = await symptomAPI.addSymptom(formData);
+        console.log("Create response:", response);
       }
-
-      // Show success message
-      alert(`Symptom ${selectedSymptom ? "updated" : "created"} successfully!`);
     } catch (error) {
-      console.error("Error saving symptom:", error);
-      alert("Error saving symptom. Please try again.");
+      console.error("Full error object:", error);
+      console.error("Error response:", error.response?.data);
+      console.error("Error status:", error.response?.status);
     }
   };
-
   // Handle modal close
   const handleModalClose = () => {
     setSelectedSymptom(null);

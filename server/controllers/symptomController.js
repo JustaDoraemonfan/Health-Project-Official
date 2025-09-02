@@ -1,4 +1,4 @@
-import Symptom from "../models/symptomModel.js";
+import Symptom from "../models/Symptom.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import { successResponse, errorResponse } from "../utils/response.js";
 
@@ -12,7 +12,7 @@ export const addSymptom = asyncHandler(async (req, res) => {
   const patientId = req.user.id; // req.user set by auth middleware
 
   if (!description || !severity) {
-    return errorResponse(res, 400, "Description and severity are required");
+    return errorResponse(res, "Description and severity are required", 400);
   }
 
   const symptom = await Symptom.create({
@@ -24,7 +24,7 @@ export const addSymptom = asyncHandler(async (req, res) => {
     category,
   });
 
-  return successResponse(res, 201, "Symptom added successfully", symptom);
+  return successResponse(res, symptom, "Symptom added successfully", 201);
 });
 
 /**
@@ -38,14 +38,14 @@ export const updateSymptom = asyncHandler(async (req, res) => {
 
   const symptom = await Symptom.findOne({ _id: id, patient: patientId });
   if (!symptom) {
-    return errorResponse(res, 404, "Symptom not found");
+    return errorResponse(res, "Symptom not found", 404);
   }
 
   const updates = req.body;
   Object.assign(symptom, updates);
   await symptom.save();
 
-  return successResponse(res, 200, "Symptom updated successfully", symptom);
+  return successResponse(res, symptom, "Symptom updated successfully", 200);
 });
 
 /**
@@ -59,7 +59,7 @@ export const getSymptoms = asyncHandler(async (req, res) => {
     createdAt: -1,
   });
 
-  return successResponse(res, 200, "Symptoms retrieved successfully", symptoms);
+  return successResponse(res, symptoms, "Symptoms retrieved successfully", 200);
 });
 
 /**
@@ -73,10 +73,10 @@ export const getSymptomById = asyncHandler(async (req, res) => {
 
   const symptom = await Symptom.findOne({ _id: id, patient: patientId });
   if (!symptom) {
-    return errorResponse(res, 404, "Symptom not found");
+    return errorResponse(res, "Symptom not found", 404);
   }
 
-  return successResponse(res, 200, "Symptom retrieved successfully", symptom);
+  return successResponse(res, symptom, "Symptom retrieved successfully", 200);
 });
 
 /**
@@ -93,8 +93,8 @@ export const deleteSymptom = asyncHandler(async (req, res) => {
     patient: patientId,
   });
   if (!symptom) {
-    return errorResponse(res, 404, "Symptom not found");
+    return errorResponse(res, "Symptom not found", 404);
   }
 
-  return successResponse(res, 200, "Symptom deleted successfully");
+  return successResponse(res, {}, "Symptom deleted successfully", 200);
 });

@@ -16,7 +16,7 @@ import frontlineRoutes from "./routes/frontlineRoutes.js";
 import statsRoutes from "./routes/statsRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
 import appointmentRoutes from "./routes/appointmentRoutes.js";
-// import symptomRoutes from "./routes/symptomRoutes.js";
+import symptomRoutes from "./routes/symptomRoutes.js";
 
 // Load env vars
 dotenv.config();
@@ -43,7 +43,7 @@ app.use("/api/frontline", frontlineRoutes);
 app.use("/api", statsRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/appointments", appointmentRoutes);
-// app.use("/api/symptoms", symptomRoutes);
+app.use("/api/symptoms", symptomRoutes);
 
 // ---------- ERROR HANDLING ----------
 app.use(notFound);
