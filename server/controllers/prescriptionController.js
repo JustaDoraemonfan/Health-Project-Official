@@ -10,7 +10,6 @@ import { successResponse, errorResponse } from "../utils/response.js";
 export const uploadPrescription = asyncHandler(async (req, res) => {
   const { patientId } = req.body;
 
-  // multer stores uploaded file in req.file
   if (!req.file) {
     return errorResponse(res, "No file uploaded", 400);
   }
@@ -19,7 +18,10 @@ export const uploadPrescription = asyncHandler(async (req, res) => {
   const prescription = await Prescription.create({
     doctorId: req.user._id, // from authMiddleware
     patientId,
-    fileUrl: `/uploads/prescriptions/${req.file.filename}`, // file path
+    originalName: req.file.originalname,
+    mime: req.file.mimetype,
+    size: req.file.size,
+    filePath: req.file.path, // absolute/relative path on server
   });
 
   return successResponse(
