@@ -4,8 +4,11 @@ import {
   getMyPrescriptions,
   getPatientPrescriptions,
 } from "../controllers/prescriptionController.js";
-import { authMiddleware, authorizeRoles } from "../middlewares/auth.js";
-import upload from "../middlewares/multer.js"; // <--- now from middlewares
+import {
+  authMiddleware,
+  authorizeRoles,
+} from "../middleware/authMiddleware.js";
+import upload from "../middleware/multer.js"; // <--- now from middlewares
 
 const router = express.Router();
 

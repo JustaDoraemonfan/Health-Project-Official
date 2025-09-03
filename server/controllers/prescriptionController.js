@@ -1,5 +1,5 @@
 import Prescription from "../models/Prescription.js";
-import asyncHandler from "../utils/asyncHandler.js";
+import asyncHandler from "../middleware/asyncHandler.js";
 import { successResponse, errorResponse } from "../utils/response.js";
 
 // -----------------------------
