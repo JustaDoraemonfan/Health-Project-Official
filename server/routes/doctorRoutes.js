@@ -25,6 +25,11 @@ router
   .post(authMiddleware, authorizeRoles("admin"), createDoctor)
   .get(authMiddleware, authorizeRoles("admin", "patient"), getDoctors);
 
+// Get all assigned patients of a doctor
+router
+  .route("/get-patients")
+  .get(authMiddleware, authorizeRoles("admin", "doctor"), getPatientsOfDoctor);
+
 // Search doctors by location (accessible to patients too)
 router.get(
   "/search",
@@ -42,7 +47,11 @@ router
 // Assign and unassign patients
 router
   .route("/assign")
-  .post(authMiddleware, authorizeRoles("admin"), assignPatientToDoctor);
+  .post(
+    authMiddleware,
+    authorizeRoles("admin", "doctor"),
+    assignPatientToDoctor
+  );
 
 router
   .route("/unassign")
@@ -51,10 +60,5 @@ router
     authorizeRoles("admin", "doctor"),
     unassignPatientFromDoctor
   );
-
-// Get all assigned patients of a doctor
-router
-  .route("/get-patients")
-  .post(authMiddleware, authorizeRoles("admin", "doctor"), getPatientsOfDoctor);
 
 export default router;

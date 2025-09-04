@@ -136,8 +136,8 @@ export const doctorAPI = {
   },
 
   // Get patients assigned to a doctor
-  getDoctorPatients: (doctorData) => {
-    return apiClient.post("/doctors/get-patients", doctorData);
+  getDoctorPatients: () => {
+    return apiClient.get("/doctors/get-patients");
   },
 
   // 🔍 Search doctors by location
@@ -281,6 +281,34 @@ export const profileAPI = {
   //Get user profile
   getProfile: () => {
     return apiClient.get("/profile");
+  },
+};
+
+// -----------------------------
+// Prescription API endpoints
+// -----------------------------
+export const prescriptionAPI = {
+  // Upload prescription (doctor only)
+  uploadPrescription: (patientId, file) => {
+    const formData = new FormData();
+    formData.append("prescriptionPdf", file); // <-- key must match multer's upload.single("file")
+    formData.append("patientId", patientId);
+
+    return apiClient.post("/prescriptions", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data", // override JSON
+      },
+    });
+  },
+
+  // Get prescriptions for logged-in patient
+  getMyPrescriptions: () => {
+    return apiClient.get("/prescriptions/mine");
+  },
+
+  // Get prescriptions for a specific patient (doctor only)
+  getPatientPrescriptions: (patientId) => {
+    return apiClient.get(`/prescriptions/${patientId}`);
   },
 };
 

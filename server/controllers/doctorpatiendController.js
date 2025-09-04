@@ -5,52 +5,65 @@ import asyncHandler from "../middleware/asyncHandler.js";
 import { successResponse, errorResponse } from "../utils/response.js";
 
 // Assign a patient to a doctor
-export const assignPatientToDoctor = asyncHandler(async (req, res) => {
-  const { doctorId, patientId } = req.body;
+export const assignPatientToDoctor = async (req, res) => {
+  try {
+    const { doctorId, patientId } = req.body;
 
-  if (
-    !mongoose.Types.ObjectId.isValid(doctorId) ||
-    !mongoose.Types.ObjectId.isValid(patientId)
-  ) {
-    return errorResponse(res, "Invalid doctorId or patientId", 400);
+    const doctor = await Doctor.findById(doctorId);
+    const patient = await Patient.findById(patientId);
+
+    if (!doctor || !patient) {
+      return res.status(404).json({ message: "Doctor or patient not found" });
+    }
+
+    // Prevent duplicates
+    if (!doctor.patients.includes(patient._id)) {
+      doctor.patients.push(patient._id);
+    }
+
+    // Always overwrite patient assignment
+    patient.assignedDoctor = doctor._id;
+
+    await doctor.save();
+    await patient.save();
+
+    res.status(200).json({
+      message: "Patient assigned successfully",
+      doctor,
+      patient,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-
-  const doctor = await Doctor.findById(doctorId);
-  const patient = await Patient.findById(patientId);
-
-  if (!doctor || !patient) {
-    return errorResponse(res, "Doctor or Patient not found", 404);
-  }
-
-  if (!doctor.patients.includes(patient._id)) doctor.patients.push(patient._id);
-  if (!patient.assignedDoctor) patient.assignedDoctor = doctor._id;
-
-  await doctor.save();
-  await patient.save();
-
-  return successResponse(
-    res,
-    { doctor, patient },
-    `Patient ${patient.name} assigned to Doctor ${doctor.name}`
-  );
-});
+};
 
 // Get all the assigned patients of a doctor
-export const getPatientsOfDoctor = asyncHandler(async (req, res) => {
-  const doctorId = req.body.doctorId?.trim();
-  if (!mongoose.Types.ObjectId.isValid(doctorId)) {
-    return errorResponse(res, "Invalid doctorId", 400);
+export const getPatientsOfDoctor = async (req, res) => {
+  try {
+    const { id } = req.user;
+    console.log(id);
+    const doctor = await Doctor.findOne({ userId: id }).populate({
+      path: "patients",
+      model: "Patient",
+      populate: {
+        path: "userId",
+        model: "User",
+        select: "name email role",
+      },
+    });
+
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+
+    res.status(200).json({
+      message: "Patients fetched successfully",
+      patients: doctor.patients,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-
-  const doctor = await Doctor.findById(doctorId).populate("patients");
-  if (!doctor) return errorResponse(res, "Doctor not found", 404);
-
-  return successResponse(
-    res,
-    { doctor: doctor.name, patients: doctor.patients },
-    "Patients of doctor fetched successfully"
-  );
-});
+};
 
 // Unassign any patient from a doctor
 export const unassignPatientFromDoctor = asyncHandler(async (req, res) => {
