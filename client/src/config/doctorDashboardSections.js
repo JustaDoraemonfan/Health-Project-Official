@@ -15,9 +15,10 @@ import {
   ClipboardList,
   Shield,
   TrendingUp,
+  Upload,
 } from "lucide-react";
 
-export const doctorDashboardSections = (navigate) => [
+export const doctorDashboardSections = (navigate, openUploadModal) => [
   {
     id: "appointments",
     title: "Today's Appointments",
@@ -57,7 +58,9 @@ export const doctorDashboardSections = (navigate) => [
     icon: Pill,
     color: "teal",
     stats: "8 to review",
-    onClick: () => navigate("/doctor/prescriptions"),
+    onClick: () => {
+      openUploadModal();
+    },
   },
   {
     id: "consultations",
@@ -165,8 +168,8 @@ export const doctorDashboardSections = (navigate) => [
   },
 ];
 
-// Quick Actions configuration for doctors
-export const doctorQuickActions = (navigate) => [
+// Updated Quick Actions configuration for doctors with upload prescription
+export const doctorQuickActions = (navigate, openUploadModal) => [
   {
     id: "emergency-protocol",
     title: "Emergency Protocol",
@@ -174,6 +177,14 @@ export const doctorQuickActions = (navigate) => [
     icon: Phone,
     color: "red",
     onClick: () => navigate("/doctor/emergency-protocol"),
+  },
+  {
+    id: "upload-prescription",
+    title: "Upload Prescription",
+    description: "Upload patient prescriptions",
+    icon: Upload,
+    color: "blue",
+    onClick: openUploadModal,
   },
   {
     id: "quick-prescription",

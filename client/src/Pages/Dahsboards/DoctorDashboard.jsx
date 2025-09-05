@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Plus } from "lucide-react";
 import DashboardCard from "./Components/dashboardCard";
 import StatusBar from "./Components/StatusBar";
 import QuickAction from "./Components/QuickAction";
 import { dashboardAPI, doctorAPI } from "../../services/api";
+import PrescriptionUploadModal from "../../DoctoAppointment/Prescription";
 import { doctorDashboardSections } from "../../config/doctorDashboardSections";
 import Footer from "./Components/Footer";
 import Header from "../../components/Header";
@@ -18,6 +20,7 @@ const DoctorDashboard = () => {
   const [doctor, setDoctor] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -60,7 +63,10 @@ const DoctorDashboard = () => {
   }, []);
 
   // Get sections from config
-  const sections = doctorDashboardSections(navigate);
+  // Get sections from config
+  const sections = doctorDashboardSections(navigate, () =>
+    setIsUploadModalOpen(true)
+  );
 
   // Show loading state
   if (loading) {
@@ -89,15 +95,19 @@ const DoctorDashboard = () => {
       <Header />
       <section className="min-h-screen bg-[#161515] py-8 pt-20">
         <div className="container mx-auto px-6">
-          {/* Status Bar - Pass role and specialization */}
-          <StatusBar
-            name={user.name}
-            email={user.email}
-            role="doctor"
-            specialization={doctor.specialization}
-            isAvailable={doctor.isAvailable}
-            id={doctor._id}
-          />
+          {/* Status Bar with Upload Button */}
+          <div className="mb-8">
+            <div className="flex items-center justify-center mb-6">
+              <StatusBar
+                name={user.name}
+                email={user.email}
+                role="doctor"
+                specialization={doctor.specialization}
+                isAvailable={doctor.isAvailable}
+                id={doctor._id}
+              />
+            </div>
+          </div>
 
           {/* Dashboard Grid */}
           <div className="max-w-6xl mx-auto">
@@ -111,7 +121,7 @@ const DoctorDashboard = () => {
                   color={section.color}
                   onClick={section.onClick}
                   badge={section.badge}
-                  stats={section.stats} // Make sure to pass stats
+                  stats={section.stats}
                 />
               ))}
             </div>
@@ -124,6 +134,12 @@ const DoctorDashboard = () => {
           <Footer role="doctor" />
         </div>
       </section>
+
+      {/* Prescription Upload Modal */}
+      <PrescriptionUploadModal
+        isOpen={isUploadModalOpen}
+        onClose={() => setIsUploadModalOpen(false)}
+      />
     </>
   );
 };
