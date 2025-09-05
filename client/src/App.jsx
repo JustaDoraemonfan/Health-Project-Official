@@ -23,6 +23,7 @@ import "./App.css";
 import DoctorAppointment from "./pages/Dahsboards/DoctorAppointment";
 import EmergencyMap from "./pages/EmergencyMap";
 import PrescriptionUploadModal from "./DoctoAppointment/Prescription";
+import { PatientPrescriptionDashboard } from "./patientConfig/Prescription/PatientPrescriptionDashboard";
 
 // Component to handle routing logic
 const AppRoutes = () => {
@@ -159,6 +160,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute allowedRoles={["doctor"]}>
             <PrescriptionUploadModal />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/patient/prescription"
+        element={
+          <ProtectedRoute allowedRoles={["patient"]}>
+            <PatientPrescriptionDashboard />
           </ProtectedRoute>
         }
       />

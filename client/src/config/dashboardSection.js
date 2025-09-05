@@ -62,7 +62,7 @@ export const dashboardSections = (navigate, modalHandlers = {}) => [
     icon: Pill,
     color: "red",
     badge: "3 active",
-    onClick: () => console.log("Prescriptions clicked"),
+    onClick: () => navigate("/patient/prescription"),
   },
   {
     id: "lab-results",
