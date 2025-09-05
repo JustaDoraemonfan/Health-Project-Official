@@ -18,7 +18,6 @@ export default function StatusBar({
 }) {
   const isDoctor = role === "doctor";
 
-  // Doctor statuses
   const statusOptions = [
     {
       value: "available",
@@ -55,12 +54,13 @@ export default function StatusBar({
 
   return (
     <section>
-      <div className="text-center mb-12">
-        <h1 className="text-4xl google-sans-code-400 font-bold text-gray-100 mb-4">
+      {/* Header */}
+      <div className="text-center mb-10">
+        <h1 className="text-4xl google-sans-code-400 font-bold text-gray-100 mb-3">
           {isDoctor ? "Doctor" : "Patient"}{" "}
           <span className="text-blue-400">Dashboard</span>
         </h1>
-        <p className="text-slate-50 google-sans-code-400 text-lg mb-2">
+        <p className="text-slate-50 google-sans-code-400 text-lg mb-1">
           Welcome back, {isDoctor ? "Dr." : ""}{" "}
           <span className="text-green-400">{name}</span>
         </p>
@@ -74,11 +74,12 @@ export default function StatusBar({
       </div>
 
       {/* Status Bar */}
-      <div className="max-w-4xl mx-auto mb-8">
-        <div className="bg-gradient-to-r from-stone-900 to-slate-900 rounded-lg p-4 border border-gray-700">
+      <div className="max-w-5xl mx-auto mb-8">
+        <div className="bg-zinc-900 rounded-xl p-5 border border-gray-700">
           <div className="flex items-center justify-between google-sans-code-400">
-            <div className="flex items-center gap-4">
-              {/* Doctor or Patient Status */}
+            {/* Left section */}
+            <div className="flex items-center gap-3">
+              {/* Doctor / Patient Status */}
               <div className="relative">
                 {isDoctor ? (
                   <button
@@ -86,9 +87,9 @@ export default function StatusBar({
                     className="flex items-center gap-2 focus:outline-none"
                   >
                     <div
-                      className={`w-2 h-2 rounded-full ${currentStatus.dot} ${
-                        doctorStatus === "available" ? "animate-pulse" : ""
-                      }`}
+                      className={`w-2.5 h-2.5 rounded-full ${
+                        currentStatus?.dot
+                      } ${doctorStatus === "available" ? "animate-pulse" : ""}`}
                     />
                     <span
                       className={`${
@@ -97,21 +98,20 @@ export default function StatusBar({
                     >
                       Status: {doctorStatus}
                     </span>
-
                     <ChevronDown className="w-4 h-4 text-gray-400" />
                   </button>
                 ) : (
                   <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                    <div className="w-2.5 h-2.5 bg-green-400 rounded-full"></div>
                     <span className="text-green-400 text-sm">
                       Health Status: Good
                     </span>
                   </div>
                 )}
 
-                {/* Dropdown menu for doctor statuses */}
+                {/* Dropdown menu */}
                 {isDoctor && open && (
-                  <div className="absolute mt-2 w-40 bg-stone-800 border border-gray-700 rounded-lg shadow-lg z-10">
+                  <div className="absolute mt-2 w-44 bg-stone-800 border border-gray-700 rounded-lg shadow-lg z-10">
                     {statusOptions.map((status) => (
                       <button
                         key={status.value}
@@ -139,8 +139,8 @@ export default function StatusBar({
               </div>
             </div>
 
-            {/* Right side alerts */}
-            <div className="flex items-center gap-4 text-sm">
+            {/* Right section */}
+            <div className="flex items-center gap-3 text-sm">
               {isDoctor ? (
                 <>
                   <div className="flex items-center gap-2 text-amber-400">
