@@ -149,10 +149,10 @@ export const RegisterSection = () => {
     return (
       <section id="register" className="py-20 bg-zinc-700/50">
         <div className="container mx-auto px-6 text-center">
-          <h2 className="text-4xl font-mono font-bold text-gray-100 mb-4">
+          <h2 className="text-4xl google-sans-code-400 font-bold text-gray-100 mb-4">
             You're already registered!
           </h2>
-          <p className="text-slate-50 font-mono">
+          <p className="text-slate-50 google-sans-code-400">
             Welcome to <span className="text-blue-400">HealthyMe</span>
           </p>
         </div>
@@ -164,10 +164,10 @@ export const RegisterSection = () => {
     <section id="register" className="py-20 bg-[#27272A]">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-mono font-bold text-gray-100 mb-4">
+          <h2 className="text-4xl google-sans-code-400 font-bold text-gray-100 mb-4">
             Create Your <span className="text-blue-400">HealthyMe</span> Account
           </h2>
-          <p className="text-slate-50 font-mono">
+          <p className="text-slate-50 google-sans-code-400">
             Fill in your details to get started
           </p>
         </div>
@@ -176,7 +176,7 @@ export const RegisterSection = () => {
           {/* Success Message */}
           {success && (
             <div className="mb-6 p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
-              <div className="flex items-center gap-2 text-green-400 text-sm font-mono">
+              <div className="flex items-center gap-2 text-green-400 text-sm google-sans-code-400">
                 <CheckCircle className="w-4 h-4" />
                 <span>Account created successfully! Welcome to HealthyMe!</span>
               </div>
@@ -186,7 +186,7 @@ export const RegisterSection = () => {
           {/* Error Display */}
           {(error || showError) && !success && (
             <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
-              <div className="flex items-start gap-2 text-red-400 text-sm font-mono">
+              <div className="flex items-start gap-2 text-red-400 text-sm google-sans-code-400">
                 <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
                 <div>
                   {error && <div className="mb-1">{error}</div>}
@@ -206,13 +206,13 @@ export const RegisterSection = () => {
             <div className="bg-gradient-to-b from-slate-900 to-slate-800 border border-gray-700 rounded-lg overflow-hidden">
               {/* Form Header */}
               <div className="flex items-center justify-between px-4 py-3 bg-amber-50 border-b border-gray-700">
-                <div className="text-black text-sm font-mono">
+                <div className="text-black text-sm google-sans-code-400">
                   Registration Form
                 </div>
                 <div className="w-12"></div>
               </div>
 
-              <div className="p-6 space-y-6 font-mono">
+              <div className="p-6 space-y-6 google-sans-code-400">
                 <div>
                   <label className="block text-slate-50 text-sm mb-2">
                     Select User Type *
@@ -222,7 +222,7 @@ export const RegisterSection = () => {
                     value={formData.userType}
                     onChange={handleInputChange}
                     disabled={loading}
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-slate-500 focus:ring-1 focus:ring-blue-500 text-white font-mono text-sm transition-all duration-200 disabled:opacity-50"
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-slate-500 focus:ring-1 focus:ring-blue-500 text-white google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50"
                   >
                     {userTypes.map((type) => (
                       <option key={type.value} value={type.value}>
@@ -242,7 +242,7 @@ export const RegisterSection = () => {
                     value={formData.name}
                     onChange={handleInputChange}
                     disabled={loading}
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 font-mono text-sm transition-all duration-200 disabled:opacity-50"
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50"
                     placeholder="Enter your full name"
                     required
                   />
@@ -258,7 +258,7 @@ export const RegisterSection = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     disabled={loading}
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 font-mono text-sm transition-all duration-200 disabled:opacity-50"
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50"
                     placeholder="Enter your email"
                     required
                   />
@@ -274,7 +274,7 @@ export const RegisterSection = () => {
                     value={formData.password}
                     onChange={handleInputChange}
                     disabled={loading}
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 font-mono text-sm transition-all duration-200 disabled:opacity-50"
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50"
                     placeholder="Enter your password"
                     required
                   />
@@ -294,7 +294,7 @@ export const RegisterSection = () => {
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
                     disabled={loading}
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 font-mono text-sm transition-all duration-200 disabled:opacity-50"
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50"
                     placeholder="Re-enter your password"
                     required
                   />
@@ -315,7 +315,7 @@ export const RegisterSection = () => {
                         disabled={loading}
                         min="1"
                         max="120"
-                        className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 font-mono text-sm transition-all duration-200 disabled:opacity-50"
+                        className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50"
                         placeholder="Age"
                       />
                     </div>
@@ -328,7 +328,7 @@ export const RegisterSection = () => {
                         value={formData.gender}
                         onChange={handleInputChange}
                         disabled={loading}
-                        className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white font-mono text-sm transition-all duration-200 disabled:opacity-50"
+                        className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50"
                       >
                         <option value="male">Male</option>
                         <option value="female">Female</option>
@@ -349,7 +349,7 @@ export const RegisterSection = () => {
                       value={formData.specialization}
                       onChange={handleInputChange}
                       disabled={loading}
-                      className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 font-mono text-sm transition-all duration-200 disabled:opacity-50"
+                      className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50"
                       placeholder="e.g., Cardiology, Pediatrics"
                       required
                     />
@@ -368,7 +368,7 @@ export const RegisterSection = () => {
                         value={formData.phone}
                         onChange={handleInputChange}
                         disabled={loading}
-                        className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 font-mono text-sm transition-all duration-200 disabled:opacity-50"
+                        className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50"
                         placeholder="Enter your phone number"
                         required
                       />
@@ -383,7 +383,7 @@ export const RegisterSection = () => {
                         value={formData.location}
                         onChange={handleInputChange}
                         disabled={loading}
-                        className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 font-mono text-sm transition-all duration-200 disabled:opacity-50"
+                        className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50"
                         placeholder="Enter your location"
                         required
                       />
@@ -394,7 +394,7 @@ export const RegisterSection = () => {
                 <button
                   type="submit"
                   disabled={loading || success}
-                  className="w-full py-3 px-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-mono rounded-md hover:from-purple-600 hover:to-purple-700 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:transform-none disabled:hover:from-purple-500 disabled:hover:to-purple-600"
+                  className="w-full py-3 px-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white google-sans-code-400 rounded-md hover:from-purple-600 hover:to-purple-700 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:transform-none disabled:hover:from-purple-500 disabled:hover:to-purple-600"
                 >
                   {loading ? (
                     <>
@@ -425,7 +425,7 @@ export const RegisterSection = () => {
           <div className="mt-6 text-center">
             <a
               href="#login"
-              className="text-blue-400 hover:text-blue-300 font-mono text-sm transition-colors duration-200"
+              className="text-blue-400 hover:text-blue-300 google-sans-code-400 text-sm transition-colors duration-200"
             >
               Already have an account? Login here
             </a>

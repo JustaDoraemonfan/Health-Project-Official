@@ -105,7 +105,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
             />
           </div>
           <div>
-            <h3 className="text-white font-semibold font-mono text-lg group-hover:text-slate-100 transition-colors">
+            <h3 className="text-white font-semibold google-sans-code-400 text-lg group-hover:text-slate-100 transition-colors">
               {appointment.patient?.name ||
                 appointment.patientName ||
                 "Unknown Patient"}
@@ -114,11 +114,15 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
               <Clock
                 className={`w-4 h-4 ${getClockIconColor()} group-hover:scale-110 transition-all duration-300`}
               />
-              <span className="font-mono">{formatTime(appointment.time)}</span>
+              <span className="google-sans-code-400">
+                {formatTime(appointment.time)}
+              </span>
               {appointment.duration && (
                 <>
                   <span className="text-slate-500">•</span>
-                  <span className="font-mono">{appointment.duration}</span>
+                  <span className="google-sans-code-400">
+                    {appointment.duration}
+                  </span>
                 </>
               )}
             </div>
@@ -128,7 +132,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
         {/* Status Badge */}
         <div className="flex flex-col items-end space-y-2">
           <span
-            className={`px-3 py-1 rounded-full text-xs font-mono border ${getStatusColor(
+            className={`px-3 py-1 rounded-full text-xs google-sans-code-400 border ${getStatusColor(
               appointment.status
             )} group-hover:scale-105 transition-transform duration-300`}
           >
@@ -143,7 +147,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
         {appointment.type && (
           <div className="flex items-center justify-between">
             <span
-              className={`px-3 py-1.5 rounded-lg text-sm font-mono border ${getTypeColor(
+              className={`px-3 py-1.5 rounded-lg text-sm google-sans-code-400 border ${getTypeColor(
                 appointment.type
               )} group-hover:scale-105 transition-transform duration-300`}
             >
@@ -158,7 +162,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
             <Phone
               className={`w-4 h-4 mr-2 ${getPhoneIconColor()} group-hover:scale-110 transition-all duration-300`}
             />
-            <span className="font-mono">
+            <span className="google-sans-code-400">
               {appointment.patient?.email ||
                 appointment.phone ||
                 "No contact info"}
@@ -172,7 +176,9 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
             <User
               className={`w-4 h-4 mr-2 ${getDoctorIconColor()} group-hover:scale-110 transition-all duration-300`}
             />
-            <span className="font-mono">Dr. {appointment.doctor.name}</span>
+            <span className="google-sans-code-400">
+              Dr. {appointment.doctor.name}
+            </span>
             {appointment.doctorProfile?.specialization && (
               <span className="ml-2 text-slate-500">
                 • {appointment.doctorProfile.specialization}
@@ -184,7 +190,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
         {/* Notes Section */}
         {appointment.notes && (
           <div className="bg-slate-900/50 border border-slate-600 rounded-lg p-3 mt-3">
-            <p className="text-sm text-slate-300 font-mono leading-relaxed">
+            <p className="text-sm text-slate-300 google-sans-code-400 leading-relaxed">
               {appointment.notes}
             </p>
           </div>
@@ -192,7 +198,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
 
         {/* Appointment Date (if different from time) */}
         {appointment.appointmentDate && (
-          <div className="text-xs text-slate-500 font-mono pt-2 border-t border-slate-700">
+          <div className="text-xs text-slate-500 google-sans-code-400 pt-2 border-t border-slate-700">
             {new Date(appointment.appointmentDate).toLocaleDateString("en-US", {
               weekday: "short",
               month: "short",

@@ -72,7 +72,7 @@ const DoctorDashboard = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#161515] flex items-center justify-center">
-        <div className="text-white text-xl font-mono">
+        <div className="text-white text-xl google-sans-code-400">
           Loading doctor dashboard...
         </div>
       </div>
@@ -83,7 +83,7 @@ const DoctorDashboard = () => {
   if (error && !user.name) {
     return (
       <div className="min-h-screen bg-[#161515] flex items-center justify-center">
-        <div className="text-red-400 text-xl font-mono">
+        <div className="text-red-400 text-xl google-sans-code-400">
           Error loading dashboard: {error}
         </div>
       </div>

@@ -45,7 +45,7 @@ const DoctorGrid = ({
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-800 rounded-md border border-gray-700">
               <MapPin className="w-3 h-3 text-gray-400" />
-              <span className="text-xs text-gray-300 font-mono">
+              <span className="text-xs text-gray-300 google-sans-code-400">
                 {location || "all locations"}
               </span>
             </div>

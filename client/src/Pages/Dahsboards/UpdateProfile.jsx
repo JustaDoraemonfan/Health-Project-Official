@@ -134,7 +134,7 @@ const UpdateProfile = () => {
   }
 
   return (
-    <section className="min-h-screen font-mono bg-[#161515] py-8">
+    <section className="min-h-screen google-sans-code-400 bg-[#161515] py-8">
       <div className="container mx-auto px-6">
         <div className="max-w-2xl mx-auto">
           {/* Header */}

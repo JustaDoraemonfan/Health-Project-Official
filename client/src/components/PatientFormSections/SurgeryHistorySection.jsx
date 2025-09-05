@@ -2,7 +2,7 @@ import React from "react";
 
 const SurgeryHistorySection = ({ formData, handleChange }) => {
   return (
-    <div className="mb-6 font-mono">
+    <div className="mb-6 google-sans-code-400">
       <h4 className="text-lg font-medium text-slate-100 mb-3">
         Surgical History
       </h4>

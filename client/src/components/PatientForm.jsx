@@ -11,7 +11,7 @@ import InsuranceSection from "./PatientFormSections/InsuranceSection";
 const PatientForm = ({ formData, handleChange }) => {
   return (
     <>
-      <h3 className="text-xl font-mono font-semibold text-amber-50 mb-4 border-b border-gray-600 pb-2">
+      <h3 className="text-xl google-sans-code-400 font-semibold text-amber-50 mb-4 border-b border-gray-600 pb-2">
         Patient Profile
       </h3>
 

@@ -27,14 +27,14 @@ export default function Footer({ role = "patient" }) {
 
   return (
     <div className="text-center mt-12 pt-8 border-t border-gray-700">
-      <p className="text-gray-500 font-mono text-sm">{message}</p>
+      <p className="text-gray-500 google-sans-code-400 text-sm">{message}</p>
       <div className="flex items-center justify-center gap-4 mt-3">
         {links.map((link, index) => (
           <React.Fragment key={link.text}>
             {index > 0 && <span className="text-gray-600">•</span>}
             <button
               onClick={link.onClick}
-              className="text-blue-400 hover:text-blue-300 font-mono text-sm transition-colors duration-200"
+              className="text-blue-400 hover:text-blue-300 google-sans-code-400 text-sm transition-colors duration-200"
             >
               {link.text}
             </button>

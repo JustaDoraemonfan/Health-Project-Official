@@ -64,7 +64,7 @@ const DoctorAppointment = () => {
   // Handle loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#161515] text-white font-mono flex items-center justify-center">
+      <div className="min-h-screen bg-[#161515] text-white google-sans-code-400 flex items-center justify-center">
         <div className="text-center">
           <div className="w-12 h-12 border-4 border-zinc-700 border-t-emerald-400 rounded-full animate-spin mb-4 mx-auto"></div>
           <p className="text-zinc-400">Loading appointments...</p>
@@ -76,7 +76,7 @@ const DoctorAppointment = () => {
   // Handle error state
   if (error) {
     return (
-      <div className="min-h-screen bg-[#161515] text-white font-mono flex items-center justify-center">
+      <div className="min-h-screen bg-[#161515] text-white google-sans-code-400 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 bg-red-900/20 border border-red-800 rounded-full flex items-center justify-center mb-4 mx-auto">
             <Bell className="w-8 h-8 text-red-400" />
@@ -91,7 +91,7 @@ const DoctorAppointment = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#161515] text-white font-mono relative overflow-hidden">
+    <div className="min-h-screen bg-[#161515] text-white google-sans-code-400 relative overflow-hidden">
       {/* Background Decorative Elements */}
       <div className="absolute inset-0 opacity-[0.015] pointer-events-none">
         <div className="absolute top-20 right-20 w-96 h-96 bg-slate-500 rounded-full blur-3xl"></div>
@@ -135,10 +135,10 @@ const DoctorAppointment = () => {
         {/* Appointments Section */}
         <div className="bg-zinc-900/50 border border-zinc-800/40 rounded-xl">
           <div className="px-6 py-4 border-b border-zinc-800/30">
-            <h2 className="text-xl font-bold text-white font-mono">
+            <h2 className="text-xl font-bold text-white google-sans-code-400">
               Today's Appointments
             </h2>
-            <p className="text-sm text-zinc-400 font-mono">
+            <p className="text-sm text-zinc-400 google-sans-code-400">
               {filteredAppointments.length} of {appointments.length}{" "}
               appointments
             </p>
@@ -176,7 +176,7 @@ const DoctorAppointment = () => {
                     ? "No appointments yet"
                     : `No ${filterStatus} appointments`}
                 </h3>
-                <p className="text-zinc-400 text-center max-w-md font-mono">
+                <p className="text-zinc-400 text-center max-w-md google-sans-code-400">
                   {filterStatus === "all"
                     ? "When appointments are scheduled, they'll appear here for easy management."
                     : `No ${filterStatus} appointments found. Try adjusting your filters.`}

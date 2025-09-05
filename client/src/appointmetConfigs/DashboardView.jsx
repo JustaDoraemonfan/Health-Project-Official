@@ -84,7 +84,7 @@ const DashboardView = ({
   // ========================================
 
   return (
-    <div className="flex flex-col min-h-screen font-mono bg-[#161515] text-white relative overflow-hidden">
+    <div className="flex flex-col min-h-screen google-sans-code-400 bg-[#161515] text-white relative overflow-hidden">
       {/* ========================================
           BACKGROUND DECORATIVE ELEMENTS
           ======================================== */}

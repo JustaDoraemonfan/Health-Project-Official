@@ -28,7 +28,7 @@ export const Footer = () => {
               <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
               <div className="w-3 h-3 rounded-full bg-green-500"></div>
             </div>
-            <div className="font-mono text-sm text-gray-400">
+            <div className="google-sans-code-400 text-sm text-gray-400">
               <Terminal className="w-4 h-4 inline mr-2" />
               ./healthyme-platform --status=running
             </div>
@@ -44,16 +44,16 @@ export const Footer = () => {
               <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded flex items-center justify-center">
                 <Heart className="w-4 h-4 text-white" />
               </div>
-              <h3 className="text-xl font-mono font-bold text-white">
+              <h3 className="text-xl google-sans-code-400 font-bold text-white">
                 HealthyMe
               </h3>
             </div>
-            <p className="text-gray-400 font-mono text-sm leading-relaxed">
+            <p className="text-gray-400 google-sans-code-400 text-sm leading-relaxed">
               A comprehensive healthcare management platform connecting
               patients, doctors, and frontline workers through secure digital
               infrastructure.
             </p>
-            <div className="flex items-center gap-2 text-green-400 font-mono text-xs">
+            <div className="flex items-center gap-2 text-green-400 google-sans-code-400 text-xs">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
               <span>System Status: Online</span>
             </div>
@@ -61,32 +61,32 @@ export const Footer = () => {
 
           {/* User Roles */}
           <div className="space-y-4">
-            <h3 className="text-white font-mono font-semibold flex items-center gap-2">
+            <h3 className="text-white google-sans-code-400 font-semibold flex items-center gap-2">
               <Users className="w-4 h-4" />
               User Access
             </h3>
             <nav className="space-y-2">
               <a
                 href="#patient-portal"
-                className="block text-gray-400 hover:text-blue-400 font-mono text-sm transition-colors duration-200"
+                className="block text-gray-400 hover:text-blue-400 google-sans-code-400 text-sm transition-colors duration-200"
               >
                 → Patient Portal
               </a>
               <a
                 href="#doctor-dashboard"
-                className="block text-gray-400 hover:text-blue-400 font-mono text-sm transition-colors duration-200"
+                className="block text-gray-400 hover:text-blue-400 google-sans-code-400 text-sm transition-colors duration-200"
               >
                 → Doctor Dashboard
               </a>
               <a
                 href="#frontline-access"
-                className="block text-gray-400 hover:text-blue-400 font-mono text-sm transition-colors duration-200"
+                className="block text-gray-400 hover:text-blue-400 google-sans-code-400 text-sm transition-colors duration-200"
               >
                 → Frontline Worker Access
               </a>
               <a
                 href="#admin-panel"
-                className="block text-gray-400 hover:text-blue-400 font-mono text-sm transition-colors duration-200"
+                className="block text-gray-400 hover:text-blue-400 google-sans-code-400 text-sm transition-colors duration-200"
               >
                 → Admin Panel
               </a>
@@ -95,32 +95,32 @@ export const Footer = () => {
 
           {/* Platform Features */}
           <div className="space-y-4">
-            <h3 className="text-white font-mono font-semibold flex items-center gap-2">
+            <h3 className="text-white google-sans-code-400 font-semibold flex items-center gap-2">
               <Activity className="w-4 h-4" />
               Platform
             </h3>
             <nav className="space-y-2">
               <a
                 href="#security"
-                className="block text-gray-400 hover:text-green-400 font-mono text-sm transition-colors duration-200"
+                className="block text-gray-400 hover:text-green-400 google-sans-code-400 text-sm transition-colors duration-200"
               >
                 → Security & Privacy
               </a>
               <a
                 href="#api-docs"
-                className="block text-gray-400 hover:text-green-400 font-mono text-sm transition-colors duration-200"
+                className="block text-gray-400 hover:text-green-400 google-sans-code-400 text-sm transition-colors duration-200"
               >
                 → API Documentation
               </a>
               <a
                 href="#system-status"
-                className="block text-gray-400 hover:text-green-400 font-mono text-sm transition-colors duration-200"
+                className="block text-gray-400 hover:text-green-400 google-sans-code-400 text-sm transition-colors duration-200"
               >
                 → System Status
               </a>
               <a
                 href="#integrations"
-                className="block text-gray-400 hover:text-green-400 font-mono text-sm transition-colors duration-200"
+                className="block text-gray-400 hover:text-green-400 google-sans-code-400 text-sm transition-colors duration-200"
               >
                 → Healthcare Integrations
               </a>
@@ -129,24 +129,24 @@ export const Footer = () => {
 
           {/* Technical Stack */}
           <div className="space-y-4">
-            <h3 className="text-white font-mono font-semibold flex items-center gap-2">
+            <h3 className="text-white google-sans-code-400 font-semibold flex items-center gap-2">
               <Code className="w-4 h-4" />
               Tech Stack
             </h3>
             <div className="space-y-3">
-              <div className="flex items-center gap-2 text-gray-400 font-mono text-xs">
+              <div className="flex items-center gap-2 text-gray-400 google-sans-code-400 text-xs">
                 <Database className="w-3 h-3" />
                 <span>MongoDB + Mongoose</span>
               </div>
-              <div className="flex items-center gap-2 text-gray-400 font-mono text-xs">
+              <div className="flex items-center gap-2 text-gray-400 google-sans-code-400 text-xs">
                 <Server className="w-3 h-3" />
                 <span>Node.js + Express</span>
               </div>
-              <div className="flex items-center gap-2 text-gray-400 font-mono text-xs">
+              <div className="flex items-center gap-2 text-gray-400 google-sans-code-400 text-xs">
                 <Code className="w-3 h-3" />
                 <span>React + Vite</span>
               </div>
-              <div className="flex items-center gap-2 text-gray-400 font-mono text-xs">
+              <div className="flex items-center gap-2 text-gray-400 google-sans-code-400 text-xs">
                 <Shield className="w-3 h-3" />
                 <span>JWT Authentication</span>
               </div>
@@ -161,10 +161,10 @@ export const Footer = () => {
               <div className="flex items-center gap-3">
                 <Github className="w-6 h-6 text-white" />
                 <div>
-                  <h4 className="text-white font-mono font-semibold">
+                  <h4 className="text-white google-sans-code-400 font-semibold">
                     Open Source Healthcare Platform
                   </h4>
-                  <p className="text-gray-400 font-mono text-sm">
+                  <p className="text-gray-400 google-sans-code-400 text-sm">
                     Fork, contribute, and help improve healthcare accessibility
                   </p>
                 </div>
@@ -177,7 +177,7 @@ export const Footer = () => {
                       "_blank"
                     )
                   }
-                  className="px-4 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded font-mono text-sm text-gray-300 transition-colors duration-200"
+                  className="px-4 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded google-sans-code-400 text-sm text-gray-300 transition-colors duration-200"
                 >
                   <Github className="w-4 h-4 inline mr-2" />
                   View Repository
@@ -189,7 +189,7 @@ export const Footer = () => {
                       "_blank"
                     )
                   }
-                  className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded font-mono text-sm text-white transition-all duration-200"
+                  className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded google-sans-code-400 text-sm text-white transition-all duration-200"
                 >
                   <Code className="w-4 h-4 inline mr-2" />
                   Fork Project
@@ -203,7 +203,7 @@ export const Footer = () => {
         <div className="border-t border-gray-800 pt-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             {/* Copyright */}
-            <div className="flex items-center gap-4 text-gray-400 font-mono text-sm">
+            <div className="flex items-center gap-4 text-gray-400 google-sans-code-400 text-sm">
               <span>© {currentYear} HealthyMe Platform</span>
               <div className="hidden md:flex items-center gap-4">
                 <a
@@ -231,13 +231,13 @@ export const Footer = () => {
             <div className="flex items-center gap-6">
               <a
                 href="mailto:support@healthyme.dev"
-                className="flex items-center gap-2 text-gray-400 hover:text-blue-400 font-mono text-sm transition-colors duration-200"
+                className="flex items-center gap-2 text-gray-400 hover:text-blue-400 google-sans-code-400 text-sm transition-colors duration-200"
               >
                 <Mail className="w-4 h-4" />
                 support@healthyme.dev
               </a>
 
-              <div className="flex items-center gap-2 text-gray-500 font-mono text-xs">
+              <div className="flex items-center gap-2 text-gray-500 google-sans-code-400 text-xs">
                 <div className="w-2 h-2 bg-green-400 rounded-full"></div>
                 <span>v1.2.3</span>
                 <span>•</span>
@@ -249,7 +249,7 @@ export const Footer = () => {
 
         {/* Bottom Terminal Line */}
         <div className="mt-8 pt-6 border-t border-gray-800">
-          <div className="text-center text-gray-500 font-mono text-xs">
+          <div className="text-center text-gray-500 google-sans-code-400 text-xs">
             <span className="text-green-400">healthyme@platform</span>
             <span className="text-gray-600">:</span>
             <span className="text-blue-400">~</span>

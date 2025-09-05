@@ -124,7 +124,7 @@ const DoctorCard = ({
 
             <div className="flex items-center gap-2 text-gray-300">
               <Phone className="w-4 h-4 text-gray-400" />
-              <span className="font-mono text-xs">{doc.phone}</span>
+              <span className="google-sans-code-400 text-xs">{doc.phone}</span>
             </div>
           </div>
 

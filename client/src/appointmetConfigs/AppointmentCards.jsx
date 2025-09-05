@@ -10,10 +10,10 @@ import {
 const AppointmentCard = ({ appointment, onCardClick }) => {
   return (
     <div
-      className="bg-zinc-700/50 border font-mono border-slate-700 rounded-md p-4 cursor-pointer hover:border-slate-600 hover:-translate-y-px transition-all relative"
+      className="bg-zinc-700/50 border google-sans-code-400 border-slate-700 rounded-md p-4 cursor-pointer hover:border-slate-600 hover:-translate-y-px transition-all relative"
       onClick={() => onCardClick(appointment._id)}
     >
-      <div className="absolute top-4 right-4 text-slate-500 text-xs font-mono">
+      <div className="absolute top-4 right-4 text-slate-500 text-xs google-sans-code-400">
         {getShortId(appointment._id)}
       </div>
 

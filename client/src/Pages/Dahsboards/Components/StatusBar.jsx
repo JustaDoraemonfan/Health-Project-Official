@@ -56,15 +56,15 @@ export default function StatusBar({
   return (
     <section>
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-mono font-bold text-gray-100 mb-4">
+        <h1 className="text-4xl google-sans-code-400 font-bold text-gray-100 mb-4">
           {isDoctor ? "Doctor" : "Patient"}{" "}
           <span className="text-blue-400">Dashboard</span>
         </h1>
-        <p className="text-slate-50 font-mono text-lg mb-2">
+        <p className="text-slate-50 google-sans-code-400 text-lg mb-2">
           Welcome back, {isDoctor ? "Dr." : ""}{" "}
           <span className="text-green-400">{name}</span>
         </p>
-        <p className="text-purple-400 font-mono text-sm">
+        <p className="text-purple-400 google-sans-code-400 text-sm">
           {isDoctor
             ? `${
                 specialization ? `${specialization} • ` : ""
@@ -76,7 +76,7 @@ export default function StatusBar({
       {/* Status Bar */}
       <div className="max-w-4xl mx-auto mb-8">
         <div className="bg-gradient-to-r from-stone-900 to-slate-900 rounded-lg p-4 border border-gray-700">
-          <div className="flex items-center justify-between font-mono">
+          <div className="flex items-center justify-between google-sans-code-400">
             <div className="flex items-center gap-4">
               {/* Doctor or Patient Status */}
               <div className="relative">

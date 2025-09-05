@@ -69,10 +69,10 @@ export default function QuickAction({ role = "patient", actions = null }) {
       {/* Quick Actions Section */}
       <div className="max-w-4xl mx-auto mt-12">
         <div className="text-center mb-6">
-          <h3 className="text-xl font-mono font-semibold text-gray-100 mb-2">
+          <h3 className="text-xl google-sans-code-400 font-semibold text-gray-100 mb-2">
             Quick Actions
           </h3>
-          <p className="text-gray-400 font-mono text-sm">
+          <p className="text-gray-400 google-sans-code-400 text-sm">
             {isDoctor
               ? "Essential tools for efficient patient care"
               : "Frequently used features for faster access"}
@@ -106,10 +106,10 @@ export default function QuickAction({ role = "patient", actions = null }) {
                     />
                   </div>
                   <div>
-                    <h4 className="text-slate-50 font-mono font-semibold text-sm">
+                    <h4 className="text-slate-50 google-sans-code-400 font-semibold text-sm">
                       {action.title}
                     </h4>
-                    <p className="text-gray-400 font-mono text-xs">
+                    <p className="text-gray-400 google-sans-code-400 text-xs">
                       {action.description}
                     </p>
                   </div>

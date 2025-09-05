@@ -39,19 +39,19 @@ const DashboardCard = ({
       >
         <div className="flex items-center gap-2">
           <Icon className="w-5 h-5 text-white" />
-          <span className="text-white text-sm font-mono font-semibold">
+          <span className="text-white text-sm google-sans-code-400 font-semibold">
             {title}
           </span>
         </div>
         <div className="flex items-center gap-2">
           {/* Add stats display */}
           {stats && (
-            <span className="bg-white bg-opacity-20 text-white text-xs font-mono px-2 py-1 rounded-full">
+            <span className="bg-white bg-opacity-20 text-white text-xs google-sans-code-400 px-2 py-1 rounded-full">
               {stats}
             </span>
           )}
           {badge && (
-            <span className="bg-red-100 bg-opacity-90 text-red-800 text-xs font-mono px-2 py-1 rounded-full">
+            <span className="bg-red-100 bg-opacity-90 text-red-800 text-xs google-sans-code-400 px-2 py-1 rounded-full">
               {badge}
             </span>
           )}
@@ -60,13 +60,13 @@ const DashboardCard = ({
 
       {/* Card Content */}
       <div className="p-4 space-y-3">
-        <p className="text-slate-50 text-sm font-mono leading-relaxed">
+        <p className="text-slate-50 text-sm google-sans-code-400 leading-relaxed">
           {description}
         </p>
 
         <div className="flex items-center justify-between">
           <button
-            className={`text-xs font-mono px-3 py-1 rounded border bg-gradient-to-r ${getColorClasses(
+            className={`text-xs google-sans-code-400 px-3 py-1 rounded border bg-gradient-to-r ${getColorClasses(
               color
             )} text-white hover:opacity-90 transition-opacity`}
           >

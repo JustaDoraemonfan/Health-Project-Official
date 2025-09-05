@@ -107,7 +107,7 @@ export const AppointmentSidebar = ({ appointment }) => {
         <div className="space-y-3">
           <div className="flex justify-between items-start">
             <span className="text-slate-400 text-sm">Patient ID</span>
-            <span className="text-white font-mono text-sm bg-slate-700 px-2 py-1 rounded">
+            <span className="text-white google-sans-code-400 text-sm bg-slate-700 px-2 py-1 rounded">
               {getShortId(appointment.patient?._id)}
             </span>
           </div>

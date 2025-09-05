@@ -30,7 +30,7 @@ const DetailedView = ({
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#161515] font-mono text-white">
+    <div className="flex flex-col min-h-screen bg-[#161515] google-sans-code-400 text-white">
       <TopBar selectedAppointment={selectedAppointment} />
 
       <main className="flex-1 p-6 max-w-6xl mx-auto w-full">

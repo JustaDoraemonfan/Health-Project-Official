@@ -120,10 +120,10 @@ export const LoginSection = () => {
     <section id="login" className="py-20 bg-[#27272A]">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-mono font-bold text-gray-100 mb-4">
+          <h2 className="text-4xl google-sans-code-400 font-bold text-gray-100 mb-4">
             Login to <span className="text-blue-400">HealthyMe</span>
           </h2>
-          <p className="text-slate-50 font-mono">
+          <p className="text-slate-50 google-sans-code-400">
             Select your role to continue
           </p>
         </div>
@@ -132,7 +132,7 @@ export const LoginSection = () => {
           {/* Error Display */}
           {(error || showError) && (
             <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
-              <div className="flex items-center gap-2 text-red-400 text-sm font-mono">
+              <div className="flex items-center gap-2 text-red-400 text-sm google-sans-code-400">
                 <AlertCircle className="w-4 h-4" />
                 <span>{error || "Please fill in all required fields"}</span>
               </div>
@@ -148,7 +148,7 @@ export const LoginSection = () => {
                     key={type.id}
                     onClick={() => setActiveTab(type.id)}
                     disabled={loading}
-                    className={`flex items-center justify-center gap-2 py-3 px-4 rounded-md text-sm font-mono transition-all duration-200 disabled:opacity-50 ${
+                    className={`flex items-center justify-center gap-2 py-3 px-4 rounded-md text-sm google-sans-code-400 transition-all duration-200 disabled:opacity-50 ${
                       activeTab === type.id
                         ? `bg-gradient-to-r ${
                             getColorClasses(type.color).split(" ")[0]
@@ -171,7 +171,7 @@ export const LoginSection = () => {
             <div className="bg-gradient-to-b from-slate-900 to-slate-800 rounded-lg border border-slate-600 shadow-xl">
               {/* Header */}
               <div className="px-6 py-4 bg-slate-100 border-b border-slate-300">
-                <h2 className="text-slate-900 text-sm font-mono font-semibold">
+                <h2 className="text-slate-900 text-sm google-sans-code-400 font-semibold">
                   {userTypes.find((t) => t.id === activeTab)?.label}{" "}
                   Authentication
                 </h2>
@@ -180,7 +180,7 @@ export const LoginSection = () => {
               {/* Form Fields */}
               <div className="p-6 space-y-6">
                 <div>
-                  <label className="block text-slate-200 text-sm font-mono mb-2">
+                  <label className="block text-slate-200 text-sm google-sans-code-400 mb-2">
                     Email Address <span className="text-red-400">*</span>
                   </label>
                   <input
@@ -189,14 +189,14 @@ export const LoginSection = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     disabled={loading}
-                    className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 font-mono text-sm transition-colors disabled:opacity-50"
+                    className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 google-sans-code-400 text-sm transition-colors disabled:opacity-50"
                     placeholder="Enter email address"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-200 text-sm font-mono mb-2">
+                  <label className="block text-slate-200 text-sm google-sans-code-400 mb-2">
                     Password <span className="text-red-400">*</span>
                   </label>
                   <input
@@ -205,7 +205,7 @@ export const LoginSection = () => {
                     value={formData.password}
                     onChange={handleInputChange}
                     disabled={loading}
-                    className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 font-mono text-sm transition-colors disabled:opacity-50"
+                    className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 google-sans-code-400 text-sm transition-colors disabled:opacity-50"
                     placeholder="Enter password"
                     required
                   />
@@ -220,7 +220,7 @@ export const LoginSection = () => {
                   }
                   className={`w-full py-3 px-4 bg-gradient-to-r ${getColorClasses(
                     userTypes.find((t) => t.id === activeTab)?.color
-                  )} text-white font-mono font-medium rounded-md hover:opacity-90 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed`}
+                  )} text-white google-sans-code-400 font-medium rounded-md hover:opacity-90 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed`}
                 >
                   {loading ? (
                     <span className="flex items-center justify-center">
@@ -235,7 +235,7 @@ export const LoginSection = () => {
                   )}
                 </button>
 
-                <p className="text-slate-400 text-xs font-mono text-center">
+                <p className="text-slate-400 text-xs google-sans-code-400 text-center">
                   Secure authentication required
                 </p>
               </div>
@@ -244,7 +244,7 @@ export const LoginSection = () => {
           <div className="mt-6 text-center">
             <a
               href="#register"
-              className="text-blue-400 hover:text-blue-300 font-mono text-sm transition-colors duration-200"
+              className="text-blue-400 hover:text-blue-300 google-sans-code-400 text-sm transition-colors duration-200"
             >
               Don't have an account? Register here
             </a>

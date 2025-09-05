@@ -66,10 +66,10 @@ export const StatsSection = () => {
       <div className="container mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-mono font-bold text-gray-100 mb-4">
+          <h2 className="text-4xl google-sans-code-400 font-bold text-gray-100 mb-4">
             Platform Analytics
           </h2>
-          <p className="text-gray-400 font-mono">
+          <p className="text-gray-400 google-sans-code-400">
             Real-time insights about our platform
           </p>
         </div>
@@ -80,7 +80,7 @@ export const StatsSection = () => {
             <div key={index} className="group">
               <div className="bg-gradient-to-br from-[#2F2F32] to-[#1F1F22] border border-gray-700 rounded-xl p-6 hover:border-blue-500/50 transition-all duration-300 transform hover:-translate-y-1">
                 {/* Metric */}
-                <div className="font-mono text-xs uppercase tracking-wider text-gray-400 mb-2">
+                <div className="google-sans-code-400 text-xs uppercase tracking-wider text-gray-400 mb-2">
                   {stat.metric}
                 </div>
 
@@ -89,13 +89,13 @@ export const StatsSection = () => {
                   <div className="text-blue-400 mr-3 text-xl group-hover:scale-110 transition-transform duration-300">
                     {stat.icon}
                   </div>
-                  <div className="text-3xl font-mono font-bold text-white">
+                  <div className="text-3xl google-sans-code-400 font-bold text-white">
                     {stat.number}
                   </div>
                 </div>
 
                 {/* Label */}
-                <div className="text-gray-400 font-mono text-sm">
+                <div className="text-gray-400 google-sans-code-400 text-sm">
                   {stat.label}
                 </div>
               </div>
