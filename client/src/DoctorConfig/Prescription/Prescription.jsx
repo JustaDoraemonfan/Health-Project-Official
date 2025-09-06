@@ -186,13 +186,13 @@ const PrescriptionUploadModal = ({ isOpen, onClose }) => {
           }`}
         >
           {/* Header */}
-          <div className="border-b border-zinc-800 p-6 flex items-center justify-between sticky top-0 bg-zinc-900">
+          <div className="border-b border-zinc-800 p-6 flex items-center justify-between sticky top-0 bg-[var(--color-secondary)]">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-blue-600/10 rounded-lg border border-blue-600/20">
                 <FileText className="h-6 w-6 text-blue-400" />
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-zinc-100">
+                <h2 className="text-xl font-light text-[var(--color-primary)]">
                   Upload Prescription
                 </h2>
                 <p className="text-sm text-zinc-400 mt-1">
