@@ -10,7 +10,7 @@ import {
 const AppointmentCard = ({ appointment, onCardClick }) => {
   return (
     <div
-      className="bg-zinc-700/50 border google-sans-code-400 border-slate-700 rounded-md p-4 cursor-pointer hover:border-slate-600 hover:-translate-y-px transition-all relative"
+      className="bg-[var(--color-secondary)]/80 border google-sans-code-400 border-slate-700 rounded-md p-4 cursor-pointer hover:border-slate-600 hover:-translate-y-px transition-all relative"
       onClick={() => onCardClick(appointment._id)}
     >
       <div className="absolute top-4 right-4 text-slate-500 text-xs google-sans-code-400">
@@ -20,7 +20,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
       <div className="mb-3">
         <div className="flex items-center gap-2 mb-1">
           <DoctorIcon />
-          <div className="text-white font-semibold">
+          <div className="text-white font-light">
             {appointment.doctor?.name || "Unassigned"}
           </div>
         </div>
@@ -38,7 +38,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
       </div>
 
       <span
-        className={`inline-flex items-center px-2 py-1 rounded-xl text-xs font-bold border ${getStatusClass(
+        className={`inline-flex items-center px-2 py-1 rounded-xl text-xs font-light border ${getStatusClass(
           appointment.status
         )}`}
       >

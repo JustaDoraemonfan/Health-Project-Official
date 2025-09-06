@@ -7,7 +7,7 @@ export const PrescriptionCard = ({ prescription, onView, onDownload }) => {
   };
 
   return (
-    <div className="bg-[#FFFDF2] rounded-lg shadow-sm border google-sans-code-400 border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
+    <div className="bg-[var(--color-secondary)]/90 rounded-lg shadow-sm border google-sans-code-400 border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
@@ -15,16 +15,16 @@ export const PrescriptionCard = ({ prescription, onView, onDownload }) => {
               <User className="w-4 h-4 text-blue-600" />
             </div>
             <div>
-              <h3 className="font-semibold text-[#000000]">
+              <h3 className="font-light text-[var(--color-primary)]">
                 {prescription.doctorName}
               </h3>
-              <p className="text-sm text-[#000000]">
+              <p className="text-sm text-[var(--color-primary)]/60">
                 {prescription.doctorEmail}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 text-sm text-[#000000] mt-3">
+          <div className="flex items-center gap-2 text-sm text-[var(--color-primary)] mt-3">
             <Calendar className="w-4 h-4" />
             <span>Issued on {formatDate(prescription.date)}</span>
           </div>

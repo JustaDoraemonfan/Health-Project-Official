@@ -14,7 +14,7 @@ const AppointmentActions = ({ onConfirm, onReschedule, onCancel }) => {
       </button>
 
       <button
-        className="flex items-center gap-2 px-4 py-2 bg-transparent hover:bg-red-900/20 border border-red-500 text-red-400 rounded-md transition-colors"
+        className="flex items-center gap-2 px-4 py-2 bg-transparent hover:bg-red-950/70 hover:cursor-pointer border border-red-500 text-red-400 rounded-md transition-colors"
         onClick={onCancel}
       >
         <TrashIcon />

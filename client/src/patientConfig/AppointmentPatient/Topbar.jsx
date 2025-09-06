@@ -11,17 +11,15 @@ const TopBar = ({ selectedAppointment, currentPatient }) => {
   const initials = getInitials(patientName);
 
   return (
-    <header className="relative bg-zinc-900/50 border-b border-slate-700/50 px-8 py-6 overflow-hidden">
+    <header className="relative bg-[var(--color-secondary)] border-b border-slate-700/50 px-8 py-6 overflow-hidden">
       {/* Subtle background pattern */}
-      <div className="absolute inset-0 opacity-[0.02]">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%)`,
-            backgroundSize: "20px 20px",
-          }}
-        />
-      </div>
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: `linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%)`,
+          backgroundSize: "20px 20px",
+        }}
+      />
 
       {/* Content */}
       <div className="max-w-6xl mx-auto relative z-10">
@@ -53,7 +51,7 @@ const TopBar = ({ selectedAppointment, currentPatient }) => {
           <div className="hidden md:flex items-center gap-6">
             {selectedAppointment && (
               <div className="text-right">
-                <div className="text-xs text-slate-500 google-sans-code-400 uppercase tracking-wider mb-1">
+                <div className="text-xs text-[var(--color-secondary)] google-sans-code-400 uppercase tracking-wider mb-1">
                   Active Appointment
                 </div>
                 <div className="text-sm text-white google-sans-code-400">

@@ -84,7 +84,7 @@ export const AppointmentSidebar = ({ appointment }) => {
   if (!appointment) return null;
 
   return (
-    <div className="bg-slate-800 border border-slate-700 rounded-lg p-6 h-fit space-y-6">
+    <div className="bg-[var(--color-secondary)] border border-slate-700 rounded-lg p-6 h-fit space-y-6">
       {/* Status */}
       <div>
         <div className="flex items-center justify-between mb-3">

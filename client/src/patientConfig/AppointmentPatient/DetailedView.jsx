@@ -30,7 +30,7 @@ const DetailedView = ({
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#161515] google-sans-code-400 text-white">
+    <div className="flex flex-col min-h-screen bg-[var(--color-primary)] google-sans-code-400 text-white">
       <TopBar selectedAppointment={selectedAppointment} />
 
       <main className="flex-1 p-6 max-w-6xl mx-auto w-full">
@@ -46,10 +46,10 @@ const DetailedView = ({
           <div className="h-6 w-px bg-slate-600 mx-2"></div>
 
           <div>
-            <h1 className="text-2xl font-semibold text-white">
+            <h1 className="text-2xl font-light text-[var(--color-secondary)]">
               {selectedAppointment.doctor?.name || "Unassigned"}
             </h1>
-            <p className="text-slate-400 text-sm mt-0.5">
+            <p className="text-[var(--color-secondary)]/60 text-sm mt-0.5">
               {selectedAppointment.doctorProfile?.specialization || "N/A"}
             </p>
           </div>

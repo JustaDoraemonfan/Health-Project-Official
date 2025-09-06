@@ -57,11 +57,11 @@ export const PatientPrescriptionDashboard = () => {
   return (
     <section>
       <Header />
-      <div className="min-h-screen google-sans-code-400 bg-[#0c0c0c] pt-20">
+      <div className="min-h-screen google-sans-code-400 bg-[var(--color-primary)] pt-20">
         <div className="max-w-6xl mx-auto p-6">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-[#FFFDF2] mb-2">
+            <h1 className="text-3xl font-light text-[var(--color-secondary)] mb-2">
               My Prescriptions
             </h1>
             <p className="text-gray-600">
@@ -71,27 +71,29 @@ export const PatientPrescriptionDashboard = () => {
 
           {/* Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-[#FFFDF2] rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="bg-[var(--color-secondary)] rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="flex items-center gap-3">
                 <div className="p-3 bg-blue-50 rounded-full">
                   <FileText className="w-6 h-6 text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-[#000000]">
+                  <p className="text-2xl font-bold text-[var(--color-primary)]">
                     {prescriptions.length}
                   </p>
-                  <p className="text-sm text-gray-500">Total Prescriptions</p>
+                  <p className="text-sm text-[var(--color-primary)]/70">
+                    Total Prescriptions
+                  </p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-[#FFFDF2] rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="bg-[var(--color-secondary)] rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="flex items-center gap-3">
                 <div className="p-3 bg-green-50 rounded-full">
                   <Calendar className="w-6 h-6 text-green-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-[#000000]">
+                  <p className="text-2xl font-bold text-[var(--color-primary)]">
                     {prescriptions.length > 0
                       ? new Date(
                           Math.max(
@@ -100,21 +102,23 @@ export const PatientPrescriptionDashboard = () => {
                         ).toLocaleDateString("en-US", { month: "short" })
                       : "-"}
                   </p>
-                  <p className="text-sm text-gray-500">Latest Prescription</p>
+                  <p className="text-sm text-[var(--color-primary)]/70">
+                    Latest Prescription
+                  </p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-[#FFFDF2] rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="bg-[var(--color-secondary)] rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="flex items-center gap-3">
                 <div classNambg-whitee="p-3 bg-purple-50 rounded-full">
                   <User className="w-6 h-6 text-purple-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-[#000000]">
+                  <p className="text-2xl font-bold text-[var(--color-primary)]">
                     {new Set(prescriptions.map((p) => p.doctorName)).size}
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-[var(--color-primary)]/70">
                     {new Set(prescriptions.map((p) => p.doctorName)).size > 1
                       ? "Differnent Doctors"
                       : "Doctor"}
