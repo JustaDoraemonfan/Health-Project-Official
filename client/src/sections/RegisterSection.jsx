@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { User, AlertCircle, Loader2, CheckCircle } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
-export const RegisterSection = () => {
+export const RegisterSection = ({ onToggleAuth }) => {
   const [formData, setFormData] = useState({
     userType: "patient",
     name: "",
@@ -161,13 +161,13 @@ export const RegisterSection = () => {
   }
 
   return (
-    <section id="register" className="py-20 bg-[#27272A]">
+    <section id="register" className="py-20 bg-[var(--color-primary)]">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl google-sans-code-400 font-bold text-gray-100 mb-4">
+          <h2 className="text-4xl google-sans-code-400 font-bold text-[var(--color-secondary)] mb-4">
             Create Your <span className="text-blue-400">HealthyMe</span> Account
           </h2>
-          <p className="text-slate-50 google-sans-code-400">
+          <p className="text-slate-500 google-sans-code-400">
             Fill in your details to get started
           </p>
         </div>
@@ -203,9 +203,9 @@ export const RegisterSection = () => {
           )}
 
           <form onSubmit={handleRegister}>
-            <div className="bg-gradient-to-b from-slate-900 to-slate-800 border border-gray-700 rounded-lg overflow-hidden">
+            <div className="bg-[var(--color-secondary)] border border-gray-700 rounded-lg overflow-hidden">
               {/* Form Header */}
-              <div className="flex items-center justify-between px-4 py-3 bg-amber-50 border-b border-gray-700">
+              <div className="flex items-center justify-between px-4 py-3 bg-[var(--color-primary)] border-b border-gray-700">
                 <div className="text-black text-sm google-sans-code-400">
                   Registration Form
                 </div>
@@ -215,7 +215,7 @@ export const RegisterSection = () => {
               <div className="p-6 space-y-6 google-sans-code-400">
                 <div>
                   <label className="block text-slate-50 text-sm mb-2">
-                    Select User Type *
+                    Select User Type <span className="text-red-500">*</span>
                   </label>
                   <select
                     name="userType"
@@ -234,7 +234,7 @@ export const RegisterSection = () => {
 
                 <div>
                   <label className="block text-slate-50 text-sm mb-2">
-                    Full Name *
+                    Full Name <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -250,7 +250,7 @@ export const RegisterSection = () => {
 
                 <div>
                   <label className="block text-slate-50 text-sm mb-2">
-                    Email Address *
+                    Email Address <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="email"
@@ -266,7 +266,7 @@ export const RegisterSection = () => {
 
                 <div>
                   <label className="block text-slate-50 text-sm mb-2">
-                    Password *
+                    Password <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="password"
@@ -286,7 +286,7 @@ export const RegisterSection = () => {
 
                 <div>
                   <label className="block text-slate-50 text-sm mb-2">
-                    Confirm Password *
+                    Confirm Password <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="password"
@@ -394,7 +394,7 @@ export const RegisterSection = () => {
                 <button
                   type="submit"
                   disabled={loading || success}
-                  className="w-full py-3 px-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white google-sans-code-400 rounded-md hover:from-purple-600 hover:to-purple-700 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:transform-none disabled:hover:from-purple-500 disabled:hover:to-purple-600"
+                  className="w-full py-3 px-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white google-sans-code-400 rounded-md hover:from-purple-600 hover:to-purple-700 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:transform-none hover:cursor-pointer disabled:hover:from-purple-500 disabled:hover:to-purple-600"
                 >
                   {loading ? (
                     <>
@@ -408,7 +408,7 @@ export const RegisterSection = () => {
                     </>
                   ) : (
                     <>
-                      <User className="w-4 h-4 inline mr-2" />
+                      <User className="w-4 h-4 inline mr-2 " />
                       Create Account
                     </>
                   )}
@@ -423,12 +423,12 @@ export const RegisterSection = () => {
           </form>
 
           <div className="mt-6 text-center">
-            <a
-              href="#login"
-              className="text-blue-400 hover:text-blue-300 google-sans-code-400 text-sm transition-colors duration-200"
+            <button
+              onClick={onToggleAuth}
+              className="text-blue-500 hover:text-blue-300 google-sans-code-400 text-sm transition-colors duration-200 bg-transparent border-none cursor-pointer"
             >
               Already have an account? Login here
-            </a>
+            </button>
           </div>
         </div>
       </div>

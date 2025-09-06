@@ -12,7 +12,7 @@ import {
 import { useAuth } from "../context/AuthContext";
 import { Navigate, useNavigate } from "react-router-dom";
 
-export const LoginSection = () => {
+export const LoginSection = ({ onToggleAuth }) => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("patient");
   const [formData, setFormData] = useState({
@@ -117,13 +117,13 @@ export const LoginSection = () => {
   }
 
   return (
-    <section id="login" className="py-20 bg-[#27272A]">
+    <section id="login" className="py-20 bg-[var(--color-primary)]">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl google-sans-code-400 font-bold text-gray-100 mb-4">
+          <h2 className="text-4xl google-sans-code-400 font-bold text-[var(--color-secondary)] mb-4">
             Login to <span className="text-blue-400">HealthyMe</span>
           </h2>
-          <p className="text-slate-50 google-sans-code-400">
+          <p className="text-[var(--color-secondary)] google-sans-code-400">
             Select your role to continue
           </p>
         </div>
@@ -141,7 +141,7 @@ export const LoginSection = () => {
 
           {/* User Type Selection */}
           <div className="mb-8">
-            <div className="bg-gradient-to-r from-stone-900 to-slate-900 rounded-lg p-1">
+            <div className="bg-[var(--color-secondary)] rounded-lg p-1">
               <div className="grid grid-cols-2 gap-1">
                 {userTypes.map((type) => (
                   <button
@@ -168,9 +168,9 @@ export const LoginSection = () => {
 
           {/* Professional Login Form */}
           <form onSubmit={handleLogin}>
-            <div className="bg-gradient-to-b from-slate-900 to-slate-800 rounded-lg border border-slate-600 shadow-xl">
+            <div className="bg-[var(--color-secondary)] rounded-lg border border-slate-600 shadow-xl">
               {/* Header */}
-              <div className="px-6 py-4 bg-slate-100 border-b border-slate-300">
+              <div className="px-6 py-4 bg-slate-100 border-b border-black">
                 <h2 className="text-slate-900 text-sm google-sans-code-400 font-semibold">
                   {userTypes.find((t) => t.id === activeTab)?.label}{" "}
                   Authentication
@@ -242,12 +242,12 @@ export const LoginSection = () => {
             </div>
           </form>
           <div className="mt-6 text-center">
-            <a
-              href="#register"
-              className="text-blue-400 hover:text-blue-300 google-sans-code-400 text-sm transition-colors duration-200"
+            <button
+              onClick={onToggleAuth}
+              className="text-blue-500 hover:text-blue-300 google-sans-code-400 text-sm transition-colors duration-200 bg-transparent border-none cursor-pointer"
             >
               Don't have an account? Register here
-            </a>
+            </button>
           </div>
         </div>
       </div>

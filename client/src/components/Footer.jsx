@@ -18,7 +18,7 @@ export const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gradient-to-b from-[#161515] to-black border-t border-gray-800">
+    <footer className="bg-[var(--color-secondary)] border-t border-gray-800">
       {/* Terminal Header */}
       <div className="border-b border-gray-800 bg-gray-900/50">
         <div className="container mx-auto px-6 py-3">
@@ -41,11 +41,8 @@ export const Footer = () => {
           {/* Platform Info */}
           <div className="space-y-4">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded flex items-center justify-center">
-                <Heart className="w-4 h-4 text-white" />
-              </div>
               <h3 className="text-xl google-sans-code-400 font-bold text-white">
-                HealthyMe
+                Healthy<span className="text-blue-400">Me</span>
               </h3>
             </div>
             <p className="text-gray-400 google-sans-code-400 text-sm leading-relaxed">

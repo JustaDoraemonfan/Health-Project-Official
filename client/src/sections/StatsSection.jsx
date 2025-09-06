@@ -48,7 +48,7 @@ export const StatsSection = () => {
   ];
 
   return (
-    <section id="stats" className="py-20 bg-[#27272A]">
+    <section id="stats" className="py-20 bg-[var(--color-primary)]">
       <div className="absolute inset-0">
         <div className="absolute inset-0 opacity-5">
           <div
@@ -66,7 +66,7 @@ export const StatsSection = () => {
       <div className="container mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl google-sans-code-400 font-bold text-gray-100 mb-4">
+          <h2 className="text-4xl google-sans-code-400 font-bold text-[var(--color-secondary)] mb-4">
             Platform Analytics
           </h2>
           <p className="text-gray-400 google-sans-code-400">
@@ -78,7 +78,7 @@ export const StatsSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {stats.map((stat, index) => (
             <div key={index} className="group">
-              <div className="bg-gradient-to-br from-[#2F2F32] to-[#1F1F22] border border-gray-700 rounded-xl p-6 hover:border-blue-500/50 transition-all duration-300 transform hover:-translate-y-1">
+              <div className="bg-[var(--color-secondary)] border border-gray-700 rounded-xl p-6 hover:border-blue-500/50 transition-all duration-300 transform hover:-translate-y-1">
                 {/* Metric */}
                 <div className="google-sans-code-400 text-xs uppercase tracking-wider text-gray-400 mb-2">
                   {stat.metric}

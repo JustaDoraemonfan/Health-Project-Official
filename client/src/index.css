@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+:root {
+  --color-primary: #fffdf2;
+  --color-secondary: #000000;
+}
+
 .google-sans-code-400 {
   font-family: "Google Sans Code", monospace;
   font-optical-sizing: auto;
