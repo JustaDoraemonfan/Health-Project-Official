@@ -26,7 +26,7 @@ const DashboardCard = ({
 
   return (
     <div
-      className={`bg-gradient-to-r from-stone-900 to-slate-900 rounded-lg overflow-hidden border border-gray-700 hover:border-gray-600 transition-all duration-200 transform hover:scale-[1.02] cursor-pointer ${
+      className={`bg-[var(--color-secondary)] overflow-hidden rounded-sm transition-all duration-200 transform hover:scale-[1.02] cursor-pointer ${
         isLarge ? "col-span-2" : ""
       }`}
       onClick={onClick}

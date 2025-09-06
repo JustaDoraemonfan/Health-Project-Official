@@ -56,11 +56,11 @@ export default function StatusBar({
     <section>
       {/* Header */}
       <div className="text-center mb-10">
-        <h1 className="text-4xl google-sans-code-400 font-bold text-gray-100 mb-3">
+        <h1 className="text-4xl google-sans-code-400 font-bold text-[var(--color-secondary)] mb-3">
           {isDoctor ? "Doctor" : "Patient"}{" "}
           <span className="text-blue-400">Dashboard</span>
         </h1>
-        <p className="text-slate-50 google-sans-code-400 text-lg mb-1">
+        <p className="text-[var(--color-secondary)]/50 google-sans-code-400 text-lg mb-1">
           Welcome back, {isDoctor ? "Dr." : ""}{" "}
           <span className="text-green-400">{name}</span>
         </p>
@@ -75,7 +75,7 @@ export default function StatusBar({
 
       {/* Status Bar */}
       <div className="max-w-5xl mx-auto mb-8">
-        <div className="bg-zinc-900 rounded-xl p-5 border border-gray-700">
+        <div className="bg-[var(--color-secondary)] rounded-xl p-5 border border-gray-700">
           <div className="flex items-center justify-between google-sans-code-400">
             {/* Left section */}
             <div className="flex items-center gap-3">

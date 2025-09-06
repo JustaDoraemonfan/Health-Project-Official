@@ -29,17 +29,19 @@ const DoctorCard = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-lg hover:border-gray-700 hover:shadow-lg transition-all duration-200">
+    <div className="bg-[var(--color-secondary)] rounded-lg shadow-lg hover:shadow-lg transition-all duration-200">
       {/* Header */}
-      <div className="p-5 border-b border-gray-800">
+      <div className="p-5 ">
         <div className="flex items-start justify-between">
           <div className="flex items-center">
-            <div className="w-11 h-11 bg-gray-700 rounded-lg flex items-center justify-center mr-3">
-              <User className="w-5 h-5 text-gray-300" />
+            <div className="w-11 h-11 bg-[var(--color-primary)] rounded-lg flex items-center justify-center mr-3">
+              <User className="w-5 h-5 text-[var(--color-secondary)]" />
             </div>
             <div>
-              <h3 className="font-semibold text-gray-100 mb-1">{doctorName}</h3>
-              <div className="flex items-center text-gray-400 text-xs">
+              <h3 className="font-light text-[var(--color-primary)] mb-1">
+                {doctorName}
+              </h3>
+              <div className="flex items-center text-gray-400 font-medium text-xs">
                 <Mail className="w-3 h-3 mr-1" />
                 {doc.userId?.email}
               </div>
@@ -74,12 +76,12 @@ const DoctorCard = ({
       </div>
 
       {/* Toggle Details */}
-      <div className="px-5 py-3 border-b border-gray-800">
+      <div className="px-5 py-3">
         <button
           onClick={onToggleExpansion}
-          className="w-full flex items-center justify-center gap-2 py-2 text-gray-400 hover:text-gray-300 hover:bg-gray-800/50 rounded-md transition-colors"
+          className="w-full flex items-center justify-center gap-2 py-2 text-gray-400 hover:text-[var(--color-secondary)] hover:bg-gray-800/50 rounded-md transition-colors"
         >
-          <span className="text-sm">
+          <span className="text-xs">
             {isExpanded ? "Hide Details" : "View Details"}
           </span>
           {isExpanded ? (
@@ -92,14 +94,14 @@ const DoctorCard = ({
 
       {/* Expandable Details */}
       {isExpanded && (
-        <div className="p-5 space-y-4 border-b border-gray-800">
+        <div className="p-5 space-y-4 bg-[var(--color-primary)] ">
           {/* Quick Stats Grid */}
           <div className="grid grid-cols-2 gap-3 text-sm">
-            <div className="flex items-center gap-2 text-gray-300">
+            <div className="flex items-center gap-2 text-[var(--color-secondary)]">
               <Clock className="w-4 h-4 text-gray-400" />
               <span>{doc.experience}y exp</span>
             </div>
-            <div className="flex items-center gap-2 text-gray-300">
+            <div className="flex items-center gap-2 text-[var(--color-secondary)]">
               <DollarSign className="w-4 h-4 text-gray-400" />
               <span>${doc.consultationFee}</span>
             </div>
@@ -107,22 +109,22 @@ const DoctorCard = ({
 
           {/* Details */}
           <div className="space-y-2 text-sm">
-            <div className="flex items-center gap-2 text-gray-300">
+            <div className="flex items-center gap-2 text-[var(--color-secondary)]">
               <MapPin className="w-4 h-4 text-gray-400" />
               <span>{doc.location}</span>
             </div>
 
-            <div className="flex items-center gap-2 text-gray-300">
+            <div className="flex items-center gap-2 text-[var(--color-secondary)]">
               <GraduationCap className="w-4 h-4 text-gray-400" />
               <span className="truncate">{doc.education}</span>
             </div>
 
-            <div className="flex items-center gap-2 text-gray-300">
+            <div className="flex items-center gap-2 text-[var(--color-secondary)]">
               <Calendar className="w-4 h-4 text-gray-400" />
               <span>Next: {doc.nextAvailable}</span>
             </div>
 
-            <div className="flex items-center gap-2 text-gray-300">
+            <div className="flex items-center gap-2 text-[var(--color-secondary)]">
               <Phone className="w-4 h-4 text-gray-400" />
               <span className="google-sans-code-400 text-xs">{doc.phone}</span>
             </div>
@@ -138,7 +140,7 @@ const DoctorCard = ({
                 {doc.languages.map((lang, index) => (
                   <span
                     key={index}
-                    className="px-2 py-1 bg-gray-800 text-gray-300 text-xs rounded border border-gray-700"
+                    className="px-2 py-1 bg-gray-800 text-[var(--color-secondary)] text-xs rounded border border-gray-700"
                   >
                     {lang}
                   </span>
@@ -193,9 +195,9 @@ const DoctorCard = ({
         <button
           onClick={() => setIsModalOpen(true)}
           disabled={!doc.isAvailable}
-          className={`flex-1 py-2.5 px-4 rounded-md font-medium transition-all duration-200 ${
+          className={`flex-1 py-2.5 px-4 font-light rounded-md hover:cursor-pointer transition-all duration-200 ${
             doc.isAvailable
-              ? "bg-gray-100 hover:bg-white text-gray-900 shadow-sm hover:shadow-md"
+              ? "bg-[var(--color-primary)] hover:bg-white text-gray-900 shadow-sm hover:shadow-md"
               : "bg-gray-800 text-gray-500 cursor-not-allowed border border-gray-700"
           }`}
         >

@@ -69,10 +69,10 @@ export default function QuickAction({ role = "patient", actions = null }) {
       {/* Quick Actions Section */}
       <div className="max-w-4xl mx-auto mt-12">
         <div className="text-center mb-6">
-          <h3 className="text-xl google-sans-code-400 font-semibold text-gray-100 mb-2">
+          <h3 className="text-xl google-sans-code-400 font-semibold text-[var(--color-secondary)] mb-2">
             Quick Actions
           </h3>
-          <p className="text-gray-400 google-sans-code-400 text-sm">
+          <p className="text-[var(--color-secondary)]/50 google-sans-code-400 text-sm">
             {isDoctor
               ? "Essential tools for efficient patient care"
               : "Frequently used features for faster access"}
@@ -88,7 +88,7 @@ export default function QuickAction({ role = "patient", actions = null }) {
             <button
               key={action.id}
               onClick={action.onClick}
-              className={`bg-gradient-to-r from-stone-900 to-slate-900 rounded-lg p-4 border border-gray-700 hover:border-${
+              className={`bg-[var(--color-secondary)] rounded-lg p-4 border border-gray-700 hover:border-${
                 action.color === "red"
                   ? "red"
                   : action.color === "green"

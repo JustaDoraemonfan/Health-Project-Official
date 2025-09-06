@@ -20,13 +20,13 @@ const SearchSection = ({
     <div className="mb-8">
       <div className="flex gap-3 max-w-md mx-auto">
         <div className="relative flex-1">
-          <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
+          <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white" />
           <input
             type="text"
             placeholder="Enter your location"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-gray-900 border border-gray-700 rounded-md text-gray-100 placeholder-gray-500 focus:outline-none focus:border-gray-600 focus:ring-1 focus:ring-gray-600 transition-colors"
+            className="w-full pl-10 pr-4 py-2 bg-[var(--color-secondary)] border border-gray-700 rounded-md text-gray-100 placeholder-slate-500 focus:outline-none focus:border-gray-600 focus:ring-1 focus:ring-gray-600 transition-colors"
             onKeyPress={handleKeyPress}
             disabled={isLoading}
           />

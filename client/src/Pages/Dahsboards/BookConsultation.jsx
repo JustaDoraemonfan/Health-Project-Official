@@ -7,6 +7,7 @@ import EmptyState from "../../bookConfig/EmptyStates";
 import { useDoctors } from "../../hooks/useDoctors";
 import { appointmentAPI } from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
+import Header from "../../components/Header";
 
 const BookConsultation = () => {
   const [location, setLocation] = useState("");
@@ -38,13 +39,28 @@ const BookConsultation = () => {
         patient: user._id,
         createdBy: "patient",
       };
-      console.log(payload);
+      console.log("BookConsultation - Booking payload:", payload);
 
-      await appointmentAPI.bookAppointment(payload);
-      alert("Appointment booked successfully!");
+      const result = await appointmentAPI.bookAppointment(payload);
+      console.log("BookConsultation - API result:", result);
+
+      // Return the result with success info for the modal to handle
+      return {
+        success: true,
+        message: result?.message || "Appointment booked successfully!",
+        data: result,
+      };
     } catch (error) {
-      console.error(error);
-      alert("Failed to book appointment. Please try again.");
+      console.error("BookConsultation - Booking error:", error);
+
+      // Return error info for the modal to handle
+      return {
+        success: false,
+        message:
+          error?.response?.data?.message ||
+          "Failed to book appointment. Please try again.",
+        error: error,
+      };
     }
   };
 
@@ -63,59 +79,55 @@ const BookConsultation = () => {
   };
 
   return (
-    <div
-      className="min-h-screen p-6"
-      style={{
-        backgroundColor: "#161515",
-        fontFamily:
-          'ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace',
-      }}
-    >
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
+    <section>
+      <Header />
+      <div className="min-h-screen p-6 bg-[var(--color-primary)]">
+        <div className="max-w-6xl mx-auto py-20">
+          {/* Header */}
 
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-100 mb-2">
-            Book Consultation
-          </h1>
-          <p className="text-gray-400">
-            Find and book appointments with qualified healthcare professionals
-          </p>
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-light text-[var(--color-secondary)] mb-2">
+              BOOK CONSULTATION
+            </h1>
+            <p className="text-gray-400">
+              Find and book appointments with qualified healthcare professionals
+            </p>
+          </div>
+
+          {/* Search Section */}
+          <SearchSection
+            location={location}
+            setLocation={setLocation}
+            onSearch={handleSearch}
+            onReset={handleReset}
+            isLoading={isLoadingState}
+            searchPerformed={searchPerformed}
+          />
+
+          {/* Content */}
+          {isLoadingState ? (
+            <LoadingState loading={loading} searchLoading={searchLoading} />
+          ) : (
+            <>
+              <DoctorGrid
+                doctors={doctors}
+                location={location}
+                searchPerformed={searchPerformed}
+                expandedCards={expandedCards}
+                onReset={handleReset}
+                onBookNow={handleBookNow}
+                onCall={handleCall}
+                onToggleExpansion={toggleCardExpansion}
+                isLoading={isLoadingState}
+              />
+              {searchPerformed && doctors.length === 0 && (
+                <EmptyState location={location} onReset={handleReset} />
+              )}
+            </>
+          )}
         </div>
-
-        {/* Search Section */}
-        <SearchSection
-          location={location}
-          setLocation={setLocation}
-          onSearch={handleSearch}
-          onReset={handleReset}
-          isLoading={isLoadingState}
-          searchPerformed={searchPerformed}
-        />
-
-        {/* Content */}
-        {isLoadingState ? (
-          <LoadingState loading={loading} searchLoading={searchLoading} />
-        ) : (
-          <>
-            <DoctorGrid
-              doctors={doctors}
-              location={location}
-              searchPerformed={searchPerformed}
-              expandedCards={expandedCards}
-              onReset={handleReset}
-              onBookNow={handleBookNow}
-              onCall={handleCall}
-              onToggleExpansion={toggleCardExpansion}
-              isLoading={isLoadingState}
-            />
-            {searchPerformed && doctors.length === 0 && (
-              <EmptyState location={location} onReset={handleReset} />
-            )}
-          </>
-        )}
       </div>
-    </div>
+    </section>
   );
 };
 

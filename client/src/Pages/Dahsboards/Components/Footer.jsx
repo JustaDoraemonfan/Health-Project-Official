@@ -34,7 +34,7 @@ export default function Footer({ role = "patient" }) {
             {index > 0 && <span className="text-gray-600">•</span>}
             <button
               onClick={link.onClick}
-              className="text-blue-400 hover:text-blue-300 google-sans-code-400 text-sm transition-colors duration-200"
+              className="text-blue-400 hover:text-blue-300 hover:cursor-pointer google-sans-code-400 text-sm transition-colors duration-200"
             >
               {link.text}
             </button>
