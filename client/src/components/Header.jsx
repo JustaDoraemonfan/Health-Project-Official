@@ -24,7 +24,7 @@ const Header = () => {
             <>
               <button
                 onClick={logout}
-                className="flex items-center gap-1 hover:cursor-pointer px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-xs google-sans-code-400 transition-colors duration-200"
+                className="flex items-center gap-1 hover:cursor-pointer px-3 py-1.5 bg-transparent hover:bg-gray-800 text-white text-sm rounded-xs google-sans-code-400 transition-colors duration-200"
               >
                 <LogOut className="w-4 h-4" />
                 Logout
@@ -32,7 +32,7 @@ const Header = () => {
               {/* 🚨 Emergency Link */}
               <button
                 onClick={() => navigate("/emergency")}
-                className="flex items-center gap-1 px-3 py-1.5 bg-red-700 hover:bg-red-600 text-white text-sm rounded-xs google-sans-code-400 transition-colors duration-200"
+                className="flex items-center gap-1 px-3 py-1.5 bg-transparent hover:cursor-pointer hover:bg-red-950 text-white text-sm rounded-xs google-sans-code-400 transition-colors duration-200"
               >
                 <MapPin className="w-4 h-4" />
                 Emergency

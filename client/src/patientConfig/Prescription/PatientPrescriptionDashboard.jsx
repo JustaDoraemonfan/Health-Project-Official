@@ -1,9 +1,10 @@
 import { PrescriptionCard } from "./PatientPrescriptionCard";
 import { PrescriptionModal } from "./PrescriptionModal";
 import React, { useState, useEffect } from "react";
-import { Calendar, User, FileText } from "lucide-react";
+import { Calendar, User, FileText, Section } from "lucide-react";
 import { prescriptionAPI } from "../../services/api";
 import { getPdfUrl } from "../../utils/file"; // ✅ import helper
+import Header from "../../components/Header";
 
 export const PatientPrescriptionDashboard = () => {
   const [selectedPrescription, setSelectedPrescription] = useState(null);
@@ -54,106 +55,111 @@ export const PatientPrescriptionDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen google-sans-code-400 bg-gray-50">
-      <div className="max-w-6xl mx-auto p-6">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            My Prescriptions
-          </h1>
-          <p className="text-gray-600">
-            View and download your medical prescriptions
-          </p>
-        </div>
+    <section>
+      <Header />
+      <div className="min-h-screen google-sans-code-400 bg-[#0c0c0c] pt-20">
+        <div className="max-w-6xl mx-auto p-6">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-[#FFFDF2] mb-2">
+              My Prescriptions
+            </h1>
+            <p className="text-gray-600">
+              View and download your medical prescriptions
+            </p>
+          </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-blue-50 rounded-full">
-                <FileText className="w-6 h-6 text-blue-600" />
+          {/* Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-[#FFFDF2] rounded-lg shadow-sm border border-gray-200 p-6">
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-blue-50 rounded-full">
+                  <FileText className="w-6 h-6 text-blue-600" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-[#000000]">
+                    {prescriptions.length}
+                  </p>
+                  <p className="text-sm text-gray-500">Total Prescriptions</p>
+                </div>
               </div>
-              <div>
-                <p className="text-2xl font-bold text-gray-900">
-                  {prescriptions.length}
-                </p>
-                <p className="text-sm text-gray-500">Total Prescriptions</p>
+            </div>
+
+            <div className="bg-[#FFFDF2] rounded-lg shadow-sm border border-gray-200 p-6">
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-green-50 rounded-full">
+                  <Calendar className="w-6 h-6 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-[#000000]">
+                    {prescriptions.length > 0
+                      ? new Date(
+                          Math.max(
+                            ...prescriptions.map((p) => new Date(p.date))
+                          )
+                        ).toLocaleDateString("en-US", { month: "short" })
+                      : "-"}
+                  </p>
+                  <p className="text-sm text-gray-500">Latest Prescription</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-[#FFFDF2] rounded-lg shadow-sm border border-gray-200 p-6">
+              <div className="flex items-center gap-3">
+                <div classNambg-whitee="p-3 bg-purple-50 rounded-full">
+                  <User className="w-6 h-6 text-purple-600" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-[#000000]">
+                    {new Set(prescriptions.map((p) => p.doctorName)).size}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {new Set(prescriptions.map((p) => p.doctorName)).size > 1
+                      ? "Differnent Doctors"
+                      : "Doctor"}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-green-50 rounded-full">
-                <Calendar className="w-6 h-6 text-green-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-gray-900">
-                  {prescriptions.length > 0
-                    ? new Date(
-                        Math.max(...prescriptions.map((p) => new Date(p.date)))
-                      ).toLocaleDateString("en-US", { month: "short" })
-                    : "-"}
-                </p>
-                <p className="text-sm text-gray-500">Latest Prescription</p>
-              </div>
-            </div>
-          </div>
+          {/* Prescriptions List */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-[#FFFDF2] mb-4">
+              Recent Prescriptions
+            </h2>
 
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-purple-50 rounded-full">
-                <User className="w-6 h-6 text-purple-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-gray-900">
-                  {new Set(prescriptions.map((p) => p.doctorName)).size}
-                </p>
-                <p className="text-sm text-gray-500">
-                  {new Set(prescriptions.map((p) => p.doctorName)).size > 1
-                    ? "Differnent Doctors"
-                    : "Doctor"}
+            {prescriptions.length === 0 ? (
+              <div className="bg-[#FFFDF2] rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+                <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  No prescriptions found
+                </h3>
+                <p className="text-gray-500">
+                  Your prescriptions will appear here once they are issued.
                 </p>
               </div>
-            </div>
+            ) : (
+              prescriptions.map((prescription) => (
+                <PrescriptionCard
+                  key={prescription._id}
+                  prescription={prescription}
+                  onView={handleView}
+                  onDownload={handleDownload}
+                />
+              ))
+            )}
           </div>
         </div>
 
-        {/* Prescriptions List */}
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
-            Recent Prescriptions
-          </h2>
-
-          {prescriptions.length === 0 ? (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
-              <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                No prescriptions found
-              </h3>
-              <p className="text-gray-500">
-                Your prescriptions will appear here once they are issued.
-              </p>
-            </div>
-          ) : (
-            prescriptions.map((prescription) => (
-              <PrescriptionCard
-                key={prescription._id}
-                prescription={prescription}
-                onView={handleView}
-                onDownload={handleDownload}
-              />
-            ))
-          )}
-        </div>
+        {/* Modal */}
+        <PrescriptionModal
+          prescription={selectedPrescription}
+          isOpen={isModalOpen}
+          onClose={closeModal}
+        />
       </div>
-
-      {/* Modal */}
-      <PrescriptionModal
-        prescription={selectedPrescription}
-        isOpen={isModalOpen}
-        onClose={closeModal}
-      />
-    </div>
+    </section>
   );
 };
