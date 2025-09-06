@@ -82,13 +82,7 @@ const DoctorAppointment = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#161515] text-white google-sans-code-400 relative overflow-hidden">
-      {/* Background Decorative Elements */}
-      <div className="absolute inset-0 opacity-[0.015] pointer-events-none">
-        <div className="absolute top-20 right-20 w-96 h-96 bg-slate-500 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-40 left-20 w-80 h-80 bg-slate-600 rounded-full blur-3xl"></div>
-      </div>
-
+    <div className="min-h-screen bg-[var(--color-primary)] text-white google-sans-code-400 relative overflow-hidden">
       <Header
         currentDate={currentDate}
         totalAppointments={appointments.length}
@@ -124,9 +118,9 @@ const DoctorAppointment = () => {
         </div>
 
         {/* Appointments Section */}
-        <div className="bg-zinc-900/50 border border-zinc-800/40 rounded-xl">
-          <div className="px-6 py-4 border-b border-zinc-800/30">
-            <h2 className="text-xl font-bold text-white google-sans-code-400">
+        <div className="bg-transparent rounded-xl shadow-2xl">
+          <div className="px-6 py-4 ">
+            <h2 className="text-xl font-bold text-[var(--color-secondary)] google-sans-code-400">
               Today's Appointments
             </h2>
             <p className="text-sm text-zinc-400 google-sans-code-400">
@@ -159,7 +153,7 @@ const DoctorAppointment = () => {
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center py-20">
-                <div className="w-20 h-20 bg-zinc-800 border-2 border-dashed border-zinc-600 rounded-xl flex items-center justify-center mb-6">
+                <div className="w-20 h-20 bg-zinc-800 rounded-xl flex items-center justify-center mb-6">
                   <Calendar className="w-10 h-10 text-zinc-500" />
                 </div>
                 <h3 className="text-xl font-semibold text-white mb-2">

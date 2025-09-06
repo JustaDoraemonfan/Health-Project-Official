@@ -43,16 +43,11 @@ const DashboardCard = ({
             {title}
           </span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center flex-col">
           {/* Add stats display */}
           {stats && (
-            <span className="bg-white bg-opacity-20 text-white text-xs google-sans-code-400 px-2 py-1 rounded-full">
+            <span className="bg-transparent bg-opacity-20 text-white text-md google-sans-code-400 px-2 py-1 rounded-full">
               {stats}
-            </span>
-          )}
-          {badge && (
-            <span className="bg-red-100 bg-opacity-90 text-red-800 text-xs google-sans-code-400 px-2 py-1 rounded-full">
-              {badge}
             </span>
           )}
         </div>

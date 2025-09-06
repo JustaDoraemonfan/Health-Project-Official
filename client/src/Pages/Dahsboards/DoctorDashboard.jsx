@@ -92,21 +92,17 @@ const DoctorDashboard = () => {
   return (
     <>
       <Header />
-      <section className="min-h-screen bg-[#161515] py-8 pt-20">
+      <section className="min-h-screen bg-[var(--color-primary)] py-8 pt-20">
         <div className="container mx-auto px-6">
           {/* Status Bar with Upload Button */}
-          <div className="mb-8">
-            <div className="flex items-center justify-center mb-6">
-              <StatusBar
-                name={user.name}
-                email={user.email}
-                role="doctor"
-                specialization={doctor.specialization}
-                isAvailable={doctor.isAvailable}
-                id={doctor._id}
-              />
-            </div>
-          </div>
+          <StatusBar
+            name={user.name}
+            email={user.email}
+            role="doctor"
+            specialization={doctor.specialization}
+            isAvailable={doctor.isAvailable}
+            id={doctor._id}
+          />
 
           {/* Dashboard Grid */}
           <div className="max-w-6xl mx-auto">

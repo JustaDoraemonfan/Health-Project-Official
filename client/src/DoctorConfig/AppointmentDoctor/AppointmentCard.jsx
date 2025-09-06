@@ -84,12 +84,9 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
 
   return (
     <div
-      className="group relative bg-zinc-700/50 border border-slate-700 rounded-xl p-6 hover:bg-slate-800/70 hover:border-slate-600 transition-all duration-300 cursor-pointer transform hover:scale-[1.02]"
+      className="group relative bg-[var(--color-secondary)]/90 border border-slate-700 rounded-xl p-6 hover:bg-slate-800/70 hover:border-slate-600 transition-all duration-300 cursor-pointer transform hover:scale-[1.02]"
       onClick={() => onCardClick && onCardClick(appointment)}
     >
-      {/* Gradient overlay on hover */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl pointer-events-none"></div>
-
       {/* Card Header */}
       <div className="relative z-10 flex items-start justify-between mb-4">
         <div className="flex items-center space-x-3">
@@ -180,7 +177,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
               Dr. {appointment.doctor.name}
             </span>
             {appointment.doctorProfile?.specialization && (
-              <span className="ml-2 text-slate-500">
+              <span className="ml-2 text-slate-400">
                 • {appointment.doctorProfile.specialization}
               </span>
             )}
@@ -189,8 +186,8 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
 
         {/* Notes Section */}
         {appointment.notes && (
-          <div className="bg-slate-900/50 border border-slate-600 rounded-lg p-3 mt-3">
-            <p className="text-sm text-slate-300 google-sans-code-400 leading-relaxed">
+          <div className="bg-[var(--color-primary)] rounded-lg p-3 mt-3">
+            <p className="text-sm text-[var(--color-secondary)] google-sans-code-400 leading-relaxed">
               {appointment.notes}
             </p>
           </div>
