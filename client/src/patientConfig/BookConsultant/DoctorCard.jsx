@@ -14,7 +14,7 @@ import {
   Mail,
   MapPin,
 } from "lucide-react";
-import { getSpecialtyColor, getDoctorName } from "../utils/doctorHelpers";
+import { getSpecialtyColor, getDoctorName } from "../../utils/doctorHelpers";
 import BookingModal from "./BookingModal";
 
 const DoctorCard = ({

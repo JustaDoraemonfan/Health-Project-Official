@@ -1,6 +1,6 @@
 // components/AppointmentActions.js
 import React from "react";
-import { CheckIcon, RescheduleIcon, TrashIcon } from "../Icons/Icons";
+import { RescheduleIcon, TrashIcon } from "../../Icons/Icons";
 
 const AppointmentActions = ({ onConfirm, onReschedule, onCancel }) => {
   return (

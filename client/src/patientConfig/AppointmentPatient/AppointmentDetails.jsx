@@ -4,7 +4,7 @@ import {
   formatDate,
   getStatusClass,
   getShortId,
-} from "../utils/appointmentUtils";
+} from "../../utils/appointmentUtils";
 
 const AppointmentDetails = ({ appointment }) => {
   if (!appointment) return null;

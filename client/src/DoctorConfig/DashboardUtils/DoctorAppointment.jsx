@@ -1,19 +1,10 @@
 import React, { useState } from "react";
-import {
-  Calendar,
-  Clock,
-  User,
-  Phone,
-  MapPin,
-  Search,
-  Filter,
-  Bell,
-} from "lucide-react";
-import Header from "../../DoctoAppointment/Header";
-import SearchFilter from "../../DoctoAppointment/SearchFilter";
-import AppointmentCard from "../../DoctoAppointment/AppointmentCard";
-import StatsCard from "../../DoctoAppointment/StatsCard";
-import { useAppointments } from "../../hooks/useAppointments";
+import { Calendar, Bell } from "lucide-react";
+import Header from "../../DoctorConfig/AppointmentDoctor/Header";
+import SearchFilter from "../../DoctorConfig/AppointmentDoctor/SearchFilter";
+import AppointmentCard from "../../DoctorConfig/AppointmentDoctor/AppointmentCard";
+import StatsCard from "../../DoctorConfig/AppointmentDoctor/StatsCard";
+import { useAppointments } from "../..//hooks/useAppointments";
 
 const DoctorAppointment = () => {
   const {

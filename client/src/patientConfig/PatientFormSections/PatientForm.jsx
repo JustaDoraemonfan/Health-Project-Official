@@ -1,17 +1,17 @@
 // src/components/Profile/components/PatientForm.jsx
 import React from "react";
-import BasicInfoSection from "./PatientFormSections/BasicInfoSection";
-import MedicalHistorySection from "./PatientFormSections/MedicalHistorySection";
-import AllergiesSection from "./PatientFormSections/AllergiesSection";
-import MedicationsSection from "./PatientFormSections/MedicationsSection";
-import SurgeryHistorySection from "./PatientFormSections/SurgeryHistorySection";
-import EmergencyContactSection from "./PatientFormSections/EmergencyContactSection";
-import InsuranceSection from "./PatientFormSections/InsuranceSection";
+import BasicInfoSection from "./BasicInfoSection";
+import MedicalHistorySection from "./MedicalHistorySection";
+import AllergiesSection from "./AllergiesSection";
+import MedicationsSection from "./MedicationsSection";
+import SurgeryHistorySection from "./SurgeryHistorySection";
+import EmergencyContactSection from "./EmergencyContactSection";
+import InsuranceSection from "./InsuranceSection";
 
 const PatientForm = ({ formData, handleChange }) => {
   return (
     <>
-      <h3 className="text-xl google-sans-code-400 font-semibold text-amber-50 mb-4 border-b border-gray-600 pb-2">
+      <h3 className="text-xl google-sans-code-400 font-semibold text-[var(--color-secondary)] mb-4 border-b border-gray-600 pb-2">
         Patient Profile
       </h3>
 

@@ -16,13 +16,13 @@ import {
   FWLDashboard,
   AdminDashboard,
 } from "./pages/Dahsboards/Dashboard";
-import BookConsultation from "./pages/Dahsboards/BookConsultation";
-import UpdateProfile from "./pages/Dahsboards/UpdateProfile";
-import AppointmentDashboard from "./pages/Dahsboards/Appointment";
+import BookConsultation from "./patientConfig/DashboardUtils/BookConsultation";
+import UpdateProfile from "./patientConfig/DashboardUtils/UpdateProfile";
+import AppointmentDashboard from "./patientConfig/DashboardUtils/Appointment";
 import "./App.css";
-import DoctorAppointment from "./pages/Dahsboards/DoctorAppointment";
+import DoctorAppointment from "./DoctorConfig/DashboardUtils/DoctorAppointment";
 import EmergencyMap from "./pages/EmergencyMap";
-import PrescriptionUploadModal from "./DoctoAppointment/Prescription";
+import PrescriptionUploadModal from "./DoctorConfig/Prescription/Prescription";
 import { PatientPrescriptionDashboard } from "./patientConfig/Prescription/PatientPrescriptionDashboard";
 
 // Component to handle routing logic

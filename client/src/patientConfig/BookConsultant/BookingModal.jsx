@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { X, ChevronRight, ChevronLeft, Check } from "lucide-react";
 import { BookingSteps } from "./BookingSteps";
-import Toast from "../components/Toast";
+import Toast from "../../components/Toast";
 
 const BookingModal = ({ doctor, onClose, onConfirm }) => {
   const [currentStep, setCurrentStep] = useState(1);

@@ -4,7 +4,7 @@ import TopBar from "./Topbar";
 import Footer from "./Footer";
 import AppointmentDetails, { AppointmentSidebar } from "./AppointmentDetails";
 import AppointmentActions from "./AppointmentActions";
-import { BackIcon } from "../Icons/Icons";
+import { BackIcon } from "../../Icons/Icons";
 
 const DetailedView = ({
   selectedAppointment,

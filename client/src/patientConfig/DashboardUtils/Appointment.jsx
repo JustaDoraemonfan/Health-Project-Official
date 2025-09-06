@@ -1,7 +1,7 @@
 // AppointmentDashboard.js
 import React, { useState } from "react";
-import DashboardView from "../../appointmetConfigs/DashboardView";
-import DetailedView from "../../appointmetConfigs/DetailedView";
+import DashboardView from "../AppointmentPatient/DashboardView";
+import DetailedView from "../AppointmentPatient/DetailedView";
 import { useAppointments } from "../../hooks/useAppointments";
 
 const AppointmentDashboard = () => {

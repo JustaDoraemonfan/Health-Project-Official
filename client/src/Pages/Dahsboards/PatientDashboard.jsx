@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import DashboardCard from "./Components/dashboardCard";
-import StatusBar from "./Components/StatusBar";
-import QuickAction from "./Components/QuickAction";
-import UpdateSymptomModal from "../../patientConfig/UpdateSymptomModal";
+import DashboardCard from "./DashboardComponents/dashboardCard";
+import StatusBar from "./DashboardComponents/StatusBar";
+import QuickAction from "./DashboardComponents/QuickAction";
+import UpdateSymptomModal from "../../patientConfig/DashboardUtils/UpdateSymptomModal";
 import { dashboardAPI } from "../../services/api";
 import { dashboardSections } from "../../config/dashboardSection";
-import Footer from "./Components/Footer";
+import Footer from "./DashboardComponents/Footer";
 import Header from "../../components/Header";
 import { symptomAPI } from "../../services/api";
 

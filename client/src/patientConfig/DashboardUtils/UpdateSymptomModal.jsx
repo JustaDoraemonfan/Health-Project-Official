@@ -1,6 +1,6 @@
 // Components/UpdateSymptomModal.js
 import React, { useState, useRef, useEffect } from "react";
-import { X, Upload, Calendar, FileText, AlertCircle } from "lucide-react";
+import { X, Upload, Calendar, FileText } from "lucide-react";
 
 // Mock shadcn/ui components with proper styling
 const Dialog = ({ open, onOpenChange, children }) => {
@@ -9,7 +9,7 @@ const Dialog = ({ open, onOpenChange, children }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0  backdrop-blur-sm transition-opacity"
         onClick={() => onOpenChange(false)}
       />
       <div className="relative z-50 w-full max-w-lg mx-4">{children}</div>
@@ -19,7 +19,7 @@ const Dialog = ({ open, onOpenChange, children }) => {
 
 const DialogContent = ({ children, className = "" }) => (
   <div
-    className={`bg-zinc-950/70 backdrop-blur-md rounded-lg shadow-lg border ${className}`}
+    className={`bg-[var(--color-secondary)] backdrop-blur-md rounded-lg overflow-hidden shadow-lg border ${className}`}
   >
     {children}
   </div>
@@ -69,14 +69,14 @@ const Button = ({
 
 const Input = ({ className = "", ...props }) => (
   <input
-    className={`flex h-10 w-full rounded-md border border-gray-300 bg-amber-50 px-3 py-2 text-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
+    className={`flex h-10 w-full rounded-md border border-gray-300 bg-[var(--color-primary)] px-3 py-2 text-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
     {...props}
   />
 );
 
 const Textarea = ({ className = "", ...props }) => (
   <textarea
-    className={`flex min-h-[80px] w-full rounded-md border border-gray-300 bg-amber-50 px-3 py-2 text-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50 resize-none ${className}`}
+    className={`flex min-h-[80px] w-full rounded-md border border-gray-300 bg-[var(--color-primary)] px-3 py-2 text-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50 resize-none ${className}`}
     {...props}
   />
 );
@@ -86,7 +86,7 @@ const Select = ({ children, value, onValueChange, placeholder }) => {
     <select
       value={value}
       onChange={(e) => onValueChange(e.target.value)}
-      className="flex h-10 w-full rounded-md border border-gray-300 bg-amber-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+      className="flex h-10 w-full rounded-md border border-gray-300 bg-[var(--color-primary)] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
     >
       {placeholder && <option value="">{placeholder}</option>}
       {children}
@@ -237,7 +237,7 @@ const UpdateSymptomModal = ({
               placeholder="Describe your symptom in detail..."
               value={formData.description}
               onChange={(e) => handleInputChange("description", e.target.value)}
-              className="min-h-[100px]"
+              className="min-h-[60px]"
               required
             />
           </div>
@@ -303,7 +303,7 @@ const UpdateSymptomModal = ({
               placeholder="Any additional information, triggers, or observations..."
               value={formData.notes}
               onChange={(e) => handleInputChange("notes", e.target.value)}
-              className="min-h-[80px]"
+              className="min-h-[60px]"
             />
           </div>
 
@@ -360,7 +360,7 @@ const UpdateSymptomModal = ({
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-col-reverse sm:flex-row gap-2 pt-4 border-t">
+          <div className="flex flex-col-reverse sm:flex-row gap-2 pt-2 border-t">
             <Button
               type="button"
               variant="secondary"

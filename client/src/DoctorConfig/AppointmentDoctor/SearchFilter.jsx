@@ -1,4 +1,4 @@
-import { Search, Filter } from "lucide-react";
+import { Search } from "lucide-react";
 const SearchFilter = ({
   searchTerm,
   setSearchTerm,

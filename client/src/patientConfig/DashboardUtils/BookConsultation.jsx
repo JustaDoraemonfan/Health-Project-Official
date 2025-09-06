@@ -1,9 +1,9 @@
 // components/consultation/BookConsultation.jsx
 import { useState } from "react";
-import SearchSection from "../../bookConfig/SearchSection";
-import DoctorGrid from "../../bookConfig/DoctorGrid";
-import LoadingState from "../../bookConfig/LoadingState";
-import EmptyState from "../../bookConfig/EmptyStates";
+import SearchSection from "../BookConsultant/SearchSection";
+import DoctorGrid from "../BookConsultant/DoctorGrid";
+import LoadingState from "../BookConsultant/LoadingState";
+import EmptyState from "../BookConsultant/EmptyStates";
 import { useDoctors } from "../../hooks/useDoctors";
 import { appointmentAPI } from "../../services/api";
 import { useAuth } from "../../context/AuthContext";

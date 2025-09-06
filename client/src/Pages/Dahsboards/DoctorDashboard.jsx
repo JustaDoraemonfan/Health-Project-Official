@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus } from "lucide-react";
-import DashboardCard from "./Components/dashboardCard";
-import StatusBar from "./Components/StatusBar";
-import QuickAction from "./Components/QuickAction";
+import DashboardCard from "./DashboardComponents/dashboardCard";
+import StatusBar from "./DashboardComponents/StatusBar";
+import QuickAction from "./DashboardComponents/QuickAction";
 import { dashboardAPI, doctorAPI } from "../../services/api";
-import PrescriptionUploadModal from "../../DoctoAppointment/Prescription";
+import PrescriptionUploadModal from "../../DoctorConfig/Prescription/Prescription";
 import { doctorDashboardSections } from "../../config/doctorDashboardSections";
-import Footer from "./Components/Footer";
+import Footer from "./DashboardComponents/Footer";
 import Header from "../../components/Header";
 
 const DoctorDashboard = () => {

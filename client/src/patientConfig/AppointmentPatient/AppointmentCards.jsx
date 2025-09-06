@@ -1,11 +1,11 @@
 // components/AppointmentCard.js
 import React from "react";
-import { DoctorIcon, CalendarIcon, ClockIcon } from "../Icons/Icons";
+import { DoctorIcon, CalendarIcon, ClockIcon } from "../../Icons/Icons";
 import {
   getStatusClass,
   formatDate,
   getShortId,
-} from "../utils/appointmentUtils";
+} from "../../utils/appointmentUtils";
 
 const AppointmentCard = ({ appointment, onCardClick }) => {
   return (

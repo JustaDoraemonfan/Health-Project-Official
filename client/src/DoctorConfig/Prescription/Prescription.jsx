@@ -1,15 +1,7 @@
 import React, { useState, useEffect } from "react";
-import {
-  Upload,
-  User,
-  FileText,
-  CheckCircle,
-  AlertCircle,
-  Loader,
-  X,
-} from "lucide-react";
-import { authAPI, prescriptionAPI, doctorAPI } from "../services/api";
-import Toast from "../components/Toast";
+import { Upload, User, FileText, Loader, X } from "lucide-react";
+import { authAPI, prescriptionAPI, doctorAPI } from "../../services/api";
+import Toast from "../../components/Toast";
 
 const PrescriptionUploadModal = ({ isOpen, onClose }) => {
   const [patients, setPatients] = useState([]);

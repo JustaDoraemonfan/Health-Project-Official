@@ -1,14 +1,4 @@
-import React, { useState } from "react";
-import {
-  Calendar,
-  Clock,
-  User,
-  Phone,
-  MapPin,
-  Search,
-  Filter,
-  Bell,
-} from "lucide-react";
+import { Calendar } from "lucide-react";
 
 const Header = ({
   currentDate,

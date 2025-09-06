@@ -1,67 +1,62 @@
-// src/components/Profile/components/PatientFormSections/InsuranceSection.jsx
+// src/components/Profile/components/PatientFormSections/EmergencyContactSection.jsx
 import React from "react";
 
-const InsuranceSection = ({ formData, handleChange }) => {
+const EmergencyContactSection = ({ formData, handleChange }) => {
   return (
     <div className="mb-6 google-sans-code-400">
-      <h4 className="text-lg font-medium text-gray-200 mb-3">
-        Insurance Information (Optional)
+      <h4 className="text-lg font-medium text-[var(--color-seconary)] mb-3">
+        Emergency Contact
       </h4>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
           <label
-            htmlFor="insuranceProvider"
-            className="block text-sm font-medium text-gray-300 mb-2"
+            htmlFor="emergencyContactName"
+            className="block text-sm font-medium text-[var(--color-seconary)] mb-2"
           >
-            Provider
+            Full Name
           </label>
           <input
             type="text"
-            id="insuranceProvider"
-            name="insurance.provider"
-            value={formData.insurance?.provider || ""}
+            id="emergencyContactName"
+            name="emergencyContact.name"
+            value={formData.emergencyContact?.name || ""}
             onChange={handleChange}
             className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 resize-vertical"
-            placeholder="Provider Name"
+            placeholder="Enter contact name"
           />
         </div>
         <div>
           <label
-            htmlFor="insurancePolicyNumber"
-            className="block text-sm font-medium text-gray-300 mb-2"
+            htmlFor="emergencyContactRelation"
+            className="block text-sm font-medium text-[var(--color-seconary)] mb-2"
           >
-            Policy Number
+            Relationship
           </label>
           <input
             type="text"
-            id="insurancePolicyNumber"
-            name="insurance.policyNumber"
-            value={formData.insurance?.policyNumber || ""}
+            id="emergencyContactRelation"
+            name="emergencyContact.relation"
+            value={formData.emergencyContact?.relation || ""}
             onChange={handleChange}
             className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 resize-vertical"
-            placeholder="Policy Number"
+            placeholder="e.g., Parent, Spouse, Sibling"
           />
         </div>
         <div>
           <label
-            htmlFor="insuranceValidTill"
-            className="block text-sm font-medium text-gray-300 mb-2"
+            htmlFor="emergencyContactPhone"
+            className="block text-sm font-medium text-[var(--color-seconary)] mb-2"
           >
-            Valid Until
+            Phone Number
           </label>
           <input
-            type="date"
-            id="insuranceValidTill"
-            name="insurance.validTill"
-            value={
-              formData.insurance?.validTill
-                ? new Date(formData.insurance.validTill)
-                    .toISOString()
-                    .split("T")[0]
-                : ""
-            }
+            type="tel"
+            id="emergencyContactPhone"
+            name="emergencyContact.phone"
+            value={formData.emergencyContact?.phone || ""}
             onChange={handleChange}
             className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 resize-vertical"
+            placeholder="Enter emergency contact number"
           />
         </div>
       </div>
@@ -69,4 +64,4 @@ const InsuranceSection = ({ formData, handleChange }) => {
   );
 };
 
-export default InsuranceSection;
+export default EmergencyContactSection;

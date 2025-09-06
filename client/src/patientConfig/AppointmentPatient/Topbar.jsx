@@ -1,6 +1,6 @@
 // components/TopBar.js
 import React from "react";
-import { getInitials } from "../utils/appointmentUtils";
+import { getInitials } from "../../utils/appointmentUtils";
 
 const TopBar = ({ selectedAppointment, currentPatient }) => {
   const patientName =

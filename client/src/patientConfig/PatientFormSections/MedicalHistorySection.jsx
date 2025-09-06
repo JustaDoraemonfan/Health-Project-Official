@@ -4,13 +4,13 @@ import React from "react";
 const MedicalHistorySection = ({ formData, handleChange }) => {
   return (
     <div className="mb-6 google-sans-code-400">
-      <h4 className="text-lg font-medium text-gray-200 mb-3">
+      <h4 className="text-lg font-medium text-[var(--color-seconary)] mb-3">
         Medical History
       </h4>
       <div>
         <label
           htmlFor="medicalHistory"
-          className="block text-sm font-medium text-gray-300 mb-2"
+          className="block text-sm font-medium text-[var(--color-seconary)] mb-2"
         >
           Past Medical Conditions
           <span className="text-sm text-gray-500 ml-2">

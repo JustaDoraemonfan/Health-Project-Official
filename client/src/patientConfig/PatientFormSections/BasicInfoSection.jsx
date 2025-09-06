@@ -4,14 +4,14 @@ import React from "react";
 const BasicInfoSection = ({ formData, handleChange }) => {
   return (
     <div className="mb-6 google-sans-code-400">
-      <h4 className="text-lg font-medium text-gray-200 mb-3">
+      <h4 className="text-lg font-medium text-[var(--color-secondary)] mb-3">
         Basic Information
       </h4>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
           <label
             htmlFor="age"
-            className="block text-sm font-medium text-gray-300 mb-2"
+            className="block text-sm font-medium text-[var(--color-seconary)] mb-2"
           >
             Age
           </label>
@@ -30,7 +30,7 @@ const BasicInfoSection = ({ formData, handleChange }) => {
         <div>
           <label
             htmlFor="gender"
-            className="block text-sm font-medium text-gray-300 mb-2"
+            className="block text-sm font-medium text-[var(--color-seconary)] mb-2"
           >
             Gender
           </label>
@@ -50,7 +50,7 @@ const BasicInfoSection = ({ formData, handleChange }) => {
         <div>
           <label
             htmlFor="bloodGroup"
-            className="block text-sm font-medium text-gray-300 mb-2"
+            className="block text-sm font-medium text-[var(--color-seconary)] mb-2"
           >
             Blood Group
           </label>
@@ -78,7 +78,7 @@ const BasicInfoSection = ({ formData, handleChange }) => {
         <div>
           <label
             htmlFor="location"
-            className="block text-sm font-medium text-gray-300 mb-2"
+            className="block text-sm font-medium text-[var(--color-seconary)] mb-2"
           >
             Location
           </label>
@@ -95,7 +95,7 @@ const BasicInfoSection = ({ formData, handleChange }) => {
         <div>
           <label
             htmlFor="contactNumber"
-            className="block text-sm font-medium text-gray-300 mb-2"
+            className="block text-sm font-medium text-[var(--color-seconary)] mb-2"
           >
             Contact Number
           </label>
