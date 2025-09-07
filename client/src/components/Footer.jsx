@@ -18,7 +18,10 @@ export const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[var(--color-secondary)] border-t border-gray-800">
+    <footer
+      id="about"
+      className="bg-[var(--color-secondary)] border-t border-gray-800"
+    >
       {/* Terminal Header */}
       <div className="border-b border-gray-800 bg-gray-900/50">
         <div className="container mx-auto px-6 py-3">

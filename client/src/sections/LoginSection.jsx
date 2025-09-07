@@ -117,7 +117,7 @@ export const LoginSection = ({ onToggleAuth }) => {
   }
 
   return (
-    <section id="login" className="py-20 bg-[var(--color-primary)]">
+    <section className="py-20 bg-[var(--color-primary)]">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl google-sans-code-400 font-bold text-[var(--color-secondary)] mb-4">
