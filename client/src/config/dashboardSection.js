@@ -43,7 +43,7 @@ export const dashboardSections = (navigate, modalHandlers = {}) => [
       "View your complete medical history and previous consultations.",
     icon: FileText,
     color: "purple",
-    onClick: () => console.log("Health records clicked"),
+    onClick: () => navigate("/patient/health"),
   },
   {
     id: "appointments",
