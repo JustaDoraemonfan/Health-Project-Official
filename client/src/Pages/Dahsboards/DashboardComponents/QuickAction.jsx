@@ -59,6 +59,14 @@ export default function QuickAction({ role = "patient", actions = null }) {
       color: "blue",
       onClick: () => console.log("Patient lookup"),
     },
+    {
+      id: "profile",
+      title: "Manage your profile",
+      description: "View & update profile details",
+      icon: CreditCard,
+      color: "blue",
+      onClick: () => navigate("/update-profile"),
+    },
   ];
 
   const quickActions =
@@ -67,7 +75,7 @@ export default function QuickAction({ role = "patient", actions = null }) {
   return (
     <section>
       {/* Quick Actions Section */}
-      <div className="max-w-4xl mx-auto mt-12">
+      <div className="max-w-6xl mx-auto mt-12">
         <div className="text-center mb-6">
           <h3 className="text-xl google-sans-code-400 font-semibold text-[var(--color-secondary)] mb-2">
             Quick Actions
@@ -81,7 +89,7 @@ export default function QuickAction({ role = "patient", actions = null }) {
 
         <div
           className={`grid grid-cols-1 ${
-            quickActions.length >= 3 ? "md:grid-cols-3" : "md:grid-cols-2"
+            quickActions.length >= 4 ? "md:grid-cols-4" : "md:grid-cols-2"
           } gap-4`}
         >
           {quickActions.map((action) => (
@@ -94,7 +102,7 @@ export default function QuickAction({ role = "patient", actions = null }) {
                   : action.color === "green"
                   ? "green"
                   : "blue"
-              }-500 transition-all duration-200 transform hover:scale-[1.02] text-left`}
+              }-500 transition-all duration-200 transform hover:scale-[1.02] text-left hover:cursor-pointer`}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
