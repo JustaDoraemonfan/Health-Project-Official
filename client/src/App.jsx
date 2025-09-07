@@ -7,7 +7,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
-import LandingPage from "./pages/LandingPage";
+import LandingPage from "./sections/LandingPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LoadingSpinner from "./components/LoadingSpinner";
 import {
@@ -25,25 +25,19 @@ import EmergencyMap from "./pages/EmergencyMap";
 import PrescriptionUploadModal from "./DoctorConfig/Prescription/Prescription";
 import { PatientPrescriptionDashboard } from "./patientConfig/Prescription/PatientPrescriptionDashboard";
 
-// Component to handle routing logic
 const AppRoutes = () => {
   const { isAuthenticated, user, initialized, error } = useAuth();
 
-  // Show spinner only during initial load, not during all loading states
   if (!initialized) {
     return <LoadingSpinner />;
   }
 
-  // If there's an auth error and we're not authenticated,
-  // we might want to handle this gracefully
   if (error && !isAuthenticated) {
     console.log("Auth error occurred:", error);
-    // You could show an error page or just proceed to landing
   }
 
   return (
     <Routes>
-      {/* Public route - Landing page with login/register */}
       <Route
         path="/"
         element={

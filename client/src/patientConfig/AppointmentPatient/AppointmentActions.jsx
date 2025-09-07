@@ -2,7 +2,7 @@
 import React from "react";
 import { RescheduleIcon, TrashIcon } from "../../Icons/Icons";
 
-const AppointmentActions = ({ onConfirm, onReschedule, onCancel }) => {
+const AppointmentActions = ({ onReschedule, onCancel }) => {
   return (
     <div className="flex flex-wrap gap-2 mt-6 mb-6">
       <button

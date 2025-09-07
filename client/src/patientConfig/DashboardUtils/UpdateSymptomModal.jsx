@@ -19,7 +19,7 @@ const Dialog = ({ open, onOpenChange, children }) => {
 
 const DialogContent = ({ children, className = "" }) => (
   <div
-    className={`bg-[var(--color-secondary)] backdrop-blur-md rounded-lg overflow-hidden shadow-lg border ${className}`}
+    className={`bg-[var(--color-primary)] backdrop-blur-md rounded-lg overflow-hidden shadow-lg border ${className}`}
   >
     {children}
   </div>
@@ -30,7 +30,9 @@ const DialogHeader = ({ children }) => (
 );
 
 const DialogTitle = ({ children }) => (
-  <h2 className="text-lg font-semibold text-white">{children}</h2>
+  <h2 className="text-3xl font-light text-[var(--color-secondary)]">
+    {children}
+  </h2>
 );
 
 const Button = ({
@@ -282,7 +284,7 @@ const UpdateSymptomModal = ({
             <Select
               value={formData.category}
               onValueChange={(value) => handleInputChange("category", value)}
-              placeholder="Select Category (optional)"
+              placeholder="Select Category (Optional)"
             >
               {categoryOptions.map((category) => (
                 <SelectItem key={category} value={category.toLowerCase()}>

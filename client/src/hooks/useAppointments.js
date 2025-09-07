@@ -57,8 +57,6 @@ export const useAppointments = () => {
     try {
       // Add API call to cancel appointment
       await appointmentAPI.cancelAppointment(appointment._id);
-      // await appointmentAPI.cancelAppointment(appointment._id);
-      // fetchAppointments(); // Refresh the list
     } catch (err) {
       console.error("Failed to cancel appointment:", err);
     }

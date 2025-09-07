@@ -1,10 +1,18 @@
 // components/DetailedView.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TopBar from "./Topbar";
 import Footer from "./Footer";
 import AppointmentDetails, { AppointmentSidebar } from "./AppointmentDetails";
 import AppointmentActions from "./AppointmentActions";
 import { BackIcon } from "../../Icons/Icons";
+const cancellationReasons = [
+  "Schedule conflict",
+  "Personal emergency",
+  "Feeling unwell",
+  "Transportation issues",
+  "No longer need appointment",
+  "Other",
+];
 
 const DetailedView = ({
   selectedAppointment,
@@ -13,7 +21,31 @@ const DetailedView = ({
   onCancelAppointment,
 }) => {
   const [showCancelModal, setShowCancelModal] = useState(false);
+  useEffect(() => {
+    if (!showCancelModal) {
+      setReason("");
+      setSelectedCategory("");
+    }
+  }, [showCancelModal]);
+  const [reason, setReason] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   if (!selectedAppointment) return null;
+
+  const handleSubmit = () => {
+    const finalReason =
+      selectedCategory === "Other" || !selectedCategory
+        ? reason
+        : selectedCategory + (reason ? `: ${reason}` : "");
+
+    confirmCancel(finalReason);
+  };
+
+  const isSubmitDisabled = () => {
+    if (selectedCategory && selectedCategory !== "Other") {
+      return false; // Category selected, no additional text required
+    }
+    return !reason.trim(); // Require text input for "Other" or when no category selected
+  };
 
   const handleReschedule = () => {
     console.log("Rescheduling appointment:", selectedAppointment._id);
@@ -24,7 +56,8 @@ const DetailedView = ({
     setShowCancelModal(true); // open modal instead of cancelling directly
   };
 
-  const confirmCancel = () => {
+  const confirmCancel = (cancellationReason) => {
+    console.log("Appointment cancelled with reason:", cancellationReason);
     onCancelAppointment?.(selectedAppointment);
     setShowCancelModal(false);
   };
@@ -80,45 +113,127 @@ const DetailedView = ({
       </main>
 
       {showCancelModal && (
-        <div
-          className="fixed inset-0 bg-transparent bg-opacity-60 flex items-center justify-center z-50 transition-opacity duration-200"
-          style={{
-            animation: showCancelModal
-              ? "fadeIn 0.2s ease-out"
-              : "fadeOut 0.2s ease-out",
-          }}
-        >
+        <>
+          <style jsx>{`
+            @keyframes fadeIn {
+              from {
+                opacity: 0;
+              }
+              to {
+                opacity: 1;
+              }
+            }
+            @keyframes fadeOut {
+              from {
+                opacity: 1;
+              }
+              to {
+                opacity: 0;
+              }
+            }
+            @keyframes scaleIn {
+              from {
+                transform: scale(0.9);
+                opacity: 0;
+              }
+              to {
+                transform: scale(1);
+                opacity: 1;
+              }
+            }
+            @keyframes scaleOut {
+              from {
+                transform: scale(1);
+                opacity: 1;
+              }
+              to {
+                transform: scale(0.9);
+                opacity: 0;
+              }
+            }
+          `}</style>
+
           <div
-            className="bg-white text-black p-6 rounded-2xl shadow-2xl w-96 transform transition-all duration-200"
+            className="fixed inset-0 bg-[var(--color-secondary)]/80 backdrop-blur-sm bg-opacity-60 flex items-center justify-center z-50 transition-opacity duration-200"
             style={{
               animation: showCancelModal
-                ? "scaleIn 0.25s ease-out"
-                : "scaleOut 0.25s ease-out",
+                ? "fadeIn 0.2s ease-out"
+                : "fadeOut 0.2s ease-out",
             }}
           >
-            <h3 className="text-xl text-red-600 font-bold mb-3">
-              Confirm Cancellation
-            </h3>
-            <p className="mb-5 text-gray-700">
-              Are you sure you want to cancel this appointment? This action
-              cannot be undone.
-            </p>
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setShowCancelModal(false)}
-                className="px-4 py-2 rounded-lg border border-gray-400 hover:bg-gray-100 transition-colors"
-              >
-                No, Keep It
-              </button>
-              <button
-                onClick={confirmCancel}
-                className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors"
-              >
-                Yes, Cancel
-              </button>
+            <div
+              className="bg-white text-black p-6 rounded-2xl shadow-2xl w-96 max-w-md mx-4 transform transition-all duration-200"
+              style={{
+                animation: showCancelModal
+                  ? "scaleIn 0.25s ease-out"
+                  : "scaleOut 0.25s ease-out",
+              }}
+            >
+              <h3 className="text-xl text-red-600 font-light mb-3">
+                Cancel Appointment
+              </h3>
+              <p className="mb-5 text-sm text-gray-700">
+                Please provide a reason for canceling this appointment. This
+                action cannot be undone.
+              </p>
+
+              {/* Reason Selection */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Reason for cancellation
+                </label>
+
+                {/* Dropdown for common reasons */}
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent mb-3"
+                >
+                  <option value="">Select a reason...</option>
+                  {cancellationReasons.map((reasonOption) => (
+                    <option key={reasonOption} value={reasonOption}>
+                      {reasonOption}
+                    </option>
+                  ))}
+                </select>
+
+                {/* Text area for additional details or "Other" reason */}
+                <textarea
+                  value={reason}
+                  onChange={(e) => setReason(e.target.value)}
+                  placeholder={
+                    selectedCategory === "Other"
+                      ? "Please specify..."
+                      : "Additional details (optional)"
+                  }
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
+                  rows={3}
+                />
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={() => setShowCancelModal(false)}
+                  className="px-4 py-2 rounded-lg border border-gray-400 text-gray-700 hover:bg-gray-100 transition-colors"
+                >
+                  Close
+                </button>
+                <button
+                  onClick={handleSubmit}
+                  disabled={isSubmitDisabled()}
+                  className={`px-4 py-2 rounded-lg transition-colors ${
+                    isSubmitDisabled()
+                      ? "bg-gray-400 text-gray-200 cursor-not-allowed"
+                      : "bg-red-600 text-white hover:bg-red-700"
+                  }`}
+                >
+                  Cancel Appointment
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        </>
       )}
       <Footer />
       <style jsx>{`
