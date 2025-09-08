@@ -20,6 +20,7 @@ import profileRoutes from "./routes/profileRoutes.js";
 import appointmentRoutes from "./routes/appointmentRoutes.js";
 import symptomRoutes from "./routes/symptomRoutes.js";
 import prescriptionRoutes from "./routes/prescriptionRoutes.js";
+import notesRoutes from "./routes/notesRoutes.js";
 
 // Load env vars
 dotenv.config();
@@ -58,6 +59,7 @@ app.use("/api/profile", profileRoutes);
 app.use("/api/appointments", appointmentRoutes);
 app.use("/api/symptoms", symptomRoutes);
 app.use("/api/prescriptions", prescriptionRoutes);
+app.use("/api/notes", notesRoutes);
 
 // ---------- ERROR HANDLING ----------
 app.use(notFound);

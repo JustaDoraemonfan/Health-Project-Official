@@ -312,6 +312,34 @@ export const prescriptionAPI = {
   },
 };
 
+// Notes API endpoints
+export const notesAPI = {
+  // Create a new note
+  createNote: (noteData) => {
+    return apiClient.post("/notes", noteData);
+  },
+
+  // Get all notes of logged-in user
+  getNotes: () => {
+    return apiClient.get("/notes");
+  },
+
+  // Get a single note by ID
+  getNoteById: (noteId) => {
+    return apiClient.get(`/notes/${noteId}`);
+  },
+
+  // Update a note
+  updateNote: (noteId, updates) => {
+    return apiClient.put(`/notes/${noteId}`, updates);
+  },
+
+  // Delete a note
+  deleteNote: (noteId) => {
+    return apiClient.delete(`/notes/${noteId}`);
+  },
+};
+
 // Generic API helper functions
 export const apiHelpers = {
   // Handle API errors
