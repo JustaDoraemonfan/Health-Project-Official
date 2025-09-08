@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FileText,
   Calendar,
@@ -9,62 +9,80 @@ import {
   ChevronRight,
   ArrowLeft,
 } from "lucide-react";
+import { appointmentAPI, prescriptionAPI } from "../../services/api";
 
 const HealthRecordsDashboard = () => {
+  const [appointmentsData, setAppointmentsData] = useState([]);
+  // const [prescriptionsData, setPrescriptionsData] = useState([]);
   const [selectedSection, setSelectedSection] = useState(null);
   const [appointmentFilter, setAppointmentFilter] = useState("all");
+  useEffect(() => {
+    const fetchdata = async () => {
+      try {
+        const appointments = await appointmentAPI.getUpcomingAppointments();
+        setAppointmentsData(appointments.data.data);
+        console.log(appointments.data.data);
+
+        // const prescription = await prescriptionAPI.getMyPrescriptions();
+        // setPrescriptionsData(prescription.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchdata();
+  });
 
   // Dummy data - replace with API calls later
-  const appointmentsData = [
-    {
-      id: 1,
-      date: "2024-09-10",
-      time: "10:30 AM",
-      doctor: "Dr. Sarah Johnson",
-      specialty: "Cardiology",
-      status: "upcoming",
-    },
-    {
-      id: 2,
-      date: "2024-09-05",
-      time: "2:15 PM",
-      doctor: "Dr. Michael Chen",
-      specialty: "General Practice",
-      status: "completed",
-    },
-    {
-      id: 3,
-      date: "2024-08-28",
-      time: "11:00 AM",
-      doctor: "Dr. Emily Rodriguez",
-      specialty: "Dermatology",
-      status: "completed",
-    },
-    {
-      id: 4,
-      date: "2024-08-15",
-      time: "3:45 PM",
-      doctor: "Dr. James Wilson",
-      specialty: "Orthopedics",
-      status: "cancelled",
-    },
-    {
-      id: 5,
-      date: "2024-09-15",
-      time: "9:00 AM",
-      doctor: "Dr. Lisa Park",
-      specialty: "Neurology",
-      status: "upcoming",
-    },
-    {
-      id: 6,
-      date: "2024-09-20",
-      time: "2:30 PM",
-      doctor: "Dr. Robert Kim",
-      specialty: "Ophthalmology",
-      status: "upcoming",
-    },
-  ];
+  // const appointmentsData = [
+  //   {
+  //     id: 1,
+  //     date: "2024-09-10",
+  //     time: "10:30 AM",
+  //     doctor: "Dr. Sarah Johnson",
+  //     specialty: "Cardiology",
+  //     status: "upcoming",
+  //   },
+  //   {
+  //     id: 2,
+  //     date: "2024-09-05",
+  //     time: "2:15 PM",
+  //     doctor: "Dr. Michael Chen",
+  //     specialty: "General Practice",
+  //     status: "completed",
+  //   },
+  //   {
+  //     id: 3,
+  //     date: "2024-08-28",
+  //     time: "11:00 AM",
+  //     doctor: "Dr. Emily Rodriguez",
+  //     specialty: "Dermatology",
+  //     status: "completed",
+  //   },
+  //   {
+  //     id: 4,
+  //     date: "2024-08-15",
+  //     time: "3:45 PM",
+  //     doctor: "Dr. James Wilson",
+  //     specialty: "Orthopedics",
+  //     status: "cancelled",
+  //   },
+  //   {
+  //     id: 5,
+  //     date: "2024-09-15",
+  //     time: "9:00 AM",
+  //     doctor: "Dr. Lisa Park",
+  //     specialty: "Neurology",
+  //     status: "upcoming",
+  //   },
+  //   {
+  //     id: 6,
+  //     date: "2024-09-20",
+  //     time: "2:30 PM",
+  //     doctor: "Dr. Robert Kim",
+  //     specialty: "Ophthalmology",
+  //     status: "upcoming",
+  //   },
+  // ];
 
   const prescriptionsData = [
     {
@@ -308,10 +326,10 @@ const HealthRecordsDashboard = () => {
                         <div>
                           <div className="flex items-center space-x-3">
                             <span className="text-lg font-semibold text-gray-900">
-                              {appointment.date}
+                              {appointment.appointmentDate}
                             </span>
                             <span className="text-gray-500">
-                              at {appointment.time}
+                              at {appointment.appointmentTime}
                             </span>
                             <span
                               className={getStatusBadge(appointment.status)}
@@ -322,9 +340,9 @@ const HealthRecordsDashboard = () => {
                           </div>
                           <div className="text-gray-600 mt-1">
                             <span className="font-medium">
-                              {appointment.doctor}
+                              {appointment.doctor.name}
                             </span>{" "}
-                            • {appointment.specialty}
+                            • {appointment.doctor.email}
                           </div>
                         </div>
                       </div>
