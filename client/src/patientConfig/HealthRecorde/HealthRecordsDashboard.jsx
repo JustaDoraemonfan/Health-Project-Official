@@ -9,11 +9,12 @@ import {
   ChevronRight,
   ArrowLeft,
 } from "lucide-react";
-import { appointmentAPI, prescriptionAPI } from "../../services/api";
+import { appointmentAPI, prescriptionAPI, notesAPI } from "../../services/api";
 
 const HealthRecordsDashboard = () => {
   const [appointmentsData, setAppointmentsData] = useState([]);
   // const [prescriptionsData, setPrescriptionsData] = useState([]);
+  const [consultationNotesData, setConsultationNotesData] = useState([]);
   const [selectedSection, setSelectedSection] = useState(null);
   const [appointmentFilter, setAppointmentFilter] = useState("all");
   useEffect(() => {
@@ -21,7 +22,8 @@ const HealthRecordsDashboard = () => {
       try {
         const appointments = await appointmentAPI.getUpcomingAppointments();
         setAppointmentsData(appointments.data.data);
-        console.log(appointments.data.data);
+        const notes = await notesAPI.getPatientNotes();
+        setConsultationNotesData(notes.data.data);
 
         // const prescription = await prescriptionAPI.getMyPrescriptions();
         // setPrescriptionsData(prescription.data.data);
@@ -154,36 +156,36 @@ const HealthRecordsDashboard = () => {
     },
   ];
 
-  const consultationNotesData = [
-    {
-      id: 1,
-      date: "2024-09-05",
-      doctor: "Dr. Michael Chen",
-      summary:
-        "Annual checkup - Patient in good health, continue current medications. Blood pressure stable at 120/80. Recommended lifestyle modifications for cholesterol management.",
-    },
-    {
-      id: 2,
-      date: "2024-08-28",
-      doctor: "Dr. Emily Rodriguez",
-      summary:
-        "Skin examination - Minor concerns addressed, follow-up in 6 months. No suspicious lesions found. Continue sun protection measures.",
-    },
-    {
-      id: 3,
-      date: "2024-08-20",
-      doctor: "Dr. Sarah Johnson",
-      summary:
-        "Cardiovascular review - Blood pressure stable, medication adjusted. Patient responding well to current treatment plan. Next appointment in 3 months.",
-    },
-    {
-      id: 4,
-      date: "2024-07-15",
-      doctor: "Dr. James Wilson",
-      summary:
-        "Orthopedic consultation - Knee pain assessment. Recommended physical therapy and anti-inflammatory medication. Follow-up in 6 weeks.",
-    },
-  ];
+  // const consultationNotesData = [
+  //   {
+  //     id: 1,
+  //     date: "2024-09-05",
+  //     doctor: "Dr. Michael Chen",
+  //     summary:
+  //       "Annual checkup - Patient in good health, continue current medications. Blood pressure stable at 120/80. Recommended lifestyle modifications for cholesterol management.",
+  //   },
+  //   {
+  //     id: 2,
+  //     date: "2024-08-28",
+  //     doctor: "Dr. Emily Rodriguez",
+  //     summary:
+  //       "Skin examination - Minor concerns addressed, follow-up in 6 months. No suspicious lesions found. Continue sun protection measures.",
+  //   },
+  //   {
+  //     id: 3,
+  //     date: "2024-08-20",
+  //     doctor: "Dr. Sarah Johnson",
+  //     summary:
+  //       "Cardiovascular review - Blood pressure stable, medication adjusted. Patient responding well to current treatment plan. Next appointment in 3 months.",
+  //   },
+  //   {
+  //     id: 4,
+  //     date: "2024-07-15",
+  //     doctor: "Dr. James Wilson",
+  //     summary:
+  //       "Orthopedic consultation - Knee pain assessment. Recommended physical therapy and anti-inflammatory medication. Follow-up in 6 weeks.",
+  //   },
+  // ];
 
   const sections = [
     {
@@ -417,7 +419,7 @@ const HealthRecordsDashboard = () => {
             {selectedSection === "consultation-notes" &&
               consultationNotesData.map((note) => (
                 <div
-                  key={note.id}
+                  key={note._id}
                   className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200"
                 >
                   <div className="flex items-start space-x-4">
@@ -425,15 +427,28 @@ const HealthRecordsDashboard = () => {
                       <Stethoscope className="w-5 h-5 text-orange-600" />
                     </div>
                     <div className="flex-1">
-                      <div className="flex items-center space-x-3 mb-3">
-                        <span className="text-lg font-semibold text-gray-900">
-                          {note.date}
+                      <div className="flex items-center justify-between mb-3">
+                        <div>
+                          <span className="text-lg font-semibold text-gray-900">
+                            {note.title}
+                          </span>
+                          <span className="text-gray-500 ml-2">
+                            ({note.category} | {note.priority})
+                          </span>
+                        </div>
+                        <span className="text-gray-400 text-sm">
+                          {new Date(note.createdAt).toLocaleString()}
                         </span>
-                        <span className="text-gray-500">by {note.doctor}</span>
                       </div>
-                      <p className="text-gray-700 leading-relaxed">
-                        {note.summary}
+                      <p className="text-gray-700 leading-relaxed mb-2">
+                        {note.content}
                       </p>
+                      <div className="text-gray-500 text-sm">
+                        <span>Doctor: {note.doctorId.name}</span>
+                        <span className="ml-4">
+                          Email: {note.doctorId.email}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
