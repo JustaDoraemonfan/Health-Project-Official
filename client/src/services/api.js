@@ -314,27 +314,37 @@ export const prescriptionAPI = {
 
 // Notes API endpoints
 export const notesAPI = {
-  // Create a new note
+  // Doctor: Create a new note
   createNote: (noteData) => {
     return apiClient.post("/notes", noteData);
   },
 
-  // Get all notes of logged-in user
-  getNotes: () => {
+  // Patient: Get all notes assigned to them
+  getPatientNotes: () => {
     return apiClient.get("/notes");
   },
 
-  // Get a single note by ID
-  getNoteById: (noteId) => {
-    return apiClient.get(`/notes/${noteId}`);
+  // Doctor: Get all notes they created
+  getDoctorNotes: () => {
+    return apiClient.get("/notes/doctor");
   },
 
-  // Update a note
+  // Patient: Mark a note as read
+  markNoteAsRead: (noteId) => {
+    return apiClient.patch(`/notes/${noteId}/read`);
+  },
+
+  // Patient: Acknowledge a note
+  acknowledgeNote: (noteId) => {
+    return apiClient.patch(`/notes/${noteId}/acknowledge`);
+  },
+
+  // Doctor: Update a note
   updateNote: (noteId, updates) => {
     return apiClient.put(`/notes/${noteId}`, updates);
   },
 
-  // Delete a note
+  // Doctor: Delete a note
   deleteNote: (noteId) => {
     return apiClient.delete(`/notes/${noteId}`);
   },
