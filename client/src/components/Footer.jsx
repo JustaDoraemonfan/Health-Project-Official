@@ -177,7 +177,7 @@ export const Footer = () => {
                       "_blank"
                     )
                   }
-                  className="px-4 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded google-sans-code-400 text-sm text-gray-300 transition-colors duration-200"
+                  className="px-4 py-2 bg-gray-800 hover: cursor-pointer hover:bg-gray-700 border border-gray-600 rounded google-sans-code-400 text-sm text-gray-300 transition-colors duration-200"
                 >
                   <Github className="w-4 h-4 inline mr-2" />
                   View Repository
@@ -189,7 +189,7 @@ export const Footer = () => {
                       "_blank"
                     )
                   }
-                  className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded google-sans-code-400 text-sm text-white transition-all duration-200"
+                  className="px-4 py-2 hover: cursor-pointer bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded google-sans-code-400 text-sm text-white transition-all duration-200"
                 >
                   <Code className="w-4 h-4 inline mr-2" />
                   Fork Project

@@ -13,6 +13,8 @@ import {
   Users,
 } from "lucide-react";
 
+import { earthquakeAPI } from "../services/api";
+
 export default function EmergencyMap() {
   const mapRef = useRef(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
@@ -23,6 +25,25 @@ export default function EmergencyMap() {
   const [userMarker, setUserMarker] = useState(null);
   const [hospitalMarkers, setHospitalMarkers] = useState([]);
   const [initialLocationSet, setInitialLocationSet] = useState(false);
+  //Earthquake
+  const [earthquakes, setEarthquakes] = useState([]);
+  const [quakeMarkers, setQuakeMarkers] = useState([]);
+
+  useEffect(() => {
+    if (!map) return;
+
+    const fetchEarthquakes = async () => {
+      try {
+        const response = await earthquakeAPI.getRecentEarthquakes(30);
+        const quakeData = response.data; // adjust if your backend returns differently
+        setEarthquakes(quakeData);
+      } catch (err) {
+        console.error("Failed to fetch earthquakes:", err);
+      }
+    };
+
+    fetchEarthquakes();
+  }, [map]);
 
   const emergencyServices = [
     {
@@ -84,93 +105,168 @@ export default function EmergencyMap() {
     }
   };
 
-  const setUserLocationAndHospitals = (position, isInitialLoad = false) => {
-    const userLocation = {
-      lat: position.coords.latitude,
-      lng: position.coords.longitude,
-    };
-
-    if (userMarker) userMarker.setMap(null);
-    hospitalMarkers.forEach((m) => m.setMap(null));
-
-    map.setCenter(userLocation);
-    map.setZoom(15);
-
-    const marker = new window.google.maps.Marker({
-      position: userLocation,
-      map,
-      title: `You are here (±${Math.round(position.coords.accuracy)}m)`,
-      icon: {
-        path: window.google.maps.SymbolPath.CIRCLE,
-        scale: 12,
-        fillColor: "#3b82f6",
-        fillOpacity: 1,
-        strokeColor: "#ffffff",
-        strokeWeight: 3,
-      },
-    });
-
-    new window.google.maps.Circle({
-      strokeColor: "#3b82f6",
-      strokeOpacity: 0.3,
-      strokeWeight: 2,
-      fillColor: "#3b82f6",
-      fillOpacity: 0.1,
-      map,
-      center: userLocation,
-      radius: position.coords.accuracy,
-    });
-
-    setUserMarker(marker);
-    setLocationStatus("success");
-
-    const service = new window.google.maps.places.PlacesService(map);
-    service.nearbySearch(
-      {
-        location: userLocation,
-        radius: 3000,
-        type: ["hospital"],
-      },
-      (results, status) => {
-        if (
-          status === window.google.maps.places.PlacesServiceStatus.OK &&
-          results
-        ) {
-          const markers = results.map((place) => {
-            const hospitalMarker = new window.google.maps.Marker({
-              position: place.geometry.location,
-              map,
-              title: place.name,
-              icon: {
-                path: window.google.maps.SymbolPath.CIRCLE,
-                scale: 8,
-                fillColor: "#ef4444",
-                fillOpacity: 1,
-                strokeColor: "#ffffff",
-                strokeWeight: 2,
-              },
-            });
-
-            const infowindow = new window.google.maps.InfoWindow({
-              content: `<div style="color:#000; padding: 8px;"><strong style="color:#ef4444;">${place.name}</strong><br><span style="color:#666;">${place.vicinity}</span></div>`,
-            });
-
-            hospitalMarker.addListener("click", () =>
-              infowindow.open(map, hospitalMarker)
-            );
-
-            return hospitalMarker;
-          });
-          setHospitalMarkers(markers);
-        }
-      }
-    );
-
-    if (isInitialLoad) {
-      setInitialLocationSet(true);
+  const findNearbyHospitals = (userLocation) => {
+    // Add validation for location
+    if (!userLocation || !userLocation.lat || !userLocation.lng) {
+      console.error("Invalid user location for hospital search");
+      return;
     }
 
-    setTimeout(() => setLocationStatus("idle"), 3000);
+    // Check if Places service is available
+    if (!window.google?.maps?.places?.PlacesService) {
+      console.error("Google Places service not available");
+      setLocationError(
+        "Places service unavailable. Please check your API key."
+      );
+      return;
+    }
+
+    const service = new window.google.maps.places.PlacesService(map);
+
+    const request = {
+      location: userLocation,
+      radius: 3000, // 3km radius
+      type: ["hospital"],
+    };
+
+    console.log("Searching for hospitals with request:", request);
+
+    service.nearbySearch(request, (results, status, pagination) => {
+      console.log("Hospital search status:", status);
+      console.log("Hospital search results:", results);
+
+      // Handle different status codes
+      if (
+        status === window.google.maps.places.PlacesServiceStatus.OK &&
+        results
+      ) {
+        // Clear previous hospital markers
+        hospitalMarkers.forEach((m) => m.setMap(null));
+
+        const markers = results.map((place) => {
+          const hospitalMarker = new window.google.maps.Marker({
+            position: place.geometry.location,
+            map,
+            title: place.name,
+            icon: {
+              path: window.google.maps.SymbolPath.CIRCLE,
+              scale: 8,
+              fillColor: "#ef4444",
+              fillOpacity: 1,
+              strokeColor: "#ffffff",
+              strokeWeight: 2,
+            },
+          });
+
+          const infowindow = new window.google.maps.InfoWindow({
+            content: `<div style="color:#000; padding: 8px;"><strong style="color:#ef4444;">${place.name}</strong><br><span style="color:#666;">${place.vicinity}</span></div>`,
+          });
+
+          hospitalMarker.addListener("click", () =>
+            infowindow.open(map, hospitalMarker)
+          );
+
+          return hospitalMarker;
+        });
+
+        setHospitalMarkers(markers);
+        console.log(`Found ${markers.length} hospitals`);
+      } else {
+        // Handle specific error cases
+        let errorMessage = "Failed to find nearby hospitals.";
+
+        switch (status) {
+          case window.google.maps.places.PlacesServiceStatus.ZERO_RESULTS:
+            errorMessage = "No hospitals found in your area.";
+            break;
+          case window.google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT:
+            errorMessage = "Search limit exceeded. Please try again later.";
+            break;
+          case window.google.maps.places.PlacesServiceStatus.REQUEST_DENIED:
+            errorMessage = "Hospital search denied. Check API permissions.";
+            break;
+          case window.google.maps.places.PlacesServiceStatus.INVALID_REQUEST:
+            errorMessage = "Invalid hospital search request.";
+            break;
+          case window.google.maps.places.PlacesServiceStatus.UNKNOWN_ERROR:
+            errorMessage = "Unknown error occurred. Please try again.";
+            break;
+        }
+
+        console.error("Hospital search failed:", status, errorMessage);
+        setLocationError(errorMessage);
+        setTimeout(() => setLocationError(""), 5000);
+      }
+    });
+  };
+
+  const setUserLocationAndHospitals = (position, isInitialLoad = false) => {
+    try {
+      const userLocation = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      };
+
+      console.log("Setting user location:", userLocation);
+
+      // Validate coordinates
+      if (Math.abs(userLocation.lat) > 90 || Math.abs(userLocation.lng) > 180) {
+        throw new Error("Invalid coordinates received");
+      }
+
+      // Clear previous markers
+      if (userMarker) userMarker.setMap(null);
+      hospitalMarkers.forEach((m) => m.setMap(null));
+
+      // Set map center and zoom
+      map.setCenter(userLocation);
+      map.setZoom(15);
+
+      // Create user marker
+      const marker = new window.google.maps.Marker({
+        position: userLocation,
+        map,
+        title: `You are here (±${Math.round(position.coords.accuracy)}m)`,
+        icon: {
+          path: window.google.maps.SymbolPath.CIRCLE,
+          scale: 12,
+          fillColor: "#3b82f6",
+          fillOpacity: 1,
+          strokeColor: "#ffffff",
+          strokeWeight: 3,
+        },
+      });
+
+      // Create accuracy circle
+      new window.google.maps.Circle({
+        strokeColor: "#3b82f6",
+        strokeOpacity: 0.3,
+        strokeWeight: 2,
+        fillColor: "#3b82f6",
+        fillOpacity: 0.1,
+        map,
+        center: userLocation,
+        radius: position.coords.accuracy,
+      });
+
+      setUserMarker(marker);
+      setLocationStatus("success");
+
+      // Search for nearby hospitals with delay to avoid API rate limits
+      setTimeout(() => {
+        findNearbyHospitals(userLocation);
+      }, 500);
+
+      if (isInitialLoad) {
+        setInitialLocationSet(true);
+      }
+
+      setTimeout(() => setLocationStatus("idle"), 3000);
+    } catch (error) {
+      console.error("Error setting user location:", error);
+      setLocationError("Failed to set your location on the map.");
+      setLocationStatus("error");
+    }
   };
 
   const getUserLocationAutomatically = async () => {
@@ -236,6 +332,8 @@ export default function EmergencyMap() {
   useEffect(() => {
     const initMap = () => {
       if (window.google && window.google.maps) {
+        console.log("Initializing Google Maps...");
+
         const mapInstance = new window.google.maps.Map(mapRef.current, {
           center: { lat: 28.6139, lng: 77.209 },
           zoom: 12,
@@ -256,6 +354,9 @@ export default function EmergencyMap() {
 
         setMap(mapInstance);
         setIsMapLoaded(true);
+        console.log("Google Maps initialized successfully");
+      } else {
+        console.error("Google Maps API not loaded");
       }
     };
 
@@ -263,14 +364,63 @@ export default function EmergencyMap() {
       initMap();
     } else {
       window.initMap = initMap;
+      console.log("Waiting for Google Maps API to load...");
     }
   }, []);
+
+  useEffect(() => {
+    if (!map || !earthquakes.length) return;
+
+    // Clear previous markers
+    quakeMarkers.forEach((marker) => marker.setMap(null));
+
+    const markers = earthquakes.map((quake) => {
+      const { location, magnitude, place, time, usgsId } = quake;
+      const marker = new window.google.maps.Marker({
+        position: {
+          lat: location.coordinates[1],
+          lng: location.coordinates[0],
+        },
+        map,
+        title: `${place} - M${magnitude}`,
+        icon: {
+          path: window.google.maps.SymbolPath.CIRCLE,
+          scale: Math.max(4, magnitude * 2),
+          fillColor: "#f97316",
+          fillOpacity: 0.8,
+          strokeColor: "#ffffff",
+          strokeWeight: 1.5,
+        },
+      });
+
+      const infowindow = new window.google.maps.InfoWindow({
+        content: `<div>
+        <strong>${place}</strong><br/>
+        Magnitude: ${magnitude}<br/>
+        Time: ${new Date(time).toLocaleString()}<br/>
+        <a href="https://earthquake.usgs.gov/earthquakes/eventpage/${usgsId}" target="_blank">USGS Link</a>
+      </div>`,
+      });
+
+      marker.addListener("click", () => infowindow.open(map, marker));
+
+      return marker;
+    });
+
+    setQuakeMarkers(markers);
+
+    // Adjust map bounds to show user + earthquakes
+    const bounds = new window.google.maps.LatLngBounds();
+    if (userMarker) bounds.extend(userMarker.getPosition());
+    markers.forEach((m) => bounds.extend(m.getPosition()));
+    map.fitBounds(bounds);
+  }, [earthquakes, map, userMarker]);
 
   useEffect(() => {
     if (map && isMapLoaded && !initialLocationSet) {
       setTimeout(() => {
         getUserLocationAutomatically();
-      }, 100);
+      }, 1000); // Increased delay to ensure map is fully loaded
     }
   }, [map, isMapLoaded, initialLocationSet]);
 
@@ -374,6 +524,10 @@ export default function EmergencyMap() {
                 <div className="flex items-center space-x-3">
                   <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                   <span className="text-slate-300">Hospitals nearby</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
+                  <span className="text-slate-300">Recent earthquakes</span>
                 </div>
               </div>
             </div>

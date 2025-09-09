@@ -8,6 +8,10 @@ import path from "path";
 import { fileURLToPath } from "url";
 import connectDB from "./config/dataBaseConnection.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
+import earthquakeRoutes from "./routes/earthquakeRoutes.js";
+import { fetchEarthquakeData } from "./services/earthquakeService.js";
+import cron from "node-cron";
+import { startEarthquakeJob } from "./jobs/earthquakeJob.js";
 
 // Routes
 import authRoutes from "./routes/authRoutes.js";
@@ -60,6 +64,7 @@ app.use("/api/appointments", appointmentRoutes);
 app.use("/api/symptoms", symptomRoutes);
 app.use("/api/prescriptions", prescriptionRoutes);
 app.use("/api/notes", notesRoutes);
+app.use("/api/earthquakes", earthquakeRoutes);
 
 // ---------- ERROR HANDLING ----------
 app.use(notFound);
@@ -69,6 +74,7 @@ app.use(errorHandler);
 const startServer = async () => {
   try {
     await connectDB();
+    startEarthquakeJob();
     const server = app.listen(PORT, () => {
       console.log(`✅ Server running in ${NODE_ENV} mode on port ${PORT}`);
     });

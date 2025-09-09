@@ -291,7 +291,7 @@ export const prescriptionAPI = {
   // Upload prescription (doctor only)
   uploadPrescription: (patientId, file) => {
     const formData = new FormData();
-    formData.append("prescriptionPdf", file); // <-- key must match multer's upload.single("file")
+    formData.append("prescriptionPdf", file); // <-- key must match multer's upload.single("prescriptionPdf")
     formData.append("patientId", patientId);
 
     return apiClient.post("/prescriptions", formData, {
@@ -348,6 +348,31 @@ export const notesAPI = {
   deleteNote: (noteId) => {
     return apiClient.delete(`/notes/${noteId}`);
   },
+};
+
+// Earthquake API endpoints
+export const earthquakeAPI = {
+  // Fetch latest earthquakes from USGS (force fetch)
+  fetchEarthquakes: () => apiClient.post("/earthquakes/fetch"),
+
+  // Get recent earthquakes (default latest 20)
+  getRecentEarthquakes: (limit = 20) =>
+    apiClient.get(`/earthquakes?limit=${limit}`), // ← correct
+
+  // Get earthquake by USGS ID
+  getEarthquakeById: (usgsId) => apiClient.get(`/earthquakes/${usgsId}`),
+
+  // Get earthquakes by date range
+  getEarthquakesByRange: (startDate, endDate) =>
+    apiClient.get(
+      `/earthquakes/range?start=${encodeURIComponent(
+        startDate
+      )}&end=${encodeURIComponent(endDate)}`
+    ),
+
+  // Get significant earthquakes above a magnitude
+  getSignificantEarthquakes: (minMag = 5.0) =>
+    apiClient.get(`/earthquakes/significant?minMag=${minMag}`),
 };
 
 // Generic API helper functions
