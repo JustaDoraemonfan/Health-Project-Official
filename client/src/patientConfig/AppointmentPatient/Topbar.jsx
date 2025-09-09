@@ -2,11 +2,8 @@
 import React from "react";
 import { getInitials } from "../../utils/appointmentUtils";
 
-const TopBar = ({ selectedAppointment, currentPatient }) => {
-  const patientName =
-    currentPatient?.patient?.name ||
-    selectedAppointment?.patient?.name ||
-    "Patient";
+const TopBar = ({ selectedAppointment, userName }) => {
+  const patientName = userName?.name || "Patient";
 
   const initials = getInitials(patientName);
 

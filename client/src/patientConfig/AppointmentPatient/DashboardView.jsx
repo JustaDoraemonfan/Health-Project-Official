@@ -6,6 +6,7 @@ import AppointmentCard from "./AppointmentCards";
 
 const DashboardView = ({
   appointments: allAppointments,
+  userName,
   selectedAppointment,
   loading,
   error,
@@ -96,10 +97,7 @@ const DashboardView = ({
       {/* ========================================
           TOP BAR NAVIGATION
           ======================================== */}
-      <TopBar
-        selectedAppointment={selectedAppointment}
-        currentPatient={allAppointments?.[0]}
-      />
+      <TopBar selectedAppointment={selectedAppointment} userName={userName} />
 
       {/* ========================================
           MAIN CONTENT AREA

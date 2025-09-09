@@ -1,17 +1,22 @@
-import { useState, useEffect } from "react";
-import { appointmentAPI } from "../services/api";
+import { useState, useEffect, use } from "react";
+import { appointmentAPI, dashboardAPI } from "../services/api";
 
 export const useAppointments = () => {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [userName, setUserName] = useState({});
 
   const fetchAppointments = async () => {
     try {
       setLoading(true);
-      const response = await appointmentAPI.getAppointments();
+      const response = await appointmentAPI.getUpcomingAppointments();
+      const userResponse = await dashboardAPI.getPatientDashboard();
       const data = response.data.data || [];
+      const userData = userResponse.data.data;
       console.log("Fetched appointments:", data);
+      setUserName(userData.user);
+      console.log(userData);
 
       setAppointments(data);
       setError(null);
@@ -64,6 +69,7 @@ export const useAppointments = () => {
 
   return {
     appointments,
+    userName,
     loading,
     error,
     findAppointmentById,

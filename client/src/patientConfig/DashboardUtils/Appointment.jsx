@@ -10,6 +10,7 @@ const AppointmentDashboard = () => {
 
   const {
     appointments,
+    userName,
     loading,
     error,
     findAppointmentById,
@@ -47,6 +48,7 @@ const AppointmentDashboard = () => {
         selectedAppointment={selectedAppointment}
         loading={loading}
         error={error}
+        userName={userName}
         onAppointmentClick={showAppointmentDetails}
       />
     );
@@ -55,6 +57,7 @@ const AppointmentDashboard = () => {
   return (
     <DetailedView
       selectedAppointment={selectedAppointment}
+      userName={userName}
       onBackToDashboard={showDashboard}
       onRescheduleAppointment={handleRescheduleAppointment}
       onCancelAppointment={handleCancelAppointment}

@@ -16,6 +16,7 @@ const cancellationReasons = [
 
 const DetailedView = ({
   selectedAppointment,
+  userName,
   onBackToDashboard,
   onRescheduleAppointment,
   onCancelAppointment,
@@ -64,7 +65,7 @@ const DetailedView = ({
 
   return (
     <div className="flex flex-col min-h-screen bg-[var(--color-primary)] google-sans-code-400 text-white">
-      <TopBar selectedAppointment={selectedAppointment} />
+      <TopBar selectedAppointment={selectedAppointment} userName={userName} />
 
       <main className="flex-1 p-6 max-w-6xl mx-auto w-full">
         <div className="flex items-center gap-4 mb-8">
