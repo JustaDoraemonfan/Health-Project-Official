@@ -24,7 +24,7 @@ import DoctorAppointment from "./DoctorConfig/DashboardUtils/DoctorAppointment";
 import EmergencyMap from "./pages/EmergencyMap";
 import PrescriptionUploadModal from "./DoctorConfig/Prescription/Prescription";
 import { PatientPrescriptionDashboard } from "./patientConfig/Prescription/PatientPrescriptionDashboard";
-import HealthRecordsDashboard from "./patientConfig/HealthRecorde/HealthRecordsDashboard";
+import HealthRecordsDashboard from "./patientConfig/DashboardUtils/HealthRecordsDashboard";
 
 const AppRoutes = () => {
   const { isAuthenticated, user, initialized, error } = useAuth();
