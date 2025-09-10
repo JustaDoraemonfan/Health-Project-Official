@@ -284,9 +284,8 @@ export const profileAPI = {
   },
 };
 
-// -----------------------------
 // Prescription API endpoints
-// -----------------------------
+
 export const prescriptionAPI = {
   // Upload prescription (doctor only)
   uploadPrescription: (patientId, file) => {
