@@ -84,7 +84,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
 
   return (
     <div
-      className="group relative bg-[var(--color-secondary)]/90 border border-slate-700 rounded-xl p-6 hover:bg-slate-800/70 hover:border-slate-600 transition-all duration-300 cursor-pointer transform hover:scale-[1.02]"
+      className="group relative bg-[var(--color-secondary)]/90 border border-slate-700 rounded-xl p-6 hover:bg-[var(--color-secondary)]/85 hover:border-slate-600 transition-all duration-300 cursor-pointer transform hover:scale-[1.02]"
       onClick={() => onCardClick && onCardClick(appointment)}
     >
       {/* Card Header */}
@@ -102,7 +102,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
             />
           </div>
           <div>
-            <h3 className="text-white font-semibold google-sans-code-400 text-lg group-hover:text-slate-100 transition-colors">
+            <h3 className="text-[var(--color-primary)] font-semibold google-sans-code-400 text-lg group-hover:text-slate-100 transition-colors">
               {appointment.patient?.name ||
                 appointment.patientName ||
                 "Unknown Patient"}
@@ -159,7 +159,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
             <Phone
               className={`w-4 h-4 mr-2 ${getPhoneIconColor()} group-hover:scale-110 transition-all duration-300`}
             />
-            <span className="google-sans-code-400">
+            <span className="google-sans-code-400 text-white/70 font-light">
               {appointment.patient?.email ||
                 appointment.phone ||
                 "No contact info"}

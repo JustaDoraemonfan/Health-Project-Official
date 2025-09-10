@@ -1,5 +1,5 @@
 import { useState, useEffect, use } from "react";
-import { appointmentAPI, dashboardAPI } from "../services/api";
+import { appointmentAPI, authAPI, dashboardAPI } from "../services/api";
 
 export const useAppointments = () => {
   const [appointments, setAppointments] = useState([]);
@@ -11,7 +11,13 @@ export const useAppointments = () => {
     try {
       setLoading(true);
       const response = await appointmentAPI.getUpcomingAppointments();
-      const userResponse = await dashboardAPI.getPatientDashboard();
+      const currentUserResponse = await authAPI.getCurrentUser();
+      const currentUser = currentUserResponse.data;
+      const userResponse =
+        currentUser.role == "patient"
+          ? await dashboardAPI.getPatientDashboard()
+          : await dashboardAPI.getDoctorDashboard();
+
       const data = response.data.data || [];
       const userData = userResponse.data.data;
       console.log("Fetched appointments:", data);

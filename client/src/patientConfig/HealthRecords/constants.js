@@ -109,6 +109,6 @@ export const sections = [
 export const filterOptions = [
   { value: "all", label: "All" },
   { value: "completed", label: "Completed" },
-  { value: "upcoming", label: "Upcoming" },
+  { value: "scheduled", label: "Upcoming" },
   { value: "cancelled", label: "Cancelled" },
 ];

@@ -1,7 +1,7 @@
 // Utility functions for Health Records
 
 export const getStatusBadge = (status) => {
-  const baseClasses = "px-3 py-1 rounded-full text-xs font-medium";
+  const baseClasses = "py-2 px-3 rounded-full text-xs font-medium";
   switch (status) {
     case "completed":
       return `${baseClasses} bg-green-100 text-green-800`;

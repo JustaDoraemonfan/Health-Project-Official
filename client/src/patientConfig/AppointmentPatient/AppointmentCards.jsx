@@ -20,13 +20,16 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
       <div className="mb-3">
         <div className="flex items-center gap-2 mb-1">
           <DoctorIcon />
-          <div className="text-white font-light">
-            {appointment.doctor?.name || "Unassigned"}
+          <div className="text-green-200 font-medium">
+            {appointment.doctor?.name || "Unassigned"} •{" "}
+            <span className="text-amber-200 text-sm font-light">
+              {appointment.doctorProfile.specialization}
+            </span>
           </div>
         </div>
       </div>
 
-      <div className="flex items-center gap-4 mb-3 text-slate-100 text-sm">
+      <div className="flex items-center font-light gap-4 mb-3 text-slate-100 text-sm">
         <div className="flex items-center gap-1">
           <CalendarIcon />
           {formatDate(appointment.appointmentDate)}

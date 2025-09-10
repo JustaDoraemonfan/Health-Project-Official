@@ -1,6 +1,6 @@
 const StatsCard = ({ title, value, color }) => {
   return (
-    <div className="bg-[var(--color-secondary)] border border-zinc-800/40 rounded-xl p-6 text-center">
+    <div className="bg-trasparent rounded-xl p-6 text-center">
       <div className={`text-3xl font-bold google-sans-code-400 mb-1 ${color}`}>
         {value}
       </div>

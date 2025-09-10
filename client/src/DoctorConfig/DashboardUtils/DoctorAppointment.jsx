@@ -103,7 +103,7 @@ const DoctorAppointment = () => {
           <StatsCard
             title="Total"
             value={appointments.length}
-            color="text-white"
+            color="text-black"
           />
           <StatsCard
             title="Confirmed"

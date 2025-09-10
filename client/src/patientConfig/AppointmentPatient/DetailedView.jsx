@@ -90,7 +90,7 @@ const DetailedView = ({
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 bg-slate-800 border border-slate-700 rounded-lg p-6 shadow-sm">
+          <div className="lg:col-span-2 bg-[var(--color-secondary)]/90 border border-slate-700 rounded-lg p-6 shadow-sm">
             <AppointmentDetails appointment={selectedAppointment} />
 
             {selectedAppointment.status === "cancelled" ? (
