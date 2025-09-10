@@ -97,4 +97,3 @@ Then run:
 npm run dev
 
 This will run the frontend and backend concurrently
-np
