@@ -23,7 +23,6 @@ Backend: Node.js, Express.js
 Database: MongoDB (Local Instance)
 Authentication: JWT
 
-
 Installation & Setup ⚡
 
 Step 1:
@@ -35,9 +34,12 @@ cd health-project-final
 
 Step 1:
 Install dependencies
+
 npm install # Root folder
+
 cd server
 npm install # Backend
+
 cd ../client
 npm install # Frontend
 
@@ -93,3 +95,5 @@ Add this to package.json in the root folder:
 Then run:
 
 npm run dev
+
+This will run the frontend and backend concurrently
