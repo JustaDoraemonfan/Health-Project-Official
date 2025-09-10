@@ -4,7 +4,7 @@ const symptomSchema = new mongoose.Schema(
   {
     patient: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Patient", // reference Patient model
+      ref: "Patient",
       required: true,
     },
     description: {
@@ -36,17 +36,21 @@ const symptomSchema = new mongoose.Schema(
         "dermatological",
         "other",
       ],
-      default: "Other",
+      default: "other",
     },
     attachments: [
       {
-        fileName: String,
-        fileUrl: String,
+        originalName: { type: String, required: true },
+        mime: { type: String, required: true },
+        size: { type: Number, required: true },
+        filePath: { type: String, required: true }, // local or S3 path
+        url: { type: String }, // public-facing URL if needed
+        uploadedAt: { type: Date, default: Date.now },
       },
     ],
   },
   {
-    timestamps: true, // adds createdAt and updatedAt
+    timestamps: true,
   }
 );
 

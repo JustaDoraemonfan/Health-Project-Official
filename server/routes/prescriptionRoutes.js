@@ -8,7 +8,7 @@ import {
   authMiddleware,
   authorizeRoles,
 } from "../middleware/authMiddleware.js";
-import upload from "../middleware/multer.js"; // <--- now from middlewares
+import { prescriptionUpload } from "../middleware/multer.js"; // <--- now from middlewares
 
 const router = express.Router();
 
@@ -16,7 +16,7 @@ router.post(
   "/",
   authMiddleware,
   authorizeRoles("doctor"),
-  upload.single("prescriptionPdf"), // multer middleware
+  prescriptionUpload.single("prescriptionPdf"), // multer middleware
   uploadPrescription
 );
 

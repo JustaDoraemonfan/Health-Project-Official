@@ -1,3 +1,4 @@
+// routes/symptomRoutes.js - Updated
 import express from "express";
 import {
   addSymptom,
@@ -10,28 +11,29 @@ import {
   authMiddleware,
   authorizeRoles,
 } from "../middleware/authMiddleware.js";
+import { symptomUpload } from "../middleware/multer.js"; // Use symptom-specific upload
 
 const router = express.Router();
 
-/**
- * Patient routes
- * All routes require authentication
- */
 router.use(authMiddleware);
 
-// ➕ Add new symptom | 👤 Patient only
-router.post("/", authorizeRoles("patient"), addSymptom);
+// Use symptom-specific multer configuration
+router.post(
+  "/",
+  authorizeRoles("patient"),
+  symptomUpload.array("symptomFiles", 10), // symptom-specific upload
+  addSymptom
+);
 
-// ✏️ Update symptom by ID | 👤 Patient only
-router.put("/:id", authorizeRoles("patient"), updateSymptom);
+router.put(
+  "/:id",
+  authorizeRoles("patient"),
+  symptomUpload.array("symptomFiles", 10), // symptom-specific upload
+  updateSymptom
+);
 
-// 📋 Get all symptoms for logged-in patient | 👤 Patient only
 router.get("/", authorizeRoles("patient"), getSymptoms);
-
-// 🔍 Get single symptom by ID | 👤 Patient only
 router.get("/:id", authorizeRoles("patient"), getSymptomById);
-
-// ❌ Delete symptom by ID | 👤 Patient only
 router.delete("/:id", authorizeRoles("patient"), deleteSymptom);
 
 export default router;

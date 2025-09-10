@@ -1,4 +1,4 @@
-// client/src/services/api.js
+// client/src/services/api.js - FIXED VERSION
 import axios from "axios";
 
 // Base API URL
@@ -14,13 +14,20 @@ const apiClient = axios.create({
   },
 });
 
-// Request interceptor to add auth token
+// Request interceptor to add auth token and handle FormData
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
+    // CRITICAL FIX: Remove Content-Type for FormData to let axios handle it
+    if (config.data instanceof FormData) {
+      delete config.headers["Content-Type"];
+      console.log("FormData detected - removed Content-Type header");
+    }
+
     return config;
   },
   (error) => {
@@ -248,16 +255,76 @@ export const appointmentAPI = {
   getAppointmentStats: () => apiClient.get("/appointments/stats"),
 };
 
-// Symptom API endpoints
+// Symptom API endpoints - FIXED VERSION
 export const symptomAPI = {
-  // Add a new symptom (patient)
-  addSymptom: (symptomData) => {
-    return apiClient.post("/symptoms", symptomData);
+  // Add a new symptom (patient) - FIXED
+  addSymptom: async (symptomData) => {
+    console.log("API: Adding symptom", {
+      isFormData: symptomData instanceof FormData,
+      type: typeof symptomData,
+    });
+
+    // Debug FormData contents
+    if (symptomData instanceof FormData) {
+      console.log("FormData contents:");
+      for (let [key, value] of symptomData.entries()) {
+        if (value instanceof File) {
+          console.log(
+            `${key}: File(${value.name}, ${value.size} bytes, ${value.type})`
+          );
+        } else {
+          console.log(`${key}: ${value}`);
+        }
+      }
+    }
+
+    try {
+      // Don't set Content-Type - the request interceptor will handle it
+      const response = await apiClient.post("/symptoms", symptomData);
+      console.log("API: Add symptom success");
+      return response;
+    } catch (error) {
+      console.error(
+        "API: Add symptom error",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
   },
 
-  // Update an existing symptom
-  updateSymptom: (symptomId, updates) => {
-    return apiClient.put(`/symptoms/${symptomId}`, updates);
+  // Update an existing symptom - FIXED (was missing FormData handling)
+  updateSymptom: async (symptomId, updates) => {
+    console.log("API: Updating symptom", symptomId, {
+      isFormData: updates instanceof FormData,
+      type: typeof updates,
+    });
+
+    // Debug FormData contents
+    if (updates instanceof FormData) {
+      console.log("FormData contents:");
+      for (let [key, value] of updates.entries()) {
+        if (value instanceof File) {
+          console.log(
+            `${key}: File(${value.name}, ${value.size} bytes, ${value.type})`
+          );
+        } else {
+          console.log(`${key}: ${value}`);
+        }
+      }
+    }
+
+    try {
+      // Don't set Content-Type - the request interceptor will handle it
+      const response = await apiClient.put(`/symptoms/${symptomId}`, updates);
+      console.log("API: Update symptom success");
+      return response;
+    } catch (error) {
+      console.error(
+        "API: Update symptom error",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
   },
 
   // Get all symptoms for current patient
@@ -284,20 +351,32 @@ export const profileAPI = {
   },
 };
 
-// Prescription API endpoints
-
+// Prescription API endpoints - ALSO NEEDS FIXING
 export const prescriptionAPI = {
-  // Upload prescription (doctor only)
-  uploadPrescription: (patientId, file) => {
+  // Upload prescription (doctor only) - FIXED
+  uploadPrescription: async (patientId, file) => {
     const formData = new FormData();
-    formData.append("prescriptionPdf", file); // <-- key must match multer's upload.single("prescriptionPdf")
+    formData.append("prescriptionPdf", file);
     formData.append("patientId", patientId);
 
-    return apiClient.post("/prescriptions", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data", // override JSON
-      },
+    console.log("API: Uploading prescription", {
+      patientId,
+      fileName: file.name,
+      fileSize: file.size,
     });
+
+    try {
+      // Don't set Content-Type - the request interceptor will handle it
+      const response = await apiClient.post("/prescriptions", formData);
+      console.log("API: Upload prescription success");
+      return response;
+    } catch (error) {
+      console.error(
+        "API: Upload prescription error",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
   },
 
   // Get prescriptions for logged-in patient
@@ -356,7 +435,7 @@ export const earthquakeAPI = {
 
   // Get recent earthquakes (default latest 20)
   getRecentEarthquakes: (limit = 20) =>
-    apiClient.get(`/earthquakes?limit=${limit}`), // ← correct
+    apiClient.get(`/earthquakes?limit=${limit}`),
 
   // Get earthquake by USGS ID
   getEarthquakeById: (usgsId) => apiClient.get(`/earthquakes/${usgsId}`),
