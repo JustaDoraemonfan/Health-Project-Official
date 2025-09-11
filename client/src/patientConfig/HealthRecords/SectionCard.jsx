@@ -7,7 +7,7 @@ const SectionCard = ({ section, onClick, count }) => {
   return (
     <div
       onClick={() => onClick(section.id)}
-      className="bg-[var(--color-secondary)] rounded-2xl shadow-lg border google-sans-code-400 border-gray-100 p-8 cursor-pointer transform hover:scale-105 hover:shadow-xl transition-all duration-300 group"
+      className="bg-[var(--color-secondary)]/90 rounded-2xl shadow-lg border google-sans-code-400 border-gray-100 p-8 cursor-pointer transform hover:scale-105 hover:shadow-xl transition-all duration-300 group"
     >
       <div className="flex items-center justify-between mb-6">
         <div
@@ -19,7 +19,7 @@ const SectionCard = ({ section, onClick, count }) => {
       </div>
 
       <div className="mb-4">
-        <h3 className="text-xl font-bold text-[var(--color-primary)] mb-2 group-hover:text-gray-700 transition-colors duration-300">
+        <h3 className="text-xl font-bold text-[var(--color-primary)] mb-2 group-hover:text-slate-300 transition-colors duration-300">
           {section.title}
         </h3>
         <div className="flex items-center space-x-2">
