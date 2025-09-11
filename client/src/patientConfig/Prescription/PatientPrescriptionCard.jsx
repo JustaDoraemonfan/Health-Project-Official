@@ -1,6 +1,6 @@
 import { Calendar, Download, Eye, User } from "lucide-react";
 
-export const PrescriptionCard = ({ prescription, onView, onDownload }) => {
+export const PrescriptionCard = ({ prescription, onDownload }) => {
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString(undefined, options);
@@ -32,21 +32,12 @@ export const PrescriptionCard = ({ prescription, onView, onDownload }) => {
 
         <div className="flex gap-2 ml-4">
           <button
-            onClick={() => onView(prescription)}
-            className="flex items-center gap-2 px-3 py-2 text-blue-600 hover:bg-blue-50 rounded-md transition-colors duration-200"
+            onClick={() => onDownload(prescription)}
+            className="flex items-center gap-2 px-3 py-2 hover:cursor-pointer text-blue-600 hover:bg-blue-50 rounded-md transition-colors duration-200"
             title="View prescription"
           >
             <Eye className="w-4 h-4" />
             <span className="text-sm font-medium">View</span>
-          </button>
-
-          <button
-            onClick={() => onDownload(prescription)}
-            className="flex items-center gap-2 px-3 py-2 text-green-600 hover:bg-green-50 rounded-md transition-colors duration-200"
-            title="Download prescription"
-          >
-            <Download className="w-4 h-4" />
-            <span className="text-sm font-medium">Download</span>
           </button>
         </div>
       </div>

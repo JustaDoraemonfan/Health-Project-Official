@@ -33,11 +33,6 @@ export const PatientPrescriptionDashboard = () => {
     fetchPrescriptions();
   }, []);
 
-  const handleView = (prescription) => {
-    setSelectedPrescription(prescription);
-    setIsModalOpen(true);
-  };
-
   const handleDownload = (prescription) => {
     const link = document.createElement("a");
     link.href = prescription.pdfUrl;
@@ -68,32 +63,31 @@ export const PatientPrescriptionDashboard = () => {
               View and download your medical prescriptions
             </p>
           </div>
-
           {/* Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-[var(--color-secondary)] rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="bg-transparent rounded-lg  p-6">
               <div className="flex items-center gap-3">
                 <div className="p-3 bg-blue-50 rounded-full">
                   <FileText className="w-6 h-6 text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-[var(--color-primary)]">
+                  <p className="text-2xl font-bold text-[var(--color-secondary)]">
                     {prescriptions.length}
                   </p>
-                  <p className="text-sm text-[var(--color-primary)]/70">
+                  <p className="text-md text-[var(--color-secondary)]/70">
                     Total Prescriptions
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-[var(--color-secondary)] rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="bg-transparent p-6">
               <div className="flex items-center gap-3">
-                <div className="p-3 bg-green-50 rounded-full">
-                  <Calendar className="w-6 h-6 text-green-600" />
+                <div className="p-3 bg-green-100 rounded-full">
+                  <Calendar className="w-6 h-6 text-green-800" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-[var(--color-primary)]">
+                  <p className="text-2xl font-bold text-[var(--color-secondary)]">
                     {prescriptions.length > 0
                       ? new Date(
                           Math.max(
@@ -102,23 +96,23 @@ export const PatientPrescriptionDashboard = () => {
                         ).toLocaleDateString("en-US", { month: "short" })
                       : "-"}
                   </p>
-                  <p className="text-sm text-[var(--color-primary)]/70">
+                  <p className="text-md text-[var(--color-secondary)]/70">
                     Latest Prescription
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-[var(--color-secondary)] rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="bg-transparent p-6">
               <div className="flex items-center gap-3">
                 <div classNambg-whitee="p-3 bg-purple-50 rounded-full">
                   <User className="w-6 h-6 text-purple-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-[var(--color-primary)]">
+                  <p className="text-2xl font-bold text-[var(--color-secondary)]">
                     {new Set(prescriptions.map((p) => p.doctorName)).size}
                   </p>
-                  <p className="text-sm text-[var(--color-primary)]/70">
+                  <p className="text-md text-[var(--color-secondary)]/70">
                     {new Set(prescriptions.map((p) => p.doctorName)).size > 1
                       ? "Differnent Doctors"
                       : "Doctor"}
@@ -127,7 +121,6 @@ export const PatientPrescriptionDashboard = () => {
               </div>
             </div>
           </div>
-
           {/* Prescriptions List */}
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-[#FFFDF2] mb-4">
@@ -149,7 +142,6 @@ export const PatientPrescriptionDashboard = () => {
                 <PrescriptionCard
                   key={prescription._id}
                   prescription={prescription}
-                  onView={handleView}
                   onDownload={handleDownload}
                 />
               ))

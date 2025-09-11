@@ -1,36 +1,38 @@
 import React, { useState, useEffect } from "react";
 import { FileText } from "lucide-react";
-import { appointmentAPI, notesAPI } from "../../services/api";
+import { appointmentAPI, notesAPI, symptomAPI } from "../../services/api";
 
 // Components
 import SectionHeader from "../HealthRecords/SectionHeader";
 import SectionCard from "../HealthRecords/SectionCard";
 import AppointmentCard from "../HealthRecords/AppointmentCard";
 import PrescriptionCard from "../HealthRecords/PrescriptionCard";
-import LabReportCard from "../HealthRecords/LabReportCard";
+import SymptomCard from "../HealthRecords/SymptomCard";
 import ConsultationNoteCard from "../HealthRecords/ConsultationNoteCard";
 import QuickStats from "../HealthRecords/QuickStats";
 import SecureFooter from "../HealthRecords/SecureFooter";
 
 // Constants and Utils
-import {
-  sections,
-  prescriptionsData,
-  labReportsData,
-} from "../HealthRecords/constants";
+import { sections, prescriptionsData } from "../HealthRecords/constants";
 import { filterAppointments } from "../../utils/healthRecordUtils";
+import { getPdfUrl } from "../../utils/file";
 
 const HealthRecordsDashboard = () => {
   const [appointmentsData, setAppointmentsData] = useState([]);
   const [consultationNotesData, setConsultationNotesData] = useState([]);
   const [selectedSection, setSelectedSection] = useState(null);
   const [appointmentFilter, setAppointmentFilter] = useState("all");
+  const [symptom, setSymptom] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const appointments = await appointmentAPI.getUpcomingAppointments();
         setAppointmentsData(appointments.data.data);
+        console.log(appointmentsData);
+
+        const symptoms = await symptomAPI.getSymptoms();
+        setSymptom(symptoms.data.data);
 
         const notes = await notesAPI.getPatientNotes();
         setConsultationNotesData(notes.data.data);
@@ -46,14 +48,24 @@ const HealthRecordsDashboard = () => {
     appointmentFilter
   );
 
+  const handleDownload = (file) => {
+    const link = document.createElement("a");
+    const url = getPdfUrl(file.filePath);
+    link.href = url; // comes from your DB
+    link.download = file.originalName; // use original name for download
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const getSectionCount = (sectionId) => {
     switch (sectionId) {
       case "appointments":
         return appointmentsData.length;
       case "prescriptions":
         return prescriptionsData.length;
-      case "lab-reports":
-        return labReportsData.length;
+      case "symptom":
+        return symptom.length;
       case "consultation-notes":
         return consultationNotesData.length;
       default:
@@ -89,9 +101,13 @@ const HealthRecordsDashboard = () => {
                 />
               ))}
 
-            {selectedSection === "lab-reports" &&
-              labReportsData.map((report) => (
-                <LabReportCard key={report.id} report={report} />
+            {selectedSection === "symptom" &&
+              symptom.map((symptom) => (
+                <SymptomCard
+                  key={symptom._id}
+                  symptom={symptom}
+                  handleDownload={handleDownload}
+                />
               ))}
 
             {selectedSection === "consultation-notes" &&
@@ -129,7 +145,8 @@ const HealthRecordsDashboard = () => {
       <QuickStats
         appointmentsData={appointmentsData}
         prescriptionsData={prescriptionsData}
-        labReportsData={labReportsData}
+        symptom={symptom}
+        note={consultationNotesData}
       />
 
       {/* Main Content */}

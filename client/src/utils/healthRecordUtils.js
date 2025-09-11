@@ -36,8 +36,9 @@ export const getActivePrescriptionsCount = (prescriptions) => {
   return prescriptions.filter((p) => p.refills > 0).length;
 };
 
-export const getRecentLabReportsCount = (labReports) => {
-  return labReports.filter(
-    (l) => l.date.includes("2024-09") || l.date.includes("2024-08")
-  ).length;
+export const getSymptomCount = (symptoms) => {
+  return symptoms.length;
+};
+export const getNotesCount = (note) => {
+  return note.filter((n) => n.isRead == false).length;
 };

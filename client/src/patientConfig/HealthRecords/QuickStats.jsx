@@ -2,20 +2,17 @@ import React from "react";
 import {
   getUpcomingAppointmentsCount,
   getActivePrescriptionsCount,
-  getRecentLabReportsCount,
+  getSymptomCount,
+  getNotesCount,
 } from "../../utils/healthRecordUtils";
 
-const QuickStats = ({
-  appointmentsData,
-  prescriptionsData,
-  labReportsData,
-}) => {
+const QuickStats = ({ appointmentsData, prescriptionsData, symptom, note }) => {
   return (
     <div className=" bg-transparent rounded-2xl google-sans-code-400  p-8">
       <h3 className="text-2xl flex justify-center font-light text-gray-900 mb-6">
         Quick Overview
       </h3>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="text-center">
           <div className="text-3xl font-bold text-blue-600 mb-2">
             {getUpcomingAppointmentsCount(appointmentsData)}
@@ -30,9 +27,17 @@ const QuickStats = ({
         </div>
         <div className="text-center">
           <div className="text-3xl font-bold text-purple-600 mb-2">
-            {getRecentLabReportsCount(labReportsData)}
+            {getSymptomCount(symptom)}
           </div>
-          <div className="text-gray-600">Recent Lab Reports</div>
+          <div className="text-gray-600">Recent Symptom Reports</div>
+        </div>
+        <div className="text-center">
+          <div className="text-3xl font-bold text-orange-600 mb-2">
+            {getNotesCount(note)}
+          </div>
+          <div className="text-gray-600">
+            {getNotesCount(note) > 1 ? "Recent Notes" : "Recent Note"}
+          </div>
         </div>
       </div>
     </div>

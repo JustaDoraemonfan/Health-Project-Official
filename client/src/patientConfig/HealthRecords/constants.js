@@ -36,41 +36,6 @@ export const prescriptionsData = [
   },
 ];
 
-export const labReportsData = [
-  {
-    id: 1,
-    test: "Complete Blood Count",
-    date: "2024-09-03",
-    status: "Normal",
-    doctor: "Dr. Michael Chen",
-    results: "All values within normal range",
-  },
-  {
-    id: 2,
-    test: "Lipid Panel",
-    date: "2024-08-25",
-    status: "High Cholesterol",
-    doctor: "Dr. Sarah Johnson",
-    results: "Total cholesterol: 245 mg/dL (High)",
-  },
-  {
-    id: 3,
-    test: "Thyroid Function",
-    date: "2024-08-10",
-    status: "Normal",
-    doctor: "Dr. Michael Chen",
-    results: "TSH: 2.1 mIU/L (Normal)",
-  },
-  {
-    id: 4,
-    test: "Hemoglobin A1C",
-    date: "2024-07-20",
-    status: "Normal",
-    doctor: "Dr. Michael Chen",
-    results: "5.4% (Normal)",
-  },
-];
-
 export const sections = [
   {
     id: "appointments",
@@ -83,18 +48,18 @@ export const sections = [
   {
     id: "prescriptions",
     title: "Prescriptions",
-    icon: Pill,
+    icon: FlaskConical,
     color: "green",
     gradient: "from-green-500 to-green-600",
     description: "Track your current medications and prescription history",
   },
   {
-    id: "lab-reports",
-    title: "Lab Reports",
-    icon: FlaskConical,
+    id: "symptom",
+    title: "Symptoms",
+    icon: Pill,
     color: "amber",
     gradient: "from-purple-500 to-purple-600",
-    description: "Access your laboratory test results and reports",
+    description: "Access your past symptoms",
   },
   {
     id: "consultation-notes",
