@@ -83,29 +83,31 @@ const ReminderCard = ({ reminder, onMarkAsTaken, onEdit, onDelete }) => {
           >
             {getStatusText()}
           </span>
-          <div className="flex space-x-1">
+          <div className="flex items-center space-x-2">
             {reminder.status === "upcoming" && (
               <button
                 onClick={() => onMarkAsTaken(reminder._id)}
-                className="p-1 text-green-600 hover:bg-green-50 rounded transition-colors"
+                className="group p-2.5 hover:cursor-pointer text-emerald-600 hover:text-white hover:bg-emerald-600 bg-emerald-50 hover:bg-emerald-600 rounded-xl transition-all duration-200 ease-in-out hover:scale-110 shadow-sm hover:shadow-md"
                 title="Mark as taken"
               >
-                <Check className="w-4 h-4" />
+                <Check className="w-4 h-4 group-hover:scale-110 transition-transform duration-150" />
               </button>
             )}
+
             <button
               onClick={() => onEdit(reminder)}
-              className="p-1 text-blue-600 hover:bg-blue-50 rounded transition-colors"
+              className="group p-2.5 hover:cursor-pointer text-blue-600 hover:text-white hover:bg-blue-600 bg-blue-50 rounded-xl transition-all duration-200 ease-in-out hover:scale-110 shadow-sm hover:shadow-md"
               title="Edit reminder"
             >
-              <Edit2 className="w-4 h-4" />
+              <Edit2 className="w-4 h-4 group-hover:scale-110 transition-transform duration-150" />
             </button>
+
             <button
               onClick={() => onDelete(reminder._id)}
-              className="p-1 text-red-600 hover:bg-red-50 rounded transition-colors"
+              className="group p-2.5 hover:cursor-pointer text-red-600 hover:text-white hover:bg-red-600 bg-red-50 rounded-xl transition-all duration-200 ease-in-out hover:scale-110 shadow-sm hover:shadow-md"
               title="Delete reminder"
             >
-              <Trash2 className="w-4 h-4" />
+              <Trash2 className="w-4 h-4 group-hover:scale-110 transition-transform duration-150" />
             </button>
           </div>
         </div>
