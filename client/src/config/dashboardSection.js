@@ -92,13 +92,12 @@ export const dashboardSections = (navigate, modalHandlers = {}) => [
     onClick: () => console.log("Messages clicked"),
   },
   {
-    id: "notifications",
-    title: "Notifications",
-    description:
-      "Medicine reminders, appointment alerts, and health notifications.",
+    id: "medication-reminder",
+    title: "Medication Reminder",
+    description: "Create your own presonalized reminders.",
     icon: Bell,
     color: "amber",
     badge: "5 active",
-    onClick: () => console.log("Notifications clicked"),
+    onClick: () => navigate("/patient/medication"),
   },
 ];

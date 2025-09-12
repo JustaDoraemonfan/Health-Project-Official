@@ -25,6 +25,7 @@ import EmergencyMap from "./pages/EmergencyMap";
 import PrescriptionUploadModal from "./DoctorConfig/Prescription/Prescription";
 import { PatientPrescriptionDashboard } from "./patientConfig/Prescription/PatientPrescriptionDashboard";
 import HealthRecordsDashboard from "./patientConfig/DashboardUtils/HealthRecordsDashboard";
+import MedicationDashboard from "./patientConfig/MedicationReminder/MedicationDashboard";
 
 const AppRoutes = () => {
   const { isAuthenticated, user, initialized, error } = useAuth();
@@ -145,6 +146,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute allowedRoles={["patient"]}>
             <HealthRecordsDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/patient/medication"
+        element={
+          <ProtectedRoute allowedRoles={["patient"]}>
+            <MedicationDashboard />
           </ProtectedRoute>
         }
       />
