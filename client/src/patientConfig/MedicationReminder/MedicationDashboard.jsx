@@ -1,90 +1,89 @@
 // App.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReminderListPage from "./ReminderListPage";
 import ReminderLogPage from "./ReminderLogPage";
 import ReminderForm from "./ReminderForm";
+import { reminderAPI } from "../../services/api";
 
 const App = () => {
   const [currentPage, setCurrentPage] = useState("reminders");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingReminder, setEditingReminder] = useState(null);
-  const [reminders, setReminders] = useState([
-    {
-      id: 1,
-      medication: "Vitamin D",
-      dosage: "1000 IU",
-      date: "2025-09-13",
-      time: "08:00",
-      frequency: "daily",
-      status: "upcoming",
-    },
-    {
-      id: 2,
-      medication: "Blood Pressure Medication",
-      dosage: "10mg",
-      date: "2025-09-13",
-      time: "12:00",
-      frequency: "daily",
-      status: "taken",
-    },
-    {
-      id: 3,
-      medication: "Calcium",
-      dosage: "500mg",
-      date: "2025-09-12",
-      time: "20:00",
-      frequency: "daily",
-      status: "upcoming",
-    },
-  ]);
+  const [reminders, setReminders] = useState([]);
 
+  // ✅ Fetch reminders on mount
+  useEffect(() => {
+    const fetchReminders = async () => {
+      try {
+        const res = await reminderAPI.getReminders();
+        setReminders(res.data.data || []); // Adjust depending on API response shape
+      } catch (err) {
+        console.error("Error fetching reminders:", err);
+      }
+    };
+    fetchReminders();
+  }, []);
+
+  // ✅ Open form for new reminder
   const handleCreateNew = () => {
     setEditingReminder(null);
     setIsFormOpen(true);
   };
 
+  // ✅ Open form for editing
   const handleEdit = (reminder) => {
     setEditingReminder(reminder);
     setIsFormOpen(true);
   };
 
-  const handleSave = (formData) => {
-    if (editingReminder) {
-      setReminders((prev) =>
-        prev.map((r) =>
-          r.id === editingReminder.id
-            ? {
-                ...formData,
-                id: editingReminder.id,
-                status: editingReminder.status,
-              }
-            : r
-        )
-      );
-    } else {
-      const newReminder = {
-        ...formData,
-        id: Date.now(),
-        status: "upcoming",
-      };
-      setReminders((prev) => [...prev, newReminder]);
+  // ✅ Save new or updated reminder
+  const handleSave = async (formData) => {
+    try {
+      if (editingReminder) {
+        // Update reminder
+        const res = await reminderAPI.updateReminder(
+          editingReminder._id,
+          formData
+        );
+        setReminders((prev) =>
+          prev.map((r) => (r._id === editingReminder._id ? res.data.data : r))
+        );
+      } else {
+        // Create new reminder
+        const res = await reminderAPI.createReminder(formData);
+        setReminders((prev) => [...prev, res.data.data]);
+      }
+    } catch (err) {
+      console.error("Error saving reminder:", err);
     }
   };
 
-  const handleMarkAsTaken = (id) => {
-    setReminders((prev) =>
-      prev.map((r) => (r.id === id ? { ...r, status: "taken" } : r))
-    );
+  // ✅ Mark reminder as taken
+  const handleMarkAsTaken = async (id) => {
+    try {
+      const res = await reminderAPI.updateReminder(id, { status: "taken" });
+      setReminders((prev) =>
+        prev.map((r) => (r._id === id ? res.data.data : r))
+      );
+    } catch (err) {
+      console.error("Error marking reminder as taken:", err);
+    }
   };
 
-  const handleDelete = (id) => {
+  // ✅ Delete reminder
+  const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this reminder?")) {
-      setReminders((prev) => prev.filter((r) => r.id !== id));
+      try {
+        await reminderAPI.deleteReminder(id);
+        setReminders((prev) => prev.filter((r) => r._id !== id));
+      } catch (err) {
+        console.error("Error deleting reminder:", err);
+      }
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#fffdf2]">
+    <div className="min-h-screen google-sans-code-400 bg-[#fffdf2]">
       <div className="max-w-4xl mx-auto p-4">
         {/* Navigation */}
         <nav className="mb-6 border-b border-black/10 pb-4">

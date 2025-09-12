@@ -18,6 +18,7 @@ const ReminderSchema = new mongoose.Schema(
     times: [{ type: String }], // ["08:00","20:00"] - HH:mm
     intervalHours: { type: Number }, // if frequency === 'intervalHours'
     startDate: { type: Date, default: () => new Date() }, // inclusive
+    status: { type: String, enum: ["taken", "upcoming", "missed", "today"] },
     endDate: { type: Date, default: null }, // null = indefinite
     timezone: { type: String, default: "Asia/Kolkata" },
     notes: { type: String },

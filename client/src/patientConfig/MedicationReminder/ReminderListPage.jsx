@@ -3,13 +3,6 @@ import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import ReminderCard from "./ReminderCard";
 
-// You'll need this utility function from utils
-const isReminderMissed = (reminder) => {
-  const now = new Date();
-  const reminderDateTime = new Date(`${reminder.date}T${reminder.time}`);
-  return reminderDateTime < now && reminder.status === "upcoming";
-};
-
 const ReminderListPage = ({
   reminders,
   onMarkAsTaken,
@@ -20,26 +13,23 @@ const ReminderListPage = ({
   const [filter, setFilter] = useState("all");
 
   const filteredReminders = reminders.filter((reminder) => {
-    const today = new Date().toISOString().split("T")[0];
-    const reminderDate = reminder.date;
-
     switch (filter) {
       case "today":
-        return reminderDate === today;
+        return reminder.status === "today";
       case "upcoming":
         return reminder.status === "upcoming";
       case "taken":
         return reminder.status === "taken";
       case "missed":
-        return isReminderMissed(reminder);
+        return reminder.status === "missed";
       default:
         return true;
     }
   });
 
   const sortedReminders = [...filteredReminders].sort((a, b) => {
-    const aDateTime = new Date(`${a.date}T${a.time}`);
-    const bDateTime = new Date(`${b.date}T${b.time}`);
+    const aDateTime = new Date(`${a.startDate}T${a.times[0]}`);
+    const bDateTime = new Date(`${b.startDate}T${b.times[0]}`);
     return aDateTime - bDateTime;
   });
 
@@ -86,7 +76,7 @@ const ReminderListPage = ({
         <div>
           {sortedReminders.map((reminder) => (
             <ReminderCard
-              key={reminder.id}
+              key={reminder._id}
               reminder={reminder}
               onMarkAsTaken={onMarkAsTaken}
               onEdit={onEdit}

@@ -2,15 +2,18 @@
 import React, { useState } from "react";
 import { Filter, X, Calendar, Clock } from "lucide-react";
 
-// Utility functions (you'll need these in your utils file)
 const formatTime = (time) => {
-  const [hours, minutes] = time.split(":");
+  if (!time) return "—";
+
+  const [hoursStr, minutes] = time.split(":");
+  const hours = parseInt(hoursStr, 10);
   const hour12 = hours % 12 || 12;
   const ampm = hours < 12 ? "AM" : "PM";
   return `${hour12}:${minutes} ${ampm}`;
 };
 
 const formatDate = (date) => {
+  if (!date) return "—";
   return new Date(date).toLocaleDateString("en-US", {
     weekday: "short",
     month: "short",
@@ -18,19 +21,11 @@ const formatDate = (date) => {
   });
 };
 
-const isReminderMissed = (reminder) => {
-  const now = new Date();
-  const reminderDateTime = new Date(`${reminder.date}T${reminder.time}`);
-  return reminderDateTime < now && reminder.status === "upcoming";
-};
-
 const ReminderLogPage = ({ reminders }) => {
   const [dateFilter, setDateFilter] = useState("");
 
   const logEntries = reminders
-    .filter(
-      (reminder) => reminder.status === "taken" || isReminderMissed(reminder)
-    )
+    .filter((reminder) => reminder.status === "taken")
     .filter((reminder) => !dateFilter || reminder.date === dateFilter)
     .sort((a, b) => {
       const aDateTime = new Date(`${a.date}T${a.time}`);
@@ -98,7 +93,7 @@ const ReminderLogPage = ({ reminders }) => {
                     <span className="px-3 py-1 bg-green-50 text-green-600 rounded-full text-sm font-medium">
                       Taken
                     </span>
-                  ) : isReminderMissed(reminder) ? (
+                  ) : reminder.status == "missed" ? (
                     <span className="px-3 py-1 bg-red-50 text-red-600 rounded-full text-sm font-medium">
                       Missed
                     </span>
