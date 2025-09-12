@@ -428,6 +428,25 @@ export const notesAPI = {
   },
 };
 
+// Reminder API endpoints
+export const reminderAPI = {
+  //Create a new reminder
+  createReminder: (data) => apiClient.post("/reminders", data),
+
+  // Get all reminders for the logged-in user
+  getReminders: () => apiClient.get("/reminders"),
+
+  // Get a specific reminder by its ID
+  getReminderById: (reminderId) => apiClient.get(`/reminders/${reminderId}`),
+
+  // Update an existing reminder
+  updateReminder: (reminderId, updateData) =>
+    apiClient.put(`/reminders/${reminderId}`, updateData),
+
+  // Delete a reminder by its ID
+  deleteReminder: (reminderId) => apiClient.delete(`/reminders/${reminderId}`),
+};
+
 // Earthquake API endpoints
 export const earthquakeAPI = {
   // Fetch latest earthquakes from USGS (force fetch)
