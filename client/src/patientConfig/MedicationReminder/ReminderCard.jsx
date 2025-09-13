@@ -38,16 +38,16 @@ const ReminderCard = ({ reminder, onMarkAsTaken, onEdit, onDelete }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-black/10 p-4 mb-3 hover:shadow-md transition-shadow">
+    <div className="bg-[var(--color-secondary)]/90 rounded-lg shadow-sm border border-black/10 p-4 mb-3 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <h3 className="font-semibold text-lg text-black">
+          <h3 className="font-semibold text-lg text-[var(--color-primary)]">
             {reminder.medicine}
           </h3>
-          <p className="text-gray-600 text-sm">{reminder.dosage}</p>
+          <p className="text-green-400 text-sm">{reminder.dosage}</p>
 
           <div className="flex items-center mt-2 space-x-4">
-            <div className="flex items-center text-gray-700">
+            <div className="flex items-center text-white">
               <Calendar className="w-4 h-4 mr-1" />
               <span className="text-sm">
                 {formatDate(reminder.startDate)}
@@ -57,7 +57,7 @@ const ReminderCard = ({ reminder, onMarkAsTaken, onEdit, onDelete }) => {
           </div>
 
           {reminder.times && reminder.times.length > 0 && (
-            <div className="flex items-center text-gray-700 mt-2">
+            <div className="flex items-center text-slate-300 mt-2">
               <Clock className="w-4 h-4 mr-1" />
               <span className="text-sm">
                 {reminder.times.map((t, i) => (
@@ -71,7 +71,7 @@ const ReminderCard = ({ reminder, onMarkAsTaken, onEdit, onDelete }) => {
           )}
 
           {reminder.frequency && (
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-orange-500 mt-1">
               Repeat: {reminder.frequency}
             </p>
           )}
@@ -87,7 +87,7 @@ const ReminderCard = ({ reminder, onMarkAsTaken, onEdit, onDelete }) => {
             {reminder.status === "upcoming" && (
               <button
                 onClick={() => onMarkAsTaken(reminder._id)}
-                className="group p-2.5 hover:cursor-pointer text-emerald-600 hover:text-white hover:bg-emerald-600 bg-emerald-50 hover:bg-emerald-600 rounded-xl transition-all duration-200 ease-in-out hover:scale-110 shadow-sm hover:shadow-md"
+                className="group p-2.5 hover:cursor-pointer text-emerald-600 hover:text-white hover:bg-emerald-600 bg-emerald-50  rounded-xl transition-all duration-200 ease-in-out hover:scale-110 shadow-sm hover:shadow-md"
                 title="Mark as taken"
               >
                 <Check className="w-4 h-4 group-hover:scale-110 transition-transform duration-150" />

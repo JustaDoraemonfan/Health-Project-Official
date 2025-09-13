@@ -39,7 +39,7 @@ const ReminderListPage = ({
         <h1 className="text-2xl font-bold text-black">My Reminders</h1>
         <button
           onClick={onCreateNew}
-          className="flex items-center space-x-2 bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition-colors"
+          className="flex items-center space-x-2 hover:cursor-pointer bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition-colors"
         >
           <Plus className="w-4 h-4" />
           <span>Add Reminder</span>
@@ -51,7 +51,7 @@ const ReminderListPage = ({
           <button
             key={filterType}
             onClick={() => setFilter(filterType)}
-            className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+            className={`px-3 py-1 rounded text-sm font-medium transition-colors hover:cursor-pointer ${
               filter === filterType
                 ? "bg-black text-white"
                 : "bg-white border border-black/20 text-black hover:bg-gray-50"
@@ -64,7 +64,7 @@ const ReminderListPage = ({
 
       {sortedReminders.length === 0 ? (
         <div className="text-center py-8">
-          <p className="text-gray-500 mb-4">No reminders found</p>
+          <p className="text-black mb-4">No reminders found</p>
           <button
             onClick={onCreateNew}
             className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition-colors"
