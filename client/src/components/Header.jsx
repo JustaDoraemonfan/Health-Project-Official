@@ -33,21 +33,24 @@ const Header = () => {
                 onClick={() => navigate("/notification")}
                 className="flex items-center gap-1 px-3 py-1.5 bg-transparent hover:cursor-pointer hover:text-gray-500 text-[var(--color-secondary)] text-sm rounded-xs google-sans-code-400 transition-colors duration-200"
               >
-                <Bell className="w-4 h-4" />
+                <Bell
+                  className="w-4 h-4 text-amber-600
+                "
+                />
                 notifications
               </button>
               <button
                 onClick={() => navigate("/emergency")}
                 className="flex items-center gap-1 px-3 py-1.5 bg-transparent hover:cursor-pointer hover:text-gray-500 text-[var(--color-secondary)] text-sm rounded-xs google-sans-code-400 transition-colors duration-200"
               >
-                <MapPin className="w-4 h-4" />
+                <MapPin className="w-4 h-4 text-green-600" />
                 emergency
               </button>
               <button
                 onClick={logout}
                 className="flex items-center gap-1 hover:cursor-pointer px-3 py-1.5 bg-transparent hover:text-gray-500 text-[var(--color-secondary)] text-sm rounded-xs google-sans-code-400 transition-colors duration-200"
               >
-                <LogOut className="w-4 h-4" />
+                <LogOut className="w-4 h-4 text-red-600" />
                 logout
               </button>
             </>
