@@ -1,4 +1,4 @@
-import { LogOut, MapPin } from "lucide-react";
+import { LogOut, MapPin, Bell } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -30,19 +30,25 @@ const Header = () => {
           {isAuthenticated ? (
             <>
               <button
-                onClick={logout}
-                className="flex items-center gap-1 hover:cursor-pointer px-3 py-1.5 bg-transparent hover:text-gray-500 text-[var(--color-secondary)] text-sm rounded-xs google-sans-code-400 transition-colors duration-200"
+                onClick={() => navigate("/notification")}
+                className="flex items-center gap-1 px-3 py-1.5 bg-transparent hover:cursor-pointer hover:text-gray-500 text-[var(--color-secondary)] text-sm rounded-xs google-sans-code-400 transition-colors duration-200"
               >
-                <LogOut className="w-4 h-4" />
-                Logout
+                <Bell className="w-4 h-4" />
+                notifications
               </button>
-              {/* 🚨 Emergency Link */}
               <button
                 onClick={() => navigate("/emergency")}
                 className="flex items-center gap-1 px-3 py-1.5 bg-transparent hover:cursor-pointer hover:text-gray-500 text-[var(--color-secondary)] text-sm rounded-xs google-sans-code-400 transition-colors duration-200"
               >
                 <MapPin className="w-4 h-4" />
-                Emergency
+                emergency
+              </button>
+              <button
+                onClick={logout}
+                className="flex items-center gap-1 hover:cursor-pointer px-3 py-1.5 bg-transparent hover:text-gray-500 text-[var(--color-secondary)] text-sm rounded-xs google-sans-code-400 transition-colors duration-200"
+              >
+                <LogOut className="w-4 h-4" />
+                logout
               </button>
             </>
           ) : (
