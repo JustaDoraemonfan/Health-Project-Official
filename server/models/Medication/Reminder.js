@@ -23,6 +23,14 @@ const ReminderSchema = new mongoose.Schema(
     timezone: { type: String, default: "Asia/Kolkata" },
     notes: { type: String },
     isActive: { type: Boolean, default: true },
+    doctorNote: {
+      type: String,
+      default: "",
+    },
+    reviewedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // assuming User has role "doctor"
+    },
   },
   { timestamps: true }
 );

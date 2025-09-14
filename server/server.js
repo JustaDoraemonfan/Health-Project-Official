@@ -27,6 +27,7 @@ import prescriptionRoutes from "./routes/prescriptionRoutes.js";
 import notesRoutes from "./routes/notesRoutes.js";
 import reminderRoutes from "./routes/Medication/reminderRoutes.js";
 import reminderLogRoutes from "./routes/Medication/reminderLogRoutes.js";
+import { startReminderJobs } from "./jobs/reminderScheduler.js";
 
 // Load env vars
 dotenv.config();
@@ -78,7 +79,7 @@ app.use(errorHandler);
 const startServer = async () => {
   try {
     await connectDB();
-    startEarthquakeJob();
+    startReminderJobs();
     const server = app.listen(PORT, () => {
       console.log(`✅ Server running in ${NODE_ENV} mode on port ${PORT}`);
     });

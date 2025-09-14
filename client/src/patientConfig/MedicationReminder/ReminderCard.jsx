@@ -22,10 +22,10 @@ const formatDate = (date) => {
 
 const ReminderCard = ({ reminder, onMarkAsTaken, onEdit, onDelete }) => {
   const getStatusColor = () => {
-    if (reminder.status === "taken") return "text-green-600 bg-green-50";
-    if (reminder.status === "missed") return "text-red-600 bg-red-50";
-    if (reminder.status === "upcoming") return "text-blue-600 bg-blue-50";
-    if (reminder.status === "today") return "text-yellow-600 bg-yellow-50";
+    if (reminder.status === "taken") return "text-green-600 bg-transparent";
+    if (reminder.status === "missed") return "text-red-600 bg-transparent";
+    if (reminder.status === "upcoming") return "text-blue-600 bg-transparent";
+    if (reminder.status === "today") return "text-yellow-600 bg-transparent";
     return "text-gray-600 bg-gray-50";
   };
 
@@ -79,7 +79,7 @@ const ReminderCard = ({ reminder, onMarkAsTaken, onEdit, onDelete }) => {
 
         <div className="flex flex-col items-end space-y-2">
           <span
-            className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor()}`}
+            className={`px-2 py-1 rounded-full text-md font-medium ${getStatusColor()}`}
           >
             {getStatusText()}
           </span>

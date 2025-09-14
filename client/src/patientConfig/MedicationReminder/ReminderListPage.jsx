@@ -1,5 +1,4 @@
 // ReminderListPage.jsx
-import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import ReminderCard from "./ReminderCard";
 
@@ -10,24 +9,7 @@ const ReminderListPage = ({
   onDelete,
   onCreateNew,
 }) => {
-  const [filter, setFilter] = useState("all");
-
-  const filteredReminders = reminders.filter((reminder) => {
-    switch (filter) {
-      case "today":
-        return reminder.status === "today";
-      case "upcoming":
-        return reminder.status === "upcoming";
-      case "taken":
-        return reminder.status === "taken";
-      case "missed":
-        return reminder.status === "missed";
-      default:
-        return true;
-    }
-  });
-
-  const sortedReminders = [...filteredReminders].sort((a, b) => {
+  const sortedReminders = [...reminders].sort((a, b) => {
     const aDateTime = new Date(`${a.startDate}T${a.times[0]}`);
     const bDateTime = new Date(`${b.startDate}T${b.times[0]}`);
     return aDateTime - bDateTime;
@@ -44,22 +26,6 @@ const ReminderListPage = ({
           <Plus className="w-4 h-4" />
           <span>Add Reminder</span>
         </button>
-      </div>
-
-      <div className="flex flex-wrap gap-2">
-        {["all", "today", "upcoming", "taken", "missed"].map((filterType) => (
-          <button
-            key={filterType}
-            onClick={() => setFilter(filterType)}
-            className={`px-3 py-1 rounded text-sm font-medium transition-colors hover:cursor-pointer ${
-              filter === filterType
-                ? "bg-black text-white"
-                : "bg-white border border-black/20 text-black hover:bg-gray-50"
-            }`}
-          >
-            {filterType.charAt(0).toUpperCase() + filterType.slice(1)}
-          </button>
-        ))}
       </div>
 
       {sortedReminders.length === 0 ? (

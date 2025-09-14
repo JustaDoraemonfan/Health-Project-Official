@@ -21,16 +21,30 @@ const formatDate = (date) => {
 
 const ReminderLogPage = ({ reminders }) => {
   const [dateFilter, setDateFilter] = useState("");
+  const [filter, setFilter] = useState("all");
+
+  const filteredReminders = reminders.filter((reminder) => {
+    switch (filter) {
+      case "today":
+        return reminder.status === "today";
+      case "taken":
+        return reminder.status === "taken";
+      case "missed":
+        return reminder.status === "missed";
+      default:
+        return true;
+    }
+  });
 
   // Normalize date for comparison
   const normalize = (d) => new Date(d).setHours(0, 0, 0, 0);
 
-  const logEntries = reminders
-    .filter((reminder) => reminder.status != "upcomming")
+  const logEntries = filteredReminders
+    .filter((reminder) => reminder.status !== "upcoming")
     .filter((reminder) => {
       if (!dateFilter) return true;
 
-      const filterDate = normalize(dateFilter);
+      const filterDate = normalize(new Date(dateFilter));
       const start = normalize(reminder.startDate);
       const end = normalize(reminder.endDate);
 
@@ -41,6 +55,21 @@ const ReminderLogPage = ({ reminders }) => {
   return (
     <div className="space-y-4">
       <h1 className="text-2xl font-bold text-black">Reminder Log</h1>
+      <div className="flex flex-wrap gap-2">
+        {["all", "today", "taken", "missed"].map((filterType) => (
+          <button
+            key={filterType}
+            onClick={() => setFilter(filterType)}
+            className={`px-3 py-1 rounded text-sm font-medium transition-colors hover:cursor-pointer ${
+              filter === filterType
+                ? "bg-black text-white"
+                : "bg-white border border-black/20 text-black hover:bg-gray-50"
+            }`}
+          >
+            {filterType.charAt(0).toUpperCase() + filterType.slice(1)}
+          </button>
+        ))}
+      </div>
 
       {/* Date Filter */}
       <div className="flex items-center space-x-2">
