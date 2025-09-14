@@ -51,7 +51,7 @@ const Header = () => {
                 className="flex items-center gap-1 hover:cursor-pointer px-3 py-1.5 bg-transparent hover:text-gray-500 text-[var(--color-secondary)] text-sm rounded-xs google-sans-code-400 transition-colors duration-200"
               >
                 <LogOut className="w-4 h-4 text-red-600" />
-                logout
+                Logout
               </button>
             </>
           ) : (
