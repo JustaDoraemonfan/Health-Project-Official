@@ -5,7 +5,7 @@ import StatusBar from "./DashboardComponents/StatusBar";
 import QuickAction from "./DashboardComponents/QuickAction";
 import UpdateSymptomModal from "../../patientConfig/DashboardUtils/UpdateSymptomModal";
 import { dashboardAPI } from "../../services/api";
-import { dashboardSections } from "../../config/dashboardSection";
+import { dashboardSections } from "../../config/patientDashboardSection";
 import Footer from "./DashboardComponents/Footer";
 import Header from "../../components/Header";
 import { symptomAPI } from "../../services/api";
