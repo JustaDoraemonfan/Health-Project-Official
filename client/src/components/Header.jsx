@@ -58,19 +58,19 @@ const Header = () => {
             <>
               <a
                 href="#home"
-                className="text-[var(--color-secondary)] hover:text-slate-400 hover:cursor-pointer transition-colors duration-200 google-sans-code-400 text-sm"
+                className="text-[var(--color-secondary)] hover:text-slate-300 hover:cursor-pointer transition-colors duration-200 google-sans-code-400 text-sm"
               >
                 ~/home
               </a>
               <a
                 href="#stats"
-                className="text-[var(--color-secondary)] hover:text-slate-400 hover:cursor-pointer transition-colors duration-200 google-sans-code-400 text-sm"
+                className="text-[var(--color-secondary)] hover:text-slate-300 hover:cursor-pointer transition-colors duration-200 google-sans-code-400 text-sm"
               >
                 ~/analytics
               </a>
               <a
                 href="#register"
-                className="text-[var(--color-secondary)] hover:text-slate-400 hover:cursor-pointer transition-colors duration-200 google-sans-code-400 text-sm"
+                className="text-[var(--color-secondary)] hover:text-slate-300 hover:cursor-pointer transition-colors duration-200 google-sans-code-400 text-sm"
               >
                 ~/register
               </a>
