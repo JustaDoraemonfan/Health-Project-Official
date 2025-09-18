@@ -63,7 +63,7 @@ const Header = () => {
                 ~/home
               </a>
               <a
-                href="#stats"
+                href="tats"
                 className="text-[var(--color-secondary)] hover:text-slate-400 hover:cursor-pointer transition-colors duration-200 google-sans-code-400 text-sm"
               >
                 ~/analytics
