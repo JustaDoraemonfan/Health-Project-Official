@@ -59,9 +59,9 @@ const App = () => {
   };
 
   // ✅ Mark reminder as taken
-  const handleMarkAsTaken = async (id) => {
+  const handleMarkAsTaken = async (id, today) => {
     try {
-      const res = await reminderAPI.updateReminder(id, { status: "taken" });
+      const res = await reminderAPI.markAsTaken(id);
       setReminders((prev) =>
         prev.map((r) => (r._id === id ? res.data.data : r))
       );

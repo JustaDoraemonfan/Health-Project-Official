@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Filter, X, Calendar, Clock } from "lucide-react";
+import { Calendar, Clock, X, Filter } from "lucide-react";
 
 const formatTime = (time) => {
   if (!time) return "—";
@@ -21,47 +21,45 @@ const formatDate = (date) => {
 
 const ReminderLogPage = ({ reminders }) => {
   const [dateFilter, setDateFilter] = useState("");
-  const [filter, setFilter] = useState("all");
-
-  const filteredReminders = reminders.filter((reminder) => {
-    switch (filter) {
-      case "today":
-        return reminder.status === "today";
-      case "taken":
-        return reminder.status === "taken";
-      case "missed":
-        return reminder.status === "missed";
-      default:
-        return true;
-    }
-  });
+  const [statusFilter, setStatusFilter] = useState("all");
 
   // Normalize date for comparison
   const normalize = (d) => new Date(d).setHours(0, 0, 0, 0);
 
-  const logEntries = filteredReminders
-    .filter((reminder) => reminder.status !== "upcoming")
-    .filter((reminder) => {
-      if (!dateFilter) return true;
+  const filteredReminders = reminders.map((reminder) => {
+    const entries = Object.entries(reminder.dailyStatus || {}).filter(
+      ([date, status]) => {
+        // Filter by status
+        if (statusFilter !== "all" && status !== statusFilter) return false;
+        // Filter by date
+        if (!dateFilter) return true;
+        const filterDate = normalize(new Date(dateFilter));
+        const entryDate = normalize(new Date(date));
+        return filterDate === entryDate;
+      }
+    );
+    return {
+      ...reminder,
+      logEntries: entries.sort((a, b) => new Date(a[0]) - new Date(b[0])),
+    };
+  });
 
-      const filterDate = normalize(new Date(dateFilter));
-      const start = normalize(reminder.startDate);
-      const end = normalize(reminder.endDate);
-
-      return filterDate >= start && filterDate <= end;
-    })
-    .sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+  const displayedReminders = filteredReminders.filter(
+    (r) => r.logEntries.length > 0
+  );
 
   return (
     <div className="space-y-4">
       <h1 className="text-2xl font-bold text-black">Reminder Log</h1>
+
+      {/* Status Filters */}
       <div className="flex flex-wrap gap-2">
-        {["all", "today", "taken", "missed"].map((filterType) => (
+        {["all", "taken", "missed"].map((filterType) => (
           <button
             key={filterType}
-            onClick={() => setFilter(filterType)}
+            onClick={() => setStatusFilter(filterType)}
             className={`px-3 py-1 rounded text-sm font-medium transition-colors hover:cursor-pointer ${
-              filter === filterType
+              statusFilter === filterType
                 ? "bg-black text-white"
                 : "bg-white border border-black/20 text-black hover:bg-gray-50"
             }`}
@@ -92,67 +90,70 @@ const ReminderLogPage = ({ reminders }) => {
       </div>
 
       {/* Log Entries */}
-      {logEntries.length === 0 ? (
+      {displayedReminders.length === 0 ? (
         <div className="text-center py-8">
           <p className="text-gray-500">No log entries found</p>
         </div>
       ) : (
         <div className="space-y-3">
-          {logEntries.map((reminder) => (
+          {displayedReminders.map((reminder) => (
             <div
               key={reminder._id}
-              className="bg-[var(--color-secondary)]/90 rounded-lg shadow-sm border border-black/10 p-4"
+              className="bg-[var(--color-secondary)]/90 rounded-lg shadow-sm border border-black/10 p-4 flex justify-between"
             >
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="font-semibold text-[var(--color-primary)]">
-                    {reminder.medicine}
-                  </h3>
-                  <p className="text-green-400 text-sm">{reminder.dosage}</p>
+              <div>
+                <h3 className="font-semibold text-[var(--color-primary)]">
+                  {reminder.medicine}
+                </h3>
+                <p className="text-green-400 text-sm">{reminder.dosage}</p>
 
-                  {/* Dates */}
-                  <div className="flex items-center mt-2 space-x-4">
-                    <div className="flex items-center text-white">
-                      <Calendar className="w-4 h-4 mr-1" />
-                      <span className="text-sm">
-                        {formatDate(reminder.startDate)} -{" "}
-                        {formatDate(reminder.endDate)}
-                      </span>
-                    </div>
+                {/* Dates */}
+                <div className="flex items-center mt-2 space-x-4">
+                  <div className="flex items-center text-white">
+                    <Calendar className="w-4 h-4 mr-1" />
+                    <span className="text-sm">
+                      {formatDate(reminder.startDate)} -{" "}
+                      {formatDate(reminder.endDate)}
+                    </span>
                   </div>
-
-                  {/* Times */}
-                  {reminder.times && reminder.times.length > 0 && (
-                    <div className="flex items-center text-slate-300 mt-2">
-                      <Clock className="w-4 h-4 mr-1" />
-                      <span className="text-sm">
-                        {reminder.times.map((t, i) => (
-                          <span key={i}>
-                            {formatTime(t)}
-                            {i < reminder.times.length - 1 ? ", " : ""}
-                          </span>
-                        ))}
-                      </span>
-                    </div>
-                  )}
                 </div>
 
-                {/* Status */}
-                <div>
-                  {reminder.status === "taken" ? (
-                    <span className="px-3 py-1 bg-green-50 text-green-600 rounded-full text-sm font-medium">
-                      Taken
+                {/* Times */}
+                {reminder.times && reminder.times.length > 0 && (
+                  <div className="flex items-center text-slate-300 mt-2">
+                    <Clock className="w-4 h-4 mr-1" />
+                    <span className="text-sm">
+                      {reminder.times.map((t, i) => (
+                        <span key={i}>
+                          {formatTime(t)}
+                          {i < reminder.times.length - 1 ? ", " : ""}
+                        </span>
+                      ))}
                     </span>
-                  ) : reminder.status === "missed" ? (
-                    <span className="px-3 py-1 bg-red-50 text-red-600 rounded-full text-sm font-medium">
-                      Missed
-                    </span>
-                  ) : (
-                    <span className="px-3 py-1 bg-gray-50 text-gray-600 rounded-full text-sm font-medium">
-                      Pending
-                    </span>
-                  )}
-                </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Daily Status Log on the right */}
+              {/* Daily Status Log on the right */}
+              <div className="flex flex-col items-end space-y-1">
+                {reminder.logEntries.map(([date, status]) => (
+                  <span
+                    key={date}
+                    className={`text-xs font-medium ${
+                      status === "taken"
+                        ? "text-green-500"
+                        : status === "missed"
+                        ? "text-red-500"
+                        : status === "today"
+                        ? "text-yellow-500"
+                        : "text-gray-700"
+                    }`}
+                  >
+                    {formatDate(date)}:{" "}
+                    {status.charAt(0).toUpperCase() + status.slice(1)}
+                  </span>
+                ))}
               </div>
             </div>
           ))}

@@ -3,7 +3,6 @@ import { Clock, Check, Edit2, Calendar, Trash2 } from "lucide-react";
 
 const formatTime = (time) => {
   if (!time) return "—";
-
   const [hoursStr, minutes] = time.split(":");
   const hours = parseInt(hoursStr, 10);
   const hour12 = hours % 12 || 12;
@@ -21,20 +20,45 @@ const formatDate = (date) => {
 };
 
 const ReminderCard = ({ reminder, onMarkAsTaken, onEdit, onDelete }) => {
+  const dateKey = new Date().toISOString().split("T")[0]; // Update dailyStatus map
+  const displayStatus = reminder.dailyStatus?.[dateKey] || "upcoming";
+  const yesterdayKey = new Date(Date.now() - 86400000)
+    .toISOString()
+    .split("T")[0]; // yesterday
+
+  // Check if yesterday's status was still 'upcoming', mark it as 'missed'
+  if (reminder.dailyStatus?.[yesterdayKey] === "upcoming") {
+    reminder.dailyStatus[yesterdayKey] = "missed";
+  }
+
   const getStatusColor = () => {
-    if (reminder.status === "taken") return "text-green-600 bg-transparent";
-    if (reminder.status === "missed") return "text-red-600 bg-transparent";
-    if (reminder.status === "upcoming") return "text-blue-600 bg-transparent";
-    if (reminder.status === "today") return "text-yellow-600 bg-transparent";
-    return "text-gray-600 bg-gray-50";
+    switch (displayStatus) {
+      case "taken":
+        return "text-green-400 bg-transparent";
+      case "missed":
+        return "text-red-600 bg-transparent";
+      case "today":
+        return "text-yellow-600 bg-transparent";
+      case "upcoming":
+        return "text-blue-600 bg-transparent";
+      default:
+        return "text-gray-600 bg-gray-50";
+    }
   };
 
   const getStatusText = () => {
-    if (reminder.status === "taken") return "Taken";
-    if (reminder.status === "missed") return "Missed";
-    if (reminder.status === "upcoming") return "Upcoming";
-    if (reminder.status === "today") return "Today";
-    return "Pending";
+    switch (displayStatus) {
+      case "taken":
+        return `Taken for ${formatDate(new Date().toISOString())}`;
+      case "missed":
+        return "Missed";
+      case "today":
+        return "Today";
+      case "upcoming":
+        return "Upcoming";
+      default:
+        return "Pending";
+    }
   };
 
   return (
@@ -50,8 +74,11 @@ const ReminderCard = ({ reminder, onMarkAsTaken, onEdit, onDelete }) => {
             <div className="flex items-center text-white">
               <Calendar className="w-4 h-4 mr-1" />
               <span className="text-sm">
-                {formatDate(reminder.startDate)}
-                {reminder.endDate ? ` - ${formatDate(reminder.endDate)}` : ""}
+                {reminder.displayDate
+                  ? formatDate(reminder.displayDate)
+                  : `${formatDate(reminder.startDate)} - ${formatDate(
+                      reminder.endDate
+                    )}`}
               </span>
             </div>
           </div>
@@ -79,21 +106,34 @@ const ReminderCard = ({ reminder, onMarkAsTaken, onEdit, onDelete }) => {
 
         <div className="flex flex-col items-end space-y-2">
           <span
-            className={`px-2 py-1 rounded-full text-md font-medium ${getStatusColor()}`}
+            className={`px-2 py-1 rounded-full text-sm font-light ${getStatusColor()}`}
           >
             {getStatusText()}
           </span>
+
+          {/* Tiny text for yesterday's status */}
+          {reminder.dailyStatus?.[yesterdayKey] &&
+            ["taken", "missed"].includes(
+              reminder.dailyStatus[yesterdayKey]
+            ) && (
+              <span className="text-xs text-gray-400">
+                Yesterday:{" "}
+                <span className="text-amber-100">
+                  {reminder.dailyStatus[yesterdayKey]}
+                </span>
+              </span>
+            )}
+
           <div className="flex items-center space-x-2">
-            {reminder.status === "upcoming" && (
+            {displayStatus !== "taken" && (
               <button
                 onClick={() => onMarkAsTaken(reminder._id)}
-                className="group p-2.5 hover:cursor-pointer text-emerald-600 hover:text-white hover:bg-emerald-600 bg-emerald-50  rounded-xl transition-all duration-200 ease-in-out hover:scale-110 shadow-sm hover:shadow-md"
+                className="group p-2.5 hover:cursor-pointer text-emerald-600 hover:text-white hover:bg-emerald-600 bg-emerald-50 rounded-xl transition-all duration-200 ease-in-out hover:scale-110 shadow-sm hover:shadow-md"
                 title="Mark as taken"
               >
                 <Check className="w-4 h-4 group-hover:scale-110 transition-transform duration-150" />
               </button>
             )}
-
             <button
               onClick={() => onEdit(reminder)}
               className="group p-2.5 hover:cursor-pointer text-blue-600 hover:text-white hover:bg-blue-600 bg-blue-50 rounded-xl transition-all duration-200 ease-in-out hover:scale-110 shadow-sm hover:shadow-md"
@@ -101,7 +141,6 @@ const ReminderCard = ({ reminder, onMarkAsTaken, onEdit, onDelete }) => {
             >
               <Edit2 className="w-4 h-4 group-hover:scale-110 transition-transform duration-150" />
             </button>
-
             <button
               onClick={() => onDelete(reminder._id)}
               className="group p-2.5 hover:cursor-pointer text-red-600 hover:text-white hover:bg-red-600 bg-red-50 rounded-xl transition-all duration-200 ease-in-out hover:scale-110 shadow-sm hover:shadow-md"

@@ -445,6 +445,8 @@ export const reminderAPI = {
 
   // Delete a reminder by its ID
   deleteReminder: (reminderId) => apiClient.delete(`/reminders/${reminderId}`),
+  markAsTaken: (reminderId) =>
+    apiClient.put(`/reminders/${reminderId}/mark-as-taken`),
 };
 
 // Earthquake API endpoints

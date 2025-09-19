@@ -16,8 +16,7 @@ const ReminderLogSchema = new mongoose.Schema(
     scheduledFor: { type: Date, required: true }, // UTC time when it was scheduled
     status: {
       type: String,
-      enum: ["sent", "taken", "skipped", "missed"],
-      default: "sent",
+      enum: ["taken", "skipped", "missed"],
     },
     respondedAt: { type: Date, default: null },
     note: { type: String, default: "" },

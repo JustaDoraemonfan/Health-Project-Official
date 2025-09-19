@@ -6,6 +6,7 @@ import {
   getReminderById,
   updateReminder,
   deleteReminder,
+  markAsTaken,
 } from "../../controllers/Medication/reminderController.js";
 import {
   authMiddleware,
@@ -24,6 +25,8 @@ router.route("/").post(createReminder).get(getReminders);
 // GET /api/reminders/:id -> get single reminder
 // PUT /api/reminders/:id -> update reminder
 // DELETE /api/reminders/:id -> delete reminder
+
+router.route("/:id/mark-as-taken").put(markAsTaken);
 router
   .route("/:id")
   .get(getReminderById)
