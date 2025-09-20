@@ -135,7 +135,6 @@ const ReminderLogPage = ({ reminders }) => {
               </div>
 
               {/* Daily Status Log on the right */}
-              {/* Daily Status Log on the right */}
               <div className="flex flex-col items-end space-y-1">
                 {reminder.logEntries.map(([date, status]) => (
                   <span
