@@ -57,7 +57,7 @@ const Header = () => {
           ) : (
             <>
               <a
-                href="#hOme"
+                href="#hOMe"
                 className="text-[var(--color-secondary)] hover:text-slate-400 hover:cursor-pointer transition-colors duration-200 google-sans-code-400 text-sm"
               >
                 ~/home
