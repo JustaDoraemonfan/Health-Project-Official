@@ -59,7 +59,7 @@ const DetailedView = ({
 
   const confirmCancel = (cancellationReason) => {
     console.log("Appointment cancelled with reason:", cancellationReason);
-    onCancelAppointment?.(selectedAppointment);
+    onCancelAppointment?.(selectedAppointment, cancellationReason);
     setShowCancelModal(false);
   };
 
@@ -93,7 +93,7 @@ const DetailedView = ({
           <div className="lg:col-span-2 bg-[var(--color-secondary)]/90 border border-slate-700 rounded-lg p-6 shadow-sm">
             <AppointmentDetails appointment={selectedAppointment} />
 
-            {selectedAppointment.status === "cancelled" ? (
+            {selectedAppointment.status.startsWith("cancelled") ? (
               <div className="mt-6 bg-red-900/20 border border-red-800 rounded-lg p-4 text-center">
                 <span className="text-red-400 font-medium">
                   This appointment has been cancelled

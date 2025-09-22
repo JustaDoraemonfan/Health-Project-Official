@@ -226,8 +226,10 @@ export const appointmentAPI = {
     apiClient.delete(`/appointments/${appointmentId}`),
 
   // Cancel appointment
-  cancelAppointment: (appointmentId) =>
-    apiClient.patch(`/appointments/${appointmentId}/cancel`),
+  cancelAppointment: (appointmentId, reasonForCancellation) =>
+    apiClient.patch(`/appointments/${appointmentId}/cancel`, {
+      reason: reasonForCancellation,
+    }),
 
   // Confirm appointment (doctor/admin)
   confirmAppointment: (appointmentId) =>

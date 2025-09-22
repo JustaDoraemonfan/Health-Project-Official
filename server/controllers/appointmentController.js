@@ -232,17 +232,23 @@ export const getPastAppointments = asyncHandler(async (req, res) => {
 // @desc    Cancel appointment
 // @route   PATCH /api/appointments/:id/cancel
 // @access  Private
+
+// A constant for your business rule (e.g., 24-hour cancellation window)
+const CANCELLATION_WINDOW_HOURS = 24;
+
 export const cancelAppointment = asyncHandler(async (req, res) => {
   try {
     const appointment = await Appointment.findById(req.params.id);
+    const { role } = req.user; // Assuming role is on the req.user object
+    const { reason } = req.body; // Get optional reason from request body
 
     if (!appointment) {
       return errorResponse(res, "Appointment not found", 404);
     }
 
-    // Check if appointment is already cancelled or completed
+    // A more robust check to see if the appointment is already cancelled
     if (
-      appointment.status === "cancelled" ||
+      appointment.status.startsWith("cancelled-by") ||
       appointment.status === "completed"
     ) {
       return errorResponse(
@@ -252,9 +258,30 @@ export const cancelAppointment = asyncHandler(async (req, res) => {
       );
     }
 
-    // Update appointment status to cancelled
-    appointment.status = "cancelled";
-    appointment.lastUpdatedBy = req.user.role;
+    // --- Business Logic: Check for Late Cancellation ---
+    const now = new Date();
+    const appointmentDate = new Date(appointment.appointmentDate);
+    // Calculate the difference in milliseconds
+    const timeDiffMs = appointmentDate.getTime() - now.getTime();
+    const isLateCancellation =
+      timeDiffMs < CANCELLATION_WINDOW_HOURS * 60 * 60 * 1000;
+
+    // --- Update Appointment Document ---
+
+    // 1. Set the new, more descriptive status
+    appointment.status = `cancelled-by-${role}`;
+
+    // 2. Populate the detailed cancellation object for a clear audit trail
+    appointment.cancellationDetails = {
+      cancelledBy: role,
+      cancellationTimestamp: now,
+      cancellationReason: reason || "No reason provided.", // Use reason from body or a default
+      isLateCancellation: isLateCancellation,
+    };
+
+    // 3. Keep track of the last user to modify the record
+    appointment.lastUpdatedBy = role;
+
     await appointment.save();
 
     return successResponse(

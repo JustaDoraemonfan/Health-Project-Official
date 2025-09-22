@@ -64,10 +64,12 @@ export const useAppointments = () => {
     }
   };
 
-  const cancelAppointment = async (appointment) => {
+  const cancelAppointment = async (appointment, reasonForCancellation) => {
     try {
-      // Add API call to cancel appointment
-      await appointmentAPI.cancelAppointment(appointment._id);
+      await appointmentAPI.cancelAppointment(
+        appointment._id,
+        reasonForCancellation
+      );
     } catch (err) {
       console.error("Failed to cancel appointment:", err);
     }

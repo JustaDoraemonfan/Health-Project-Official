@@ -44,8 +44,34 @@ const appointmentSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["scheduled", "completed", "cancelled", "no-show"],
+      enum: [
+        "scheduled",
+        "completed",
+        "cancelled-by-patient",
+        "cancelled-by-doctor",
+        "no-show",
+      ],
       default: "scheduled",
+    },
+
+    // NEW: A dedicated object for cancellation info
+    cancellationDetails: {
+      cancelledBy: {
+        type: String, // 'patient', 'doctor', 'admin'
+        enum: ["patient", "doctor", "admin"],
+      },
+      cancellationTimestamp: {
+        type: Date,
+      },
+      cancellationReason: {
+        type: String,
+        trim: true,
+      },
+      // This flag can be used to automatically enforce policies
+      isLateCancellation: {
+        type: Boolean,
+        default: false,
+      },
     },
     reasonForVisit: {
       type: String,
