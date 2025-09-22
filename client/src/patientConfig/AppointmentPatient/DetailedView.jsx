@@ -17,7 +17,7 @@ const cancellationReasons = [
 const DetailedView = ({
   selectedAppointment,
   userName,
-  onbackToDashboard,
+  onBackToDashboard,
   onRescheduleAppointment,
   onCancelAppointment,
 }) => {
