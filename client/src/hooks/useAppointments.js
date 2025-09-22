@@ -1,4 +1,4 @@
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { appointmentAPI, authAPI, dashboardAPI } from "../services/api";
 
 export const useAppointments = () => {
