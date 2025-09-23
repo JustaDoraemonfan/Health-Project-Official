@@ -1,6 +1,10 @@
 import Symptom from "../models/Symptom.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import { successResponse, errorResponse } from "../utils/response.js";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+// Initialize the Google Gemini client
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 /**
  * @desc    Add a new symptom
@@ -126,4 +130,122 @@ export const deleteSymptom = asyncHandler(async (req, res) => {
   }
 
   return successResponse(res, {}, "Symptom deleted successfully", 200);
+});
+
+/**
+ * @desc    Summarize a symptom with AI
+ * @route   POST /api/symptoms/:id/summarize
+ * @access  Private (Patient)
+ */
+/**
+ * @desc    Analyze symptoms with AI assistance
+ * @route   POST /api/symptoms/analyze
+ * @access  Private (Patient)
+ */
+/**
+ * @desc    Analyze an existing symptom with AI assistance
+ * @route   POST /api/symptoms/:id/analyze
+ * @access  Private (Patient)
+ */
+export const analyzeSymptom = asyncHandler(async (req, res) => {
+  try {
+    const { id } = req.params;
+    const patientId = req.user.id;
+
+    // Find the symptom in the database
+    const symptom = await Symptom.findOne({ _id: id, patient: patientId });
+    if (!symptom) {
+      return errorResponse(res, "Symptom not found", 404);
+    }
+
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
+    const prompt = `
+You are a helpful and caring medical assistant providing clear, educational information about symptoms. 
+
+Patient has described: "${symptom.description}"
+Severity: ${symptom.severity}
+Category: ${symptom.category}  
+Started: ${
+      symptom.onsetDate
+        ? new Date(symptom.onsetDate).toDateString()
+        : "Not specified"
+    }
+Additional notes: "${symptom.notes || "None"}"
+
+Please provide a structured, easy-to-read response using these sections:
+
+1. **Understanding**: Acknowledge their symptoms with empathy.
+2. **Possible causes**: Simple explanations of what might be causing the symptoms.
+3. **Self-care tips**: Safe things they can try at home (if appropriate).
+4. **When to seek care**: Clear guidance on when to see a doctor.
+5. **Reassurance**: Balanced encouragement without dismissing concerns.
+
+Formatting guidelines for the response:
+- No need to bold anything 
+- Use bullet points (*) for lists and tips.
+- Keep paragraphs short (2-3 sentences max) for readability.
+- Include ⚠️ warning for severe symptoms at the start if necessary.
+
+
+Keep the tone warm, supportive, and conversational. 
+Limit the response to 200-300 words.
+`;
+
+    const result = await model.generateContent(prompt);
+    let responseText = result.response.text();
+
+    // Add emergency warning for severe symptoms
+    const emergencyKeywords = [
+      "chest pain",
+      "difficulty breathing",
+      "severe headache",
+      "severe bleeding",
+      "unconscious",
+    ];
+    const hasEmergencySymptoms = emergencyKeywords.some((keyword) =>
+      symptom.description.toLowerCase().includes(keyword.toLowerCase())
+    );
+
+    if (hasEmergencySymptoms || symptom.severity === "Severe") {
+      responseText = `⚠️ **IMPORTANT**: Based on your symptoms, you may need immediate medical attention. If this is urgent, please call emergency services or go to the nearest emergency room right away.\n\n${responseText}`;
+    }
+
+    // Add standard disclaimer
+    responseText += `\n\nThis information is for educational purposes only and does not replace professional medical advice. Please consult with a healthcare provider for proper evaluation and treatment.`;
+
+    // Optional: Save the analysis back to the symptom record
+    symptom.lastAnalyzed = new Date();
+    await symptom.save();
+
+    return successResponse(
+      res,
+      {
+        symptomId: symptom._id,
+        analysis: responseText,
+        analyzedAt: new Date().toISOString(),
+        symptomData: {
+          description: symptom.description,
+          severity: symptom.severity,
+          category: symptom.category,
+          onsetDate: symptom.onsetDate,
+        },
+      },
+      "Symptom analysis completed",
+      200
+    );
+  } catch (error) {
+    console.error("Error analyzing symptom:", error);
+
+    return errorResponse(
+      res,
+      {
+        message:
+          "I'm unable to analyze your symptom right now. Please consult with a healthcare provider directly for evaluation of your symptoms.",
+        fallbackAdvice:
+          "If you're experiencing severe or concerning symptoms, don't hesitate to seek medical attention promptly.",
+      },
+      500
+    );
+  }
 });

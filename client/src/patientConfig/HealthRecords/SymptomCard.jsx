@@ -1,12 +1,15 @@
 import React from "react";
+import { useState } from "react";
 import {
   Calendar,
   Eye,
   AlertTriangle,
   FileText,
-  Download,
   Clock,
+  Brain,
 } from "lucide-react";
+import { symptomAPI } from "../../services/api";
+import SymptomAnalysisModal from "./SymptomAnalysisModal";
 
 const getSeverityBadge = (severity) => {
   const severityStyles = {
@@ -52,6 +55,27 @@ const SymptomCard = ({ symptom, handleDownload }) => {
     createdAt,
     updatedAt,
   } = symptom;
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [analysis, setAnalysis] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleAnalyze = async () => {
+    setIsModalOpen(true);
+    setIsLoading(true);
+
+    try {
+      const result = await symptomAPI.analyzeSymptom(symptom._id);
+      setAnalysis(result.data.data.analysis);
+    } catch (error) {
+      console.error("Analysis failed:", error);
+      setAnalysis(
+        "Sorry, I couldn't analyze your symptom at this time. Please try again later or consult with a healthcare provider."
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
@@ -153,8 +177,24 @@ const SymptomCard = ({ symptom, handleDownload }) => {
               </p>
             </div>
           )}
+          <div className="flex justify-end">
+            <button
+              onClick={handleAnalyze}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm font-medium"
+            >
+              <Brain className="w-4 h-4" />
+              Analyze Symptom
+            </button>
+          </div>
         </div>
       </div>
+      <SymptomAnalysisModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        analysis={analysis}
+        symptomData={symptom}
+        isLoading={isLoading}
+      />
     </div>
   );
 };

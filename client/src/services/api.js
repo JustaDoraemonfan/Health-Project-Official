@@ -8,7 +8,7 @@ const API_BASE_URL =
 // Create axios instance
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 10000,
+  timeout: 50000,
   headers: {
     "Content-Type": "application/json",
   },
@@ -292,6 +292,10 @@ export const symptomAPI = {
       );
       throw error;
     }
+  },
+
+  analyzeSymptom: (symptomId) => {
+    return apiClient.post(`/symptoms/${symptomId}/analyze`);
   },
 
   // Update an existing symptom - FIXED (was missing FormData handling)

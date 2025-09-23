@@ -68,7 +68,7 @@ const UpdateSymptomModal = ({
                 variant="secondary"
                 size="sm"
                 onClick={handleClose}
-                className="h-8 w-8 p-0 hover:bg-gray-100"
+                className="bg-transparent"
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -106,9 +106,8 @@ const UpdateSymptomModal = ({
             <div className="flex flex-col-reverse sm:flex-row gap-2 pt-2 border-t">
               <Button
                 type="button"
-                variant="secondary"
                 onClick={handleClose}
-                className="flex-1 sm:flex-none"
+                className="flex-1 sm:flex-none text-white bg-[var(--color-secondary)] hover:cursor-pointer hover:bg-zinc-800"
               >
                 Cancel
               </Button>

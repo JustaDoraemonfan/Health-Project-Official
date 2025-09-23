@@ -33,13 +33,13 @@ export const DialogContent = ({ children, className = "" }) => (
 );
 
 export const DialogHeader = ({ children }) => (
-  <div className="px-6 py-5 border-b border-gray-600 bg-[var(--color-secondary)]">
+  <div className="px-6 py-5 border-b border-gray-600 bg-[var(--color-primary)]">
     {children}
   </div>
 );
 
 export const DialogTitle = ({ children }) => (
-  <h2 className="text-2xl font-light text-[var(--color-primary)] flex items-center gap-2">
+  <h2 className="text-2xl font-light text-[var(--color-secondary)] flex items-center gap-2">
     {children}
   </h2>
 );
@@ -58,7 +58,7 @@ export const Button = ({
     default:
       "bg-[var(--color-primary)] text-[var(--color-secondary)] hover:bg-white shadow-sm hover:shadow-md focus:ring-blue-500",
     secondary:
-      "bg-gray-700 text-gray-200 hover:bg-gray-600 focus:ring-gray-500 border border-gray-600",
+      "bg-transparent text-black hover:text-zinc-700 hover:cursor-pointer",
     outline:
       "border border-gray-500 bg-transparent text-gray-300 hover:bg-gray-800 focus:ring-gray-500",
     destructive: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500",

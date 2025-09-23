@@ -6,6 +6,7 @@ import {
   getSymptoms,
   getSymptomById,
   deleteSymptom,
+  analyzeSymptom,
 } from "../controllers/symptomController.js";
 import {
   authMiddleware,
@@ -24,6 +25,8 @@ router.post(
   symptomUpload.array("symptomFiles", 10), // symptom-specific upload
   addSymptom
 );
+
+router.post("/:id/analyze", authorizeRoles("patient"), analyzeSymptom);
 
 router.put(
   "/:id",
