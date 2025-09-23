@@ -108,8 +108,67 @@ const DetailedView = ({
               </div>
             )}
           </div>
+          {selectedAppointment.status.startsWith("cancelled") ? (
+            <div className="bg-[var(--color-secondary)] border border-slate-700 rounded-lg p-6 h-fit space-y-6">
+              <div>
+                <h3 className="text-white font-semibold mb-4">
+                  Cancellation Details
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-slate-400 text-sm">Reason</span>
+                    <span className="text-white text-sm bg-slate-700/50 p-2 rounded">
+                      {selectedAppointment.cancellationDetails
+                        ?.cancellationReason || "No reason provided"}
+                    </span>
+                  </div>
+                  {selectedAppointment.cancellationDetails?.cancelledAt && (
+                    <div className="flex justify-between items-start">
+                      <span className="text-slate-400 text-sm">
+                        Cancelled At
+                      </span>
+                      <span className="text-white text-sm text-right">
+                        {new Date(
+                          selectedAppointment.cancellationDetails.cancelledAt
+                        ).toLocaleString()}
+                      </span>
+                    </div>
+                  )}
+                  {selectedAppointment.cancellationDetails?.cancelledBy && (
+                    <div className="flex justify-between items-start">
+                      <span className="text-slate-400 text-sm">
+                        Cancelled By
+                      </span>
+                      <span className="text-white text-sm text-right capitalize">
+                        {selectedAppointment.cancellationDetails.cancelledBy}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
 
-          <AppointmentSidebar appointment={selectedAppointment} />
+              {/* Patient Information (still relevant for cancelled appointments) */}
+              <div className="border-t border-slate-700 pt-6">
+                <h3 className="text-white font-semibold mb-4">
+                  Patient Information
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex flex-col justify-between items-start">
+                    <span className="text-slate-400 text-sm">Email</span>
+                    <span className="text-white text-sm text-right max-w-[140px] ">
+                      {selectedAppointment.patient?.email || "N/A"}
+                    </span>
+                    <span className="text-slate-400 text-sm">Name</span>
+                    <span className="text-white text-sm text-right max-w-[140px] truncate">
+                      {selectedAppointment.patient?.name || "N/A"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <AppointmentSidebar appointment={selectedAppointment} />
+          )}
         </div>
       </main>
 

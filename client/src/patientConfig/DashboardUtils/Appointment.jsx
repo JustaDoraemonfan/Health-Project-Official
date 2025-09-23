@@ -36,8 +36,8 @@ const AppointmentDashboard = () => {
     // You might want to open a reschedule modal or navigate to a reschedule page
   };
 
-  const handleCancelAppointment = (appointment) => {
-    cancelAppointment(appointment);
+  const handleCancelAppointment = (appointment, reasonForCancellation) => {
+    cancelAppointment(appointment, reasonForCancellation);
     // You might want to show a confirmation dialog first
   };
 

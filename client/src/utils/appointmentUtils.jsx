@@ -9,8 +9,12 @@ export const getStatusClass = (status) => {
   const statusClasses = {
     confirmed: "bg-green-800/40 text-white border-green-700/50",
     pending: "bg-yellow-800/40 text-white border-yellow-700/50",
-    cancelled: "bg-red-800/40 text-white border-red-700/50",
     scheduled: "bg-blue-800/40 text-white border-blue-700/50",
+    "cancelled-by-patient": "bg-red-800/40 text-white border-red-700/50",
+    "cancelled-by-doctor": "bg-red-800/40 text-white border-red-700/50",
+    completed: "bg-emerald-800/40 text-white border-emerald-700/50", // if you track completed appointments
+    "no-show": "bg-orange-800/40 text-white border-orange-700/50", // if you track no-shows
+    rescheduled: "bg-purple-800/40 text-white border-purple-700/50", // if you track rescheduled appointments
   };
   return (
     statusClasses[status] || "bg-gray-900/20 text-gray-400 border-gray-700/50"
