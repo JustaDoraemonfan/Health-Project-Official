@@ -1,6 +1,5 @@
-// components/FileUploadSection.js
 import React from "react";
-import { Upload } from "lucide-react";
+import { Upload, Paperclip, X, ExternalLink } from "lucide-react";
 import { Button, Label } from "./index";
 import { ACCEPTED_FILE_TYPES } from "./Constants";
 
@@ -13,21 +12,28 @@ const FileUploadSection = ({
   onRemoveNew,
 }) => {
   return (
-    <div className="space-y-2">
-      <Label className="flex items-center gap-1">
-        <Upload className="h-4 w-4" />
+    <div className="space-y-4">
+      <Label className="flex items-center gap-2">
+        <Paperclip className="h-4 w-4 text-cyan-400" />
         Attachments (optional)
       </Label>
-      <div className="space-y-2">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => fileInputRef.current?.click()}
-          className="w-full sm:w-auto"
-        >
-          <Upload className="h-4 w-4 mr-2" />
-          Upload Files
-        </Button>
+
+      <div className="space-y-4">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => fileInputRef.current?.click()}
+            className="flex-1 sm:flex-none"
+          >
+            <Upload className="h-4 w-4 mr-2" />
+            Upload Files
+          </Button>
+          <p className="text-xs text-gray-400 flex items-center">
+            Supported: Images, PDFs, Documents (Max 10MB each)
+          </p>
+        </div>
+
         <input
           ref={fileInputRef}
           type="file"
@@ -37,56 +43,78 @@ const FileUploadSection = ({
           className="hidden"
         />
 
-        {/* Existing attachments (from server) */}
+        {/* Existing attachments */}
         {existingAttachments.length > 0 && (
-          <div className="space-y-1">
-            <h4 className="text-sm font-medium text-gray-700">
+          <div className="space-y-3">
+            <h4 className="text-sm font-medium text-gray-300 flex items-center gap-2">
+              <Paperclip className="h-4 w-4" />
               Current Files:
             </h4>
-            {existingAttachments.map((att, i) => (
-              <div
-                key={att._id || att.filePath || i}
-                className="flex items-center justify-between p-2 bg-gray-50 rounded text-sm"
-              >
-                <a
-                  href={att.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="truncate mr-2 text-blue-600 hover:text-blue-800"
+            <div className="grid gap-2">
+              {existingAttachments.map((att, i) => (
+                <div
+                  key={att._id || att.filePath || i}
+                  className="flex items-center justify-between p-3 bg-[var(--color-primary)]/60 rounded-lg border border-gray-600"
                 >
-                  {att.originalName || att.url}
-                </a>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => onRemoveExisting(i)}
-                >
-                  Remove
-                </Button>
-              </div>
-            ))}
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <Paperclip className="h-4 w-4 text-blue-400 flex-shrink-0" />
+                    <a
+                      href={att.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="truncate text-sm text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1"
+                    >
+                      {att.originalName || att.url}
+                      <ExternalLink className="h-3 w-3 flex-shrink-0" />
+                    </a>
+                  </div>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => onRemoveExisting(i)}
+                    className="ml-2 flex-shrink-0"
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
         {/* Newly selected files */}
         {newFiles.length > 0 && (
-          <div className="space-y-1">
-            <h4 className="text-sm font-medium text-gray-700">New Files:</h4>
-            {newFiles.map((file, i) => (
-              <div
-                key={i}
-                className="flex items-center justify-between p-2 bg-blue-50 rounded text-sm"
-              >
-                <span className="truncate mr-2">{file.name}</span>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => onRemoveNew(i)}
+          <div className="space-y-3">
+            <h4 className="text-sm font-medium text-gray-300 flex items-center gap-2">
+              <Upload className="h-4 w-4" />
+              New Files:
+            </h4>
+            <div className="grid gap-2">
+              {newFiles.map((file, i) => (
+                <div
+                  key={i}
+                  className="flex items-center justify-between p-3 bg-green-900/20 rounded-lg border border-green-800/50"
                 >
-                  Remove
-                </Button>
-              </div>
-            ))}
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <Upload className="h-4 w-4 text-green-400 flex-shrink-0" />
+                    <span className="truncate text-sm text-green-300">
+                      {file.name}
+                    </span>
+                    <span className="text-xs text-gray-400 flex-shrink-0">
+                      ({(file.size / 1024 / 1024).toFixed(1)}MB)
+                    </span>
+                  </div>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => onRemoveNew(i)}
+                    className="ml-2 flex-shrink-0"
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>

@@ -1,35 +1,36 @@
-// components/SymptomFormSections.js
 import React from "react";
-import { Calendar, FileText } from "lucide-react";
+import { Calendar, FileText, AlertCircle, Activity } from "lucide-react";
 import { Input, Textarea, Select, SelectItem, Label } from "./index";
 import { SEVERITY_OPTIONS, CATEGORY_OPTIONS } from "./Constants";
 
 export const DescriptionSection = ({ value, onChange }) => (
-  <div className="space-y-2">
-    <Label htmlFor="description">
-      Symptom Description <span className="text-red-500">*</span>
+  <div className="space-y-3">
+    <Label htmlFor="description" className="flex items-center gap-2">
+      <FileText className="h-4 w-4 text-blue-400" />
+      Symptom Description <span className="text-red-400">*</span>
     </Label>
     <Textarea
       id="description"
-      placeholder="Describe your symptom in detail..."
+      placeholder="Please describe your symptom in detail. Include when it occurs, how it feels, and any patterns you've noticed..."
       value={value}
       onChange={(e) => onChange("description", e.target.value)}
-      className="min-h-[60px]"
+      className="min-h-[100px] resize-none"
       required
     />
   </div>
 );
 
 export const SeverityDateSection = ({ formData, onChange }) => (
-  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-    <div className="space-y-2">
-      <Label htmlFor="severity">
-        Severity <span className="text-red-500">*</span>
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="space-y-3">
+      <Label htmlFor="severity" className="flex items-center gap-2">
+        <AlertCircle className="h-4 w-4 text-orange-400" />
+        Severity Level <span className="text-red-400">*</span>
       </Label>
       <Select
         value={formData.severity}
         onValueChange={(value) => onChange("severity", value)}
-        placeholder="Select severity"
+        placeholder="How severe is your symptom?"
       >
         {SEVERITY_OPTIONS.map((option) => (
           <SelectItem key={option.value} value={option.value}>
@@ -39,10 +40,10 @@ export const SeverityDateSection = ({ formData, onChange }) => (
       </Select>
     </div>
 
-    <div className="space-y-2">
-      <Label htmlFor="onsetDate" className="flex items-center gap-1">
-        <Calendar className="h-4 w-4" />
-        Date of Onset <span className="text-red-500">*</span>
+    <div className="space-y-3">
+      <Label htmlFor="onsetDate" className="flex items-center gap-2">
+        <Calendar className="h-4 w-4 text-green-400" />
+        When did this start? <span className="text-red-400">*</span>
       </Label>
       <Input
         id="onsetDate"
@@ -56,12 +57,15 @@ export const SeverityDateSection = ({ formData, onChange }) => (
 );
 
 export const CategorySection = ({ value, onChange }) => (
-  <div className="space-y-2">
-    <Label htmlFor="category">Category</Label>
+  <div className="space-y-3">
+    <Label htmlFor="category" className="flex items-center gap-2">
+      <Activity className="h-4 w-4 text-purple-400" />
+      Symptom Category
+    </Label>
     <Select
       value={value}
       onValueChange={(value) => onChange("category", value)}
-      placeholder="Select Category (Optional)"
+      placeholder="Select a category (optional)"
     >
       {CATEGORY_OPTIONS.map((category) => (
         <SelectItem key={category} value={category.toLowerCase()}>
@@ -73,17 +77,17 @@ export const CategorySection = ({ value, onChange }) => (
 );
 
 export const NotesSection = ({ value, onChange }) => (
-  <div className="space-y-2">
-    <Label htmlFor="notes" className="flex items-center gap-1">
-      <FileText className="h-4 w-4" />
+  <div className="space-y-3">
+    <Label htmlFor="notes" className="flex items-center gap-2">
+      <FileText className="h-4 w-4 text-indigo-400" />
       Additional Notes
     </Label>
     <Textarea
       id="notes"
-      placeholder="Any additional information, triggers, or observations..."
+      placeholder="Any additional information, triggers, medications taken, or other observations that might be helpful..."
       value={value}
       onChange={(e) => onChange("notes", e.target.value)}
-      className="min-h-[60px]"
+      className="min-h-[80px] resize-none"
     />
   </div>
 );
