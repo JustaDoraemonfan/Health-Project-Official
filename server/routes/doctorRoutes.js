@@ -28,7 +28,11 @@ router
 // Get all assigned patients of a doctor
 router
   .route("/get-patients")
-  .get(authMiddleware, authorizeRoles("admin", "doctor"), getPatientsOfDoctor);
+  .get(
+    authMiddleware,
+    authorizeRoles("patient", "doctor"),
+    getPatientsOfDoctor
+  );
 
 // Search doctors by location (accessible to patients too)
 router.get(
@@ -41,6 +45,7 @@ router.get(
 router
   .route("/:id")
   .get(authMiddleware, authorizeRoles("admin", "doctor"), getDoctor)
+
   .put(authMiddleware, authorizeRoles("admin", "doctor"), updateDoctor)
   .delete(authMiddleware, authorizeRoles("admin"), deleteDoctor);
 

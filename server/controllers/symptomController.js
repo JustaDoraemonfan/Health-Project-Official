@@ -94,6 +94,19 @@ export const getSymptoms = asyncHandler(async (req, res) => {
 
   return successResponse(res, symptoms, "Symptoms retrieved successfully", 200);
 });
+/**
+ * @desc    Get all symptoms for a patient
+ * @route   GET /api/symptoms
+ * @access  Private (Patient)
+ */
+export const getSymptomsForDoctors = asyncHandler(async (req, res) => {
+  const { patientId } = req.body;
+  const symptoms = await Symptom.find({ patient: patientId }).sort({
+    createdAt: -1,
+  });
+
+  return successResponse(res, symptoms, "Symptoms retrieved successfully", 200);
+});
 
 /**
  * @desc    Get a single symptom

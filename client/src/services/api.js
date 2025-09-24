@@ -337,6 +337,10 @@ export const symptomAPI = {
   getSymptoms: () => {
     return apiClient.get("/symptoms");
   },
+  //Get all symptoms for current patient for doctor
+  getSymptomForDoctor: (patientId) => {
+    return apiClient.post("/symptoms/doctorpatientsymptoms", { patientId });
+  },
 
   // Get single symptom by ID
   getSymptomById: (symptomId) => {
