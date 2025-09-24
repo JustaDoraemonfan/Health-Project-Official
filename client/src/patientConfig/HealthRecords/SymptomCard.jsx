@@ -180,7 +180,7 @@ const SymptomCard = ({ symptom, handleDownload }) => {
           <div className="flex justify-end">
             <button
               onClick={handleAnalyze}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm font-medium"
+              className="flex items-center gap-2 px-4 py-2 bg-black hover:bg-zinc-800 text-white hover:cursor-pointer rounded-lg transition-colors text-sm font-medium"
             >
               <Brain className="w-4 h-4" />
               Analyze Symptom
