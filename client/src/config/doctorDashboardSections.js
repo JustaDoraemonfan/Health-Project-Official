@@ -73,14 +73,14 @@ export const doctorDashboardSections = (navigate, openUploadModal) => [
     onClick: () => navigate("/doctor/consultations"),
   },
   {
-    id: "lab-results",
-    title: "Lab Results & Reports",
+    id: "Symptom Track",
+    title: "Track Your Patient's Symptoms",
     description:
-      "Review diagnostic reports, laboratory results, and coordinate with pathology departments.",
+      "View recent symptom logs, monitor severity trends, and respond with timely feedback.",
     icon: Activity,
     color: "blue",
-    stats: "6 new",
-    onClick: () => navigate("/doctor/lab-results"),
+    stats: "6 new symptoms",
+    onClick: () => navigate("/doctor/symptoms"),
   },
   {
     id: "schedule",
