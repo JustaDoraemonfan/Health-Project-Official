@@ -1,4 +1,12 @@
-import { LogOut, MapPin, Bell } from "lucide-react";
+import {
+  LogOut,
+  MapPin,
+  Bell,
+  Home,
+  BarChart3,
+  UserPlus,
+  Info,
+} from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -8,15 +16,15 @@ const Header = () => {
   const navigate = useNavigate();
 
   return (
-    <header className="fixed top-0 w-full bg-[var(--color-primary)]/90 backdrop-blur-sm z-50">
+    <header className="fixed top-0 w-full bg-[var(--color-primary)]/95 backdrop-blur-md z-50 border-b border-white/10">
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 opacity-20"
         style={{
-          backgroundImage: `linear-gradient(45deg, transparent 40%, rgba(0,0,0,0.1) 50%, transparent 60%)`,
-          backgroundSize: "20px 20px",
+          backgroundImage: `linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.05) 50%, transparent 60%)`,
+          backgroundSize: "25px 25px",
         }}
       />
-      <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
+      <nav className="container mx-auto px-6 py-4 flex justify-between items-center relative">
         {/* Logo */}
         <div className="flex items-center space-x-3">
           <div className="text-2xl google-sans-code-400 font-bold text-[var(--color-secondary)]">
@@ -25,32 +33,29 @@ const Header = () => {
         </div>
 
         {/* Nav Links */}
-        <div className="hidden md:flex space-x-8 items-center z-60">
+        <div className="hidden md:flex space-x-6 items-center z-60">
           {/* ✅ Logout Button */}
           {isAuthenticated ? (
             <>
               <button
                 onClick={() => navigate("/notification")}
-                className="flex items-center gap-1 px-3 py-1.5 bg-transparent hover:cursor-pointer hover:text-gray-500 text-[var(--color-secondary)] text-sm rounded-xs google-sans-code-400 transition-colors duration-200"
+                className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 hover:text-zinc-500 text-[var(--color-secondary)] text-sm rounded-lg google-sans-code-400 transition-all duration-200 border border-transparent hover:border-white/20"
               >
-                <Bell
-                  className="w-4 h-4 text-amber-600
-                "
-                />
+                <Bell className="w-4 h-4 text-amber-500" />
                 notifications
               </button>
               <button
                 onClick={() => navigate("/emergency")}
-                className="flex items-center gap-1 px-3 py-1.5 bg-transparent hover:cursor-pointer hover:text-gray-500 text-[var(--color-secondary)] text-sm rounded-xs google-sans-code-400 transition-colors duration-200"
+                className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 hover:text-zinc-500 text-[var(--color-secondary)] text-sm rounded-lg google-sans-code-400 transition-all duration-200 border border-transparent hover:border-white/20"
               >
-                <MapPin className="w-4 h-4 text-green-600" />
+                <MapPin className="w-4 h-4 text-red-500" />
                 emergency
               </button>
               <button
                 onClick={logout}
-                className="flex items-center gap-1 hover:cursor-pointer px-3 py-1.5 bg-transparent hover:text-gray-500 text-[var(--color-secondary)] text-sm rounded-xs google-sans-code-400 transition-colors duration-200"
+                className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-red-500/20 hover:text-red-400 text-[var(--color-secondary)] text-sm rounded-lg google-sans-code-400 transition-all duration-200 border border-transparent hover:border-red-500/30"
               >
-                <LogOut className="w-4 h-4 text-red-600" />
+                <LogOut className="w-4 h-4 text-red-500" />
                 logout
               </button>
             </>
@@ -58,26 +63,30 @@ const Header = () => {
             <>
               <a
                 href="#home"
-                className="text-[var(--color-secondary)] hover:text-slate-400 hover:cursor-pointer transition-colors duration-200 google-sans-code-400 text-sm"
+                className="flex items-center gap-2 px-4 py-2 text-[var(--color-secondary)] hover:text-zinc-500 hover:bg-white/10 transition-all duration-200 google-sans-code-400 text-sm rounded-lg border border-transparent hover:border-white/20"
               >
+                <Home className="w-4 h-4 text-blue-400" />
                 ~/home
               </a>
               <a
                 href="#stats"
-                className="text-[var(--color-secondary)] hover:text-slate-400 hover:cursor-pointer transition-colors duration-200 google-sans-code-400 text-sm"
+                className="flex items-center gap-2 px-4 py-2 text-[var(--color-secondary)] hover:text-zinc-500 hover:bg-white/10 transition-all duration-200 google-sans-code-400 text-sm rounded-lg border border-transparent hover:border-white/20"
               >
+                <BarChart3 className="w-4 h-4 text-green-400" />
                 ~/analytics
               </a>
               <a
                 href="#register"
-                className="text-[var(--color-secondary)] hover:text-slate-400 hover:cursor-pointer transition-colors duration-200 google-sans-code-400 text-sm"
+                className="flex items-center gap-2 px-4 py-2 text-[var(--color-secondary)] hover:text-zinc-500 hover:bg-white/10 transition-all duration-200 google-sans-code-400 text-sm rounded-lg border border-transparent hover:border-white/20"
               >
+                <UserPlus className="w-4 h-4 text-purple-400" />
                 ~/register
               </a>
               <a
                 href="#about"
-                className="text-[var(--color-secondary)] hover:text-slate-400 hover:cursor-pointer transition-colors duration-200 google-sans-code-400 text-sm"
+                className="flex items-center gap-2 px-4 py-2 text-[var(--color-secondary)] hover:text-zinc-500 hover:bg-white/10 transition-all duration-200 google-sans-code-400 text-sm rounded-lg border border-transparent hover:border-white/20"
               >
+                <Info className="w-4 h-4 text-cyan-400" />
                 ~/about
               </a>
             </>
