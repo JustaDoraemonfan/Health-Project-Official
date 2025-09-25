@@ -32,7 +32,7 @@ const SymptomCard = ({ symptom, isExpanded, onToggle }) => {
                 {getPriorityIndicator(symptom.priority)}
                 <span
                   className="text-sm font-medium opacity-60"
-                  style={{ color: "var(--color-Primary)" }}
+                  style={{ color: "var(--color-primary)" }}
                 >
                   {symptom.priority || "medium"} severity
                 </span>
