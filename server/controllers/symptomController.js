@@ -1,4 +1,5 @@
 import Symptom from "../models/Symptom.js";
+import Patient from "../models/Patient.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import { successResponse, errorResponse } from "../utils/response.js";
 import { GoogleGenerativeAI } from "@google/generative-ai";
@@ -41,6 +42,12 @@ export const addSymptom = asyncHandler(async (req, res) => {
   }
 
   const symptom = await Symptom.create(symptomData);
+  await Patient.findOneAndUpdate(
+    { userId: patientId },
+    { $push: { symptoms: symptom._id } },
+    { new: true }
+  );
+
   return successResponse(res, symptom, "Symptom added successfully", 201);
 });
 

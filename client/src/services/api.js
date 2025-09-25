@@ -282,7 +282,7 @@ export const symptomAPI = {
 
     try {
       // Don't set Content-Type - the request interceptor will handle it
-      const response = await apiClient.post("/symptoms", symptomData);
+      const response = await apiClient.post("/symptoms/add", symptomData);
       console.log("API: Add symptom success");
       return response;
     } catch (error) {

@@ -15,6 +15,7 @@ const patientSchema = new mongoose.Schema(
     location: { type: String },
     contactNumber: { type: String },
     bloodGroup: { type: String },
+    symptoms: [{ type: mongoose.Schema.Types.ObjectId, ref: "Symptom" }],
 
     // Medical Information
     medicalHistory: [
