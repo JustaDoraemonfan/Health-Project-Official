@@ -8,7 +8,7 @@
     "client": "npm run dev --prefix client",
     "server": "npm run server --prefix server",
     "build": "vite build",
-    "lInt": "eslint .",
+    "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
