@@ -9,7 +9,7 @@
     "server": "npm run server --prefix server",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite previe"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
