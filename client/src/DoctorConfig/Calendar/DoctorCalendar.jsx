@@ -11,7 +11,7 @@ import {
   AlertCircle,
   CheckCircle,
 } from "lucide-react";
-import { authAPI, doctorAPI } from "../../services/api";
+import { doctorAPI } from "../../services/api";
 import { useAppointments } from "../../hooks/useAppointments";
 
 const DoctorCalendar = () => {
