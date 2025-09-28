@@ -98,22 +98,10 @@ export const BookingSteps = ({
 
     return (
       <div className="space-y-6">
-        <div className="text-center mb-6">
-          <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-            <Calendar className="w-6 h-6 text-blue-400" />
-          </div>
-          <h3 className="text-lg font-semibold text-[var(--color-secondary)] mb-1">
-            Schedule Appointment
-          </h3>
-          <p className="text-sm text-gray-400">
-            Choose your preferred date and time
-          </p>
-        </div>
-
         {/* Date Input */}
         <div>
-          <label className="block text-sm font-medium text-[var(--color-secondary)] mb-2">
-            Appointment Date *
+          <label className="block text-xs font-medium text-[var(--color-primary)] mb-2">
+            Appointment Date <span className="text-red-500">*</span>
           </label>
           <input
             type="date"
@@ -132,20 +120,20 @@ export const BookingSteps = ({
               }
             }}
             min={new Date().toISOString().split("T")[0]}
-            className={`w-full p-3 rounded-lg bg-[var(--color-secondary)]/10 text-[var(--color-secondary)] border transition-colors ${
+            className={`w-full p-3 rounded-lg bg-[var(--color-primary)]/10 text-[var(--color-primary)] border transition-colors ${
               errors.appointmentDate
                 ? "border-red-500 focus:border-red-400"
                 : "border-gray-700 focus:border-blue-500"
             } focus:outline-none focus:ring-2 focus:ring-blue-500/30`}
           />
           {errors.appointmentDate && (
-            <div className="flex items-center gap-2 mt-2 text-red-400 text-sm">
+            <div className="flex items-center gap-2 mt-2 text-red-400 text-xs">
               <AlertCircle className="w-4 h-4" />
               {errors.appointmentDate}
             </div>
           )}
           {selectedWeekday && (
-            <div className="flex items-center gap-2 mt-2 text-blue-400 text-sm">
+            <div className="flex items-center gap-2 mt-2 text-blue-400 text-xs">
               <Info className="w-4 h-4" />
               Selected date is a {selectedWeekday}
             </div>
@@ -155,7 +143,7 @@ export const BookingSteps = ({
         {/* Time Slot Selection */}
         {formData.appointmentDate && (
           <div>
-            <label className="block text-sm font-medium text-[var(--color-secondary)] mb-3">
+            <label className="block text-xs font-medium text-[var(--color-primary)] mb-3">
               Available Time Slots *
             </label>
 
@@ -175,12 +163,12 @@ export const BookingSteps = ({
                       className={`p-3 rounded-lg border text-center transition-all duration-200 hover:border-gray-600 ${
                         formData.appointmentTime === timeSlot
                           ? "border-blue-500 bg-blue-500/10 text-blue-300"
-                          : "border-gray-700 bg-[var(--color-secondary)]/5 text-[var(--color-secondary)]"
+                          : "border-gray-700 bg-[var(--color-primary)]/5 text-[var(--color-primary)]"
                       }`}
                     >
                       <div className="flex items-center justify-center gap-2">
                         <Clock className="w-4 h-4" />
-                        <span className="font-medium text-sm">
+                        <span className="font-medium text-xs">
                           {formatTime12Hour(timeSlot)}
                         </span>
                       </div>
@@ -191,17 +179,17 @@ export const BookingSteps = ({
             ) : (
               <div className="bg-gray-800/50 rounded-lg p-4 text-center">
                 <AlertCircle className="w-6 h-6 text-gray-400 mx-auto mb-2" />
-                <p className="text-gray-400 text-sm">
+                <p className="text-gray-400 text-xs">
                   No available time slots for {selectedWeekday}
                 </p>
-                <p className="text-gray-500 text-xs mt-1">
+                <p className="text-gray-400 text-xs mt-1">
                   Please select a different date
                 </p>
               </div>
             )}
 
             {errors.appointmentTime && (
-              <div className="flex items-center gap-2 mt-2 text-red-400 text-sm">
+              <div className="flex items-center gap-2 mt-2 text-red-400 text-xs">
                 <AlertCircle className="w-4 h-4" />
                 {errors.appointmentTime}
               </div>
@@ -211,16 +199,16 @@ export const BookingSteps = ({
 
         {/* Reason for Visit */}
         <div>
-          <label className="block text-sm font-medium text-[var(--color-secondary)] mb-2">
-            Reason for Visit *
+          <label className="block text-xs font-medium text-[var(--color-primary)] mb-2">
+            Reason for Visit <span className="text-red-500">*</span>
           </label>
           <textarea
             name="reasonForVisit"
             value={formData.reasonForVisit}
             onChange={onChange}
-            rows={4}
+            rows={3}
             placeholder="Please describe your symptoms, concerns, or the purpose of this appointment..."
-            className={`w-full p-3 rounded-lg bg-[var(--color-secondary)]/10 text-[var(--color-secondary)] border transition-colors resize-none ${
+            className={`w-full p-3 rounded-lg bg-[var(--color-primary)]/10 text-[var(--color-primary)] border transition-colors resize-none ${
               errors.reasonForVisit
                 ? "border-red-500 focus:border-red-400"
                 : "border-gray-700 focus:border-blue-500"
@@ -228,16 +216,16 @@ export const BookingSteps = ({
           />
           <div className="flex justify-between items-center mt-2">
             {errors.reasonForVisit ? (
-              <div className="flex items-center gap-2 text-red-400 text-sm">
+              <div className="flex items-center gap-2 text-red-400 text-xs">
                 <AlertCircle className="w-4 h-4" />
                 {errors.reasonForVisit}
               </div>
             ) : (
-              <div className="text-xs text-gray-500">
+              <div className="text-xs text-gray-400">
                 Minimum 5 characters required
               </div>
             )}
-            <div className="text-xs text-gray-500">
+            <div className="text-xs text-gray-400">
               {formData.reasonForVisit.length}/200
             </div>
           </div>
@@ -248,21 +236,9 @@ export const BookingSteps = ({
 
   const renderStep2 = () => (
     <div className="space-y-6">
-      <div className="text-center mb-6">
-        <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-          <FileText className="w-6 h-6 text-green-400" />
-        </div>
-        <h3 className="text-lg font-semibold text-[var(--color-secondary)] mb-1">
-          Additional Details
-        </h3>
-        <p className="text-sm text-gray-400">
-          Optional information to help prepare for your appointment
-        </p>
-      </div>
-
       {/* Appointment Type */}
       <div>
-        <label className="block text-sm font-medium text-[var(--color-secondary)] mb-3">
+        <label className="block text-xs font-medium text-[var(--color-primary)] mb-3">
           Appointment Type
         </label>
         <div className="grid grid-cols-2 gap-3">
@@ -297,11 +273,11 @@ export const BookingSteps = ({
                 className={`p-3 rounded-lg border transition-all duration-200 hover:border-gray-600 ${
                   formData.type === option.value
                     ? "border-blue-500 bg-blue-500/10 text-blue-300"
-                    : "border-gray-700 bg-[var(--color-secondary)]/5 text-[var(--color-secondary)]"
+                    : "border-gray-700 bg-[var(--color-primary)]/5 text-[var(--color-primary)]"
                 }`}
               >
-                <div className="font-medium text-sm">{option.label}</div>
-                <div className="text-xs text-gray-500 mt-1">{option.desc}</div>
+                <div className="font-medium text-xs">{option.label}</div>
+                <div className="text-xs text-gray-400 mt-1">{option.desc}</div>
               </div>
             </label>
           ))}
@@ -310,7 +286,7 @@ export const BookingSteps = ({
 
       {/* Mode */}
       <div>
-        <label className="block text-sm font-medium text-[var(--color-secondary)] mb-3">
+        <label className="block text-xs font-medium text-[var(--color-primary)] mb-3">
           Consultation Mode
         </label>
         <div className="grid grid-cols-2 gap-3">
@@ -327,7 +303,7 @@ export const BookingSteps = ({
               className={`p-4 rounded-lg border transition-all duration-200 hover:border-gray-600 ${
                 formData.mode === "in-person"
                   ? "border-blue-500 bg-blue-500/10"
-                  : "border-gray-700 bg-[var(--color-secondary)]/5"
+                  : "border-gray-700 bg-[var(--color-primary)]/5"
               }`}
             >
               <div className="flex items-center gap-3">
@@ -343,12 +319,12 @@ export const BookingSteps = ({
                     className={`font-medium ${
                       formData.mode === "in-person"
                         ? "text-blue-300"
-                        : "text-[var(--color-secondary)]"
+                        : "text-[var(--color-primary)]"
                     }`}
                   >
                     In-Person
                   </div>
-                  <div className="text-xs text-gray-500">Visit clinic</div>
+                  <div className="text-xs text-gray-400">Visit clinic</div>
                 </div>
               </div>
             </div>
@@ -367,7 +343,7 @@ export const BookingSteps = ({
               className={`p-4 rounded-lg border transition-all duration-200 hover:border-gray-600 ${
                 formData.mode === "online"
                   ? "border-blue-500 bg-blue-500/10"
-                  : "border-gray-700 bg-[var(--color-secondary)]/5"
+                  : "border-gray-700 bg-[var(--color-primary)]/5"
               }`}
             >
               <div className="flex items-center gap-3">
@@ -383,12 +359,12 @@ export const BookingSteps = ({
                     className={`font-medium ${
                       formData.mode === "online"
                         ? "text-blue-300"
-                        : "text-[var(--color-secondary)]"
+                        : "text-[var(--color-primary)]"
                     }`}
                   >
                     Online
                   </div>
-                  <div className="text-xs text-gray-500">Video call</div>
+                  <div className="text-xs text-gray-400">Video call</div>
                 </div>
               </div>
             </div>
@@ -399,7 +375,7 @@ export const BookingSteps = ({
       {/* Location (for in-person) */}
       {formData.mode === "in-person" && (
         <div>
-          <label className="block text-sm font-medium text-[var(--color-secondary)] mb-2">
+          <label className="block text-xs font-medium text-[var(--color-primary)] mb-2">
             Preferred Location
           </label>
           <input
@@ -408,9 +384,9 @@ export const BookingSteps = ({
             value={formData.location}
             onChange={onChange}
             placeholder="e.g., Main Clinic, Branch Office..."
-            className="w-full p-3 rounded-lg bg-[var(--color-secondary)]/10 text-[var(--color-secondary)] border border-gray-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-colors"
+            className="w-full p-3 rounded-lg bg-[var(--color-primary)]/10 text-[var(--color-primary)] border border-gray-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-colors"
           />
-          <div className="text-xs text-gray-500 mt-1">
+          <div className="text-xs text-gray-400 mt-1">
             Leave empty to use default clinic location
           </div>
         </div>
@@ -418,7 +394,7 @@ export const BookingSteps = ({
 
       {/* Additional Notes */}
       <div>
-        <label className="block text-sm font-medium text-[var(--color-secondary)] mb-2">
+        <label className="block text-xs font-medium text-[var(--color-primary)] mb-2">
           Additional Notes
         </label>
         <textarea
@@ -427,16 +403,16 @@ export const BookingSteps = ({
           onChange={onChange}
           rows={3}
           placeholder="Any additional information, medical history, or special requests..."
-          className="w-full p-3 rounded-lg bg-[var(--color-secondary)]/10 text-[var(--color-secondary)] border border-gray-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-colors resize-none"
+          className="w-full p-3 rounded-lg bg-[var(--color-primary)]/10 text-[var(--color-primary)] border border-gray-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-colors resize-none"
         />
-        <div className="text-xs text-gray-500 mt-1 text-right">
+        <div className="text-xs text-gray-400 mt-1 text-right">
           {formData.notes.length}/500
         </div>
       </div>
 
       {/* Payment Reference */}
       <div>
-        <label className="block text-sm font-medium text-[var(--color-secondary)] mb-2">
+        <label className="block text-xs font-medium text-[var(--color-primary)] mb-2">
           Payment Reference
         </label>
         <div className="relative">
@@ -447,10 +423,10 @@ export const BookingSteps = ({
             value={formData.paymentReference}
             onChange={onChange}
             placeholder="Insurance ID, payment confirmation, etc."
-            className="w-full pl-10 p-3 rounded-lg bg-[var(--color-secondary)]/10 text-[var(--color-secondary)] border border-gray-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-colors"
+            className="w-full pl-10 p-3 rounded-lg bg-[var(--color-primary)]/10 text-[var(--color-primary)] border border-gray-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-colors"
           />
         </div>
-        <div className="text-xs text-gray-500 mt-1">
+        <div className="text-xs text-gray-400 mt-1">
           Optional: Add payment or insurance information
         </div>
       </div>
@@ -463,10 +439,10 @@ export const BookingSteps = ({
         <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
           <Check className="w-6 h-6 text-green-400" />
         </div>
-        <h3 className="text-lg font-semibold text-[var(--color-secondary)] mb-1">
+        <h3 className="text-md font-semibold text-[var(--color-primary)] mb-1">
           Confirm Appointment
         </h3>
-        <p className="text-sm text-gray-400">
+        <p className="text-xs text-gray-400">
           Please review your appointment details
         </p>
       </div>
@@ -478,10 +454,10 @@ export const BookingSteps = ({
             <User className="w-5 h-5 text-blue-400" />
           </div>
           <div>
-            <div className="font-medium text-[var(--color-secondary)]">
+            <div className="font-medium text-[var(--color-primary)]">
               {doctor.name}
             </div>
-            <div className="text-sm text-gray-400">{doctor.specialization}</div>
+            <div className="text-xs text-gray-400">{doctor.specialization}</div>
           </div>
         </div>
       </div>
@@ -490,7 +466,7 @@ export const BookingSteps = ({
       <div className="space-y-3">
         <div className="flex items-center justify-between py-2 border-b border-gray-800">
           <span className="text-gray-400">Date & Time</span>
-          <span className="text-[var(--color-secondary)] font-medium">
+          <span className="text-[var(--color-primary)] font-medium">
             {new Date(formData.appointmentDate).toLocaleDateString()} at{" "}
             {formData.appointmentTime
               ? formatTime12Hour(formData.appointmentTime)
@@ -500,14 +476,14 @@ export const BookingSteps = ({
 
         <div className="flex items-center justify-between py-2 border-b border-gray-800">
           <span className="text-gray-400">Type</span>
-          <span className="text-[var(--color-secondary)] capitalize">
+          <span className="text-[var(--color-primary)] capitalize">
             {formData.type}
           </span>
         </div>
 
         <div className="flex items-center justify-between py-2 border-b border-gray-800">
           <span className="text-gray-400">Mode</span>
-          <span className="text-[var(--color-secondary)] capitalize">
+          <span className="text-[var(--color-primary)] capitalize">
             {formData.mode}
           </span>
         </div>
@@ -515,7 +491,7 @@ export const BookingSteps = ({
         {formData.location && (
           <div className="flex items-center justify-between py-2 border-b border-gray-800">
             <span className="text-gray-400">Location</span>
-            <span className="text-[var(--color-secondary)]">
+            <span className="text-[var(--color-primary)]">
               {formData.location}
             </span>
           </div>
@@ -523,8 +499,8 @@ export const BookingSteps = ({
 
         <div className="py-2">
           <span className="text-gray-400 block mb-2">Reason for Visit</span>
-          <div className="bg-[var(--color-secondary)]/5 rounded-md p-3 border border-gray-700">
-            <p className="text-[var(--color-secondary)] text-sm leading-relaxed">
+          <div className="bg-[var(--color-primary)]/5 rounded-md p-3 border border-gray-700">
+            <p className="text-[var(--color-primary)] text-xs leading-relaxed">
               {formData.reasonForVisit}
             </p>
           </div>
@@ -533,8 +509,8 @@ export const BookingSteps = ({
         {formData.notes && (
           <div className="py-2">
             <span className="text-gray-400 block mb-2">Additional Notes</span>
-            <div className="bg-[var(--color-secondary)]/5 rounded-md p-3 border border-gray-700">
-              <p className="text-[var(--color-secondary)] text-sm leading-relaxed">
+            <div className="bg-[var(--color-primary)]/5 rounded-md p-3 border border-gray-700">
+              <p className="text-[var(--color-primary)] text-xs leading-relaxed">
                 {formData.notes}
               </p>
             </div>
@@ -544,7 +520,7 @@ export const BookingSteps = ({
         {formData.paymentReference && (
           <div className="flex items-center justify-between py-2 border-b border-gray-800">
             <span className="text-gray-400">Payment Reference</span>
-            <span className="text-[var(--color-secondary)] font-mono text-sm">
+            <span className="text-[var(--color-primary)] font-mono text-xs">
               {formData.paymentReference}
             </span>
           </div>
@@ -555,7 +531,7 @@ export const BookingSteps = ({
       <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4 mt-6">
         <div className="flex items-start gap-2">
           <Check className="w-4 h-4 text-green-400 mt-0.5" />
-          <div className="text-sm text-green-400">
+          <div className="text-xs text-green-400">
             <p className="font-medium mb-1">Ready to book!</p>
             <p className="text-xs text-green-300/80">
               You will receive a confirmation email with appointment details and
