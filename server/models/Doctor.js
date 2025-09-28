@@ -33,8 +33,8 @@ const doctorSchema = new mongoose.Schema(
 
     availability: [
       {
-        day: String, // e.g. "Monday"
-        slots: [String], // e.g. ["9:00 AM", "10:30 AM"]
+        day: String,
+        slots: [String],
       },
     ],
 

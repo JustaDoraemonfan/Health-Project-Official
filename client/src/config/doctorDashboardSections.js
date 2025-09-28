@@ -169,7 +169,7 @@ export const doctorDashboardSections = (navigate, openUploadModal) => [
 ];
 
 // Updated Quick Actions configuration for doctors with upload prescription
-export const doctorQuickActions = (navigate, openUploadModal) => [
+export const doctorQuickActions = (navigate) => [
   {
     id: "doctor-slot",
     title: "Select Your Slots",
