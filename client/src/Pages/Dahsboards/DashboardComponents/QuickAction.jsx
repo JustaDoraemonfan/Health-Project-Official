@@ -8,69 +8,16 @@ import {
   UserCheck,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { doctorQuickActions } from "../../../config/doctorDashboardSections";
+import { patientQuickActions } from "../../../config/patientDashboardSection";
 
 export default function QuickAction({ role = "patient", actions = null }) {
   const navigate = useNavigate();
   const isDoctor = role === "doctor";
 
-  // Default actions for patients
-  const defaultPatientActions = [
-    {
-      id: "emergency",
-      title: "Emergency Contact",
-      description: "Call emergency services",
-      icon: Stethoscope,
-      color: "red",
-      onClick: () => console.log("Emergency contact"),
-    },
-    {
-      id: "profile",
-      title: "Manage your profile",
-      description: "View & update profile details",
-      icon: CreditCard,
-      color: "blue",
-      onClick: () => navigate("/update-profile"),
-    },
-  ];
-
-  // Default actions for doctors
-  const defaultDoctorActions = [
-    {
-      id: "emergency-protocol",
-      title: "Emergency Protocol",
-      description: "Rapid response system",
-      icon: Phone,
-      color: "red",
-      onClick: () => console.log("Emergency protocol"),
-    },
-    {
-      id: "quick-prescription",
-      title: "Quick Prescription",
-      description: "Generate prescriptions",
-      icon: Pill,
-      color: "green",
-      onClick: () => console.log("Quick prescription"),
-    },
-    {
-      id: "patient-lookup",
-      title: "Patient Lookup",
-      description: "Search patient records",
-      icon: UserCheck,
-      color: "blue",
-      onClick: () => console.log("Patient lookup"),
-    },
-    {
-      id: "profile",
-      title: "Manage your profile",
-      description: "View & update profile details",
-      icon: CreditCard,
-      color: "blue",
-      onClick: () => navigate("/update-profile"),
-    },
-  ];
-
   const quickActions =
-    actions || (isDoctor ? defaultDoctorActions : defaultPatientActions);
+    actions ||
+    (isDoctor ? doctorQuickActions(navigate) : patientQuickActions(navigate));
 
   return (
     <section>

@@ -97,3 +97,49 @@ export const getDoctorsByLocation = asyncHandler(async (req, res) => {
 
   return successResponse(res, doctors, "Doctors fetched successfully");
 });
+// @desc Set or update doctor availability
+// @route POST /api/doctors/availability
+// @access Private (Doctor)
+export const setAvailability = async (req, res) => {
+  try {
+    const userId = req.user.id; // assuming authentication middleware sets req.user
+    const { availability } = req.body;
+
+    if (!availability || !Array.isArray(availability)) {
+      return res.status(400).json({ message: "Availability must be an array" });
+    }
+
+    const doctor = await Doctor.findOne({ userId });
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor profile not found" });
+    }
+
+    doctor.availability = availability;
+    await doctor.save();
+
+    res.status(200).json({
+      message: "Availability updated successfully",
+      availability: doctor.availability,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc Get doctor availability
+// @route GET /api/doctors/availability
+// @access Private (Doctor)
+export const getAvailability = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const doctor = await Doctor.findOne({ userId }).select("availability");
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor profile not found" });
+    }
+
+    res.status(200).json({ availability: doctor.availability });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

@@ -7,6 +7,8 @@ import {
   Activity,
   DollarSign,
   MessageCircle,
+  CreditCard,
+  Stethoscope,
   Bell,
 } from "lucide-react";
 
@@ -99,5 +101,24 @@ export const dashboardSections = (navigate, modalHandlers = {}) => [
     color: "amber",
     badge: "5 active",
     onClick: () => navigate("/patient/medication"),
+  },
+];
+
+export const patientQuickActions = (navigate) => [
+  {
+    id: "emergency",
+    title: "Emergency Contact",
+    description: "Call emergency services",
+    icon: Stethoscope,
+    color: "red",
+    onClick: () => console.log("Emergency-contact"),
+  },
+  {
+    id: "profile",
+    title: "Manage your profile",
+    description: "View & update profile details",
+    icon: CreditCard,
+    color: "blue",
+    onClick: () => navigate("/update-profile"),
   },
 ];

@@ -9,7 +9,9 @@ import {
   getDoctor,
   updateDoctor,
   deleteDoctor,
-  getDoctorsByLocation, // ✅ Import new controller
+  getDoctorsByLocation,
+  setAvailability,
+  getAvailability,
 } from "../controllers/doctorController.js";
 import {
   assignPatientToDoctor,
@@ -24,6 +26,15 @@ router
   .route("/")
   .post(authMiddleware, authorizeRoles("admin"), createDoctor)
   .get(authMiddleware, authorizeRoles("admin", "patient"), getDoctors);
+
+// Doctor availability routes
+router
+  .route("/availability")
+  .post(authMiddleware, authorizeRoles("doctor"), setAvailability) // ✅ doctor updates availability
+  .get(authMiddleware, authorizeRoles("doctor"), getAvailability); // ✅ doctor views their own availability
+
+// (Optional) public endpoint for patients to see a specific doctor’s schedule
+// router.get("/:id/availability", getDoctorAvailabilityById);
 
 // Get all assigned patients of a doctor
 router
@@ -45,7 +56,6 @@ router.get(
 router
   .route("/:id")
   .get(authMiddleware, authorizeRoles("admin", "doctor"), getDoctor)
-
   .put(authMiddleware, authorizeRoles("admin", "doctor"), updateDoctor)
   .delete(authMiddleware, authorizeRoles("admin"), deleteDoctor);
 

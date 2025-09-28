@@ -171,29 +171,14 @@ export const doctorDashboardSections = (navigate, openUploadModal) => [
 // Updated Quick Actions configuration for doctors with upload prescription
 export const doctorQuickActions = (navigate, openUploadModal) => [
   {
-    id: "emergency-protocol",
-    title: "Emergency Protocol",
-    description: "Rapid response system",
-    icon: Phone,
+    id: "doctor-slot",
+    title: "Select Your Slots",
+    description: "Select when you are able to take appointments",
+    icon: Calendar,
     color: "red",
-    onClick: () => navigate("/doctor/emergency-protocol"),
+    onClick: () => navigate("/doctor/slots"),
   },
-  {
-    id: "upload-prescription",
-    title: "Upload Prescription",
-    description: "Upload patient prescriptions",
-    icon: Upload,
-    color: "blue",
-    onClick: openUploadModal,
-  },
-  {
-    id: "quick-prescription",
-    title: "Quick Prescription",
-    description: "Generate prescriptions",
-    icon: Pill,
-    color: "green",
-    onClick: () => navigate("/doctor/quick-prescription"),
-  },
+
   {
     id: "patient-lookup",
     title: "Patient Lookup",
