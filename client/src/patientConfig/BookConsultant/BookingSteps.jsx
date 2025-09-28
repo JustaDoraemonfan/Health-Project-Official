@@ -7,6 +7,7 @@ import {
   AlertCircle,
   MapPin,
   CreditCard,
+  Info,
 } from "lucide-react";
 
 export const BookingSteps = ({
@@ -15,105 +16,235 @@ export const BookingSteps = ({
   errors,
   doctor,
   onChange,
+  availability = [], // Availability from backend: [{ day: "Monday", slots: ["09:00-11:00", "14:00-16:00"] }]
 }) => {
-  const renderStep1 = () => (
-    <div className="space-y-6">
-      <div className="text-center mb-6">
-        <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-          <Calendar className="w-6 h-6 text-blue-400" />
+  // Helper function to get weekday name from date
+  const getWeekdayFromDate = (dateString) => {
+    if (!dateString) return null;
+    const date = new Date(dateString);
+    const weekdays = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    return weekdays[date.getDay()];
+  };
+
+  // Helper function to generate time slots from availability ranges
+  const generateTimeSlots = (slots) => {
+    const timeSlots = [];
+
+    slots.forEach((slot) => {
+      const [start, end] = slot.split("-");
+      const startHour = parseInt(start.split(":")[0]);
+      const startMinute = parseInt(start.split(":")[1]);
+      const endHour = parseInt(end.split(":")[0]);
+      const endMinute = parseInt(end.split(":")[1]);
+
+      // Generate 30-minute slots
+      let currentHour = startHour;
+      let currentMinute = startMinute;
+
+      while (
+        currentHour < endHour ||
+        (currentHour === endHour && currentMinute < endMinute)
+      ) {
+        const timeString = `${currentHour
+          .toString()
+          .padStart(2, "0")}:${currentMinute.toString().padStart(2, "0")}`;
+        timeSlots.push(timeString);
+
+        currentMinute += 30;
+        if (currentMinute >= 60) {
+          currentMinute = 0;
+          currentHour++;
+        }
+      }
+    });
+
+    return timeSlots;
+  };
+
+  // Get available time slots for selected date
+  const getAvailableTimeSlots = () => {
+    if (!formData.appointmentDate) return [];
+
+    const weekday = getWeekdayFromDate(formData.appointmentDate);
+    const dayAvailability = availability.find(
+      (avail) => avail.day.toLowerCase() === weekday?.toLowerCase()
+    );
+
+    if (!dayAvailability) return [];
+
+    return generateTimeSlots(dayAvailability.slots);
+  };
+
+  // Format time for display (12-hour format)
+  const formatTime12Hour = (time24) => {
+    const [hours, minutes] = time24.split(":");
+    const hour = parseInt(hours);
+    const ampm = hour >= 12 ? "PM" : "AM";
+    const hour12 = hour % 12 || 12;
+    return `${hour12}:${minutes} ${ampm}`;
+  };
+
+  const renderStep1 = () => {
+    const availableTimeSlots = getAvailableTimeSlots();
+    const selectedWeekday = getWeekdayFromDate(formData.appointmentDate);
+
+    return (
+      <div className="space-y-6">
+        <div className="text-center mb-6">
+          <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
+            <Calendar className="w-6 h-6 text-blue-400" />
+          </div>
+          <h3 className="text-lg font-semibold text-[var(--color-secondary)] mb-1">
+            Schedule Appointment
+          </h3>
+          <p className="text-sm text-gray-400">
+            Choose your preferred date and time
+          </p>
         </div>
-        <h3 className="text-lg font-semibold text-[var(--color-secondary)] mb-1">
-          Schedule Appointment
-        </h3>
-        <p className="text-sm text-gray-400">
-          Choose your preferred date and time
-        </p>
-      </div>
 
-      {/* Date Input */}
-      <div>
-        <label className="block text-sm font-medium text-[var(--color-secondary)] mb-2">
-          Appointment Date *
-        </label>
-        <input
-          type="date"
-          name="appointmentDate"
-          value={formData.appointmentDate}
-          onChange={onChange}
-          min={new Date().toISOString().split("T")[0]}
-          className={`w-full p-3 rounded-lg bg-[var(--color-secondary)]/10 text-[var(--color-secondary)] border transition-colors ${
-            errors.appointmentDate
-              ? "border-red-500 focus:border-red-400"
-              : "border-gray-700 focus:border-blue-500"
-          } focus:outline-none focus:ring-2 focus:ring-blue-500/30`}
-        />
-        {errors.appointmentDate && (
-          <div className="flex items-center gap-2 mt-2 text-red-400 text-sm">
-            <AlertCircle className="w-4 h-4" />
-            {errors.appointmentDate}
-          </div>
-        )}
-      </div>
-
-      {/* Time Input */}
-      <div>
-        <label className="block text-sm font-medium text-[var(--color-secondary)] mb-2">
-          Appointment Time *
-        </label>
-        <input
-          type="time"
-          name="appointmentTime"
-          value={formData.appointmentTime}
-          onChange={onChange}
-          className={`w-full p-3 rounded-lg bg-[var(--color-secondary)]/10 text-[var(--color-secondary)] border transition-colors ${
-            errors.appointmentTime
-              ? "border-red-500 focus:border-red-400"
-              : "border-gray-700 focus:border-blue-500"
-          } focus:outline-none focus:ring-2 focus:ring-blue-500/30`}
-        />
-        {errors.appointmentTime && (
-          <div className="flex items-center gap-2 mt-2 text-red-400 text-sm">
-            <AlertCircle className="w-4 h-4" />
-            {errors.appointmentTime}
-          </div>
-        )}
-      </div>
-
-      {/* Reason for Visit */}
-      <div>
-        <label className="block text-sm font-medium text-[var(--color-secondary)] mb-2">
-          Reason for Visit *
-        </label>
-        <textarea
-          name="reasonForVisit"
-          value={formData.reasonForVisit}
-          onChange={onChange}
-          rows={4}
-          placeholder="Please describe your symptoms, concerns, or the purpose of this appointment..."
-          className={`w-full p-3 rounded-lg bg-[var(--color-secondary)]/10 text-[var(--color-secondary)] border transition-colors resize-none ${
-            errors.reasonForVisit
-              ? "border-red-500 focus:border-red-400"
-              : "border-gray-700 focus:border-blue-500"
-          } focus:outline-none focus:ring-2 focus:ring-blue-500/30`}
-        />
-        <div className="flex justify-between items-center mt-2">
-          {errors.reasonForVisit ? (
-            <div className="flex items-center gap-2 text-red-400 text-sm">
+        {/* Date Input */}
+        <div>
+          <label className="block text-sm font-medium text-[var(--color-secondary)] mb-2">
+            Appointment Date *
+          </label>
+          <input
+            type="date"
+            name="appointmentDate"
+            value={formData.appointmentDate}
+            onChange={(e) => {
+              onChange(e);
+              // Clear time selection when date changes
+              if (formData.appointmentTime) {
+                onChange({
+                  target: {
+                    name: "appointmentTime",
+                    value: "",
+                  },
+                });
+              }
+            }}
+            min={new Date().toISOString().split("T")[0]}
+            className={`w-full p-3 rounded-lg bg-[var(--color-secondary)]/10 text-[var(--color-secondary)] border transition-colors ${
+              errors.appointmentDate
+                ? "border-red-500 focus:border-red-400"
+                : "border-gray-700 focus:border-blue-500"
+            } focus:outline-none focus:ring-2 focus:ring-blue-500/30`}
+          />
+          {errors.appointmentDate && (
+            <div className="flex items-center gap-2 mt-2 text-red-400 text-sm">
               <AlertCircle className="w-4 h-4" />
-              {errors.reasonForVisit}
-            </div>
-          ) : (
-            <div className="text-xs text-gray-500">
-              Minimum 5 characters required
+              {errors.appointmentDate}
             </div>
           )}
-          <div className="text-xs text-gray-500">
-            {formData.reasonForVisit.length}/200
+          {selectedWeekday && (
+            <div className="flex items-center gap-2 mt-2 text-blue-400 text-sm">
+              <Info className="w-4 h-4" />
+              Selected date is a {selectedWeekday}
+            </div>
+          )}
+        </div>
+
+        {/* Time Slot Selection */}
+        {formData.appointmentDate && (
+          <div>
+            <label className="block text-sm font-medium text-[var(--color-secondary)] mb-3">
+              Available Time Slots *
+            </label>
+
+            {availableTimeSlots.length > 0 ? (
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {availableTimeSlots.map((timeSlot) => (
+                  <label key={timeSlot} className="cursor-pointer">
+                    <input
+                      type="radio"
+                      name="appointmentTime"
+                      value={timeSlot}
+                      checked={formData.appointmentTime === timeSlot}
+                      onChange={onChange}
+                      className="sr-only"
+                    />
+                    <div
+                      className={`p-3 rounded-lg border text-center transition-all duration-200 hover:border-gray-600 ${
+                        formData.appointmentTime === timeSlot
+                          ? "border-blue-500 bg-blue-500/10 text-blue-300"
+                          : "border-gray-700 bg-[var(--color-secondary)]/5 text-[var(--color-secondary)]"
+                      }`}
+                    >
+                      <div className="flex items-center justify-center gap-2">
+                        <Clock className="w-4 h-4" />
+                        <span className="font-medium text-sm">
+                          {formatTime12Hour(timeSlot)}
+                        </span>
+                      </div>
+                    </div>
+                  </label>
+                ))}
+              </div>
+            ) : (
+              <div className="bg-gray-800/50 rounded-lg p-4 text-center">
+                <AlertCircle className="w-6 h-6 text-gray-400 mx-auto mb-2" />
+                <p className="text-gray-400 text-sm">
+                  No available time slots for {selectedWeekday}
+                </p>
+                <p className="text-gray-500 text-xs mt-1">
+                  Please select a different date
+                </p>
+              </div>
+            )}
+
+            {errors.appointmentTime && (
+              <div className="flex items-center gap-2 mt-2 text-red-400 text-sm">
+                <AlertCircle className="w-4 h-4" />
+                {errors.appointmentTime}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Reason for Visit */}
+        <div>
+          <label className="block text-sm font-medium text-[var(--color-secondary)] mb-2">
+            Reason for Visit *
+          </label>
+          <textarea
+            name="reasonForVisit"
+            value={formData.reasonForVisit}
+            onChange={onChange}
+            rows={4}
+            placeholder="Please describe your symptoms, concerns, or the purpose of this appointment..."
+            className={`w-full p-3 rounded-lg bg-[var(--color-secondary)]/10 text-[var(--color-secondary)] border transition-colors resize-none ${
+              errors.reasonForVisit
+                ? "border-red-500 focus:border-red-400"
+                : "border-gray-700 focus:border-blue-500"
+            } focus:outline-none focus:ring-2 focus:ring-blue-500/30`}
+          />
+          <div className="flex justify-between items-center mt-2">
+            {errors.reasonForVisit ? (
+              <div className="flex items-center gap-2 text-red-400 text-sm">
+                <AlertCircle className="w-4 h-4" />
+                {errors.reasonForVisit}
+              </div>
+            ) : (
+              <div className="text-xs text-gray-500">
+                Minimum 5 characters required
+              </div>
+            )}
+            <div className="text-xs text-gray-500">
+              {formData.reasonForVisit.length}/200
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const renderStep2 = () => (
     <div className="space-y-6">
@@ -361,7 +492,9 @@ export const BookingSteps = ({
           <span className="text-gray-400">Date & Time</span>
           <span className="text-[var(--color-secondary)] font-medium">
             {new Date(formData.appointmentDate).toLocaleDateString()} at{" "}
-            {formData.appointmentTime}
+            {formData.appointmentTime
+              ? formatTime12Hour(formData.appointmentTime)
+              : formData.appointmentTime}
           </span>
         </div>
 

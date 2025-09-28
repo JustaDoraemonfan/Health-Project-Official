@@ -1,10 +1,12 @@
-import { useState } from "react";
-import { X, ChevronRight, ChevronLeft, Check } from "lucide-react";
+import { useState, useEffect } from "react";
+import { X, ChevronRight, ChevronLeft, Check, Loader2 } from "lucide-react";
 import { BookingSteps } from "./BookingSteps";
 import Toast from "../../components/Toast";
 
 const BookingModal = ({ doctor, onClose, onConfirm }) => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [availability, setAvailability] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     // Required fields
     appointmentDate: "",
@@ -19,8 +21,33 @@ const BookingModal = ({ doctor, onClose, onConfirm }) => {
     paymentReference: "",
   });
   const [toast, setToast] = useState(null);
-
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    const fetchAvailability = async () => {
+      try {
+        setAvailability(doctor.availability || []);
+      } catch (error) {
+        console.error("Error fetching availability:", error);
+        showToast("Failed to load available time slots", "error");
+
+        // Fallback availability for demo purposes
+        setAvailability([
+          { day: "Monday", slots: ["09:00-11:00", "14:00-16:00"] },
+          { day: "Tuesday", slots: ["10:00-12:00", "15:00-17:00"] },
+          { day: "Wednesday", slots: ["10:00-13:00"] },
+          { day: "Thursday", slots: ["09:00-11:30", "13:30-16:00"] },
+          { day: "Friday", slots: ["09:00-11:30", "13:00-16:00"] },
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (doctor?._id) {
+      fetchAvailability();
+    }
+  }, [doctor?._id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -116,6 +143,25 @@ const BookingModal = ({ doctor, onClose, onConfirm }) => {
     }
   };
 
+  // Show loading state while fetching availability
+  if (loading) {
+    return (
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div className="bg-[var(--color-primary)] rounded-2xl shadow-2xl w-full max-w-lg border border-gray-700 p-8">
+          <div className="text-center">
+            <Loader2 className="w-8 h-8 animate-spin text-blue-500 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-[var(--color-secondary)] mb-2">
+              Loading Available Slots
+            </h3>
+            <p className="text-sm text-gray-400">
+              Please wait while we fetch the doctor's availability...
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -165,6 +211,7 @@ const BookingModal = ({ doctor, onClose, onConfirm }) => {
               errors={errors}
               doctor={doctor}
               onChange={handleChange}
+              availability={availability} // Pass the fetched availability
             />
           </div>
 
@@ -217,7 +264,7 @@ const BookingModal = ({ doctor, onClose, onConfirm }) => {
         </div>
       </div>
 
-      {/* Toast Component - This was missing! */}
+      {/* Toast Component */}
       {toast && (
         <Toast
           message={toast.message}
