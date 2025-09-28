@@ -204,7 +204,13 @@ const BookingModal = ({ doctor, onClose, onConfirm }) => {
           </div>
 
           {/* Content */}
-          <div className="p-6 overflow-y-auto max-h-[60vh]">
+          <div
+            className="p-6 overflow-y-auto max-h-[60vh]"
+            style={{
+              msOverflowStyle: "none",
+              scrollbarWidth: "none",
+            }}
+          >
             <BookingSteps
               currentStep={currentStep}
               formData={formData}
