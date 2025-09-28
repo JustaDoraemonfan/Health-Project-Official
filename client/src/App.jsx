@@ -28,6 +28,7 @@ import HealthRecordsDashboard from "./patientConfig/DashboardUtils/HealthRecords
 import MedicationDashboard from "./patientConfig/MedicationReminder/MedicationDashboard";
 import DoctorSymptomPage from "./DoctorConfig/DashboardUtils/DoctorSymptomPage";
 import DoctorSlotSelection from "./DoctorConfig/DoctorSlots/DoctorSlotSelection";
+import DoctorCalendar from "./DoctorConfig/Calendar/DoctorCalendar";
 
 const AppRoutes = () => {
   const { isAuthenticated, user, initialized, error } = useAuth();
@@ -186,6 +187,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute allowedRoles={["doctor"]}>
             <DoctorSlotSelection />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/doctor/calendar"
+        element={
+          <ProtectedRoute allowedRoles={["doctor"]}>
+            <DoctorCalendar />
           </ProtectedRoute>
         }
       />

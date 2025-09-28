@@ -156,6 +156,9 @@ export const doctorAPI = {
   setAvailability: (availability) => {
     return apiClient.post("/doctors/availability", { availability });
   },
+  getAvailability: () => {
+    return apiClient.get("/doctors/availability");
+  },
 };
 
 // Frontline Worker API endpoints

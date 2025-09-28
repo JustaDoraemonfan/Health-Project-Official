@@ -1,5 +1,6 @@
 import {
   Calendar,
+  CalendarDays,
   Users,
   FileText,
   Stethoscope,
@@ -83,14 +84,14 @@ export const doctorDashboardSections = (navigate, openUploadModal) => [
     onClick: () => navigate("/doctor/symptoms"),
   },
   {
-    id: "schedule",
-    title: "Schedule Management",
-    description:
-      "Manage your availability, block time slots, and coordinate with hospital scheduling.",
-    icon: Clock,
-    color: "amber",
-    onClick: () => navigate("/doctor/schedule"),
+    id: "calendar",
+    title: "My Schedule",
+    description: "View and manage your weekly appointments",
+    icon: CalendarDays,
+    color: "indigo",
+    onClick: () => navigate("/doctor/calendar"),
   },
+
   {
     id: "messages",
     title: "Secure Messages",

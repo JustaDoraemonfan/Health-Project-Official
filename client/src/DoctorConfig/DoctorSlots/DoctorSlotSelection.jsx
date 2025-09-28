@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { doctorAPI } from "../../services/api";
+import Toast from "../../components/Toast";
+import { useNavigate } from "react-router-dom";
 
 const DoctorSlotSelection = ({
   onSave = (data) => console.log("Formatted availability:", data),
 }) => {
+  const navigate = useNavigate();
   // Generate time slots from 9:00 AM to 6:00 PM in 1-hour intervals
   const generateTimeSlots = () => {
     const slots = [];
@@ -35,6 +38,7 @@ const DoctorSlotSelection = ({
   // State management
   const [selectedSlots, setSelectedSlots] = useState({});
   const [activeDay, setActiveDay] = useState(null);
+  const [toast, setToast] = useState(null);
 
   const toggleSlot = (dayKey, timeValue) => {
     setSelectedSlots((prev) => ({
@@ -48,6 +52,14 @@ const DoctorSlotSelection = ({
 
   const isSlotSelected = (dayKey, timeValue) => {
     return selectedSlots[dayKey]?.[timeValue] || false;
+  };
+
+  const showToast = (message, type) => {
+    setToast({ message, type });
+  };
+
+  const handleCloseToast = () => {
+    setToast(null);
   };
 
   const getDaySlotCount = (dayKey) => {
@@ -121,7 +133,20 @@ const DoctorSlotSelection = ({
     };
 
     onSave(formattedData);
-    await doctorAPI.setAvailability(availability);
+    const result = await doctorAPI.setAvailability(availability);
+    if (result?.success || result?.data?.success) {
+      showToast(
+        result?.message ||
+          result?.data?.message ||
+          "Slot Alloted Successfully!",
+        "success"
+      );
+    } else {
+      showToast("Failed to allot Slots", "error");
+    }
+    setTimeout(() => {
+      navigate("/doctor/dashboard");
+    }, 1000);
   };
 
   const getTotalSelectedSlots = () => {
@@ -278,6 +303,13 @@ const DoctorSlotSelection = ({
           </div>
         )}
       </div>
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={handleCloseToast}
+        />
+      )}
     </div>
   );
 };
