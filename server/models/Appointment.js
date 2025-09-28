@@ -76,7 +76,6 @@ const appointmentSchema = new mongoose.Schema(
     reasonForVisit: {
       type: String,
       trim: true,
-      minlength: 5,
       maxlength: 200,
     },
     notes: {

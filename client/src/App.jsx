@@ -124,14 +124,18 @@ const AppRoutes = () => {
       />
 
       {/* Emergency Page - Accessible to all authenticated users */}
-      {/* <Route
-        path="/emergency"
-        element={
-          <ProtectedRoute allowedRoles={["patient", "doctor", "fwl", "admin"]}>
-            <EmergencyMap />
-          </ProtectedRoute>
-        }
-      /> */}
+      {/* {
+        <Route
+          path="/emergency"
+          element={
+            <ProtectedRoute
+              allowedRoles={["patient", "doctor", "fwl", "admin"]}
+            >
+              <EmergencyMap />
+            </ProtectedRoute>
+          }
+        />
+      } */}
 
       {/* Patient Appointments - Only patients */}
       <Route
