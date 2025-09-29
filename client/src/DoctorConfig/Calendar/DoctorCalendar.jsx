@@ -15,6 +15,7 @@ import { doctorAPI } from "../../services/api";
 import { useAppointments } from "../../hooks/useAppointments";
 
 const DoctorCalendar = () => {
+  a;
   // Get appointments from the hook
   const { appointments } = useAppointments();
   const [doctorAvailability, setDoctorAvailability] = useState([]);
