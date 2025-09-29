@@ -235,7 +235,7 @@ const DoctorCalendar = () => {
                 <p className="text-gray-600">
                   {transformedAppointments.length > 0 &&
                     transformedAppointments[0].doctorSpecialization}{" "}
-                  • Today's Schedule
+                  • Today's Schedul
                 </p>
               </div>
             </div>
