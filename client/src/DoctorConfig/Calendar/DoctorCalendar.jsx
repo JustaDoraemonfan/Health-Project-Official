@@ -16,7 +16,7 @@ import { useAppointments } from "../../hooks/useAppointments";
 
 const DoctorCalendar = () => {
   // Get appointments from the hook
-  const { appointment } = useAppointments();
+  const { appointments } = useAppointments();
   const [doctorAvailability, setDoctorAvailability] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showEventDetails, setShowEventDetails] = useState(false);
