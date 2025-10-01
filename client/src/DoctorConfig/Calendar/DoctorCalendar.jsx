@@ -272,7 +272,7 @@ const DoctorCalendar = () => {
                 plugins={[timeGridPlugin, interactionPlugin]}
                 initialView="timeGridWeek"
                 headerToolbar={{
-                  left: "prev,next today",
+                  left: "pre,next today",
                   center: "title",
                   right: "timeGridWeek,timeGridDay",
                 }}
