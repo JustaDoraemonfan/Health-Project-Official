@@ -230,7 +230,7 @@ const DoctorCalendar = () => {
               <Calendar className="w-8 h-8 text-blue-600" />
               <div>
                 <h1 className="text-2xl font-semibold text-gray-900">
-                  Doctor Dashboar
+                  Doctor Dashboard
                 </h1>
                 <p className="text-gray-600">
                   {transformedAppointments.length > 0 &&
