@@ -91,7 +91,7 @@ const BookConsultation = () => {
             </h1>
             <p className="text-gray-400">
               Find and book appointments with qualified healthcare{" "}
-              <span className="text-red-300">professionals</span>
+              <span className="text-red-200">professionals</span>
             </p>
           </div>
 
