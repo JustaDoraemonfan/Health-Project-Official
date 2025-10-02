@@ -90,7 +90,8 @@ const BookConsultation = () => {
               BOOK CONSULTATION
             </h1>
             <p className="text-gray-400">
-              Find and book appointments with qualified healthcare professionals
+              Find and book appointments with qualified healthcare{" "}
+              <span className="text-purple-300">professionals</span>
             </p>
           </div>
 
