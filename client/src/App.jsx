@@ -126,7 +126,7 @@ const AppRoutes = () => {
       />
 
       {/* Emergency Page - Accessible to all authenticated users */}
-      {
+      {/* {
         <Route
           path="/emergency"
           element={
@@ -137,7 +137,7 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
-      }
+      } */}
 
       {/* Patient Appointments - Only patients */}
       <Route
