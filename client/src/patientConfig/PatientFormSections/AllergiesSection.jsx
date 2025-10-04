@@ -14,7 +14,7 @@ const AllergiesSection = ({ formData, handleChange }) => {
         >
           Known Allergies
           <span className="text-sm text-gray-500 ml-2">
-            (Separate multiple items with commas ",")
+            (Separate multiple items with commas)
           </span>
         </label>
         <textarea
