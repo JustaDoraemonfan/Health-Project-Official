@@ -55,7 +55,7 @@ export const getReminders = asyncHandler(async (req, res) => {
 
     // Optionally: set today as 'today' if no status exists
     if (!reminder.dailyStatus?.get(todayKey)) {
-      reminder.dailyStatus.set(todayKey, "today");
+      reminder.dailyStatus.set(todayKey, "missed");
       reminder.markModified("dailyStatus");
     }
   });

@@ -115,7 +115,6 @@ const BookingModal = ({ doctor, onClose, onConfirm }) => {
       const payload = {
         ...formData,
         doctor: doctor.userId._id,
-        doctorProfile: doctor._id,
       };
 
       // Call the confirmation handler

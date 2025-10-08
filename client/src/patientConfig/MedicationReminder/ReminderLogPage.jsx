@@ -140,13 +140,7 @@ const ReminderLogPage = ({ reminders }) => {
                   <span
                     key={date}
                     className={`text-xs font-medium ${
-                      status === "taken"
-                        ? "text-green-500"
-                        : status === "missed"
-                        ? "text-red-500"
-                        : status === "today"
-                        ? "text-yellow-500"
-                        : "text-gray-700"
+                      status === "taken" ? "text-green-500" : "text-red-500"
                     }`}
                   >
                     {formatDate(date)}:{" "}

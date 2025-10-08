@@ -20,18 +20,24 @@ const formatDate = (date) => {
 };
 
 const ReminderCard = ({ reminder, onMarkAsTaken, onEdit, onDelete }) => {
-  const dateKey = new Date().toISOString().split("T")[0]; // Update dailyStatus map
+  const today = new Date();
+  const dateKey = today.toISOString().split("T")[0];
   const displayStatus = reminder.dailyStatus?.[dateKey] || "upcoming";
   const yesterdayKey = new Date(Date.now() - 86400000)
     .toISOString()
-    .split("T")[0]; // yesterday
+    .split("T")[0];
 
-  // Check if yesterday's status was still 'upcoming', mark it as 'missed'
+  // Mark yesterday’s missed meds
   if (reminder.dailyStatus?.[yesterdayKey] === "upcoming") {
     reminder.dailyStatus[yesterdayKey] = "missed";
   }
 
+  // ✅ Check if medication period is over
+  const isMedicationEnded =
+    reminder.endDate && new Date(reminder.endDate) < today;
+
   const getStatusColor = () => {
+    if (isMedicationEnded) return "text-gray-500";
     switch (displayStatus) {
       case "taken":
         return "text-green-400 bg-transparent";
@@ -47,6 +53,7 @@ const ReminderCard = ({ reminder, onMarkAsTaken, onEdit, onDelete }) => {
   };
 
   const getStatusText = () => {
+    if (isMedicationEnded) return "Medication Ended";
     switch (displayStatus) {
       case "taken":
         return `Taken for ${formatDate(new Date().toISOString())}`;
@@ -83,7 +90,7 @@ const ReminderCard = ({ reminder, onMarkAsTaken, onEdit, onDelete }) => {
             </div>
           </div>
 
-          {reminder.times && reminder.times.length > 0 && (
+          {reminder.times?.length > 0 && (
             <div className="flex items-center text-slate-300 mt-2">
               <Clock className="w-4 h-4 mr-1" />
               <span className="text-sm">
@@ -111,44 +118,34 @@ const ReminderCard = ({ reminder, onMarkAsTaken, onEdit, onDelete }) => {
             {getStatusText()}
           </span>
 
-          {/* Tiny text for yesterday's status */}
-          {reminder.dailyStatus?.[yesterdayKey] &&
-            ["taken", "missed"].includes(
-              reminder.dailyStatus[yesterdayKey]
-            ) && (
-              <span className="text-xs text-gray-400">
-                Yesterday:{" "}
-                <span className="text-amber-100">
-                  {reminder.dailyStatus[yesterdayKey]}
-                </span>
-              </span>
-            )}
-
-          <div className="flex items-center space-x-2">
-            {displayStatus !== "taken" && (
+          {/* ✅ Hide buttons if medication has ended */}
+          {!isMedicationEnded && (
+            <div className="flex items-center space-x-2">
+              {displayStatus !== "taken" && (
+                <button
+                  onClick={() => onMarkAsTaken(reminder._id)}
+                  className="group p-2.5 text-emerald-600 hover:text-white hover:bg-emerald-600 bg-emerald-50 rounded-xl transition-all duration-200 ease-in-out hover:scale-110 shadow-sm hover:shadow-md"
+                  title="Mark as taken"
+                >
+                  <Check className="w-4 h-4 group-hover:scale-110 transition-transform duration-150" />
+                </button>
+              )}
               <button
-                onClick={() => onMarkAsTaken(reminder._id)}
-                className="group p-2.5 hover:cursor-pointer text-emerald-600 hover:text-white hover:bg-emerald-600 bg-emerald-50 rounded-xl transition-all duration-200 ease-in-out hover:scale-110 shadow-sm hover:shadow-md"
-                title="Mark as taken"
+                onClick={() => onEdit(reminder)}
+                className="group p-2.5 text-blue-600 hover:text-white hover:bg-blue-600 bg-blue-50 rounded-xl transition-all duration-200 ease-in-out hover:scale-110 shadow-sm hover:shadow-md"
+                title="Edit reminder"
               >
-                <Check className="w-4 h-4 group-hover:scale-110 transition-transform duration-150" />
+                <Edit2 className="w-4 h-4 group-hover:scale-110 transition-transform duration-150" />
               </button>
-            )}
-            <button
-              onClick={() => onEdit(reminder)}
-              className="group p-2.5 hover:cursor-pointer text-blue-600 hover:text-white hover:bg-blue-600 bg-blue-50 rounded-xl transition-all duration-200 ease-in-out hover:scale-110 shadow-sm hover:shadow-md"
-              title="Edit reminder"
-            >
-              <Edit2 className="w-4 h-4 group-hover:scale-110 transition-transform duration-150" />
-            </button>
-            <button
-              onClick={() => onDelete(reminder._id)}
-              className="group p-2.5 hover:cursor-pointer text-red-600 hover:text-white hover:bg-red-600 bg-red-50 rounded-xl transition-all duration-200 ease-in-out hover:scale-110 shadow-sm hover:shadow-md"
-              title="Delete reminder"
-            >
-              <Trash2 className="w-4 h-4 group-hover:scale-110 transition-transform duration-150" />
-            </button>
-          </div>
+              <button
+                onClick={() => onDelete(reminder._id)}
+                className="group p-2.5 text-red-600 hover:text-white hover:bg-red-600 bg-red-50 rounded-xl transition-all duration-200 ease-in-out hover:scale-110 shadow-sm hover:shadow-md"
+                title="Delete reminder"
+              >
+                <Trash2 className="w-4 h-4 group-hover:scale-110 transition-transform duration-150" />
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
