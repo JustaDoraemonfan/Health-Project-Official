@@ -46,7 +46,7 @@ const DashboardCard = ({
         <div className="flex items-center flex-col">
           {/* Add stats display */}
           {stats && (
-            <span className="bg-transparent bg-opacity-20 text-white text-md google-sans-code-400 px-2 py-1 rounded-full">
+            <span className="bg-transparent bg-opacity-20 text-white text-xs google-sans-code-400 px-2 py-1 rounded-full">
               {stats}
             </span>
           )}

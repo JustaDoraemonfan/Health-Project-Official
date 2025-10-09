@@ -22,7 +22,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
       case "consultation":
         return "bg-teal-100 text-teal-800 border-teal-300";
       case "emergency":
-        return "bg-red-600 text-black border-black";
+        return "bg-red-600/20 text-red-300 ";
       case "follow-up":
         return "bg-blue-100 text-emerald-800 border-emerald-300";
       case "check-up":
@@ -84,7 +84,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
 
   return (
     <div
-      className="group relative bg-[var(--color-secondary)]/90 border border-slate-700 rounded-xl p-6 hover:bg-[var(--color-secondary)]/85 hover:border-slate-600 transition-all duration-300 cursor-pointer transform hover:scale-[1.02]"
+      className="group relative bg-[var(--color-secondary)] border border-slate-700 rounded-xl p-6  transition-all duration-300 cursor-pointer transform hover:scale-[1.02]"
       onClick={() => onCardClick && onCardClick(appointment)}
     >
       {/* Card Header */}
