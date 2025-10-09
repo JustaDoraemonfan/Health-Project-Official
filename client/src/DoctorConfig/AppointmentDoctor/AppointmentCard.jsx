@@ -1,19 +1,19 @@
-import { Clock, User, Phone } from "lucide-react";
+import { Clock, User, MailIcon, LucideDot } from "lucide-react";
 
 const AppointmentCard = ({ appointment, onCardClick }) => {
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
       case "confirmed":
       case "scheduled":
-        return "bg-green-900/20 text-green-300 border-green-800";
+        return "bg-transparent text-green-300 border-green-800";
       case "pending":
-        return "bg-yellow-900/20 text-yellow-300 border-yellow-800";
+        return "bg-transparent text-yellow-300 border-yellow-800";
       case "completed":
-        return "bg-blue-900/20 text-blue-300 border-blue-800";
+        return "bg-transparent text-blue-300 border-blue-800";
       case "cancelled":
-        return "bg-red-900/20 text-red-300 border-red-800";
+        return "bg-transparent text-red-300 border-red-800";
       default:
-        return "bg-gray-800/50 text-gray-300 border-gray-600";
+        return "bg-transparent text-gray-300 border-gray-600";
     }
   };
 
@@ -22,7 +22,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
       case "consultation":
         return "bg-teal-100 text-teal-800 border-teal-300";
       case "emergency":
-        return "bg-red-600/20 text-red-300 ";
+        return "bg-transparent text-red-300";
       case "follow-up":
         return "bg-blue-100 text-emerald-800 border-emerald-300";
       case "check-up":
@@ -128,38 +128,31 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
 
         {/* Status Badge */}
         <div className="flex flex-col items-end space-y-2">
-          <span
-            className={`px-3 py-1 rounded-full text-xs google-sans-code-400 border ${getStatusColor(
-              appointment.status
-            )} group-hover:scale-105 transition-transform duration-300`}
-          >
-            {appointment.status || "pending"}
-          </span>
+          {appointment.type && (
+            <div className="flex items-center justify-between">
+              <span
+                className={`px-3 py-1.5 rounded-lg text-sm google-sans-code-400  ${getTypeColor(
+                  appointment.type
+                )} group-hover:scale-105 transition-transform duration-300`}
+              >
+                {appointment.type}
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Card Body */}
       <div className="relative z-10 space-y-3">
         {/* Appointment Type */}
-        {appointment.type && (
-          <div className="flex items-center justify-between">
-            <span
-              className={`px-3 py-1.5 rounded-lg text-sm google-sans-code-400 border ${getTypeColor(
-                appointment.type
-              )} group-hover:scale-105 transition-transform duration-300`}
-            >
-              {appointment.type}
-            </span>
-          </div>
-        )}
 
         {/* Contact Information */}
         <div className="flex items-center justify-between text-sm">
-          <div className="flex items-center text-white">
-            <Phone
+          <div className="flex items-center text-white ">
+            <MailIcon
               className={`w-4 h-4 mr-2 ${getPhoneIconColor()} group-hover:scale-110 transition-all duration-300`}
             />
-            <span className="google-sans-code-400 text-white/70 font-light">
+            <span className="google-sans-code-400 text-white/70 font-light ">
               {appointment.patient?.email ||
                 appointment.phone ||
                 "No contact info"}
@@ -177,7 +170,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
               Dr. {appointment.doctor.name}
             </span>
             {appointment.doctorProfile?.specialization && (
-              <span className="ml-2 text-slate-400">
+              <span className="ml-2 text-orange-400">
                 • {appointment.doctorProfile.specialization}
               </span>
             )}
@@ -194,16 +187,27 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
         )}
 
         {/* Appointment Date (if different from time) */}
-        {appointment.appointmentDate && (
-          <div className="text-xs text-slate-500 google-sans-code-400 pt-2 border-t border-slate-700">
-            {new Date(appointment.appointmentDate).toLocaleDateString("en-US", {
-              weekday: "short",
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            })}
-          </div>
-        )}
+
+        <span
+          className={` rounded-full text-xs google-sans-code-400 flex justify-between p-2  ${getStatusColor(
+            appointment.status
+          )} group-hover:scale-105 transition-transform duration-300`}
+        >
+          {appointment.appointmentDate && (
+            <div className="text-xs text-slate-500 google-sans-code-400 ">
+              {new Date(appointment.appointmentDate).toLocaleDateString(
+                "en-US",
+                {
+                  weekday: "short",
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                }
+              )}
+            </div>
+          )}
+          <span>{appointment.status || "pending"}</span>
+        </span>
       </div>
 
       {/* Hover indicator */}
