@@ -13,7 +13,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
       case "cancelled":
         return "bg-transparent text-red-300 border-red-800";
       default:
-        return " text-gray-300 border-gray-600";
+        return "bg-transparent text-gray-300 border-gray-600";
     }
   };
 
