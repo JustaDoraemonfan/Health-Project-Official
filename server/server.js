@@ -44,7 +44,12 @@ const app = express();
 
 // ---------- MIDDLEWARE ----------
 app.use(express.json());
-app.use(cors({ origin: CLIENT_URL, credentials: true }));
+app.use(
+  cors({
+    origin: "*",
+    credentials: true,
+  })
+);
 app.use(helmet()); // Secure HTTP headers
 if (NODE_ENV === "development") app.use(morgan("dev")); // Logging only in dev
 
