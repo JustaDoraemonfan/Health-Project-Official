@@ -26,7 +26,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
       case "follow-up":
         return "bg-transparent text-emerald-800 border-emerald-300";
       case "check-up":
-        return "bg-amber-100 text-amber-800 border-amber-300";
+        return "bg-transparent text-amber-800 border-amber-300";
       default:
         return "bg-gray-100 text-gray-700 border-gray-300";
     }
