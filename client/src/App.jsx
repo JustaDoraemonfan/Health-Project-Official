@@ -12,11 +12,11 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import LoadingSpinner from "./components/LoadingSpinner";
 // ERROR ZONE
 
-import PatientDashboard from "./pages/Dashboards/PatientDashboard";
-import DoctorDashboard from "./pages/Dashboards/DoctorDashboard";
-import AdminDashboard from "./pages/Dashboards/AdminDashboard";
+import PatientDashboard from "./pages/Dashboards/PatientDashboard.jsx";
+import DoctorDashboard from "./pages/Dashboards/DoctorDashboard.jsx";
+import AdminDashboard from "./pages/Dashboards/AdminDashboard.jsx";
 
-import FWLDashboard from "./pages/Dashboards/FWLDashboard";
+import FWLDashboard from "./pages/Dashboards/FWLDashboard.jsx";
 
 import BookConsultation from "./patientConfig/DashboardUtils/BookConsultation";
 import UpdateProfile from "./patientConfig/DashboardUtils/UpdateProfile";
