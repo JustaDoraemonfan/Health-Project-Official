@@ -11,10 +11,10 @@ import LandingPage from "./sections/LandingPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LoadingSpinner from "./components/LoadingSpinner";
 
-import AdminDashboard from "./pages/Dahsboards/AdminDashboard.jsx";
-import PatientDashboard from "./pages/Dahsboards/PatientDashboard";
-import DoctorDashboard from "./pages/Dahsboards/DoctorDashboard.jsx";
-import FWLDashboard from "./pages/Dahsboards/FWLDashboard.jsx";
+import AdminDashboard from "./pages/Dashboards/AdminDashboard";
+import PatientDashboard from "./pages/Dashboards/PatientDashboard";
+import DoctorDashboard from "./pages/Dashboards/DoctorDashboard";
+import FWLDashboard from "./pages/Dashboards/FWLDashboard";
 import BookConsultation from "./patientConfig/DashboardUtils/BookConsultation";
 import UpdateProfile from "./patientConfig/DashboardUtils/UpdateProfile";
 import AppointmentDashboard from "./patientConfig/DashboardUtils/Appointment";
