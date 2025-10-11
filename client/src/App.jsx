@@ -15,7 +15,7 @@ import {
   DoctorDashboard,
   FWLDashboard,
   AdminDashboard,
-} from "./pages/Dahsboards/Dashboard";
+} from "./pages/Dahsboards/Dashboard.jsx";
 import BookConsultation from "./patientConfig/DashboardUtils/BookConsultation";
 import UpdateProfile from "./patientConfig/DashboardUtils/UpdateProfile";
 import AppointmentDashboard from "./patientConfig/DashboardUtils/Appointment";
