@@ -20,11 +20,11 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
   const getTypeColor = (type) => {
     switch ((type || "").toLowerCase()) {
       case "consultation":
-        return "bg-teal-100 text-teal-800 border-teal-300";
+        return "bg-transparent text-teal-800 border-teal-300";
       case "emergency":
         return "bg-transparent text-red-300";
       case "follow-up":
-        return "bg-blue-100 text-emerald-800 border-emerald-300";
+        return "bg-transparent text-emerald-800 border-emerald-300";
       case "check-up":
         return "bg-amber-100 text-amber-800 border-amber-300";
       default:
