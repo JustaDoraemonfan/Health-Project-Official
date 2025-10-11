@@ -10,11 +10,14 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import LandingPage from "./sections/LandingPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LoadingSpinner from "./components/LoadingSpinner";
+// ERROR ZONE
 
-import AdminDashboard from "./pages/Dashboards/AdminDashboard";
 import PatientDashboard from "./pages/Dashboards/PatientDashboard";
 import DoctorDashboard from "./pages/Dashboards/DoctorDashboard";
+import AdminDashboard from "./pages/Dashboards/AdminDashboard";
+
 import FWLDashboard from "./pages/Dashboards/FWLDashboard";
+
 import BookConsultation from "./patientConfig/DashboardUtils/BookConsultation";
 import UpdateProfile from "./patientConfig/DashboardUtils/UpdateProfile";
 import AppointmentDashboard from "./patientConfig/DashboardUtils/Appointment";
