@@ -1,4 +1,3 @@
-// client/src/App.js
 import React from "react";
 import {
   BrowserRouter as Router,
@@ -12,18 +11,18 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import LoadingSpinner from "./components/LoadingSpinner";
 // ERROR ZONE
 
-import PatientDashboard from "./pages/Dashboards/PatientDashboard";
-import DoctorDashboard from "./pages/Dashboards/DoctorDashboard";
-import AdminDashboard from "./pages/Dashboards/AdminDashboard";
+import PatientDashboard from "./Pages/Dashboards/PatientDashboard";
+import DoctorDashboard from "./Pages/Dashboards/DoctorDashboard";
+import AdminDashboard from "./Pages/Dashboards/AdminDashboard";
 
-import FWLDashboard from "./pages/Dashboards/FWLDashboard";
+import FWLDashboard from "./Pages/Dashboards/FWLDashboard";
 
 import BookConsultation from "./patientConfig/DashboardUtils/BookConsultation";
 import UpdateProfile from "./patientConfig/DashboardUtils/UpdateProfile";
 import AppointmentDashboard from "./patientConfig/DashboardUtils/Appointment";
 import "./App.css";
 import DoctorAppointment from "./DoctorConfig/DashboardUtils/DoctorAppointment";
-import EmergencyMap from "./pages/EmergencyMap";
+import EmergencyMap from "./Pages/EmergencyMap";
 import PrescriptionUploadModal from "./DoctorConfig/Prescription/Prescription";
 import { PatientPrescriptionDashboard } from "./patientConfig/Prescription/PatientPrescriptionDashboard";
 import HealthRecordsDashboard from "./patientConfig/DashboardUtils/HealthRecordsDashboard";
