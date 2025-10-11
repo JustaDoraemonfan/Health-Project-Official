@@ -10,12 +10,11 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import LandingPage from "./sections/LandingPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LoadingSpinner from "./components/LoadingSpinner";
-import {
-  PatientDashboard,
-  DoctorDashboard,
-  FWLDashboard,
-  AdminDashboard,
-} from "./pages/Dahsboards/Dashboard.jsx";
+
+import AdminDashboard from "./pages/Dahsboards/AdminDashboard.jsx";
+import PatientDashboard from "./pages/Dahsboards/PatientDashboard";
+import DoctorDashboard from "./pages/Dahsboards/DoctorDashboard.jsx";
+import FWLDashboard from "./pages/Dahsboards/FWLDashboard.jsx";
 import BookConsultation from "./patientConfig/DashboardUtils/BookConsultation";
 import UpdateProfile from "./patientConfig/DashboardUtils/UpdateProfile";
 import AppointmentDashboard from "./patientConfig/DashboardUtils/Appointment";
