@@ -7,7 +7,7 @@
     "dev": "concurrently \"npm run dev --prefix client\" \"npm run server --prefix server\"",
     "client": "npm run dev --prefix client",
     "server": "npm run server --prefix server",
-    "build": "vite build",
+    "build": "concurrently \"vite build --prefix client\" \"vite build --prefix server\"",
     "lint": "eslint .",
     "preview": "vite preview"
   },

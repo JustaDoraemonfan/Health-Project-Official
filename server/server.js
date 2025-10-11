@@ -36,7 +36,7 @@ dotenv.config();
 // eslint-disable-next-line no-undef
 const PORT = process.env.PORT || 5000;
 // eslint-disable-next-line no-undef
-const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
+const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173" || ;
 // eslint-disable-next-line no-undef
 const NODE_ENV = process.env.NODE_ENV || "development";
 
