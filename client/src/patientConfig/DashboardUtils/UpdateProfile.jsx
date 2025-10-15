@@ -13,6 +13,10 @@ import {
   transformProfileData,
   prepareDataForSubmission,
 } from "../../utils/dataTransforms";
+import {
+  transformDoctorProfileData,
+  prepareDoctorDataForSubmission,
+} from "../../utils/doctorProfileTransform";
 
 const UpdateProfile = () => {
   const [profile, setProfile] = useState(null);
@@ -32,8 +36,13 @@ const UpdateProfile = () => {
         const profileData = res.data.data;
         setProfile(profileData);
 
-        // Transform the data for form display
-        const transformedData = transformProfileData(profileData);
+        // Transform the data based on user role
+        let transformedData;
+        if (profileData.userId.role === "patient") {
+          transformedData = transformProfileData(profileData);
+        } else if (profileData.userId.role === "doctor") {
+          transformedData = transformDoctorProfileData(profileData);
+        }
         setFormData(transformedData);
       } catch (err) {
         console.error("Error fetching profile", err);
@@ -48,7 +57,7 @@ const UpdateProfile = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Handle nested fields like emergencyContact.name
+    // Handle nested fields like emergencyContact.name or insurance.provider
     if (name.includes(".")) {
       const [parent, child] = name.split(".");
       setFormData((prev) => ({
@@ -69,16 +78,21 @@ const UpdateProfile = () => {
     setMessage({ type: "", content: "" });
 
     try {
-      const dataToSend = prepareDataForSubmission(formData, profile);
+      let dataToSend;
 
       if (profile.userId.role === "patient") {
+        dataToSend = prepareDataForSubmission(formData, profile);
         console.log(
           "Sending patient data:",
           JSON.stringify(dataToSend, null, 2)
         );
         await patientAPI.updatePatient(profile._id, dataToSend);
       } else if (profile.userId.role === "doctor") {
-        console.log("Sending doctor data:", dataToSend);
+        dataToSend = prepareDoctorDataForSubmission(formData, profile);
+        console.log(
+          "Sending doctor data:",
+          JSON.stringify(dataToSend, null, 2)
+        );
         await doctorAPI.updateDoctor(profile._id, dataToSend);
       }
 

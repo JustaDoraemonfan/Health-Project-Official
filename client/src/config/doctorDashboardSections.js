@@ -181,12 +181,12 @@ export const doctorQuickActions = (navigate) => [
   },
 
   {
-    id: "patient-lookup",
-    title: "Patient Lookup",
-    description: "Search patient records",
+    id: "doctor-profile",
+    title: "Your Profile",
+    description: "Update your profile",
     icon: UserCheck,
     color: "blue",
-    onClick: () => navigate("/doctor/patient-lookup"),
+    onClick: () => navigate("/update-profile"),
   },
 ];
 
