@@ -41,7 +41,7 @@ export const StatsSection = () => {
     },
     {
       icon: <Building2 className="w-6 h-6 text-red-500" />,
-      number: 500,
+      number: statsData.admin,
       label: "Partner Hospitals",
       metric: "Hospitals",
     },

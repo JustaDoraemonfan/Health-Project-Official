@@ -57,7 +57,7 @@ const doctorSchema = new mongoose.Schema(
       status: {
         type: String,
         enum: ["unverified", "pending", "verified", "rejected", "suspended"],
-        default: "unverified",
+        default: "pending",
       },
       appliedAt: { type: Date },
       verifiedAt: { type: Date }, // When verification was approved
