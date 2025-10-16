@@ -28,6 +28,7 @@ import notesRoutes from "./routes/notesRoutes.js";
 import reminderRoutes from "./routes/Medication/reminderRoutes.js";
 import reminderLogRoutes from "./routes/Medication/reminderLogRoutes.js";
 import { startReminderJobs } from "./jobs/reminderScheduler.js";
+import adminRoutes from "./routes/adminRoutes.js";
 
 // Load env vars
 dotenv.config();
@@ -75,6 +76,7 @@ app.use("/api/notes", notesRoutes);
 app.use("/api/earthquakes", earthquakeRoutes);
 app.use("/api/reminders", reminderRoutes);
 app.use("/api/reminder-logs", reminderLogRoutes);
+app.use("/api/admin", adminRoutes);
 
 // ---------- ERROR HANDLING ----------
 app.use(notFound);

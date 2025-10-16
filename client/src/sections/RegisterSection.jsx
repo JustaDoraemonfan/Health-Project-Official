@@ -10,13 +10,15 @@ export const RegisterSection = ({ onToggleAuth }) => {
     email: "",
     password: "",
     confirmPassword: "",
-    // Additional fields based on user type
     age: "",
     gender: "other",
     specialization: "",
     phone: "",
     location: "",
+    department: "", // for admin
+    adminRole: "verifier", // default admin role
   });
+
   const [showError, setShowError] = useState(false);
   const [validationErrors, setValidationErrors] = useState([]);
   const [success, setSuccess] = useState(false);
@@ -27,7 +29,11 @@ export const RegisterSection = ({ onToggleAuth }) => {
     { value: "patient", label: "Patient" },
     { value: "doctor", label: "Doctor" },
     { value: "frontlineWorker", label: "Frontline Worker" },
-    { value: "admin", label: "Hospital Admin" },
+    { value: "admin", label: "Admin" },
+  ];
+  const adminRoles = [
+    { value: "verifier", label: "Verifier" },
+    { value: "support", label: "Support" },
   ];
 
   // Clear errors when form data changes
@@ -90,6 +96,14 @@ export const RegisterSection = ({ onToggleAuth }) => {
     if (formData.userType === "doctor" && !formData.specialization.trim()) {
       errors.push("Specialization is required for doctors");
     }
+    if (formData.userType === "admin") {
+      if (!formData.department.trim()) {
+        errors.push("Department is required for admins");
+      }
+      if (!formData.adminRole.trim()) {
+        errors.push("Admin role is required");
+      }
+    }
 
     return errors;
   };
@@ -123,6 +137,9 @@ export const RegisterSection = ({ onToggleAuth }) => {
     } else if (formData.userType === "frontlineWorker") {
       registerData.phone = formData.phone.trim();
       registerData.location = formData.location.trim();
+    } else if (formData.userType === "admin") {
+      registerData.department = formData.department.trim();
+      registerData.adminRole = formData.adminRole; // admin role (verifier/support)
     }
 
     const result = await register(registerData);
@@ -387,6 +404,43 @@ export const RegisterSection = ({ onToggleAuth }) => {
                         placeholder="Enter your location"
                         required
                       />
+                    </div>
+                  </div>
+                )}
+                {formData.userType === "admin" && (
+                  <div className="grid grid-cols-1 gap-4">
+                    <div>
+                      <label className="block text-slate-50 text-sm mb-2">
+                        Department *
+                      </label>
+                      <input
+                        type="text"
+                        name="department"
+                        value={formData.department}
+                        onChange={handleInputChange}
+                        disabled={loading}
+                        className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50"
+                        placeholder="Enter department"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-slate-50 text-sm mb-2">
+                        Admin Role *
+                      </label>
+                      <select
+                        name="role"
+                        value={formData.role}
+                        onChange={handleInputChange}
+                        disabled={loading}
+                        className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50"
+                      >
+                        {adminRoles.map((role) => (
+                          <option key={role.value} value={role.value}>
+                            {role.label}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   </div>
                 )}

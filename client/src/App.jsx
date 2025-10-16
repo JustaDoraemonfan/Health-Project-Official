@@ -30,6 +30,7 @@ import MedicationDashboard from "./patientConfig/MedicationReminder/MedicationDa
 import DoctorSymptomPage from "./DoctorConfig/DashboardUtils/DoctorSymptomPage";
 import DoctorSlotSelection from "./DoctorConfig/DoctorSlots/DoctorSlotSelection";
 import DoctorCalendar from "./DoctorConfig/Calendar/DoctorCalendar";
+import DoctorVerificationDashboard from "./AdminConfig/DoctorVerification/DoctorVerification";
 
 const AppRoutes = () => {
   const { isAuthenticated, user, initialized, error } = useAuth();
@@ -213,6 +214,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute allowedRoles={["patient"]}>
             <PatientPrescriptionDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/doctor-verification"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <DoctorVerificationDashboard />
           </ProtectedRoute>
         }
       />

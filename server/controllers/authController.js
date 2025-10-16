@@ -4,6 +4,7 @@ import User from "../models/User.js";
 import Patient from "../models/Patient.js";
 import Doctor from "../models/Doctor.js";
 import FrontlineWorker from "../models/FWL.js";
+import Admin from "../models/Admin.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import { successResponse, errorResponse } from "../utils/response.js";
 
@@ -116,6 +117,52 @@ export const registerUser = asyncHandler(async (req, res) => {
       phone,
       location,
     });
+  } else if (userRole === "admin") {
+    const { adminRole, department } = req.body;
+
+    // Validate admin role
+    const validAdminRoles = ["superadmin", "verifier", "support"];
+    const selectedAdminRole = adminRole || "verifier";
+
+    if (!validAdminRoles.includes(selectedAdminRole)) {
+      return errorResponse(
+        res,
+        `Invalid admin role. Must be one of: ${validAdminRoles.join(", ")}`,
+        400
+      );
+    }
+
+    // Set permissions based on admin role
+    let permissions = {
+      canApproveDoctors: false,
+      canManageAdmins: false,
+      canViewAnalytics: false,
+      canSuspendAccounts: false,
+    };
+
+    if (selectedAdminRole === "superadmin") {
+      permissions = {
+        canApproveDoctors: true,
+        canManageAdmins: true,
+        canViewAnalytics: true,
+        canSuspendAccounts: true,
+      };
+    } else if (selectedAdminRole === "verifier") {
+      permissions.canApproveDoctors = true;
+    } else if (selectedAdminRole === "support") {
+      permissions.canViewAnalytics = true;
+    }
+
+    await Admin.create({
+      userId: user.id,
+      role: selectedAdminRole,
+      department: department || "Verification",
+      permissions,
+      security: {
+        passwordHash: hashedPassword,
+        isActive: true,
+      },
+    });
   }
 
   const userResponse = {
@@ -156,6 +203,22 @@ export const loginUser = asyncHandler(async (req, res) => {
     return errorResponse(res, "Invalid credentials", 401);
   }
 
+  // Update last login for admin users
+  if (user.role === "admin") {
+    await Admin.findOneAndUpdate(
+      { userId: user.id },
+      {
+        "activity.lastLogin": new Date(),
+        $push: {
+          auditTrail: {
+            action: "login",
+            at: new Date(),
+          },
+        },
+      }
+    );
+  }
+
   const userResponse = {
     id: user.id,
     name: user.name,
@@ -174,10 +237,30 @@ export const getUserProfile = asyncHandler(async (req, res) => {
     return errorResponse(res, "User not found", 404);
   }
 
-  return successResponse(res, {
+  let profileData = {
     id: user.id,
     name: user.name,
     email: user.email,
     role: user.role,
-  });
+  };
+
+  // If admin, include admin-specific details
+  if (user.role === "admin") {
+    const adminProfile = await Admin.findOne({ userId: user.id })
+      .select("-security.passwordHash")
+      .populate("handledVerifications.doctor", "name specialization");
+
+    if (adminProfile) {
+      profileData.adminDetails = {
+        adminRole: adminProfile.role,
+        department: adminProfile.department,
+        permissions: adminProfile.permissions,
+        isActive: adminProfile.security.isActive,
+        lastLogin: adminProfile.activity.lastLogin,
+        verificationsHandled: adminProfile.handledVerifications.length,
+      };
+    }
+  }
+
+  return successResponse(res, profileData);
 });

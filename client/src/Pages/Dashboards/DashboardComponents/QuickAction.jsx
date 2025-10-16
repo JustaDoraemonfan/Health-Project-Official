@@ -10,6 +10,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { doctorQuickActions } from "../../../config/doctorDashboardSections";
 import { patientQuickActions } from "../../../config/patientDashboardSection";
+import { adminQuickActions } from "../../../config/adminDashboardSection";
 
 export default function QuickAction({ role = "patient", actions = null }) {
   const navigate = useNavigate();
@@ -17,7 +18,11 @@ export default function QuickAction({ role = "patient", actions = null }) {
 
   const quickActions =
     actions ||
-    (isDoctor ? doctorQuickActions(navigate) : patientQuickActions(navigate));
+    (isDoctor
+      ? doctorQuickActions(navigate)
+      : role === "admin"
+      ? adminQuickActions(navigate)
+      : patientQuickActions(navigate));
 
   return (
     <section>

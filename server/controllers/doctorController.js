@@ -143,3 +143,102 @@ export const getAvailability = asyncHandler(async (req, res) => {
     200
   );
 });
+
+export const submitVerification = async (req, res) => {
+  try {
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
+    const doctorId = req.user.id;
+    const { nmcRegistrationNumber } = req.body;
+
+    // Validate registration number
+    if (!nmcRegistrationNumber) {
+      return res.status(400).json({
+        success: false,
+        message: "NMC Registration Number is required",
+      });
+    }
+
+    // Check if all files are uploaded
+    if (!req.files || Object.keys(req.files).length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "No files uploaded",
+      });
+    }
+
+    // Validate all required files are present
+    const requiredFiles = [
+      "nmcCertificate",
+      "mbbsCertificate",
+      "internshipCertificate",
+      "aadharCard",
+    ];
+    const missingFiles = requiredFiles.filter((field) => !req.files[field]);
+
+    if (missingFiles.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: `Missing required files: ${missingFiles.join(", ")}`,
+      });
+    }
+
+    // Extract file URLs from uploaded files
+    const evidence = {
+      nmcCertificate: req.files.nmcCertificate[0].location,
+      mbbsCertificate: req.files.mbbsCertificate[0].location,
+      internshipCertificate: req.files.internshipCertificate[0].location,
+      aadharCard: req.files.aadharCard[0].location,
+    };
+
+    const now = new Date();
+
+    // Update doctor with verification data
+    const updatedDoctor = await Doctor.findOneAndUpdate(
+      { userId: doctorId },
+      {
+        verification: {
+          status: "pending",
+          appliedAt: now,
+          nmcRegistrationNumber,
+          evidence,
+        },
+      },
+      { new: true }
+    );
+
+    if (!updatedDoctor) {
+      return res.status(404).json({
+        success: false,
+        message: "Doctor not found",
+      });
+    }
+
+    // Convert to IST for response
+    const appliedAtIST = now.toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
+    });
+
+    res.json({
+      success: true,
+      message: "Verification submitted successfully",
+      data: {
+        verificationStatus: updatedDoctor.verification.status,
+        appliedAt: appliedAtIST,
+        nmcRegistrationNumber,
+        documentsUploaded: Object.keys(evidence),
+      },
+    });
+  } catch (error) {
+    console.error("Verification error:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

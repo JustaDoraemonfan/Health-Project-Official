@@ -159,6 +159,24 @@ export const doctorAPI = {
   getAvailability: () => {
     return apiClient.get("/doctors/availability");
   },
+  // Submit verification documents for a doctor
+  submitDoctorVerification: async (formData) => {
+    console.log("API: Submitting doctor verification", {
+      isFormData: formData instanceof FormData,
+    });
+
+    try {
+      const response = await apiClient.post("/doctors/verify", formData);
+      console.log("API: Doctor verification submitted successfully");
+      return response;
+    } catch (error) {
+      console.error(
+        "API: Doctor verification submission error",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  },
 };
 
 // Frontline Worker API endpoints
@@ -181,6 +199,94 @@ export const frontlineAPI = {
   // Delete frontline worker (admin only)
   deleteFrontlineWorker: (fwlId) => {
     return apiClient.delete(`/frontline/${fwlId}`);
+  },
+};
+
+// ==================== ADMIN MANAGEMENT ====================
+
+export const adminAPI = {
+  // Get all admins (superadmin only)
+  getAllAdmins: () => {
+    return apiClient.get("/admin");
+  },
+
+  // Get a single admin by ID (superadmin only)
+  getAdmin: (adminId) => {
+    return apiClient.get(`/admin/${adminId}`);
+  },
+
+  // Update admin details (superadmin only)
+  updateAdmin: (adminId, adminData) => {
+    return apiClient.put(`/admin/${adminId}`, adminData);
+  },
+
+  // Delete admin (superadmin only)
+  deleteAdmin: (adminId) => {
+    return apiClient.delete(`/admin/${adminId}`);
+  },
+
+  // ==================== DOCTOR VERIFICATION ====================
+
+  // Get all pending doctor verifications
+  getPendingVerifications: () => {
+    return apiClient.get("/admin/verifications/pending");
+  },
+
+  // Get all doctor verifications
+  getAllVerifications: () => {
+    return apiClient.get("/admin/verifications");
+  },
+
+  // Approve a doctor’s verification
+  approveVerification: (doctorId, notes) => {
+    return apiClient.post(`/admin/verifications/${doctorId}/approve`, {
+      notes,
+    });
+  },
+
+  // Reject a doctor’s verification
+  rejectVerification: (doctorId, reason) => {
+    return apiClient.post(`/admin/verifications/${doctorId}/reject`, {
+      reason,
+    });
+  },
+
+  // ==================== ACCOUNT MANAGEMENT ====================
+
+  // Suspend a user account
+  suspendAccount: (userId) => {
+    return apiClient.post(`/admin/users/${userId}/suspend`);
+  },
+
+  // Reactivate a suspended user account
+  reactivateAccount: (userId) => {
+    return apiClient.post(`/admin/users/${userId}/reactivate`);
+  },
+
+  // ==================== ANALYTICS & ACTIVITY ====================
+
+  // Get dashboard analytics
+  getDashboardAnalytics: () => {
+    return apiClient.get("/admin/analytics/dashboard");
+  },
+
+  // Get admin’s recent activity logs
+  getAdminActivity: () => {
+    return apiClient.get("/admin/activity");
+  },
+
+  // ==================== USER MANAGEMENT ====================
+
+  // Get all users
+  getAllUsers: () => {
+    return apiClient.get("/admin/users");
+  },
+
+  // ==================== ADMIN PROFILE ====================
+
+  // Update admin password
+  updateAdminPassword: (passwordData) => {
+    return apiClient.put("/admin/password", passwordData);
   },
 };
 

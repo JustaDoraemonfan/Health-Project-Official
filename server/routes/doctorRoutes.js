@@ -12,12 +12,14 @@ import {
   getDoctorsByLocation,
   setAvailability,
   getAvailability,
+  submitVerification,
 } from "../controllers/doctorController.js";
 import {
   assignPatientToDoctor,
   getPatientsOfDoctor,
   unassignPatientFromDoctor,
 } from "../controllers/doctorpatiendController.js";
+import { upload } from "../config/s3.js";
 
 const router = express.Router();
 
@@ -27,6 +29,17 @@ router
   .post(authMiddleware, authorizeRoles("admin"), createDoctor)
   .get(authMiddleware, authorizeRoles("admin", "patient"), getDoctors);
 
+router.post(
+  "/verify",
+  authMiddleware, // Your auth middleware
+  upload.fields([
+    { name: "nmcCertificate", maxCount: 1 },
+    { name: "mbbsCertificate", maxCount: 1 },
+    { name: "internshipCertificate", maxCount: 1 },
+    { name: "aadharCard", maxCount: 1 },
+  ]),
+  submitVerification
+);
 // Doctor availability routes
 router
   .route("/availability")

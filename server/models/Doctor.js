@@ -10,7 +10,7 @@ const doctorSchema = new mongoose.Schema(
     },
 
     specialization: { type: String, required: true },
-    experience: { type: Number, default: 0 }, // years of experience
+    experience: { type: Number, default: 0 },
     location: { type: String },
     isAvailable: {
       type: String,
@@ -25,7 +25,7 @@ const doctorSchema = new mongoose.Schema(
     languages: [{ type: String }],
 
     consultationFee: { type: Number, default: 0 },
-    nextAvailable: { type: String }, // e.g. "Today, 4:15 PM"
+    nextAvailable: { type: String },
 
     certifications: [{ type: String }],
     about: { type: String },
@@ -44,12 +44,65 @@ const doctorSchema = new mongoose.Schema(
         ref: "Patient",
       },
     ],
+
     appointments: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Appointment", // reference to the Appointment model
+        ref: "Appointment",
       },
     ],
+
+    // --- Doctor Verification Section ---
+    verification: {
+      status: {
+        type: String,
+        enum: ["unverified", "pending", "verified", "rejected", "suspended"],
+        default: "unverified",
+      },
+      appliedAt: { type: Date },
+      verifiedAt: { type: Date }, // When verification was approved
+      reviewedAt: { type: Date }, // When last reviewed (approved or rejected)
+      reviewedBy: { type: mongoose.Schema.Types.ObjectId, ref: "Admin" },
+      verifiedBy: { type: mongoose.Schema.Types.ObjectId, ref: "Admin" }, // Who approved it
+      reviewNotes: { type: String },
+      rejectionReason: { type: String }, // Specific reason for rejection
+      attempts: { type: Number, default: 0 },
+
+      // NMC/State Medical Council Registration Details
+      nmcRegistrationNumber: { type: String }, // Registration number
+
+      // Document Evidence
+      evidence: {
+        nmcCertificate: { type: String }, // NMC/State Medical Council Registration Certificate
+        mbbsCertificate: { type: String }, // MBBS Certificate
+        internshipCertificate: { type: String }, // MBBS Internship Certificate
+        aadharCard: { type: String }, // Aadhar Card
+
+        // Optional legacy fields (keep for backward compatibility if needed)
+        idDocument: { type: String },
+        licenseDocument: { type: String },
+        selfie: { type: String },
+      },
+
+      // Audit Trail
+      auditTrail: [
+        {
+          action: {
+            type: String,
+            enum: [
+              "applied",
+              "approved",
+              "rejected",
+              "resubmitted",
+              "suspended",
+            ],
+          },
+          by: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+          at: { type: Date, default: Date.now },
+          notes: { type: String },
+        },
+      ],
+    },
   },
   { timestamps: true }
 );
