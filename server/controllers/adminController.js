@@ -196,7 +196,7 @@ export const approveVerification = asyncHandler(async (req, res) => {
       doctor: doctor._id,
       action: "approved",
       at: new Date(),
-      notes: notes || "Verification approved",
+      notes: notes || "Verification approved !",
     });
 
     admin.auditTrail.push({
