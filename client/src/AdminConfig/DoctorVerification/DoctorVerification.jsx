@@ -124,22 +124,22 @@ const DoctorVerificationDashboard = () => {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen google-sans-code-400 bg-[var(--color-primary)]">
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="bg-white border-b border-gray-200 px-8 py-4 flex items-center justify-between">
+        <header className="bg-[var(--color-secondary)]  px-8 py-4 flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-gray-800">
+            <h2 className="text-2xl font-bold text-white">
               Doctor Verification
             </h2>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-gray-100 mt-1">
               Review and verify pending doctor applications
             </p>
           </div>
           <div className="flex items-center gap-4">
-            <button className="relative p-2 hover:bg-gray-100 rounded-full transition-colors">
-              <Bell size={20} className="text-gray-600" />
+            <button className="relative p-2 hover:bg-gray-800 hover:cursor-pointer rounded-full transition-colors">
+              <Bell size={20} className="text-white" />
               {doctors.filter((d) => d.verification.status === "pending")
                 .length > 0 && (
                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
@@ -147,10 +147,8 @@ const DoctorVerificationDashboard = () => {
             </button>
             <div className="flex items-center gap-3 pl-4 border-l border-gray-200">
               <div className="text-right">
-                <p className="text-sm font-semibold text-gray-800">
-                  Admin User
-                </p>
-                <p className="text-xs text-gray-500">admin@health.com</p>
+                <p className="text-sm font-semibold text-red-100">Admin User</p>
+                <p className="text-xs text-amber-200">admin@health.com</p>
               </div>
               <div className="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center">
                 <User size={20} className="text-white" />
@@ -160,33 +158,34 @@ const DoctorVerificationDashboard = () => {
         </header>
 
         {/* Search Bar */}
-        <div className="px-8 py-6 bg-white border-b border-gray-200">
-          <div className="flex items-center justify-between">
+        <div className="px-8 py-6 bg-[var(--color-primary)] ">
+          <div className="flex items-center justify-between gap-4">
             <div className="relative max-w-md">
               <Search
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white"
                 size={20}
               />
               <input
                 type="text"
-                placeholder="Search by name, email, or specialization..."
+                placeholder="name, email, or specialization..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                className="w-full bg-[var(--color-secondary)] text-white pl-10 pr-4 py-2 border border-white rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               />
             </div>
-            <div className="text-sm text-gray-600">
-              <span className="font-semibold">
-                {
-                  doctors.filter((d) => d.verification.status === "pending")
-                    .length
-                }
-              </span>{" "}
-              pending verification
+            <div className="text-md text-red-800">
+              Pending verification
               {doctors.filter((d) => d.verification.status === "pending")
                 .length !== 1
                 ? "s"
                 : ""}
+              :{" "}
+              <span className="font-semibold text-xl bg-red-400/20 p-2 rounded-lg">
+                {
+                  doctors.filter((d) => d.verification.status === "pending")
+                    .length
+                }
+              </span>
             </div>
           </div>
         </div>
@@ -237,11 +236,11 @@ const DoctorVerificationDashboard = () => {
                           <p className="font-semibold text-gray-800">
                             {doctor.userId.name}
                           </p>
-                          <p className="text-sm text-gray-500">
+                          <p className="text-sm text-orange-700">
                             {doctor.userId.email}
                           </p>
                           {doctor.location && (
-                            <p className="text-xs text-gray-400 mt-1">
+                            <p className="text-xs font-medium text-brown-700 mt-1">
                               {doctor.location}
                             </p>
                           )}
@@ -253,7 +252,7 @@ const DoctorVerificationDashboard = () => {
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-sm text-gray-700">
+                        <span className="text-sm text-black">
                           {doctor.experience} years
                         </span>
                       </td>
