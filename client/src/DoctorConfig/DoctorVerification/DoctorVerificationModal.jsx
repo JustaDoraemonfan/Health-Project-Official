@@ -185,14 +185,14 @@ const DoctorVerificationModal = ({ isOpen, onClose, doctorId }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 bg-opacity-60 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-2xl z-10">
+    <div className="fixed inset-0 google-sans-code-400 bg-black/60 bg-opacity-60 flex items-center justify-center z-50 p-4">
+      <div className="bg-[var(--color-primary)] rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-[var(--color-secondary)] border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-2xl z-10">
           <div>
-            <h2 className="text-2xl font-bold text-gray-800">
+            <h2 className="text-2xl font-bold text-[var(--color-primary)]">
               Apply for Verification
             </h2>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-white mt-1">
               Upload your medical credentials and documents
             </p>
           </div>

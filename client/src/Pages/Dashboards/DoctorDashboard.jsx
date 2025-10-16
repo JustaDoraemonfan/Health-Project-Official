@@ -92,7 +92,7 @@ const DoctorDashboard = () => {
   return (
     <>
       <Header />
-      <section className="min-h-screen bg-[var(--color-primary)] py-8 pt-20">
+      <section className="min-h-screen google-sans-code-400 bg-[var(--color-primary)] py-8 pt-20">
         <div className="container mx-auto px-6">
           {/* Verification Alert Banner */}
           {verificationStatus === "pending" && (
