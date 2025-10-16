@@ -240,7 +240,7 @@ const DoctorVerificationDashboard = () => {
                             {doctor.userId.email}
                           </p>
                           {doctor.location && (
-                            <p className="text-xs font-medium text-brown-700 mt-1">
+                            <p className="text-xs font-medium text-orange-700 mt-1">
                               {doctor.location}
                             </p>
                           )}
