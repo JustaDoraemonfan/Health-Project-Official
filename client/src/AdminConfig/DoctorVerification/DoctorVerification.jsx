@@ -37,8 +37,12 @@ const DoctorVerificationDashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalAction, setModalAction] = useState(null);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [approvalNote, setApprovalNote] = useState("");
+  const [rejectionNote, setRejectionNote] = useState("");
 
   const handleAction = (doctor, action) => {
+    console.log(doctor);
+
     setSelectedDoctor(doctor);
     setModalAction(action);
     setShowModal(true);
@@ -46,10 +50,12 @@ const DoctorVerificationDashboard = () => {
 
   const confirmAction = async () => {
     try {
-      // Update the verification status in the backend
-      // await adminAPI.updateVerificationStatus(selectedDoctor._id, modalAction);
+      if (modalAction === "approved") {
+        await adminAPI.approveVerification(selectedDoctor._id, approvalNote);
+      } else {
+        await adminAPI.rejectVerification(selectedDoctor._id, rejectionNote);
+      }
 
-      // Update local state
       setDoctors(
         doctors.map((doc) =>
           doc._id === selectedDoctor._id
@@ -63,9 +69,12 @@ const DoctorVerificationDashboard = () => {
             : doc
         )
       );
+
       setShowModal(false);
       setSelectedDoctor(null);
       setModalAction(null);
+      setApprovalNote("");
+      setRejectionNote("");
     } catch (err) {
       console.error("Error updating verification status:", err);
       alert("Failed to update verification status");
@@ -345,35 +354,88 @@ const DoctorVerificationDashboard = () => {
 
       {/* Confirmation Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 animate-scale">
-            <h3 className="text-xl font-bold text-gray-800 mb-2">
-              Confirm {modalAction === "approved" ? "Approval" : "Rejection"}
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Are you sure you want to{" "}
-              {modalAction === "approved" ? "approve" : "reject"}{" "}
-              <span className="font-semibold">
-                {selectedDoctor?.userId?.name}
-              </span>
-              ?
-            </p>
-            <div className="flex gap-3">
+        <div className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full transform transition-all">
+            {/* Modal Header */}
+            <div
+              className={`px-6 py-5 border-b ${
+                modalAction === "approved"
+                  ? "bg-emerald-50 border-emerald-100"
+                  : "bg-red-50 border-red-100"
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                {modalAction === "approved" ? (
+                  <div className="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center">
+                    <CheckCircle size={24} className="text-white" />
+                  </div>
+                ) : (
+                  <div className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center">
+                    <XCircle size={24} className="text-white" />
+                  </div>
+                )}
+                <div>
+                  <h2 className="text-xl font-bold text-gray-800">
+                    {modalAction === "approved"
+                      ? "Approve Verification"
+                      : "Reject Verification"}
+                  </h2>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {selectedDoctor?.userId?.name}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Body */}
+            <div className="px-6 py-5">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                {modalAction === "approved"
+                  ? "Approval Note (Optional)"
+                  : "Rejection Reason (Required)"}
+              </label>
+              <textarea
+                placeholder={
+                  modalAction === "approved"
+                    ? "Add any additional notes or comments..."
+                    : "Please provide a clear reason for rejection..."
+                }
+                value={
+                  modalAction === "approved" ? approvalNote : rejectionNote
+                }
+                onChange={(e) =>
+                  modalAction === "approved"
+                    ? setApprovalNote(e.target.value)
+                    : setRejectionNote(e.target.value)
+                }
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none text-gray-700 placeholder-gray-400"
+                rows="4"
+              />
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-4 bg-gray-50 rounded-b-2xl flex gap-3 justify-end">
               <button
-                onClick={() => setShowModal(false)}
-                className="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors"
+                onClick={() => {
+                  setShowModal(false);
+                  setApprovalNote("");
+                  setRejectionNote("");
+                }}
+                className="px-5 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={confirmAction}
-                className={`flex-1 px-4 py-2 text-white rounded-lg font-medium transition-all hover:shadow-md ${
+                className={`px-5 py-2.5 rounded-lg font-medium text-white transition-all hover:shadow-lg active:scale-95 ${
                   modalAction === "approved"
                     ? "bg-emerald-500 hover:bg-emerald-600"
                     : "bg-red-500 hover:bg-red-600"
                 }`}
               >
-                Confirm
+                {modalAction === "approved"
+                  ? "Confirm Approval"
+                  : "Confirm Rejection"}
               </button>
             </div>
           </div>
