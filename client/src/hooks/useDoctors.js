@@ -7,7 +7,6 @@ export const useDoctors = () => {
   const [loading, setLoading] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
 
-  // Load all doctors initially
   useEffect(() => {
     fetchAllDoctors();
   }, []);
@@ -16,9 +15,13 @@ export const useDoctors = () => {
     setLoading(true);
     try {
       const response = await doctorAPI.getDoctors();
-      const data = response.data.data;
-      console.log("All doctors loaded:", data);
-      setDoctors(data);
+      const data = response.data.data || [];
+      // ✅ Filter only verified doctors
+      const verifiedDoctors = data.filter(
+        (doc) => doc.verification?.status === "verified"
+      );
+      console.log("Verified doctors loaded:", verifiedDoctors);
+      setDoctors(verifiedDoctors);
     } catch (err) {
       console.error("Failed to fetch doctors:", err);
       setDoctors([]);
@@ -29,16 +32,18 @@ export const useDoctors = () => {
 
   const searchDoctors = async (location) => {
     if (!location.trim()) {
-      // If no location entered, reload all doctors
       return fetchAllDoctors();
     }
 
     try {
       setSearchLoading(true);
       const response = await doctorAPI.searchDoctors(location);
-      const data = response.data.data || response.data;
-      console.log("Search results:", data);
-      setDoctors(data || []);
+      const data = response.data.data || response.data || [];
+      // ✅ Filter verified doctors
+      const verifiedDoctors = data.filter(
+        (doc) => doc.verification?.status === "verified"
+      );
+      setDoctors(verifiedDoctors);
     } catch (err) {
       console.error("Failed to search doctors:", err);
       setDoctors([]);
