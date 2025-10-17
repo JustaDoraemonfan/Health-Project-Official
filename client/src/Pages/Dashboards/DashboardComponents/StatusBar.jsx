@@ -15,6 +15,7 @@ export default function StatusBar({
   specialization = null,
   isAvailable = "Available",
   id = "",
+  verificationStatus = "unverified",
 }) {
   const isDoctor = role === "doctor";
 
@@ -62,7 +63,28 @@ export default function StatusBar({
         </h1>
         <p className="text-[var(--color-secondary)]/50 google-sans-code-400 text-lg mb-1">
           Welcome back, {isDoctor ? "Dr." : ""}{" "}
-          <span className="text-green-400">{name}</span>
+          <span className="text-red-400">{name}</span>
+          {isDoctor && (
+            <span
+              className={`ml-2 text-xs font-semibold px-2 py-1 rounded ${
+                verificationStatus === "verified"
+                  ? "bg-green-500/20 text-green-400"
+                  : verificationStatus === "pending"
+                  ? "bg-yellow-500/20 text-yellow-400"
+                  : verificationStatus === "rejected"
+                  ? "bg-red-500/20 text-red-400"
+                  : "bg-gray-500/20 text-gray-400"
+              }`}
+            >
+              {verificationStatus === "verified"
+                ? "✓ Verified"
+                : verificationStatus === "pending"
+                ? "⏳ Pending"
+                : verificationStatus === "rejected"
+                ? "✗ Rejected"
+                : "● Unverified"}
+            </span>
+          )}
         </p>
         <p className="text-purple-400 google-sans-code-400 text-sm">
           {isDoctor

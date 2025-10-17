@@ -165,6 +165,7 @@ const DoctorDashboard = () => {
             specialization={doctor.specialization}
             isAvailable={doctor.isAvailable}
             id={doctor._id}
+            verificationStatus={verificationStatus}
           />
 
           <div className="max-w-6xl mx-auto">
