@@ -148,7 +148,7 @@ export const BookingSteps = ({
             </label>
 
             {availableTimeSlots.length > 0 ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                 {availableTimeSlots.map((timeSlot) => (
                   <label key={timeSlot} className="cursor-pointer">
                     <input
@@ -241,7 +241,8 @@ export const BookingSteps = ({
         <label className="block text-xs font-medium text-[var(--color-primary)] mb-3">
           Appointment Type
         </label>
-        <div className="grid grid-cols-2 gap-3">
+        {/* UPDATED: grid-cols-1 sm:grid-cols-2 */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {[
             {
               value: "consultation",
@@ -289,7 +290,8 @@ export const BookingSteps = ({
         <label className="block text-xs font-medium text-[var(--color-primary)] mb-3">
           Consultation Mode
         </label>
-        <div className="grid grid-cols-2 gap-3">
+        {/* UPDATED: grid-cols-1 sm:grid-cols-2 */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <label className="cursor-pointer">
             <input
               type="radio"
@@ -466,9 +468,12 @@ export const BookingSteps = ({
 
       {/* Appointment Details */}
       <div className="space-y-3">
-        <div className="flex items-center justify-between py-2 border-b border-gray-800">
-          <span className="text-gray-400 text-xs">Date & Time</span>
-          <span className="text-[var(--color-primary)] font-medium">
+        {/* UPDATED: flex-col sm:flex-row and margins */}
+        <div className="flex flex-col items-start sm:flex-row sm:items-center sm:justify-between py-2 border-b border-gray-800">
+          <span className="text-gray-400 text-xs mb-1 sm:mb-0">
+            Date & Time
+          </span>
+          <span className="text-[var(--color-primary)] font-medium text-right">
             {new Date(formData.appointmentDate).toLocaleDateString()} at{" "}
             {formData.appointmentTime
               ? formatTime12Hour(formData.appointmentTime)
@@ -476,23 +481,26 @@ export const BookingSteps = ({
           </span>
         </div>
 
-        <div className="flex items-center justify-between py-2 border-b border-gray-800">
-          <span className="text-gray-400 ">Type</span>
+        {/* UPDATED: flex-col sm:flex-row and margins */}
+        <div className="flex flex-col items-start sm:flex-row sm:items-center sm:justify-between py-2 border-b border-gray-800">
+          <span className="text-gray-400 text-xs mb-1 sm:mb-0">Type</span>
           <span className="text-[var(--color-primary)] text-xs capitalize">
             {formData.type}
           </span>
         </div>
 
-        <div className="flex items-center justify-between py-2 border-b border-gray-800">
-          <span className="text-gray-400">Mode</span>
+        {/* UPDATED: flex-col sm:flex-row and margins */}
+        <div className="flex flex-col items-start sm:flex-row sm:items-center sm:justify-between py-2 border-b border-gray-800">
+          <span className="text-gray-400 text-xs mb-1 sm:mb-0">Mode</span>
           <span className="text-green-300 capitalize text-xs">
             {formData.mode}
           </span>
         </div>
 
+        {/* UPDATED: flex-col sm:flex-row and margins */}
         {formData.location && (
-          <div className="flex items-center justify-between py-2 border-b border-gray-800">
-            <span className="text-gray-400">Location</span>
+          <div className="flex flex-col items-start sm:flex-row sm:items-center sm:justify-between py-2 border-b border-gray-800">
+            <span className="text-gray-400 text-xs mb-1 sm:mb-0">Location</span>
             <span className="text-[var(--color-primary)] text-xs">
               {formData.location}
             </span>
@@ -500,7 +508,9 @@ export const BookingSteps = ({
         )}
 
         <div className="py-2">
-          <span className="text-gray-400 block mb-2">Reason for Visit</span>
+          <span className="text-gray-400 text-xs block mb-2">
+            Reason for Visit
+          </span>
           <div className="bg-[var(--color-primary)]/5 rounded-md p-3 border border-gray-700">
             <p className="text-[var(--color-primary)] text-xs leading-relaxed">
               {formData.reasonForVisit}
@@ -510,7 +520,9 @@ export const BookingSteps = ({
 
         {formData.notes && (
           <div className="py-2">
-            <span className="text-gray-400 block mb-2">Additional Notes</span>
+            <span className="text-gray-400 text-xs block mb-2">
+              Additional Notes
+            </span>
             <div className="bg-[var(--color-primary)]/5 rounded-md p-3 border border-gray-700">
               <p className="text-[var(--color-primary)] text-xs leading-relaxed">
                 {formData.notes}
@@ -519,9 +531,12 @@ export const BookingSteps = ({
           </div>
         )}
 
+        {/* UPDATED: flex-col sm:flex-row and margins */}
         {formData.paymentReference && (
-          <div className="flex items-center justify-between py-2 border-b border-gray-800">
-            <span className="text-gray-400">Payment Reference</span>
+          <div className="flex flex-col items-start sm:flex-row sm:items-center sm:justify-between py-2 border-b border-gray-800">
+            <span className="text-gray-400 text-xs mb-1 sm:mb-0">
+              Payment Reference
+            </span>
             <span className="text-[var(--color-primary)] font-mono text-xs">
               {formData.paymentReference}
             </span>

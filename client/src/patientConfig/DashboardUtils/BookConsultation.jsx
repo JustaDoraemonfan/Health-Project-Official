@@ -34,9 +34,11 @@ const BookConsultation = () => {
 
   const handleBookNow = async (data) => {
     try {
+      console.log(user);
+
       const payload = {
         ...data,
-        patient: user._id,
+        patient: user.id,
         createdBy: "patient",
       };
       console.log("BookConsultation - Booking payload:", payload);

@@ -18,7 +18,8 @@ const SearchSection = ({
 
   return (
     <div className="mb-8">
-      <div className="flex gap-3 max-w-md mx-auto">
+      {/* UPDATED: flex-col sm:flex-row */}
+      <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
         <div className="relative flex-1">
           <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white" />
           <input

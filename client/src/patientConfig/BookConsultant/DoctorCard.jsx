@@ -24,7 +24,7 @@ const DoctorDetailsModal = ({ doctor, isOpen, onClose }) => {
   const doctorName = getDoctorName(doc);
 
   return (
-    <div className="fixed inset-0 bg-black/50 google-sans-code-400  backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/50 google-sans-code-400 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div
         className="bg-[var(--color-secondary)] rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
         style={{
@@ -35,17 +35,18 @@ const DoctorDetailsModal = ({ doctor, isOpen, onClose }) => {
       >
         {/* Header */}
         <div className="sticky top-0 bg-[var(--color-secondary)] border-b border-gray-700 p-6">
+          {/* UPDATED: Fixed layout by grouping status and close button */}
           <div className="flex items-start justify-between">
             <div className="flex items-center">
-              <div className="w-14 h-14 bg-[var(--color-primary)] rounded-xl flex items-center justify-center mr-4">
+              <div className="w-14 h-14 bg-[var(--color-primary)] rounded-xl flex items-center justify-center mr-4 flex-shrink-0">
                 <User className="w-7 h-7 text-[var(--color-secondary)]" />
               </div>
               <div>
                 <h2 className="text-xl font-light text-[var(--color-primary)] mb-1">
                   {doctorName}
                 </h2>
-                <div className="flex items-center text-purple-400 text-xs mb-2">
-                  <Mail className="w-4 h-4 mr-2" />
+                <div className="flex items-center text-purple-400 text-xs mb-2 break-all">
+                  <Mail className="w-4 h-4 mr-2 flex-shrink-0" />
                   Email: {doc.userId?.email}
                 </div>
                 <div
@@ -58,29 +59,30 @@ const DoctorDetailsModal = ({ doctor, isOpen, onClose }) => {
               </div>
             </div>
 
-            <div className="flex flex-col items-end gap-3">
+            {/* This new div groups the status and close button */}
+            <div className="flex flex-col items-end gap-3 ml-4 flex-shrink-0">
+              <button
+                onClick={onClose}
+                className="p-2 -mt-2 -mr-2 hover:bg-gray-800 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5 text-gray-400" />
+              </button>
               <div className="flex items-center gap-2">
                 <span
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium ${
-                    doc.isAvailable ? " text-green-300 0" : " text-red-300"
+                    doc.isAvailable ? " text-green-300" : " text-red-300" // Removed stray '0'
                   }`}
                 >
                   {doc.isAvailable ? "Available" : "Busy"}
                 </span>
               </div>
             </div>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
-            >
-              <X className="w-5 h-5 text-gray-400" />
-            </button>
           </div>
         </div>
 
         {/* Content */}
         <div className="p-6 space-y-6">
-          {/* Quick Stats Grid */}
+          {/* Quick Stats Grid - Already Responsive */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-gray-800/30 p-4 rounded-lg border border-gray-700">
               <div className="flex items-center gap-2 mb-2">
@@ -131,7 +133,7 @@ const DoctorDetailsModal = ({ doctor, isOpen, onClose }) => {
             </div>
           </div>
 
-          {/* Education & Contact */}
+          {/* Education & Contact - Already Responsive */}
           <div className="space-y-4">
             <div className="bg-gray-800/20 p-4 rounded-lg border border-gray-700">
               <div className="flex items-center gap-2 mb-2">
@@ -154,7 +156,7 @@ const DoctorDetailsModal = ({ doctor, isOpen, onClose }) => {
             </div>
           </div>
 
-          {/* Languages */}
+          {/* Languages - Already Responsive (flex-wrap) */}
           {doc.languages && doc.languages.length > 0 && (
             <div>
               <h3 className="text-xs text-gray-400 mb-3 uppercase tracking-wide">
@@ -173,7 +175,7 @@ const DoctorDetailsModal = ({ doctor, isOpen, onClose }) => {
             </div>
           )}
 
-          {/* Certifications */}
+          {/* Certifications - Already Responsive */}
           {doc.certifications && doc.certifications.length > 0 && (
             <div>
               <h3 className="text-xs text-gray-400 mb-3 uppercase tracking-wide">
@@ -193,7 +195,7 @@ const DoctorDetailsModal = ({ doctor, isOpen, onClose }) => {
             </div>
           )}
 
-          {/* About */}
+          {/* About - Already Responsive */}
           {doc.about && (
             <div>
               <h3 className="text-xs text-gray-400 mb-3 uppercase tracking-wide">
@@ -218,79 +220,82 @@ const DoctorCard = ({ doctor, onBookNow, onCall }) => {
 
   return (
     <>
-      <div className="bg-[var(--color-secondary)]/90 google-sans-code-400  rounded-lg shadow-lg hover:shadow-xl transition-all duration-200">
-        {/* Header */}
-        <div className="p-5">
-          <div className="flex items-start justify-between">
-            <div className="flex items-center">
-              <div className="w-11 h-11 bg-[var(--color-primary)] rounded-lg flex items-center justify-center mr-3">
-                <User className="w-5 h-5 text-[var(--color-secondary)]" />
-              </div>
-              <div>
-                <h3 className="font-light text-[var(--color-primary)] mb-1">
-                  {doctorName}
-                </h3>
-                <div className="flex items-center text-purple-400 font-light text-xs">
-                  <Mail className="w-3 h-3 mr-1" />
-                  {doc.userId?.email}
+      <div className="bg-[var(--color-secondary)]/90 google-sans-code-400 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex flex-col justify-between">
+        <div>
+          {/* Header */}
+          <div className="p-5">
+            <div className="flex items-start justify-between">
+              <div className="flex items-center">
+                <div className="w-11 h-11 bg-[var(--color-primary)] rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
+                  <User className="w-5 h-5 text-[var(--color-secondary)]" />
                 </div>
-                <div
-                  className={`text-xs mt-1 ${getSpecialtyColor(
-                    doc.specialization
-                  )}`}
+                <div>
+                  <h3 className="font-light text-[var(--color-primary)] mb-1">
+                    {doctorName}
+                  </h3>
+                  <div className="flex items-center text-purple-400 font-light text-xs break-all">
+                    <Mail className="w-3 h-3 mr-1 flex-shrink-0" />
+                    {doc.userId?.email}
+                  </div>
+                  <div
+                    className={`text-xs mt-1 ${getSpecialtyColor(
+                      doc.specialization
+                    )}`}
+                  >
+                    {doc.specialization}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col items-end gap-2 ml-2 flex-shrink-0">
+                <span
+                  className={`px-2 py-1 rounded text-xs font-medium ${
+                    doc.isAvailable ? "text-green-300" : "text-red-300 "
+                  }`}
                 >
-                  {doc.specialization}
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col items-end gap-2">
-              <span
-                className={`px-2 py-1 rounded text-xs font-medium ${
-                  doc.isAvailable ? "text-green-300" : "text-red-300 "
-                }`}
-              >
-                {doc.isAvailable ? "Available" : "Busy"}
-              </span>
-
-              <div className="flex items-center gap-1 text-xs">
-                <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                <span className="text-yellow-400 font-medium">
-                  {doc.rating}
+                  {doc.isAvailable ? "Available" : "Busy"}
                 </span>
-                <span className="text-gray-500">({doc.reviewCount})</span>
+
+                <div className="flex items-center gap-1 text-xs">
+                  <Star className="w-3 h-3 text-yellow-400 fill-current" />
+                  <span className="text-yellow-400 font-medium">
+                    {doc.rating}
+                  </span>
+                  <span className="text-gray-500">({doc.reviewCount})</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Quick Info */}
-        <div className="px-5 pb-4">
-          <div className="grid grid-cols-2 gap-3 text-xs">
-            <div className="flex items-center gap-2 text-gray-400">
-              <Clock className="w-4 h-4" />
-              <span>{doc.experience}y exp</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-400">
-              <DollarSign className="w-4 h-4" />
-              <span>${doc.consultationFee}</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-400">
-              <Calendar className="w-4 h-4" />
-              <span className="truncate">{doc.nextAvailable}</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-400">
-              <MapPin className="w-4 h-4" />
-              <span className="truncate">{doc.location}</span>
+          {/* Quick Info - Already Responsive */}
+          <div className="px-5 pb-4">
+            <div className="grid grid-cols-2 gap-3 text-xs">
+              <div className="flex items-center gap-2 text-gray-400">
+                <Clock className="w-4 h-4" />
+                <span>{doc.experience}y exp</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-400">
+                <DollarSign className="w-4 h-4" />
+                <span>${doc.consultationFee}</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-400">
+                <Calendar className="w-4 h-4" />
+                <span className="truncate">{doc.nextAvailable}</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-400">
+                <MapPin className="w-4 h-4" />
+                <span className="truncate">{doc.location}</span>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="p-5 flex gap-3">
+        {/* UPDATED: flex-col sm:flex-row */}
+        <div className="p-5 flex flex-col sm:flex-row gap-3">
           <button
             onClick={() => setIsDetailsModalOpen(true)}
-            className="px-4 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-md transition-colors duration-200 flex items-center gap-2"
+            className="px-4 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-md transition-colors duration-200 flex items-center justify-center gap-2"
           >
             <Eye className="w-4 h-4" />
             <span className="text-xs">View Details</span>
@@ -310,7 +315,7 @@ const DoctorCard = ({ doctor, onBookNow, onCall }) => {
 
           <button
             onClick={() => onCall(doc.phone)}
-            className="px-4 py-2.5 bg-green-800 hover:bg-green-700 text-green-100 rounded-md transition-colors duration-200"
+            className="px-4 py-2.5 bg-green-800 hover:bg-green-700 text-green-100 rounded-md transition-colors duration-200 flex items-center justify-center"
           >
             <Phone className="w-4 h-4" />
           </button>

@@ -146,13 +146,13 @@ const BookingModal = ({ doctor, onClose, onConfirm }) => {
   if (loading) {
     return (
       <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        <div className="bg-[var(--color-primary)] rounded-2xl shadow-2xl w-full max-w-lg border border-gray-700 p-8">
+        <div className="bg-[var(--color-primary)] rounded-2xl shadow-2xl w-full max-w-lg border border-gray-700 p-6 sm:p-8">
           <div className="text-center">
             <Loader2 className="w-8 h-8 animate-spin text-blue-500 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-[var(--color-secondary)] mb-2">
+            <h3 className="text-base sm:text-lg font-semibold text-[var(--color-secondary)] mb-2">
               Loading Available Slots
             </h3>
-            <p className="text-sm text-gray-400">
+            <p className="text-xs sm:text-sm text-gray-400">
               Please wait while we fetch the doctor's availability...
             </p>
           </div>
@@ -163,16 +163,16 @@ const BookingModal = ({ doctor, onClose, onConfirm }) => {
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        <div className="bg-[var(--color-secondary)] rounded-2xl shadow-2xl w-full max-w-lg border border-gray-700 max-h-[90vh] overflow-hidden">
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-4">
+        <div className="bg-[var(--color-secondary)] rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-lg border border-gray-700 max-h-[95vh] sm:max-h-[90vh] overflow-hidden flex flex-col">
           {/* Header */}
-          <div className="p-6 border-b border-gray-800">
-            <div className="flex justify-between items-center">
-              <div>
-                <h2 className="text-xl font-semibold text-[var(--color-primary)]">
+          <div className="p-4 sm:p-6 border-b border-gray-800 flex-shrink-0">
+            <div className="flex justify-between items-start sm:items-center gap-2">
+              <div className="flex-1">
+                <h2 className="text-lg sm:text-xl font-semibold text-[var(--color-primary)]">
                   Book Appointment
                 </h2>
-                <div className="flex items-center gap-2 mt-2">
+                <div className="flex items-center gap-1.5 sm:gap-2 mt-2">
                   <div
                     className={`w-2 h-2 rounded-full transition-colors duration-300 ${
                       currentStep >= 1 ? "bg-green-300" : "bg-gray-600"
@@ -188,14 +188,15 @@ const BookingModal = ({ doctor, onClose, onConfirm }) => {
                       currentStep >= 3 ? "bg-green-700" : "bg-gray-600"
                     }`}
                   />
-                  <span className="text-xs text-gray-200 ml-2">
+                  <span className="text-xs text-gray-200 ml-1 sm:ml-2">
                     Step {currentStep} of 3
                   </span>
                 </div>
               </div>
               <button
                 onClick={onClose}
-                className="text-gray-400 hover:text-gray-200 p-2 rounded-lg hover:bg-gray-800/50 transition-colors"
+                className="text-gray-400 hover:text-gray-200 p-1.5 sm:p-2 rounded-lg hover:bg-gray-800/50 transition-colors flex-shrink-0"
+                aria-label="Close modal"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -204,7 +205,7 @@ const BookingModal = ({ doctor, onClose, onConfirm }) => {
 
           {/* Content */}
           <div
-            className="p-6 overflow-y-auto max-h-[60vh]"
+            className="flex-1 p-4 sm:p-6 overflow-y-auto"
             style={{
               msOverflowStyle: "none",
               scrollbarWidth: "none",
@@ -216,29 +217,29 @@ const BookingModal = ({ doctor, onClose, onConfirm }) => {
               errors={errors}
               doctor={doctor}
               onChange={handleChange}
-              availability={availability} // Pass the fetched availability
+              availability={availability}
             />
           </div>
 
           {/* Footer */}
-          <div className="p-3  ">
-            <div className="flex gap-3">
+          <div className="p-3 sm:p-4 border-t border-gray-800 flex-shrink-0">
+            <div className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3">
               {currentStep > 1 && (
                 <button
                   onClick={handleBack}
-                  className="flex items-center gap-2 px-4 py-2 bg-[var(--color-secondary)] text-[var(--color-primary)] hover:text-white hover:bg-gray-800/50 rounded-lg transition-colors border border-gray-700 hover:border-gray-600"
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 bg-[var(--color-secondary)] text-[var(--color-primary)] hover:text-white hover:bg-gray-800/50 rounded-lg transition-colors border border-gray-700 hover:border-gray-600 text-sm sm:text-base"
                 >
                   <ChevronLeft className="w-4 h-4" />
                   Back
                 </button>
               )}
 
-              <div className="flex-1" />
+              <div className="hidden sm:block sm:flex-1" />
 
               {currentStep === 1 && (
                 <button
                   onClick={handleNext}
-                  className="flex items-center gap-2 px-6 py-2.5 bg-[var(--color-primary)] text-black rounded-lg font-medium transition-all duration-200"
+                  className="flex items-center justify-center gap-2 px-6 py-2.5 bg-[var(--color-primary)] text-black rounded-lg font-medium transition-all duration-200 text-sm sm:text-base w-full sm:w-auto"
                 >
                   Continue
                   <ChevronRight className="w-4 h-4" />
@@ -248,7 +249,7 @@ const BookingModal = ({ doctor, onClose, onConfirm }) => {
               {currentStep === 2 && (
                 <button
                   onClick={() => setCurrentStep(3)}
-                  className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white rounded-lg font-medium transition-all duration-200 shadow-lg shadow-blue-600/25"
+                  className="flex items-center justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white rounded-lg font-medium transition-all duration-200 shadow-lg shadow-blue-600/25 text-sm sm:text-base w-full sm:w-auto"
                 >
                   Review
                   <ChevronRight className="w-4 h-4" />
@@ -258,7 +259,7 @@ const BookingModal = ({ doctor, onClose, onConfirm }) => {
               {currentStep === 3 && (
                 <button
                   onClick={handleSubmit}
-                  className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white rounded-lg font-medium transition-all duration-200 shadow-lg shadow-green-600/25"
+                  className="flex items-center justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white rounded-lg font-medium transition-all duration-200 shadow-lg shadow-green-600/25 text-sm sm:text-base w-full sm:w-auto"
                 >
                   <Check className="w-4 h-4" />
                   Confirm Appointment
