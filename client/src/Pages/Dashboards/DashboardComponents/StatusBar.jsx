@@ -98,72 +98,183 @@ export default function StatusBar({
       {/* Status Bar - Responsive */}
       <div className="max-w-5xl mx-auto">
         <div className="bg-[var(--color-secondary)] rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-700">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 google-sans-code-400">
-            {/* Left section */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
-              {/* Doctor / Patient Status */}
-              <div className="relative">
-                {isDoctor ? (
-                  <button
-                    onClick={() => setOpen(!open)}
-                    className="flex items-center gap-2 focus:outline-none"
-                  >
-                    <div
-                      className={`w-2.5 h-2.5 rounded-full ${
-                        currentStatus?.dot
-                      } ${doctorStatus === "available" ? "animate-pulse" : ""}`}
-                    />
-                    <span
-                      className={`${
-                        currentStatus?.color || "text-gray-400"
-                      } text-xs sm:text-sm`}
+          <div className="google-sans-code-400">
+            {/* Mobile Layout - Stack everything */}
+            <div className="flex flex-col gap-3 sm:hidden">
+              {/* Top Row: Status */}
+              <div className="flex items-center justify-between">
+                <div className="relative">
+                  {isDoctor ? (
+                    <button
+                      onClick={() => setOpen(!open)}
+                      className="flex items-center gap-2 focus:outline-none"
                     >
-                      Status: {doctorStatus}
-                    </span>
-                    <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
-                  </button>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <div className="w-2.5 h-2.5 bg-green-400 rounded-full"></div>
-                    <span className="text-green-400 text-xs sm:text-sm">
-                      Health Status: Good
-                    </span>
-                  </div>
-                )}
-
-                {/* Dropdown menu */}
-                {isDoctor && open && (
-                  <div className="absolute mt-2 w-44 bg-stone-800 border border-gray-700 rounded-lg shadow-lg z-10">
-                    {statusOptions.map((status) => (
-                      <button
-                        key={status.value}
-                        onClick={async () => {
-                          setDoctorStatus(status.label);
-                          await doctorAPI.updateDoctor(id, {
-                            isAvailable: status.label,
-                          });
-                          setOpen(false);
-                        }}
-                        className={`flex items-center gap-2 px-3 py-2 w-full text-left text-sm hover:bg-stone-700 ${status.color}`}
+                      <div
+                        className={`w-2.5 h-2.5 rounded-full ${
+                          currentStatus?.dot
+                        } ${
+                          doctorStatus === "available" ? "animate-pulse" : ""
+                        }`}
+                      />
+                      <span
+                        className={`${
+                          currentStatus?.color || "text-gray-400"
+                        } text-xs`}
                       >
-                        <div className={`w-2 h-2 rounded-full ${status.dot}`} />
-                        {status.label}
-                      </button>
-                    ))}
+                        {doctorStatus}
+                      </span>
+                      <ChevronDown className="w-3 h-3 text-gray-400" />
+                    </button>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <div className="w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse"></div>
+                      <span className="text-green-400 text-xs">Good</span>
+                    </div>
+                  )}
+
+                  {/* Dropdown menu */}
+                  {isDoctor && open && (
+                    <div className="absolute mt-2 w-44 bg-stone-800 border border-gray-700 rounded-lg shadow-lg z-10">
+                      {statusOptions.map((status) => (
+                        <button
+                          key={status.value}
+                          onClick={async () => {
+                            setDoctorStatus(status.label);
+                            await doctorAPI.updateDoctor(id, {
+                              isAvailable: status.label,
+                            });
+                            setOpen(false);
+                          }}
+                          className={`flex items-center gap-2 px-3 py-2 w-full text-left text-sm hover:bg-stone-700 first:rounded-t-lg last:rounded-b-lg ${status.color}`}
+                        >
+                          <div
+                            className={`w-2 h-2 rounded-full ${status.dot}`}
+                          />
+                          {status.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Alerts on mobile - compact */}
+                {isDoctor ? (
+                  <div className="flex items-center gap-3 text-xs">
+                    <div className="flex items-center gap-1 text-amber-400">
+                      <Clock className="w-3 h-3" />
+                      <span>5</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-red-400">
+                      <AlertTriangle className="w-3 h-3" />
+                      <span>2</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-1 text-amber-400 text-xs">
+                    <AlertCircle className="w-3 h-3" />
+                    <span>2</span>
                   </div>
                 )}
               </div>
 
-              {/* Email - Truncated on mobile */}
-              <div className="flex items-center gap-2">
-                <User className="w-3 h-3 sm:w-4 sm:h-4 text-blue-400 flex-shrink-0" />
-                <span className="text-slate-50 text-xs sm:text-sm truncate max-w-[200px] sm:max-w-none">
-                  {email}
-                </span>
+              {/* Bottom Row: Email */}
+              <div className="flex items-center gap-2 pt-2 border-t border-gray-700">
+                <User className="w-3 h-3 text-blue-400 flex-shrink-0" />
+                <span className="text-slate-50 text-xs truncate">{email}</span>
               </div>
             </div>
 
-            {/* Right section - Stack on mobile */}
+            {/* Desktop/Tablet Layout - Horizontal */}
+            <div className="hidden sm:flex items-center justify-between gap-4">
+              {/* Left section */}
+              <div className="flex items-center gap-3 flex-1 min-w-0">
+                {/* Doctor / Patient Status */}
+                <div className="relative flex-shrink-0">
+                  {isDoctor ? (
+                    <button
+                      onClick={() => setOpen(!open)}
+                      className="flex items-center gap-2 focus:outline-none"
+                    >
+                      <div
+                        className={`w-2.5 h-2.5 rounded-full ${
+                          currentStatus?.dot
+                        } ${
+                          doctorStatus === "available" ? "animate-pulse" : ""
+                        }`}
+                      />
+                      <span
+                        className={`${
+                          currentStatus?.color || "text-gray-400"
+                        } text-sm whitespace-nowrap`}
+                      >
+                        Status: {doctorStatus}
+                      </span>
+                      <ChevronDown className="w-4 h-4 text-gray-400" />
+                    </button>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <div className="w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse"></div>
+                      <span className="text-green-400 text-sm whitespace-nowrap">
+                        Health Status: Good
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Dropdown menu */}
+                  {isDoctor && open && (
+                    <div className="absolute mt-2 w-44 bg-stone-800 border border-gray-700 rounded-lg shadow-lg z-10">
+                      {statusOptions.map((status) => (
+                        <button
+                          key={status.value}
+                          onClick={async () => {
+                            setDoctorStatus(status.label);
+                            await doctorAPI.updateDoctor(id, {
+                              isAvailable: status.label,
+                            });
+                            setOpen(false);
+                          }}
+                          className={`flex items-center gap-2 px-3 py-2 w-full text-left text-sm hover:bg-stone-700 first:rounded-t-lg last:rounded-b-lg ${status.color}`}
+                        >
+                          <div
+                            className={`w-2 h-2 rounded-full ${status.dot}`}
+                          />
+                          {status.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Email - Truncated */}
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                  <User className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                  <span className="text-slate-50 text-sm truncate">
+                    {email}
+                  </span>
+                </div>
+              </div>
+
+              {/* Right section - Alerts */}
+              <div className="flex items-center gap-3 text-sm flex-shrink-0">
+                {isDoctor ? (
+                  <>
+                    <div className="flex items-center gap-2 text-amber-400 whitespace-nowrap">
+                      <Clock className="w-4 h-4" />
+                      <span>5 pending</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-red-400 whitespace-nowrap">
+                      <AlertTriangle className="w-4 h-4" />
+                      <span>2 urgent</span>
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex items-center gap-2 text-amber-400 whitespace-nowrap">
+                    <AlertCircle className="w-4 h-4" />
+                    <span>2 reminders</span>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>
