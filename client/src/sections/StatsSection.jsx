@@ -7,7 +7,9 @@ export const StatsSection = () => {
     patients: 0,
     doctors: 0,
     frontline: 0,
+    admin: 0,
   });
+
   useEffect(() => {
     const fetchStats = async () => {
       try {
@@ -20,27 +22,28 @@ export const StatsSection = () => {
 
     fetchStats();
   }, []);
+
   const stats = [
     {
-      icon: <Users className="w-6 h-6 text-blue-500" />,
+      icon: <Users className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500" />,
       number: statsData.patients,
       label: "Registered Patients",
       metric: "Patients",
     },
     {
-      icon: <Users className="w-6 h-6 text-green-500" />,
+      icon: <Users className="w-5 h-5 sm:w-6 sm:h-6 text-green-500" />,
       number: statsData.doctors,
       label: "Verified Doctors",
       metric: "Doctors",
     },
     {
-      icon: <Stethoscope className="w-6 h-6 text-purple-500" />,
+      icon: <Stethoscope className="w-5 h-5 sm:w-6 sm:h-6 text-purple-500" />,
       number: statsData.frontline,
       label: "Frontline Workers",
       metric: "FWL",
     },
     {
-      icon: <Building2 className="w-6 h-6 text-red-500" />,
+      icon: <Building2 className="w-5 h-5 sm:w-6 sm:h-6 text-red-500" />,
       number: statsData.admin,
       label: "Partner Hospitals",
       metric: "Hospitals",
@@ -48,7 +51,10 @@ export const StatsSection = () => {
   ];
 
   return (
-    <section id="stats" className="py-20 bg-[var(--color-primary)]">
+    <section
+      id="stats"
+      className="w-full py-12 sm:py-16 lg:py-20 bg-[var(--color-primary)] relative"
+    >
       <div className="absolute inset-0">
         <div className="absolute inset-0 opacity-5">
           <div
@@ -63,39 +69,40 @@ export const StatsSection = () => {
           ></div>
         </div>
       </div>
-      <div className="container mx-auto px-6">
+
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl google-sans-code-400 font-bold text-[var(--color-secondary)] mb-4">
+        <div className="text-center mb-10 sm:mb-16">
+          <h2 className="text-3xl sm:text-4xl google-sans-code-400 font-bold text-[var(--color-secondary)] mb-3 sm:mb-4">
             Platform Analytics
           </h2>
-          <p className="text-gray-400 google-sans-code-400">
+          <p className="text-sm sm:text-base text-gray-400 google-sans-code-400">
             Real-time insights about our platform
           </p>
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {stats.map((stat, index) => (
             <div key={index} className="group">
-              <div className="bg-[var(--color-secondary)] border border-gray-700 rounded-xl p-6 hover:border-blue-500/50 transition-all duration-300 transform hover:-translate-y-1">
+              <div className="bg-[var(--color-secondary)] border border-gray-700 rounded-lg sm:rounded-xl p-4 sm:p-6 hover:border-blue-500/50 transition-all duration-300 transform hover:-translate-y-1">
                 {/* Metric */}
                 <div className="google-sans-code-400 text-xs uppercase tracking-wider text-gray-400 mb-2">
                   {stat.metric}
                 </div>
 
                 {/* Icon + Number */}
-                <div className="flex items-center mb-4">
-                  <div className="text-blue-400 mr-3 text-xl group-hover:scale-110 transition-transform duration-300">
+                <div className="flex items-center mb-3 sm:mb-4">
+                  <div className="text-blue-400 mr-2 sm:mr-3 group-hover:scale-110 transition-transform duration-300">
                     {stat.icon}
                   </div>
-                  <div className="text-3xl google-sans-code-400 font-bold text-white">
+                  <div className="text-2xl sm:text-3xl google-sans-code-400 font-bold text-white">
                     {stat.number}
                   </div>
                 </div>
 
                 {/* Label */}
-                <div className="text-gray-400 google-sans-code-400 text-sm">
+                <div className="text-gray-400 google-sans-code-400 text-xs sm:text-sm">
                   {stat.label}
                 </div>
               </div>
