@@ -8,17 +8,22 @@ import {
   UserPlus,
   Info,
   Menu,
+  ArrowLeft,
   X,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-const Header = () => {
+const Header = ({ isNotDashboard = false }) => {
   const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const toggleMobileMenu = () => setMobileOpen((prev) => !prev);
+
+  const handleBack = () => {
+    navigate(-1);
+  };
 
   return (
     <header className="fixed top-0 google-sans-code-400 w-full bg-[var(--color-primary)]/95 backdrop-blur-md z-50 border-b border-white/10">
@@ -39,7 +44,7 @@ const Header = () => {
         </div>
 
         {/* Desktop Nav Links */}
-        <div className="hidden md:flex space-x-6 items-center z-60 ">
+        <div className="hidden md:flex space-x-2 items-center z-60 ">
           {isAuthenticated ? (
             <>
               <button
@@ -60,6 +65,15 @@ const Header = () => {
               >
                 <LogOut className="w-4 h-4 text-red-500" />~ logout
               </button>
+              {isNotDashboard && (
+                <button
+                  onClick={handleBack}
+                  className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-red-500/20  text-[var(--color-secondary)] text-sm rounded-lg transition-all duration-200 border border-transparent hover:border-red-500/30"
+                >
+                  <ArrowLeft className="w-4 h-4 text-purple-500" />
+                  back
+                </button>
+              )}
             </>
           ) : (
             <>
@@ -123,6 +137,15 @@ const Header = () => {
                 >
                   <LogOut className="w-4 h-4 text-red-500" /> ~logout
                 </button>
+                {isNotDashboard && (
+                  <button
+                    onClick={handleBack}
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-red-100/20"
+                  >
+                    <ArrowLeft className="w-4 h-4 text-purple-500" />
+                    back
+                  </button>
+                )}
               </>
             ) : (
               <>
