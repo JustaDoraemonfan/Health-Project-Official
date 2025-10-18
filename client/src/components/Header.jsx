@@ -21,7 +21,7 @@ const Header = () => {
   const toggleMobileMenu = () => setMobileOpen((prev) => !prev);
 
   return (
-    <header className="fixed top-0 w-full bg-[var(--color-primary)]/95 backdrop-blur-md z-50 border-b border-white/10">
+    <header className="fixed top-0 google-sans-code-400 w-full bg-[var(--color-primary)]/95 backdrop-blur-md z-50 border-b border-white/10">
       <div
         className="absolute inset-0 opacity-20"
         style={{
@@ -39,29 +39,26 @@ const Header = () => {
         </div>
 
         {/* Desktop Nav Links */}
-        <div className="hidden md:flex space-x-6 items-center z-60">
+        <div className="hidden md:flex space-x-6 items-center z-60 ">
           {isAuthenticated ? (
             <>
               <button
                 onClick={() => navigate("/notification")}
                 className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 hover:text-zinc-500 text-[var(--color-secondary)] text-sm rounded-lg transition-all duration-200 border border-transparent hover:border-white/20"
               >
-                <Bell className="w-4 h-4 text-amber-500" />
-                notifications
+                <Bell className="w-4 h-4 text-amber-500" />~ notifications
               </button>
               <button
                 onClick={() => navigate("/emergency")}
                 className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 hover:text-zinc-500 text-[var(--color-secondary)] text-sm rounded-lg transition-all duration-200 border border-transparent hover:border-white/20"
               >
-                <MapPin className="w-4 h-4 text-red-500" />
-                emergency
+                <MapPin className="w-4 h-4 text-red-500" />~ emergency
               </button>
               <button
                 onClick={logout}
                 className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-red-500/20 hover:text-red-400 text-[var(--color-secondary)] text-sm rounded-lg transition-all duration-200 border border-transparent hover:border-red-500/30"
               >
-                <LogOut className="w-4 h-4 text-red-500" />
-                logout
+                <LogOut className="w-4 h-4 text-red-500" />~ logout
               </button>
             </>
           ) : (
@@ -112,19 +109,19 @@ const Header = () => {
                   onClick={() => navigate("/notification")}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-white/10"
                 >
-                  <Bell className="w-4 h-4 text-amber-500" /> notifications
+                  <Bell className="w-4 h-4 text-amber-500" /> ~notifications
                 </button>
                 <button
                   onClick={() => navigate("/emergency")}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-white/10"
                 >
-                  <MapPin className="w-4 h-4 text-red-500" /> emergency
+                  <MapPin className="w-4 h-4 text-red-500" /> ~emergency
                 </button>
                 <button
                   onClick={logout}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-red-500/20"
                 >
-                  <LogOut className="w-4 h-4 text-red-500" /> logout
+                  <LogOut className="w-4 h-4 text-red-500" /> ~logout
                 </button>
               </>
             ) : (

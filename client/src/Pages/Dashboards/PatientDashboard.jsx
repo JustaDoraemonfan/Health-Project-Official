@@ -1,3 +1,6 @@
+// ============================================
+// 1. RESPONSIVE PatientDashboard.jsx
+// ============================================
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardCard from "./DashboardComponents/dashboardCard";
@@ -23,10 +26,9 @@ const PatientDashboard = () => {
     medicalHistory: "",
   });
 
-  // Modal state management
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedSymptom, setSelectedSymptom] = useState(null);
-  const [symptoms, setSymptoms] = useState([]); // Store symptoms data
+  const [symptoms, setSymptoms] = useState([]);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -38,8 +40,6 @@ const PatientDashboard = () => {
         setUser(data.user);
         setPatient(data.patient);
         setSymptoms(symptomResp.data.data || []);
-        // If you have symptoms data from API, set it here
-        // setSymptoms(data.symptoms || []);
       } catch (err) {
         console.error("Failed to fetch stats:", err);
       }
@@ -50,24 +50,19 @@ const PatientDashboard = () => {
 
   const navigate = useNavigate();
 
-  // Enhanced sections with modal trigger
   const sections = dashboardSections(navigate, {
     onSymptomsClick: () => {
-      // Open modal for new symptom entry
       setSelectedSymptom(null);
       setModalOpen(true);
     },
     onEditSymptom: (symptom) => {
-      // Open modal for editing existing symptom
       setSelectedSymptom(symptom);
       setModalOpen(true);
     },
   });
 
-  // Handle symptom form submission
   const handleSymptomSubmit = async (formData) => {
     try {
-      // Debug: Check if token exists
       const token = localStorage.getItem("token");
       console.log("Token exists:", !!token);
       console.log("Form data being sent:", formData);
@@ -90,7 +85,7 @@ const PatientDashboard = () => {
       console.error("Error status:", error.response?.status);
     }
   };
-  // Handle modal close
+
   const handleModalClose = () => {
     setSelectedSymptom(null);
     setModalOpen(false);
@@ -99,13 +94,13 @@ const PatientDashboard = () => {
   return (
     <>
       <Header />
-      <section className="min-h-screen bg-[var(--color-primary)] py-8 pt-20">
-        <div className="container mx-auto px-6">
+      <section className="min-h-screen bg-[var(--color-primary)] py-6 sm:py-8 pt-16 sm:pt-20">
+        <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
           <StatusBar name={user.name} email={user.email} />
 
-          {/* Dashboard Grid */}
+          {/* Dashboard Grid - Responsive */}
           <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {sections.map((section) => (
                 <DashboardCard
                   key={section.id}

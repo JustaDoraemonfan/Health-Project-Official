@@ -54,14 +54,14 @@ export default function StatusBar({
   const currentStatus = statusOptions.find((s) => s.label === doctorStatus);
 
   return (
-    <section>
-      {/* Header */}
-      <div className="text-center mb-10">
-        <h1 className="text-4xl google-sans-code-400 font-bold text-[var(--color-secondary)] mb-3">
+    <section className="mb-6 sm:mb-8">
+      {/* Header - Responsive */}
+      <div className="text-center mb-6 sm:mb-10">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl google-sans-code-400 font-bold text-[var(--color-secondary)] mb-2 sm:mb-3">
           {isDoctor ? "Doctor" : "Patient"}{" "}
           <span className="text-blue-400">Dashboard</span>
         </h1>
-        <p className="text-[var(--color-secondary)]/50 google-sans-code-400 text-lg mb-1">
+        <p className="text-sm sm:text-base lg:text-lg text-[var(--color-secondary)]/50 google-sans-code-400 mb-1 px-4">
           Welcome back, {isDoctor ? "Dr." : ""}{" "}
           <span className="text-red-400">{name}</span>
           {isDoctor && (
@@ -86,7 +86,7 @@ export default function StatusBar({
             </span>
           )}
         </p>
-        <p className="text-purple-400 google-sans-code-400 text-sm">
+        <p className="text-xs sm:text-sm text-purple-400 google-sans-code-400 px-4">
           {isDoctor
             ? `${
                 specialization ? `${specialization} • ` : ""
@@ -95,12 +95,12 @@ export default function StatusBar({
         </p>
       </div>
 
-      {/* Status Bar */}
-      <div className="max-w-5xl mx-auto mb-8">
-        <div className="bg-[var(--color-secondary)] rounded-xl p-5 border border-gray-700">
-          <div className="flex items-center justify-between google-sans-code-400">
+      {/* Status Bar - Responsive */}
+      <div className="max-w-5xl mx-auto">
+        <div className="bg-[var(--color-secondary)] rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-700">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 google-sans-code-400">
             {/* Left section */}
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
               {/* Doctor / Patient Status */}
               <div className="relative">
                 {isDoctor ? (
@@ -116,16 +116,16 @@ export default function StatusBar({
                     <span
                       className={`${
                         currentStatus?.color || "text-gray-400"
-                      } text-sm`}
+                      } text-xs sm:text-sm`}
                     >
                       Status: {doctorStatus}
                     </span>
-                    <ChevronDown className="w-4 h-4 text-gray-400" />
+                    <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
                   </button>
                 ) : (
                   <div className="flex items-center gap-2">
                     <div className="w-2.5 h-2.5 bg-green-400 rounded-full"></div>
-                    <span className="text-green-400 text-sm">
+                    <span className="text-green-400 text-xs sm:text-sm">
                       Health Status: Good
                     </span>
                   </div>
@@ -154,30 +154,32 @@ export default function StatusBar({
                 )}
               </div>
 
-              {/* Email */}
+              {/* Email - Truncated on mobile */}
               <div className="flex items-center gap-2">
-                <User className="w-4 h-4 text-blue-400" />
-                <span className="text-slate-50 text-sm">{email}</span>
+                <User className="w-3 h-3 sm:w-4 sm:h-4 text-blue-400 flex-shrink-0" />
+                <span className="text-slate-50 text-xs sm:text-sm truncate max-w-[200px] sm:max-w-none">
+                  {email}
+                </span>
               </div>
             </div>
 
-            {/* Right section */}
-            <div className="flex items-center gap-3 text-sm">
+            {/* Right section - Stack on mobile */}
+            <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm w-full sm:w-auto justify-end">
               {isDoctor ? (
                 <>
-                  <div className="flex items-center gap-2 text-amber-400">
-                    <Clock className="w-4 h-4" />
+                  <div className="flex items-center gap-1.5 sm:gap-2 text-amber-400">
+                    <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
                     <span>5 pending</span>
                   </div>
-                  <div className="flex items-center gap-2 text-red-400">
-                    <AlertTriangle className="w-4 h-4" />
+                  <div className="flex items-center gap-1.5 sm:gap-2 text-red-400">
+                    <AlertTriangle className="w-3 h-3 sm:w-4 sm:h-4" />
                     <span>2 urgent</span>
                   </div>
                 </>
               ) : (
-                <div className="flex items-center gap-2 text-amber-400">
-                  <AlertCircle className="w-4 h-4" />
-                  <span>2 reminders pending</span>
+                <div className="flex items-center gap-1.5 sm:gap-2 text-amber-400">
+                  <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span>2 reminders</span>
                 </div>
               )}
             </div>
