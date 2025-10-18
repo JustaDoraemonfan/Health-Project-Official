@@ -164,25 +164,6 @@ export default function StatusBar({
             </div>
 
             {/* Right section - Stack on mobile */}
-            <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm w-full sm:w-auto justify-end">
-              {isDoctor ? (
-                <>
-                  <div className="flex items-center gap-1.5 sm:gap-2 text-amber-400">
-                    <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
-                    <span>5 pending</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 sm:gap-2 text-red-400">
-                    <AlertTriangle className="w-3 h-3 sm:w-4 sm:h-4" />
-                    <span>2 urgent</span>
-                  </div>
-                </>
-              ) : (
-                <div className="flex items-center gap-1.5 sm:gap-2 text-amber-400">
-                  <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4" />
-                  <span>2 reminders</span>
-                </div>
-              )}
-            </div>
           </div>
         </div>
       </div>
