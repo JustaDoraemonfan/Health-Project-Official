@@ -6,8 +6,6 @@ import AppointmentCard from "./AppointmentCards";
 
 const DashboardView = ({
   appointments: allAppointments,
-  userName,
-  selectedAppointment,
   loading,
   error,
   onAppointmentClick,
@@ -34,6 +32,12 @@ const DashboardView = ({
     if (statusFilter === "all") {
       return allAppointments || [];
     }
+    // Updated filtering for "cancelled" to catch variations
+    if (statusFilter === "cancelled") {
+      return (allAppointments || []).filter((appointment) =>
+        appointment.status?.toLowerCase().startsWith("cancelled")
+      );
+    }
     return (allAppointments || []).filter(
       (appointment) =>
         appointment.status?.toLowerCase() === statusFilter.toLowerCase()
@@ -51,7 +55,7 @@ const DashboardView = ({
         (apt) => apt.status?.toLowerCase() === "completed"
       ).length,
       cancelled: (allAppointments || []).filter(
-        (apt) => apt.status?.toLowerCase() === "cancelled"
+        (apt) => apt.status?.toLowerCase().startsWith("cancelled") // handles both cancelled-by-patient and -by-doctor
       ).length,
     }),
     [allAppointments]
@@ -85,30 +89,11 @@ const DashboardView = ({
   // ========================================
 
   return (
-    <div className="flex flex-col min-h-screen google-sans-code-400 bg-[var(--color-primary)] text-white relative overflow-hidden">
-      {/* ========================================
-          BACKGROUND DECORATIVE ELEMENTS
-          ======================================== */}
-      <div className="absolute inset-0 opacity-[0.015] pointer-events-none">
-        <div className="absolute top-20 right-20 w-96 h-96 bg-slate-500 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-40 left-20 w-80 h-80 bg-slate-600 rounded-full blur-3xl"></div>
-      </div>
-
-      {/* ========================================
-          TOP BAR NAVIGATION
-          ======================================== */}
-      <TopBar selectedAppointment={selectedAppointment} userName={userName} />
-
-      {/* ========================================
-          MAIN CONTENT AREA
-          ======================================== */}
-      <main className="flex-1 p-8 max-w-7xl mx-auto w-full relative z-10">
-        {/* ========================================
-            DASHBOARD HEADER & STATS
-            ======================================== */}
+    <div className=" flex flex-col min-h-screen google-sans-code-400 bg-[var(--color-primary)] text-white relative overflow-hidden">
+      <main className="flex-1 p-4 sm:p-6 md:p-8 max-w-7xl mx-auto w-full relative z-10">
         <div className="mb-10 ">
-          <div className="flex items-center justify-between mb-6">
-            <div>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-6">
+            <div className="text-center md:text-left">
               <h1 className="text-3xl font-light bg-[var(--color-secondary)] bg-clip-text text-transparent mb-2">
                 Your Appointments
               </h1>
@@ -118,7 +103,7 @@ const DashboardView = ({
             </div>
 
             {/* Quick Stats - Desktop Only */}
-            <div className="hidden lg:flex items-center gap-6">
+            <div className="hidden lg:flex items-center justify-center md:justify-end flex-wrap gap-4">
               <div className="text-center px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg">
                 <div className="text-2xl font-bold text-white">
                   {appointmentStats.total}
@@ -158,8 +143,9 @@ const DashboardView = ({
               FILTER CONTROLS SECTION
               ======================================== */}
           <div className="mb-6">
-            <div className="flex items-center gap-4 mb-4">
-              <span className="text-slate-300 font-medium">
+            {/* Desktop Filter Buttons */}
+            <div className="hidden sm:flex items-center gap-4 mb-4">
+              <span className="text-slate-600 font-medium flex-shrink-0">
                 Filter by status:
               </span>
               <div className="flex flex-wrap gap-2">
@@ -170,7 +156,7 @@ const DashboardView = ({
                     className={`group relative px-4 py-2 rounded-lg border font-medium text-sm transition-all duration-200 ${
                       statusFilter === option.value
                         ? "bg-slate-600 border-slate-500 text-white"
-                        : "bg-slate-800/50 border-slate-700 text-slate-300 hover:bg-slate-700/50 hover:border-slate-600"
+                        : "bg-[var(--color-secondary)] border-slate-700 text-slate-300 hover:bg-slate-700/50 hover:border-slate-600"
                     }`}
                   >
                     <span className="relative z-10">
@@ -195,29 +181,47 @@ const DashboardView = ({
               </div>
             </div>
 
+            {/* Mobile Filter Dropdown */}
+            <div className="block sm:hidden mb-4">
+              <label
+                htmlFor="status-filter-mobile"
+                className="block text-slate-300 font-medium mb-2"
+              >
+                Filter by status
+              </label>
+              <select
+                id="status-filter-mobile"
+                value={statusFilter}
+                onChange={(e) => handleFilterChange(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-lg border bg-[var(--color-secondary)] border-slate-700 text-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-500 appearance-none"
+              >
+                {filterOptionsWithCounts.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label} ({option.count})
+                  </option>
+                ))}
+              </select>
+            </div>
+
             {/* Active Filter Indicator */}
             {statusFilter !== "all" && (
               <div className="flex items-center gap-2 text-sm">
                 <span className="text-slate-400">Showing:</span>
-                <span className="text-white font-medium capitalize">
+                <span className="text-black font-medium capitalize">
                   {statusFilter} appointments
                 </span>
                 <button
                   onClick={handleClearFilter}
-                  className="text-slate-400 hover:text-white underline transition-colors"
+                  className="text-blue-400 hover:text-white underline transition-colors"
                 >
-                  Clear filter
+                  Clear
                 </button>
               </div>
             )}
           </div>
-
-          {/* Decorative separator line */}
         </div>
 
-        {/* ========================================
-            LOADING STATE
-            ======================================== */}
+        {/* LOADING STATE */}
         {loading && (
           <div className="flex flex-col items-center justify-center py-20">
             <div className="relative">
@@ -236,11 +240,9 @@ const DashboardView = ({
           </div>
         )}
 
-        {/* ========================================
-            ERROR STATE
-            ======================================== */}
+        {/* ERROR STATE */}
         {error && (
-          <div className="flex flex-col items-center justify-center py-20">
+          <div className="flex flex-col items-center justify-center py-20 text-center">
             <div className="w-16 h-16 bg-red-900/20 border border-red-800 rounded-full flex items-center justify-center mb-4">
               <svg
                 className="w-8 h-8 text-red-400"
@@ -263,11 +265,9 @@ const DashboardView = ({
           </div>
         )}
 
-        {/* ========================================
-            EMPTY STATE
-            ======================================== */}
+        {/* EMPTY STATE */}
         {!loading && !error && filteredAppointments.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-20">
+          <div className="flex flex-col items-center justify-center py-20 text-center">
             <div className="w-20 h-20 bg-slate-800 border-2 border-dashed border-slate-600 rounded-xl flex items-center justify-center mb-6">
               <svg
                 className="w-10 h-10 text-slate-500"
@@ -304,32 +304,30 @@ const DashboardView = ({
           </div>
         )}
 
-        {/* ========================================
-            APPOINTMENTS GRID
-            ======================================== */}
+        {/* APPOINTMENTS GRID */}
         {!loading && !error && filteredAppointments.length > 0 && (
           <>
             {/* Mobile Stats */}
-            <div className="lg:hidden grid grid-cols-4 gap-2 mb-8">
-              <div className="text-center p-2 bg-slate-800/50 border border-slate-700 rounded-lg">
+            <div className="lg:hidden grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+              <div className="text-center p-2 bg-[var(--color-secondary)] border border-slate-700 rounded-lg">
                 <div className="text-lg font-bold text-white">
                   {appointmentStats.total}
                 </div>
-                <div className="text-xs text-slate-400">Total</div>
+                <div className="text-xs text-slate-100">Total</div>
               </div>
-              <div className="text-center p-2 bg-blue-900/20 border border-blue-800 rounded-lg">
+              <div className="text-center p-2 bg-[var(--color-secondary)] border border-blue-800 rounded-lg">
                 <div className="text-lg font-bold text-blue-300">
                   {appointmentStats.scheduled}
                 </div>
                 <div className="text-xs text-blue-400">Scheduled</div>
               </div>
-              <div className="text-center p-2 bg-green-900/20 border border-green-800 rounded-lg">
+              <div className="text-center p-2 bg-[var(--color-secondary)] border border-green-800 rounded-lg">
                 <div className="text-lg font-bold text-green-300">
                   {appointmentStats.completed}
                 </div>
                 <div className="text-xs text-green-400">Done</div>
               </div>
-              <div className="text-center p-2 bg-red-900/20 border border-red-800 rounded-lg">
+              <div className="text-center p-2 bg-[var(--color-secondary)] border border-red-800 rounded-lg">
                 <div className="text-lg font-bold text-red-300">
                   {appointmentStats.cancelled}
                 </div>
@@ -339,34 +337,19 @@ const DashboardView = ({
 
             {/* Appointment Cards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredAppointments.map((appointment, index) => (
-                <div
-                  key={appointment._id}
-                  className="transform transition-all duration-300 hover:scale-[1.02]"
-                  style={{
-                    animationDelay: `${index * 100}ms`,
-                    animation: "slideInUp 0.6s ease-out forwards",
-                  }}
-                >
-                  <AppointmentCard
-                    appointment={appointment}
-                    onCardClick={onAppointmentClick}
-                  />
-                </div>
+              {filteredAppointments.map((appointment) => (
+                <AppointmentCard
+                  appointment={appointment}
+                  onCardClick={onAppointmentClick}
+                />
               ))}
             </div>
           </>
         )}
       </main>
 
-      {/* ========================================
-          FOOTER SECTION
-          ======================================== */}
       <Footer />
 
-      {/* ========================================
-          ANIMATIONS & STYLES
-          ======================================== */}
       <style jsx>{`
         @keyframes slideInUp {
           from {

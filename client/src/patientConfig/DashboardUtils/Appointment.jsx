@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import DashboardView from "../AppointmentPatient/DashboardView";
 import DetailedView from "../AppointmentPatient/DetailedView";
 import { useAppointments } from "../../hooks/useAppointments";
+import Header from "../../components/Header";
 
 const AppointmentDashboard = () => {
   const [currentView, setCurrentView] = useState("dashboard");
@@ -41,28 +42,37 @@ const AppointmentDashboard = () => {
     // You might want to show a confirmation dialog first
   };
 
-  if (currentView === "dashboard") {
-    return (
-      <DashboardView
-        appointments={appointments}
-        selectedAppointment={selectedAppointment}
-        loading={loading}
-        error={error}
-        userName={userName}
-        onAppointmentClick={showAppointmentDetails}
-      />
-    );
-  }
-
+  // The Header is now placed outside the conditional rendering, so it's always visible.
   return (
-    <DetailedView
-      selectedAppointment={selectedAppointment}
-      userName={userName}
-      onBackToDashboard={showDashboard}
-      onRescheduleAppointment={handleRescheduleAppointment}
-      onCancelAppointment={handleCancelAppointment}
-      appointmentStatus={appointments.status}
-    />
+    // This div wrapper manages the overall page layout and background.
+    <div className="bg-[var(--color-primary)] min-h-screen">
+      <Header isNotDashboard={true} />
+
+      {/* The <main> tag wraps the content that should appear below the header. */}
+      {/* pt-20 (padding-top) pushes the content down to prevent it from being hidden by the fixed Header. */}
+      {/* Adjust this value (e.g., pt-16, pt-24) to match your Header's actual height. */}
+      <main className="pt-20">
+        {currentView === "dashboard" ? (
+          <DashboardView
+            appointments={appointments}
+            selectedAppointment={selectedAppointment}
+            loading={loading}
+            error={error}
+            userName={userName}
+            onAppointmentClick={showAppointmentDetails}
+          />
+        ) : (
+          <DetailedView
+            selectedAppointment={selectedAppointment}
+            userName={userName}
+            onBackToDashboard={showDashboard}
+            onRescheduleAppointment={handleRescheduleAppointment}
+            onCancelAppointment={handleCancelAppointment}
+            appointmentStatus={selectedAppointment?.status} // Fixed: Pass status from the selected appointment
+          />
+        )}
+      </main>
+    </div>
   );
 };
 

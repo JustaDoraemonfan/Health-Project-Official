@@ -5,6 +5,7 @@ import Footer from "./Footer";
 import AppointmentDetails, { AppointmentSidebar } from "./AppointmentDetails";
 import AppointmentActions from "./AppointmentActions";
 import { BackIcon } from "../../Icons/Icons";
+
 const cancellationReasons = [
   "Schedule conflict",
   "Personal emergency",
@@ -65,19 +66,19 @@ const DetailedView = ({
 
   return (
     <div className="flex flex-col min-h-screen bg-[var(--color-primary)] google-sans-code-400 text-white">
-      <TopBar selectedAppointment={selectedAppointment} userName={userName} />
-
-      <main className="flex-1 p-6 max-w-6xl mx-auto w-full">
-        <div className="flex items-center gap-4 mb-8">
+      {/* UPDATED: Responsive padding */}
+      <main className="flex-1 p-4 sm:p-6 max-w-6xl mx-auto w-full">
+        {/* UPDATED: Stacks on mobile, row on sm+ screens */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-8">
           <button
             onClick={onBackToDashboard}
-            className="flex items-center gap-2 px-4 py-2.5 bg-slate-700 border border-slate-600 text-white font-medium rounded-lg hover:bg-slate-600 hover:border-slate-500 transition-all duration-200 text-sm"
+            className="flex self-start items-center gap-2 px-4 py-2.5 bg-slate-700 border border-slate-600 text-white font-medium rounded-lg hover:bg-slate-600 hover:border-slate-500 transition-all duration-200 text-sm"
           >
             <BackIcon />
             Back to Appointments
           </button>
 
-          <div className="h-6 w-px bg-slate-600 mx-2"></div>
+          <div className="hidden sm:block h-6 w-px bg-slate-600 mx-2"></div>
 
           <div>
             <h1 className="text-2xl font-light text-[var(--color-secondary)]">
@@ -89,6 +90,7 @@ const DetailedView = ({
           </div>
         </div>
 
+        {/* This grid is already responsive */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 bg-[var(--color-secondary)]/90 border border-slate-700 rounded-lg p-6 shadow-sm">
             <AppointmentDetails appointment={selectedAppointment} />
@@ -117,13 +119,13 @@ const DetailedView = ({
                 <div className="space-y-3">
                   <div className="flex flex-col gap-1">
                     <span className="text-slate-400 text-sm">Reason</span>
-                    <span className="text-white text-sm bg-slate-700/50 p-2 rounded">
+                    <span className="text-white text-sm bg-slate-700/50 p-2 rounded break-words">
                       {selectedAppointment.cancellationDetails
                         ?.cancellationReason || "No reason provided"}
                     </span>
                   </div>
                   {selectedAppointment.cancellationDetails?.cancelledAt && (
-                    <div className="flex justify-between items-start">
+                    <div className="flex justify-between items-start gap-2">
                       <span className="text-slate-400 text-sm">
                         Cancelled At
                       </span>
@@ -135,7 +137,7 @@ const DetailedView = ({
                     </div>
                   )}
                   {selectedAppointment.cancellationDetails?.cancelledBy && (
-                    <div className="flex justify-between items-start">
+                    <div className="flex justify-between items-start gap-2">
                       <span className="text-slate-400 text-sm">
                         Cancelled By
                       </span>
@@ -153,21 +155,31 @@ const DetailedView = ({
                   Patient Information
                 </h3>
                 <div className="space-y-3">
-                  <div className="flex flex-col justify-between items-start">
-                    <span className="text-slate-400 text-sm">Email</span>
-                    <span className="text-white text-sm text-right max-w-[140px] ">
-                      {selectedAppointment.patient?.email || "N/A"}
-                    </span>
-                    <span className="text-slate-400 text-sm">Name</span>
-                    <span className="text-white text-sm text-right max-w-[140px] truncate">
-                      {selectedAppointment.patient?.name || "N/A"}
-                    </span>
+                  {/* UPDATED: Removed max-width for better wrapping */}
+                  <div className="space-y-2">
+                    <div>
+                      <span className="text-slate-400 text-sm block">
+                        Email
+                      </span>
+                      <span className="text-white text-sm break-all">
+                        {selectedAppointment.patient?.email || "N/A"}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-slate-400 text-sm block">Name</span>
+                      <span className="text-white text-sm break-words">
+                        {selectedAppointment.patient?.name || "N/A"}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           ) : (
-            <AppointmentSidebar appointment={selectedAppointment} />
+            <AppointmentSidebar
+              appointment={selectedAppointment}
+              userName={userName}
+            />
           )}
         </div>
       </main>
@@ -214,7 +226,7 @@ const DetailedView = ({
           `}</style>
 
           <div
-            className="fixed inset-0 bg-[var(--color-secondary)]/80 backdrop-blur-sm bg-opacity-60 flex items-center justify-center z-50 transition-opacity duration-200"
+            className="fixed inset-0 bg-[var(--color-secondary)]/80 backdrop-blur-sm bg-opacity-60 flex items-center justify-center z-50 transition-opacity duration-200 p-4"
             style={{
               animation: showCancelModal
                 ? "fadeIn 0.2s ease-out"
@@ -222,7 +234,7 @@ const DetailedView = ({
             }}
           >
             <div
-              className="bg-white text-black p-6 rounded-2xl shadow-2xl w-96 max-w-md mx-4 transform transition-all duration-200"
+              className="bg-white text-black p-6 rounded-2xl shadow-2xl w-full max-w-md transform transition-all duration-200"
               style={{
                 animation: showCancelModal
                   ? "scaleIn 0.25s ease-out"
@@ -272,17 +284,17 @@ const DetailedView = ({
               </div>
 
               {/* Action Buttons */}
-              <div className="flex justify-end gap-3">
+              <div className="flex flex-col sm:flex-row justify-end gap-3">
                 <button
                   onClick={() => setShowCancelModal(false)}
-                  className="px-4 py-2 rounded-lg border border-gray-400 text-gray-700 hover:bg-gray-100 transition-colors"
+                  className="px-4 py-2 rounded-lg border border-gray-400 text-gray-700 hover:bg-gray-100 transition-colors w-full sm:w-auto"
                 >
                   Close
                 </button>
                 <button
                   onClick={handleSubmit}
                   disabled={isSubmitDisabled()}
-                  className={`px-4 py-2 rounded-lg transition-colors ${
+                  className={`px-4 py-2 rounded-lg transition-colors w-full sm:w-auto ${
                     isSubmitDisabled()
                       ? "bg-gray-400 text-gray-200 cursor-not-allowed"
                       : "bg-red-600 text-white hover:bg-red-700"

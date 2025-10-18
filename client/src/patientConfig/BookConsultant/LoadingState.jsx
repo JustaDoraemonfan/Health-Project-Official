@@ -1,6 +1,6 @@
 // components/consultation/LoadingState.jsx
 
-const LoadingState = ({ loading, searchLoading }) => {
+const LoadingState = ({ loading }) => {
   const message = loading ? "Loading doctors..." : "Searching...";
 
   return (

@@ -21,8 +21,8 @@ export const useAppointments = () => {
       const data = response.data.data || [];
       const userData = userResponse.data.data;
       console.log("Fetched appointments:", data);
-      setUserName(userData.user);
-      console.log(userData);
+      setUserName(userData.user.name);
+      console.log(userData.user.name);
 
       setAppointments(data);
       setError(null);
