@@ -53,10 +53,18 @@ const HeroSection = () => {
             <span className="text-red-400">administrators</span>.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center google-sans-code-400">
-            <button className="px-8 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg hover:cursor-pointer text-white font-semibold transition-all duration-200 transform hover:scale-105 border border-blue-500">
+            <button
+              onClick={() => {
+                document.querySelector("#register")?.scrollIntoView({
+                  behavior: "smooth",
+                });
+              }}
+              className="px-8 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg hover:cursor-pointer text-white font-semibold transition-all duration-200 transform hover:scale-105 border border-blue-500"
+            >
               <Terminal className="w-5 h-5 inline mr-2" />
               Get Started
             </button>
+
             <button className="px-8 py-3 border border-gray-600 text-gray-700 hover:cursor-pointer hover:text-gray-300 hover:border-gray-500 rounded-lg font-semibold transition-all duration-200">
               <GitBranch className="w-5 h-5 inline mr-2" />
               Learn More
