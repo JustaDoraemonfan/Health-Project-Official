@@ -220,7 +220,7 @@ const DoctorCard = ({ doctor, onBookNow, onCall }) => {
 
   return (
     <>
-      <div className="bg-[var(--color-secondary)]/90 google-sans-code-400 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex flex-col justify-between">
+      <div className="bg-[var(--color-secondary)] google-sans-code-400 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex flex-col justify-between">
         <div>
           {/* Header */}
           <div className="p-5">
@@ -234,7 +234,6 @@ const DoctorCard = ({ doctor, onBookNow, onCall }) => {
                     {doctorName}
                   </h3>
                   <div className="flex items-center text-purple-400 font-light text-xs break-all">
-                    <Mail className="w-3 h-3 mr-1 flex-shrink-0" />
                     {doc.userId?.email}
                   </div>
                   <div
@@ -248,20 +247,11 @@ const DoctorCard = ({ doctor, onBookNow, onCall }) => {
               </div>
 
               <div className="flex flex-col items-end gap-2 ml-2 flex-shrink-0">
-                <span
-                  className={`px-2 py-1 rounded text-xs font-medium ${
-                    doc.isAvailable ? "text-green-300" : "text-red-300 "
-                  }`}
-                >
-                  {doc.isAvailable ? "Available" : "Busy"}
-                </span>
-
                 <div className="flex items-center gap-1 text-xs">
-                  <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                  <span className="text-yellow-400 font-medium">
-                    {doc.rating}
+                  <Star className="w-2 h-2 text-yellow-400 fill-current" />
+                  <span className="text-yellow-100">
+                    {doc.verification?.status}
                   </span>
-                  <span className="text-gray-500">({doc.reviewCount})</span>
                 </div>
               </div>
             </div>
@@ -271,20 +261,20 @@ const DoctorCard = ({ doctor, onBookNow, onCall }) => {
           <div className="px-5 pb-4">
             <div className="grid grid-cols-2 gap-3 text-xs">
               <div className="flex items-center gap-2 text-gray-400">
-                <Clock className="w-4 h-4" />
-                <span>{doc.experience}y exp</span>
+                <Clock className="w-4 h-4 text-red-800" />
+                <span className="text-white">{doc.experience}y experience</span>
               </div>
               <div className="flex items-center gap-2 text-gray-400">
-                <DollarSign className="w-4 h-4" />
-                <span>${doc.consultationFee}</span>
+                <DollarSign className="w-4 h-4 text-green-500" />
+                <span className="text-white">${doc.consultationFee}</span>
               </div>
               <div className="flex items-center gap-2 text-gray-400">
-                <Calendar className="w-4 h-4" />
-                <span className="truncate">{doc.nextAvailable}</span>
+                <Phone className="w-4 h-4 text-green-600" />
+                <span className="truncate text-blue-300">{doc.phone}</span>
               </div>
               <div className="flex items-center gap-2 text-gray-400">
-                <MapPin className="w-4 h-4" />
-                <span className="truncate">{doc.location}</span>
+                <MapPin className="w-4 h-4 text-orange-600" />
+                <span className="truncate text-amber-300">{doc.location}</span>
               </div>
             </div>
           </div>

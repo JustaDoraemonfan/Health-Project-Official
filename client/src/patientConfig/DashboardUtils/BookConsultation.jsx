@@ -113,7 +113,9 @@ const BookConsultation = () => {
           ) : (
             <>
               <DoctorGrid
-                doctors={doctors}
+                doctors={doctors.filter(
+                  (doc) => doc.isAvailable === "Available"
+                )}
                 location={location}
                 searchPerformed={searchPerformed}
                 expandedCards={expandedCards}
