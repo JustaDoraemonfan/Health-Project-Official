@@ -5,15 +5,13 @@ import DoctorGrid from "../BookConsultant/DoctorGrid";
 import LoadingState from "../BookConsultant/LoadingState";
 import EmptyState from "../BookConsultant/EmptyStates";
 import { useDoctors } from "../../hooks/useDoctors";
-import { appointmentAPI } from "../../services/api";
-import { useAuth } from "../../context/AuthContext";
+import { appointmentAPI, authAPI } from "../../services/api";
 import Header from "../../components/Header";
 
 const BookConsultation = () => {
   const [location, setLocation] = useState("");
   const [searchPerformed, setSearchPerformed] = useState(false);
   const [expandedCards, setExpandedCards] = useState(new Set());
-  const { user } = useAuth();
 
   const { doctors, loading, searchLoading, searchDoctors, resetSearch } =
     useDoctors();
@@ -34,11 +32,10 @@ const BookConsultation = () => {
 
   const handleBookNow = async (data) => {
     try {
-      console.log(user);
-
+      const user = await authAPI.getCurrentUser();
       const payload = {
         ...data,
-        patient: user.id,
+        patient: user.data._id,
         createdBy: "patient",
       };
       console.log("BookConsultation - Booking payload:", payload);

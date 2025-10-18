@@ -146,7 +146,7 @@ const BookingModal = ({ doctor, onClose, onConfirm }) => {
   if (loading) {
     return (
       <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        <div className="bg-[var(--color-primary)] rounded-2xl shadow-2xl w-full max-w-lg border border-gray-700 p-6 sm:p-8">
+        <div className="bg-[var(--color-primary)] rounded-2xl shadow-2xl w-full max-w-lg border border-slate-400 p-6 sm:p-8">
           <div className="text-center">
             <Loader2 className="w-8 h-8 animate-spin text-blue-500 mx-auto mb-4" />
             <h3 className="text-base sm:text-lg font-semibold text-[var(--color-secondary)] mb-2">
@@ -164,7 +164,7 @@ const BookingModal = ({ doctor, onClose, onConfirm }) => {
   return (
     <>
       <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-4">
-        <div className="bg-[var(--color-secondary)] rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-lg border border-gray-700 max-h-[95vh] sm:max-h-[90vh] overflow-hidden flex flex-col">
+        <div className="bg-[var(--color-secondary)] rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-lg border border-slate-400 max-h-[95vh] sm:max-h-[90vh] overflow-hidden flex flex-col">
           {/* Header */}
           <div className="p-4 sm:p-6 border-b border-gray-800 flex-shrink-0">
             <div className="flex justify-between items-start sm:items-center gap-2">

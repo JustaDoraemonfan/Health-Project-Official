@@ -97,7 +97,7 @@ export const BookingSteps = ({
     const selectedWeekday = getWeekdayFromDate(formData.appointmentDate);
 
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 google-sans-code-400">
         {/* Date Input */}
         <div>
           <label className="block text-xs font-medium text-[var(--color-primary)] mb-2">
@@ -120,7 +120,7 @@ export const BookingSteps = ({
               }
             }}
             min={new Date().toISOString().split("T")[0]}
-            className={`w-full p-3 rounded-lg bg-[var(--color-primary)]/10 text-[var(--color-primary)] border transition-colors ${
+            className={`w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-slate-400 focus:ring-1 focus:ring-slate-400 text-white placeholder-slate-400 text-sm transition-colors disabled:opacity-50 ${
               errors.appointmentDate
                 ? "border-red-500 focus:border-red-400"
                 : "border-gray-700 focus:border-blue-500"
@@ -148,7 +148,7 @@ export const BookingSteps = ({
             </label>
 
             {availableTimeSlots.length > 0 ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                 {availableTimeSlots.map((timeSlot) => (
                   <label key={timeSlot} className="cursor-pointer">
                     <input
@@ -162,7 +162,7 @@ export const BookingSteps = ({
                     <div
                       className={`p-3 rounded-lg border text-center transition-all duration-200 hover:border-gray-600 ${
                         formData.appointmentTime === timeSlot
-                          ? "border-blue-500 bg-blue-500/10 text-blue-300"
+                          ? "border-[var(--color-secondary)] bg-[var(--color-primary)]/20 text-white"
                           : "border-gray-700 bg-[var(--color-primary)]/5 text-[var(--color-primary)]"
                       }`}
                     >
@@ -208,7 +208,7 @@ export const BookingSteps = ({
             onChange={onChange}
             rows={3}
             placeholder="Please describe your symptoms, concerns, or the purpose of this appointment..."
-            className={`w-full p-3 rounded-lg bg-[var(--color-primary)]/10 text-[var(--color-primary)] border transition-colors resize-none ${
+            className={`w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-slate-400 focus:ring-1 focus:ring-slate-400 text-white placeholder-slate-400 text-sm transition-colors disabled:opacity-50 ${
               errors.reasonForVisit
                 ? "border-red-500 focus:border-red-400"
                 : "border-gray-700 focus:border-blue-500"
@@ -273,7 +273,7 @@ export const BookingSteps = ({
               <div
                 className={`p-3 rounded-lg border transition-all duration-200 hover:border-gray-600 ${
                   formData.type === option.value
-                    ? "border-blue-500 bg-blue-500/10 text-blue-300"
+                    ? "border-green-600 bg-[var(--color-primary)]/20 text-white"
                     : "border-gray-700 bg-[var(--color-primary)]/5 text-[var(--color-primary)]"
                 }`}
               >
@@ -386,7 +386,7 @@ export const BookingSteps = ({
             value={formData.location}
             onChange={onChange}
             placeholder="e.g., Main Clinic, Branch Office..."
-            className="w-full p-3 rounded-lg bg-[var(--color-primary)]/10 text-[var(--color-primary)] border border-gray-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-colors"
+            className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-slate-400 focus:ring-1 focus:ring-slate-400 text-white placeholder-slate-400 text-sm transition-colors disabled:opacity-50"
           />
           <div className="text-xs text-gray-400 mt-1">
             Leave empty to use default clinic location
@@ -405,7 +405,7 @@ export const BookingSteps = ({
           onChange={onChange}
           rows={3}
           placeholder="Any additional information, medical history, or special requests..."
-          className="w-full p-3 rounded-lg bg-[var(--color-primary)]/10 text-[var(--color-primary)] border border-gray-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-colors resize-none"
+          className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-slate-400 focus:ring-1 focus:ring-slate-400 text-white placeholder-slate-400 text-sm transition-colors disabled:opacity-50"
         />
         <div className="text-xs text-gray-400 mt-1 text-right">
           {formData.notes.length}/500
@@ -418,14 +418,14 @@ export const BookingSteps = ({
           Payment Reference
         </label>
         <div className="relative">
-          <CreditCard className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+          <CreditCard className="absolute left-3 top-3 w-6 h-6 text-gray-400" />
           <input
             type="text"
             name="paymentReference"
             value={formData.paymentReference}
             onChange={onChange}
             placeholder="Insurance ID, payment confirmation, etc."
-            className="w-full pl-10 p-3 rounded-lg bg-[var(--color-primary)]/10 text-[var(--color-primary)] border border-gray-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-colors"
+            className="w-full pl-10 p-3 bg-slate-800 border border-slate-600 rounded-md focus:border-slate-400 focus:ring-1 focus:ring-slate-400 text-white placeholder-slate-400 text-sm transition-colors disabled:opacity-50"
           />
         </div>
         <div className="text-xs text-gray-400 mt-1">
