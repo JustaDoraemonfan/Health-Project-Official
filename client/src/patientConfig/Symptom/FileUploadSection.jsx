@@ -19,7 +19,11 @@ const FileUploadSection = ({
       </Label>
 
       <div className="space-y-4">
-        <div className="flex flex-col sm:flex-row gap-3">
+        {/*
+          CHANGE: Added 'sm:items-center' for better vertical alignment on desktop screens.
+          The flex-col sm:flex-row pattern ensures it stacks on mobile and goes side-by-side on larger screens.
+        */}
+        <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
           <Button
             type="button"
             variant="outline"
@@ -29,7 +33,7 @@ const FileUploadSection = ({
             <Upload className="h-4 w-4 mr-2" />
             Upload Files
           </Button>
-          <p className="text-xs text-gray-400 flex items-center">
+          <p className="text-xs text-gray-400">
             Supported: Images, PDFs, Documents (Max 10MB each)
           </p>
         </div>
@@ -50,7 +54,11 @@ const FileUploadSection = ({
               <Paperclip className="h-4 w-4" />
               Current Files:
             </h4>
-            <div className="grid gap-2">
+            {/*
+              CHANGE: Added 'sm:grid-cols-2'.
+              This makes the list a single column on mobile and a two-column grid on screens sm and wider.
+            */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {existingAttachments.map((att, i) => (
                 <div
                   key={att._id || att.filePath || i}
@@ -89,7 +97,10 @@ const FileUploadSection = ({
               <Upload className="h-4 w-4" />
               New Files:
             </h4>
-            <div className="grid gap-2">
+            {/*
+              CHANGE: Added 'sm:grid-cols-2' for a responsive two-column layout on larger screens.
+            */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {newFiles.map((file, i) => (
                 <div
                   key={i}

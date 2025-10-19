@@ -103,7 +103,11 @@ const UpdateSymptomModal = ({
             />
 
             {/* Action Buttons */}
-            <div className="flex flex-col-reverse sm:flex-row gap-2 pt-2 border-t">
+            {/* CHANGE: Added 'sm:justify-end'
+              - Mobile (default): 'flex-col-reverse' stacks buttons vertically (primary action on top).
+              - Desktop ('sm'): 'sm:flex-row' makes them horizontal, and 'sm:justify-end' pushes them to the right.
+            */}
+            <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-2 border-t">
               <Button
                 type="button"
                 onClick={handleClose}
@@ -115,7 +119,7 @@ const UpdateSymptomModal = ({
                 type="button"
                 onClick={handleSubmit}
                 disabled={!isFormValid || loading}
-                className="flex-1 sm:flex-none"
+                className="flex-1 sm:flex-none" // 'flex-1' makes it full-width on mobile, 'sm:flex-none' makes it content-width on desktop
               >
                 {loading ? (
                   <>
