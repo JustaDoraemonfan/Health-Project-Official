@@ -16,6 +16,7 @@ import SecureFooter from "../HealthRecords/SecureFooter";
 import { sections, prescriptionsData } from "../HealthRecords/constants";
 import { filterAppointments } from "../../utils/healthRecordUtils";
 import { getPdfUrl } from "../../utils/file";
+import Header from "../../components/Header";
 
 const HealthRecordsDashboard = () => {
   const [appointmentsData, setAppointmentsData] = useState([]);
@@ -125,25 +126,7 @@ const HealthRecordsDashboard = () => {
   return (
     <div className="min-h-screen google-sans-code-400 bg-[var(--color-primary)]">
       {/* Header */}
-      <div className="bg-[var(--color-secondary)]/90 shadow-sm border-b border-gray-200">
-        {/* Responsive padding */}
-        <div className="px-4 sm:px-8 py-6">
-          <div className="flex items-center space-x-4">
-            <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-3 rounded-xl shadow-lg">
-              <FileText className="w-8 h-8 text-white" />
-            </div>
-            <div>
-              {/* Responsive font size */}
-              <h1 className="text-2xl sm:text-3xl font-light text-[var(--color-primary)]">
-                Health Records
-              </h1>
-              <p className="text-gray-400 mt-1 text-sm sm:text-base">
-                Manage and view your medical information
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Header isNotDashboard={true} />
       <QuickStats
         appointmentsData={appointmentsData}
         prescriptionsData={prescriptionsData}

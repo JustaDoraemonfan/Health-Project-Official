@@ -29,7 +29,6 @@ export const PrescriptionCard = ({ prescription, onDownload }) => {
             <span>Issued on {formatDate(prescription.date)}</span>
           </div>
         </div>
-
         <div className="flex gap-2 ml-4">
           <button
             onClick={() => onDownload(prescription)}
