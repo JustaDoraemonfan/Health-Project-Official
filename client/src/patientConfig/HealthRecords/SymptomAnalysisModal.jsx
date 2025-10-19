@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Brain,
   X,
@@ -17,20 +18,20 @@ const SymptomAnalysisModal = ({
 }) => {
   if (!isOpen) return null;
 
+  // This function is for formatting text and doesn't need responsive changes itself.
   const formatAnalysis = (text) => {
     const sections = text.split("\n\n");
 
     return sections.map((section, index) => {
       section = section.trim();
 
-      // Handle emergency warning
       if (section.startsWith("⚠️")) {
         return (
           <div
             key={index}
             className="bg-red-900/30 border border-red-600 rounded-lg p-4 mb-4"
           >
-            <div className="flex items-start gap-2">
+            <div className="flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
               <div className="text-red-200 text-sm">
                 {section.replace("⚠️", "")}
@@ -40,7 +41,6 @@ const SymptomAnalysisModal = ({
         );
       }
 
-      // Handle bullet lists
       if (section.startsWith("*") || section.includes("\n*")) {
         const items = section.split("\n").map((line, idx) => {
           if (!line.trim().startsWith("*")) return null;
@@ -72,7 +72,6 @@ const SymptomAnalysisModal = ({
         );
       }
 
-      // Handle section headers in bold (**text**)
       const formatted = section.replace(
         /\*\*(.*?)\*\*/g,
         "<strong class='font-semibold text-gray-100'>$1</strong>"
@@ -91,7 +90,7 @@ const SymptomAnalysisModal = ({
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div
-        className="bg-[var(--color-secondary)] rounded-xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden"
+        className="bg-[var(--color-secondary)] rounded-xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col"
         style={{
           msOverflowStyle: "none",
           scrollbarWidth: "none",
@@ -104,17 +103,18 @@ const SymptomAnalysisModal = ({
         `}</style>
 
         {/* Header */}
-        <div className="sticky top-0 bg-[var(--color-primary)] border-b border-gray-600 p-6">
+        <div className="flex-shrink-0 bg-[var(--color-primary)] border-b border-gray-600 p-4 sm:p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
                 <Brain className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h2 className="text-xl font-light text-[var(--color-secondary)]">
+                {/* Responsive font sizes for header */}
+                <h2 className="text-lg sm:text-xl font-light text-[var(--color-secondary)]">
                   AI Symptom Analysis
                 </h2>
-                <p className="text-sm text-gray-400">
+                <p className="text-xs sm:text-sm text-gray-400">
                   Educational information about your symptoms
                 </p>
               </div>
@@ -130,10 +130,11 @@ const SymptomAnalysisModal = ({
 
         {/* Content */}
         <div
-          className="overflow-y-auto bg-[var(--color-primary)] max-h-[calc(90vh-120px)]"
+          className="overflow-y-auto bg-[var(--color-primary)] flex-grow"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          <div className="p-6 space-y-6">
+          {/* Responsive padding */}
+          <div className="p-4 sm:p-6 space-y-6">
             {/* Symptom Summary */}
             {symptomData && (
               <div className="bg-[var(--color-secondary)] rounded-lg p-4 border border-gray-600">
@@ -141,6 +142,7 @@ const SymptomAnalysisModal = ({
                   <Activity className="w-4 h-4" />
                   Your Symptom Summary
                 </h3>
+                {/* This grid is already responsive */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
                   <div className="flex items-center gap-2">
                     <AlertTriangle className="w-4 h-4 text-orange-400" />
@@ -160,20 +162,20 @@ const SymptomAnalysisModal = ({
                   <div className="flex items-center gap-2">
                     <Activity className="w-4 h-4 text-purple-400" />
                     <span className="text-gray-400">Category:</span>
-                    <span className="text-[var(--color-primary)] font-medium capitalize">
+                    <span className="text-gray-200 font-medium capitalize">
                       {symptomData.category}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4 text-blue-400" />
                     <span className="text-gray-400">Started:</span>
-                    <span className="text-[var(--color-primary)] font-medium">
+                    <span className="text-gray-200 font-medium">
                       {new Date(symptomData.onsetDate).toLocaleDateString()}
                     </span>
                   </div>
                 </div>
                 <div className="mt-3 pt-3 border-t border-gray-600">
-                  <p className="text-[var(--color-primary)] text-sm">
+                  <p className="text-gray-200 text-sm">
                     "{symptomData.description}"
                   </p>
                 </div>
@@ -181,7 +183,7 @@ const SymptomAnalysisModal = ({
             )}
 
             {/* Analysis Content */}
-            <div className="bg-[var(--color-secondary)]/90 rounded-lg p-6 border border-gray-600">
+            <div className="bg-[var(--color-secondary)]/90 rounded-lg p-4 sm:p-6 border border-gray-600">
               <h3 className="text-sm font-medium text-gray-300 mb-4 flex items-center gap-2">
                 <Brain className="w-4 h-4" />
                 AI Analysis & Recommendations
@@ -217,4 +219,5 @@ const SymptomAnalysisModal = ({
     </div>
   );
 };
+
 export default SymptomAnalysisModal;

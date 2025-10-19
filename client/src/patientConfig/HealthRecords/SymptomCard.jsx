@@ -78,7 +78,7 @@ const SymptomCard = ({ symptom, handleDownload }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 hover:shadow-md transition-shadow duration-200">
       <div className="flex items-start space-x-4">
         {/* Category Icon */}
         <div className="bg-purple-50 p-3 rounded-lg flex-shrink-0">
@@ -87,7 +87,7 @@ const SymptomCard = ({ symptom, handleDownload }) => {
 
         <div className="flex-1 min-w-0">
           {/* Header with description and severity */}
-          <div className="flex items-start justify-between mb-3">
+          <div className="flex flex-col sm:flex-row items-start justify-between gap-2 mb-3">
             <div className="flex-1 min-w-0">
               <h3 className="text-lg font-semibold text-gray-900 mb-1">
                 {description}
@@ -96,7 +96,7 @@ const SymptomCard = ({ symptom, handleDownload }) => {
                 {category}
               </span>
             </div>
-            <div className="flex-shrink-0 ml-2">
+            <div className="flex-shrink-0">
               <span className={getSeverityBadge(severity)}>
                 <AlertTriangle className="w-3 h-3 mr-1" />
                 {severity}
@@ -112,14 +112,14 @@ const SymptomCard = ({ symptom, handleDownload }) => {
           )}
 
           {/* Date Information */}
-          <div className="flex flex-wrap gap-4 mb-3 text-sm text-gray-600">
+          <div className="flex flex-wrap gap-x-4 gap-y-2 mb-3 text-sm text-gray-600">
             <div className="flex items-center">
-              <Calendar className="w-4 h-4 mr-1" />
+              <Calendar className="w-4 h-4 mr-1.5" />
               <span className="font-medium">Onset:</span>
               <span className="ml-1">{formatDate(onsetDate)}</span>
             </div>
             <div className="flex items-center">
-              <Clock className="w-4 h-4 mr-1" />
+              <Clock className="w-4 h-4 mr-1.5" />
               <span className="font-medium">Recorded:</span>
               <span className="ml-1">{formatDate(createdAt)}</span>
             </div>
@@ -127,9 +127,9 @@ const SymptomCard = ({ symptom, handleDownload }) => {
 
           {/* Attachments */}
           {attachments.length > 0 && (
-            <div className="mt-3">
+            <div className="mt-4">
               <div className="flex items-center mb-2">
-                <FileText className="w-4 h-4 mr-1 text-gray-500" />
+                <FileText className="w-4 h-4 mr-1.5 text-gray-500" />
                 <span className="text-sm font-medium text-gray-700">
                   Attachments ({attachments.length})
                 </span>
@@ -138,7 +138,7 @@ const SymptomCard = ({ symptom, handleDownload }) => {
                 {attachments.map((attachment, index) => (
                   <div
                     key={attachment._id || index}
-                    className="flex items-center justify-between p-2 bg-gray-50 rounded-lg border"
+                    className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-2 bg-gray-50 rounded-lg border"
                   >
                     <div className="flex items-center space-x-2 flex-1 min-w-0">
                       <FileText className="w-4 h-4 text-gray-400 flex-shrink-0" />
@@ -153,7 +153,7 @@ const SymptomCard = ({ symptom, handleDownload }) => {
                       </div>
                     </div>
                     {attachment.url && (
-                      <div className="flex space-x-2">
+                      <div className="flex space-x-2 self-end sm:self-center">
                         <button
                           onClick={() => handleDownload(attachment)}
                           className="flex items-center justify-center w-8 h-8 rounded-full bg-green-50 text-green-600 hover:bg-green-100 transition-colors"
@@ -169,23 +169,25 @@ const SymptomCard = ({ symptom, handleDownload }) => {
             </div>
           )}
 
-          {/* Updated timestamp */}
-          {updatedAt !== createdAt && (
-            <div className="mt-3 pt-3 border-t border-gray-100">
-              <p className="text-xs text-gray-500">
-                Last updated: {formatDate(updatedAt)}
-              </p>
-            </div>
-          )}
-          <div className="flex justify-end">
+          {/* Action Button */}
+          <div className="mt-4 flex justify-end">
             <button
               onClick={handleAnalyze}
-              className="flex items-center gap-2 px-4 py-2 bg-black hover:bg-zinc-800 text-white hover:cursor-pointer rounded-lg transition-colors text-sm font-medium"
+              className="flex items-center justify-center gap-2 px-4 py-2 w-full sm:w-auto bg-black hover:bg-zinc-800 text-white hover:cursor-pointer rounded-lg transition-colors text-sm font-medium"
             >
               <Brain className="w-4 h-4" />
               Analyze Symptom
             </button>
           </div>
+
+          {/* Updated timestamp */}
+          {updatedAt !== createdAt && (
+            <div className="mt-3 pt-3 border-t border-gray-100">
+              <p className="text-xs text-gray-500 text-center sm:text-left">
+                Last updated: {formatDate(updatedAt)}
+              </p>
+            </div>
+          )}
         </div>
       </div>
       <SymptomAnalysisModal

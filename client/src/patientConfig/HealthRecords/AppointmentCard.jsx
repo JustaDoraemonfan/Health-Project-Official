@@ -25,14 +25,24 @@ const AppointmentCard = ({ appointment }) => {
 
   return (
     <div className="bg-[var(--color-secondary)]/90 rounded-xl shadow-sm border google-sans-code-400 border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
-      <div className="grid grid-cols-2 gap-6 items-center">
+      {/* Main layout: 
+        - Mobile: Stacks vertically (flex-col) with a smaller gap.
+        - Medium screens (md) & up: Becomes a 2-column grid.
+      */}
+      <div className="flex flex-col gap-4 md:grid md:grid-cols-2 md:gap-6 md:items-center">
         {/* Left Side: Date & Time */}
         <div className="flex items-center space-x-4">
-          <div className="bg-blue-50 p-3 rounded-lg">
+          <div className="bg-blue-50 p-3 rounded-lg flex-shrink-0">
             <Calendar className="w-6 h-6 text-blue-600" />
           </div>
-          <div className="flex space-x-3 flex-row">
-            <div className="flex items-center space-x-3">
+
+          {/* Date/Time/Status layout:
+            - Mobile: Stacks vertically (flex-col).
+            - Small screens (sm) & up: Becomes horizontal.
+          */}
+          <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:space-x-3">
+            {/* Date & Time wrapper: Allows wrapping on very small screens */}
+            <div className="flex items-center flex-wrap gap-x-3">
               <span className="text-lg font-light text-white">
                 {formattedDate}
               </span>
@@ -45,8 +55,11 @@ const AppointmentCard = ({ appointment }) => {
           </div>
         </div>
 
-        {/* Right Side: Doctor Info */}
-        <div className="text-right">
+        {/* Right Side: Doctor Info
+          - Mobile: Text is aligned left.
+          - Medium screens (md) & up: Text is aligned right.
+        */}
+        <div className="text-left md:text-right">
           <div className="text-green-300 font-medium">
             {appointment.doctor.name}
           </div>

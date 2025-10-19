@@ -29,7 +29,6 @@ const HealthRecordsDashboard = () => {
       try {
         const appointments = await appointmentAPI.getUpcomingAppointments();
         setAppointmentsData(appointments.data.data);
-        console.log(appointmentsData);
 
         const symptoms = await symptomAPI.getSymptoms();
         setSymptom(symptoms.data.data);
@@ -51,8 +50,8 @@ const HealthRecordsDashboard = () => {
   const handleDownload = (file) => {
     const link = document.createElement("a");
     const url = getPdfUrl(file.filePath);
-    link.href = url; // comes from your DB
-    link.download = file.originalName; // use original name for download
+    link.href = url;
+    link.download = file.originalName;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -83,7 +82,8 @@ const HealthRecordsDashboard = () => {
           setAppointmentFilter={setAppointmentFilter}
         />
 
-        <div className="px-6 py-6">
+        {/* Responsive padding for content lists */}
+        <div className="px-4 sm:px-6 py-6">
           <div className="grid gap-4">
             {selectedSection === "appointments" &&
               filteredAppointments.map((appointment) => (
@@ -126,16 +126,18 @@ const HealthRecordsDashboard = () => {
     <div className="min-h-screen google-sans-code-400 bg-[var(--color-primary)]">
       {/* Header */}
       <div className="bg-[var(--color-secondary)]/90 shadow-sm border-b border-gray-200">
-        <div className="px-8 py-6">
+        {/* Responsive padding */}
+        <div className="px-4 sm:px-8 py-6">
           <div className="flex items-center space-x-4">
             <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-3 rounded-xl shadow-lg">
               <FileText className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-light text-[var(--color-primary)]">
+              {/* Responsive font size */}
+              <h1 className="text-2xl sm:text-3xl font-light text-[var(--color-primary)]">
                 Health Records
               </h1>
-              <p className="text-gray-400 mt-1">
+              <p className="text-gray-400 mt-1 text-sm sm:text-base">
                 Manage and view your medical information
               </p>
             </div>
@@ -150,7 +152,8 @@ const HealthRecordsDashboard = () => {
       />
 
       {/* Main Content */}
-      <div className="px-8 py-8">
+      {/* Responsive padding */}
+      <div className="px-4 sm:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {sections.map((section) => (
             <SectionCard
