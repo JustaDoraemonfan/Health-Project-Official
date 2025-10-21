@@ -4,6 +4,8 @@ import ReminderListPage from "./ReminderListPage";
 import ReminderLogPage from "./ReminderLogPage";
 import ReminderForm from "./ReminderForm";
 import { reminderAPI } from "../../services/api";
+import { getMissedDates } from "../../utils/DateHelpers";
+import Header from "../../components/Header";
 
 const App = () => {
   const [currentPage, setCurrentPage] = useState("reminders");
@@ -11,17 +13,58 @@ const App = () => {
   const [editingReminder, setEditingReminder] = useState(null);
   const [reminders, setReminders] = useState([]);
 
-  // ✅ Fetch reminders on mount
+  // ✅ Fetch reminders and auto-mark missed medications
   useEffect(() => {
-    const fetchReminders = async () => {
+    const fetchAndProcessReminders = async () => {
       try {
         const res = await reminderAPI.getReminders();
-        setReminders(res.data.data || []); // Adjust depending on API response shape
+        const fetchedReminders = res.data.data || [];
+
+        // Check for missed medications and update if needed
+        const updatesNeeded = [];
+
+        for (const reminder of fetchedReminders) {
+          const missedDates = getMissedDates(reminder);
+
+          if (missedDates.length > 0) {
+            // Prepare update payload
+            const updatedDailyStatus = { ...reminder.dailyStatus };
+
+            missedDates.forEach((dateKey) => {
+              if (updatedDailyStatus[dateKey] !== "taken") {
+                updatedDailyStatus[dateKey] = "missed";
+              }
+            });
+
+            updatesNeeded.push({
+              id: reminder._id,
+              dailyStatus: updatedDailyStatus,
+            });
+          }
+        }
+
+        // Update missed medications in backend
+        if (updatesNeeded.length > 0) {
+          await Promise.all(
+            updatesNeeded.map((update) =>
+              reminderAPI.updateReminder(update.id, {
+                dailyStatus: update.dailyStatus,
+              })
+            )
+          );
+
+          // Fetch again to get updated data
+          const updatedRes = await reminderAPI.getReminders();
+          setReminders(updatedRes.data.data || []);
+        } else {
+          setReminders(fetchedReminders);
+        }
       } catch (err) {
         console.error("Error fetching reminders:", err);
       }
     };
-    fetchReminders();
+
+    fetchAndProcessReminders();
   }, []);
 
   // ✅ Open form for new reminder
@@ -53,13 +96,16 @@ const App = () => {
         const res = await reminderAPI.createReminder(formData);
         setReminders((prev) => [...prev, res.data.data]);
       }
+      setIsFormOpen(false);
+      setEditingReminder(null);
     } catch (err) {
       console.error("Error saving reminder:", err);
+      alert("Failed to save reminder. Please try again.");
     }
   };
 
-  // ✅ Mark reminder as taken
-  const handleMarkAsTaken = async (id, today) => {
+  // ✅ Mark reminder as taken for today
+  const handleMarkAsTaken = async (id) => {
     try {
       const res = await reminderAPI.markAsTaken(id);
       setReminders((prev) =>
@@ -67,6 +113,7 @@ const App = () => {
       );
     } catch (err) {
       console.error("Error marking reminder as taken:", err);
+      alert("Failed to mark as taken. Please try again.");
     }
   };
 
@@ -78,13 +125,15 @@ const App = () => {
         setReminders((prev) => prev.filter((r) => r._id !== id));
       } catch (err) {
         console.error("Error deleting reminder:", err);
+        alert("Failed to delete reminder. Please try again.");
       }
     }
   };
 
   return (
     <div className="min-h-screen google-sans-code-400 bg-[#fffdf2]">
-      <div className="max-w-4xl mx-auto p-4">
+      <Header isNotDashboard={true} />
+      <div className="max-w-4xl mx-auto pt-20 p-4">
         {/* Navigation */}
         <nav className="mb-6 border-b border-black/10 pb-4">
           <div className="flex space-x-6">

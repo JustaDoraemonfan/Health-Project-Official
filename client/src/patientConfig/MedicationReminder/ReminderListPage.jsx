@@ -1,22 +1,10 @@
 import { Plus } from "lucide-react";
 import { useState, useMemo } from "react";
 import ReminderCard from "./ReminderCard";
-
-// Check if reminder is active for today
-const checkTodayOrNot = (reminder) => {
-  const timezone =
-    reminder.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const now = new Date();
-  const today = new Date(now.toLocaleString("en-US", { timeZone: timezone }));
-  today.setHours(0, 0, 0, 0);
-
-  const start = new Date(reminder.startDate);
-  const end = new Date(reminder.endDate);
-  start.setHours(0, 0, 0, 0);
-  end.setHours(0, 0, 0, 0);
-
-  return today >= start && today <= end;
-};
+import {
+  isReminderActiveToday,
+  sortRemindersByTime,
+} from "../../utils/DateHelpers";
 
 const ReminderListPage = ({
   reminders,
@@ -28,17 +16,15 @@ const ReminderListPage = ({
   const [filter, setFilter] = useState("all");
 
   const sortedFilteredReminders = useMemo(() => {
-    // Sort by first reminder time or start date
-    const sorted = [...reminders].sort((a, b) => {
-      const aDateTime = new Date(`${a.startDate}T${a.times?.[0] || "00:00"}`);
-      const bDateTime = new Date(`${b.startDate}T${b.times?.[0] || "00:00"}`);
-      return aDateTime - bDateTime;
-    });
+    // Sort reminders by time
+    const sorted = sortRemindersByTime(reminders);
 
     // Apply filter
-    return sorted.filter((reminder) =>
-      filter === "today" ? checkTodayOrNot(reminder) : true
-    );
+    if (filter === "today") {
+      return sorted.filter(isReminderActiveToday);
+    }
+
+    return sorted;
   }, [reminders, filter]);
 
   return (
@@ -74,7 +60,11 @@ const ReminderListPage = ({
       {/* Reminder List */}
       {sortedFilteredReminders.length === 0 ? (
         <div className="text-center py-8">
-          <p className="text-black mb-4">No reminders found</p>
+          <p className="text-black mb-4">
+            {filter === "today"
+              ? "No reminders scheduled for today"
+              : "No reminders found"}
+          </p>
           <button
             onClick={onCreateNew}
             className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition-colors"

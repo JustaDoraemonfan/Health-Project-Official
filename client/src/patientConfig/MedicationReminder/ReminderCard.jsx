@@ -1,43 +1,64 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Clock, Check, Edit2, Calendar, Trash2 } from "lucide-react";
-
-const formatTime = (time) => {
-  if (!time) return "—";
-  const [hoursStr, minutes] = time.split(":");
-  const hours = parseInt(hoursStr, 10);
-  const hour12 = hours % 12 || 12;
-  const ampm = hours < 12 ? "AM" : "PM";
-  return `${hour12}:${minutes} ${ampm}`;
-};
-
-const formatDate = (date) => {
-  if (!date) return "—";
-  return new Date(date).toLocaleDateString("en-US", {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-  });
-};
+import {
+  formatTime,
+  formatDate,
+  getReminderStatus,
+  isMedicationEnded,
+  getISTDateKey,
+  getYesterdayIST,
+  getTodayIST,
+  normalizeToISTMidnight,
+} from "../../utils/DateHelpers";
 
 const ReminderCard = ({ reminder, onMarkAsTaken, onEdit, onDelete }) => {
-  const today = new Date();
-  const dateKey = today.toISOString().split("T")[0];
-  const displayStatus = reminder.dailyStatus?.[dateKey] || "upcoming";
-  const yesterdayKey = new Date(Date.now() - 86400000)
-    .toISOString()
-    .split("T")[0];
+  const todayKey = getISTDateKey(getTodayIST());
+  const displayStatus = getReminderStatus(reminder);
+  const isEnded = isMedicationEnded(reminder.endDate);
 
-  // Mark yesterday’s missed meds
-  if (reminder.dailyStatus?.[yesterdayKey] === "upcoming") {
-    reminder.dailyStatus[yesterdayKey] = "missed";
-  }
+  // Enhanced missed logic - check all past dates that should be marked as missed
+  useEffect(() => {
+    if (!reminder.dailyStatus || isEnded) return;
 
-  // ✅ Check if medication period is over
-  const isMedicationEnded =
-    reminder.endDate && new Date(reminder.endDate) < today;
+    const today = getTodayIST();
+    const startDate = normalizeToISTMidnight(reminder.startDate);
+    const endDate = reminder.endDate
+      ? normalizeToISTMidnight(reminder.endDate)
+      : today;
+
+    // Only check dates before today
+    const checkUntil = new Date(
+      Math.min(endDate.getTime(), today.getTime() - 86400000)
+    ); // yesterday
+
+    // Check each day from start to yesterday
+    let currentDate = new Date(startDate);
+    let hasChanges = false;
+
+    while (currentDate <= checkUntil) {
+      const dateKey = getISTDateKey(currentDate);
+
+      // If status is "upcoming" or undefined for a past date, it should be "missed"
+      if (
+        !reminder.dailyStatus[dateKey] ||
+        reminder.dailyStatus[dateKey] === "upcoming"
+      ) {
+        // Don't mutate directly - this would need to trigger a backend update
+        console.log(
+          `Date ${dateKey} should be marked as missed for ${reminder.medicine}`
+        );
+        hasChanges = true;
+      }
+
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    // If there are changes needed, you should call the backend to update
+    // For now, we're just logging - ideally add an onMarkAsMissed callback
+  }, [reminder, isEnded]);
 
   const getStatusColor = () => {
-    if (isMedicationEnded) return "text-gray-500";
+    if (isEnded) return "text-gray-500";
     switch (displayStatus) {
       case "taken":
         return "text-green-400 bg-transparent";
@@ -53,19 +74,47 @@ const ReminderCard = ({ reminder, onMarkAsTaken, onEdit, onDelete }) => {
   };
 
   const getStatusText = () => {
-    if (isMedicationEnded) return "Medication Ended";
+    if (isEnded) return "Medication Ended";
+
+    const today = getTodayIST();
+    const startDate = normalizeToISTMidnight(reminder.startDate);
+
+    // If medication hasn't started yet
+    if (today < startDate) {
+      return `Starts ${formatDate(startDate)}`;
+    }
+
     switch (displayStatus) {
       case "taken":
-        return `Taken for ${formatDate(new Date().toISOString())}`;
+        return `✓ Taken today`;
       case "missed":
         return "Missed";
       case "today":
-        return "Today";
+        return "Due today";
       case "upcoming":
         return "Upcoming";
       default:
         return "Pending";
     }
+  };
+
+  // Determine if we should show action buttons
+  const showActionButtons = () => {
+    if (isEnded) return false;
+
+    const today = getTodayIST();
+    const startDate = normalizeToISTMidnight(reminder.startDate);
+    const endDate = reminder.endDate
+      ? normalizeToISTMidnight(reminder.endDate)
+      : null;
+
+    // Show buttons only if medication period is active
+    return today >= startDate && (!endDate || today <= endDate);
+  };
+
+  // Check if "Mark as taken" button should be shown
+  const canMarkAsTaken = () => {
+    return displayStatus !== "taken" && showActionButtons();
   };
 
   return (
@@ -75,7 +124,9 @@ const ReminderCard = ({ reminder, onMarkAsTaken, onEdit, onDelete }) => {
           <h3 className="font-semibold text-lg text-[var(--color-primary)]">
             {reminder.medicine}
           </h3>
-          <p className="text-green-400 text-sm">{reminder.dosage}</p>
+          {reminder.dosage && (
+            <p className="text-green-400 text-sm">{reminder.dosage}</p>
+          )}
 
           <div className="flex items-center mt-2 space-x-4">
             <div className="flex items-center text-white">
@@ -83,9 +134,11 @@ const ReminderCard = ({ reminder, onMarkAsTaken, onEdit, onDelete }) => {
               <span className="text-sm">
                 {reminder.displayDate
                   ? formatDate(reminder.displayDate)
-                  : `${formatDate(reminder.startDate)} - ${formatDate(
+                  : reminder.endDate
+                  ? `${formatDate(reminder.startDate)} - ${formatDate(
                       reminder.endDate
-                    )}`}
+                    )}`
+                  : `From ${formatDate(reminder.startDate)}`}
               </span>
             </div>
           </div>
@@ -109,6 +162,31 @@ const ReminderCard = ({ reminder, onMarkAsTaken, onEdit, onDelete }) => {
               Repeat: {reminder.frequency}
             </p>
           )}
+
+          {/* Show streak or missed count */}
+          {reminder.dailyStatus &&
+            Object.keys(reminder.dailyStatus).length > 0 && (
+              <div className="flex items-center gap-3 mt-2 text-xs">
+                <span className="text-green-400">
+                  ✓{" "}
+                  {
+                    Object.values(reminder.dailyStatus).filter(
+                      (s) => s === "taken"
+                    ).length
+                  }{" "}
+                  taken
+                </span>
+                <span className="text-red-400">
+                  ✗{" "}
+                  {
+                    Object.values(reminder.dailyStatus).filter(
+                      (s) => s === "missed"
+                    ).length
+                  }{" "}
+                  missed
+                </span>
+              </div>
+            )}
         </div>
 
         <div className="flex flex-col items-end space-y-2">
@@ -118,10 +196,10 @@ const ReminderCard = ({ reminder, onMarkAsTaken, onEdit, onDelete }) => {
             {getStatusText()}
           </span>
 
-          {/* ✅ Hide buttons if medication has ended */}
-          {!isMedicationEnded && (
+          {/* Action buttons */}
+          {showActionButtons() && (
             <div className="flex items-center space-x-2">
-              {displayStatus !== "taken" && (
+              {canMarkAsTaken() && (
                 <button
                   onClick={() => onMarkAsTaken(reminder._id)}
                   className="group p-2.5 text-emerald-600 hover:text-white hover:bg-emerald-600 bg-emerald-50 rounded-xl transition-all duration-200 ease-in-out hover:scale-110 shadow-sm hover:shadow-md"

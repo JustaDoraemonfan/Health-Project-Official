@@ -552,11 +552,14 @@ export const notesAPI = {
 
 // Reminder API endpoints
 export const reminderAPI = {
-  //Create a new reminder
+  // Create a new reminder
   createReminder: (data) => apiClient.post("/reminders", data),
 
   // Get all reminders for the logged-in user
   getReminders: () => apiClient.get("/reminders"),
+
+  // Get reminder statistics
+  getStats: () => apiClient.get("/reminders/stats"),
 
   // Get a specific reminder by its ID
   getReminderById: (reminderId) => apiClient.get(`/reminders/${reminderId}`),
@@ -567,8 +570,15 @@ export const reminderAPI = {
 
   // Delete a reminder by its ID
   deleteReminder: (reminderId) => apiClient.delete(`/reminders/${reminderId}`),
+
+  // Mark a reminder as taken for today
   markAsTaken: (reminderId) =>
     apiClient.put(`/reminders/${reminderId}/mark-as-taken`),
+
+  // Mark a reminder as missed for a specific date
+  // The 'date' (e.g., "2025-10-20") is sent in the request body
+  markAsMissed: (reminderId, date) =>
+    apiClient.put(`/reminders/${reminderId}/mark-as-missed`, { date }),
 };
 
 // Earthquake API endpoints
