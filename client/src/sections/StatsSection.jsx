@@ -61,9 +61,9 @@ export const StatsSection = () => {
             className="w-full h-full"
             style={{
               backgroundImage: `
-              linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px)
-            `,
+                linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px)
+              `,
               backgroundSize: "50px 50px",
             }}
           ></div>
@@ -71,7 +71,7 @@ export const StatsSection = () => {
       </div>
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
+        {/* Header (already responsive) */}
         <div className="text-center mb-10 sm:mb-16">
           <h2 className="text-3xl sm:text-4xl google-sans-code-400 font-bold text-[var(--color-secondary)] mb-3 sm:mb-4">
             Platform Analytics
@@ -81,8 +81,13 @@ export const StatsSection = () => {
           </p>
         </div>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+        {/* --- RESPONSIVE CHANGE --- */}
+        {/*
+          Changed from "grid-cols-2 lg:grid-cols-4"
+          to "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4".
+          This makes the grid 1-column on small mobile screens for better readability.
+        */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {stats.map((stat, index) => (
             <div key={index} className="group">
               <div className="bg-[var(--color-secondary)] border border-gray-700 rounded-lg sm:rounded-xl p-4 sm:p-6 hover:border-blue-500/50 transition-all duration-300 transform hover:-translate-y-1">
@@ -91,7 +96,7 @@ export const StatsSection = () => {
                   {stat.metric}
                 </div>
 
-                {/* Icon + Number */}
+                {/* Icon + Number (already responsive) */}
                 <div className="flex items-center mb-3 sm:mb-4">
                   <div className="text-blue-400 mr-2 sm:mr-3 group-hover:scale-110 transition-transform duration-300">
                     {stat.icon}
@@ -101,7 +106,7 @@ export const StatsSection = () => {
                   </div>
                 </div>
 
-                {/* Label */}
+                {/* Label (already responsive) */}
                 <div className="text-gray-400 google-sans-code-400 text-xs sm:text-sm">
                   {stat.label}
                 </div>
