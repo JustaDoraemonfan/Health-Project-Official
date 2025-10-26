@@ -5,12 +5,13 @@ import { getPriorityIndicator } from "../../utils/symptomUtils";
 const SymptomCard = ({ symptom, isExpanded, onToggle }) => {
   return (
     <div
-      className={`group relative border border-black/10 rounded-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:shadow-xl ${
+      className={`group relative border border-black/10 rounded-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 ${
         isExpanded ? "shadow-xl scale-[1.02]" : "hover:shadow-lg"
       }`}
       style={{ backgroundColor: "var(--color-secondary)" }}
       onClick={onToggle}
     >
+      {/* Priority indicator bar */}
       <div
         className="absolute top-0 left-6 w-12 h-0.5 rounded-full"
         style={{
@@ -25,35 +26,40 @@ const SymptomCard = ({ symptom, isExpanded, onToggle }) => {
       ></div>
 
       <div className="p-6 md:p-8">
-        <div className="flex items-start justify-between gap-6">
+        {/* --- KEY RESPONSIVE CHANGE --- */}
+        {/* Stacks vertically on mobile, horizontal on medium+ */}
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
+          {/* Block 1: Main Content (stretches) */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-3 mb-4">
+            {/* Priority/Category Row (now wraps) */}
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-4">
               <div className="flex items-center gap-2">
                 {getPriorityIndicator(symptom.priority)}
                 <span
-                  className="text-sm font-medium opacity-60"
+                  className="text-sm font-medium opacity-60 capitalize"
                   style={{ color: "var(--color-primary)" }}
                 >
                   {symptom.priority || "medium"} severity
                 </span>
-                {symptom.category && (
-                  <>
-                    <span className="text-sm opacity-30">•</span>
-                    <span
-                      className="text-sm font-medium opacity-60 capitalize"
-                      style={{ color: "var(--color-primary)" }}
-                    >
-                      {symptom.category}
-                    </span>
-                  </>
-                )}
               </div>
+              {symptom.category && (
+                <>
+                  <span className="text-sm opacity-30">•</span>
+                  <span
+                    className="text-sm font-medium opacity-60 capitalize"
+                    style={{ color: "var(--color-primary)" }}
+                  >
+                    {symptom.category}
+                  </span>
+                </>
+              )}
             </div>
 
+            {/* Description & Notes */}
             <div className="mb-6">
               <p
                 className={`text-base md:text-lg leading-relaxed transition-all duration-300 ${
-                  isExpanded ? "" : "line-clamp-2"
+                  isExpanded ? "prose" : "line-clamp-2" // prose class for better formatting
                 }`}
                 style={{ color: "var(--color-primary)" }}
               >
@@ -84,6 +90,7 @@ const SymptomCard = ({ symptom, isExpanded, onToggle }) => {
               )}
             </div>
 
+            {/* Expanded Action Buttons (already responsive) */}
             {isExpanded && (
               <div className="flex flex-wrap gap-3 mb-4 animate-in slide-in-from-top-2 duration-300">
                 <button
@@ -117,8 +124,11 @@ const SymptomCard = ({ symptom, isExpanded, onToggle }) => {
             )}
           </div>
 
-          <div className="flex flex-col items-end gap-2 flex-shrink-0">
-            <div className="text-right">
+          {/* Block 2: Date/Time (doesn't shrink) */}
+          {/* --- KEY RESPONSIVE CHANGE --- */}
+          {/* Left-aligned on mobile, right-aligned on medium+ */}
+          <div className="flex flex-col items-start md:items-end gap-2 flex-shrink-0">
+            <div className="text-left md:text-right">
               <p
                 className="text-lg md:text-xl font-medium"
                 style={{ color: "var(--color-primary)" }}

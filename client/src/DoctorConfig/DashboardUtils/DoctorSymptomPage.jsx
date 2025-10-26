@@ -4,6 +4,7 @@ import { symptomAPI, doctorAPI } from "../../services/api";
 import PatientsList from "../SymptomTrack/PatientsList";
 import PatientSymptoms from "../SymptomTrack/PatientSymptoms";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import Header from "../../components/Header";
 
 const DoctorSymptomPage = () => {
   const [patients, setPatients] = useState([]);
@@ -29,6 +30,7 @@ const DoctorSymptomPage = () => {
         status: patient.status || "active",
         lastVisit: patient.createdAt || new Date().toISOString(),
       }));
+      console.log(patientsWithDefaults);
 
       setPatients(patientsWithDefaults);
     } catch (error) {
@@ -95,7 +97,12 @@ const DoctorSymptomPage = () => {
   }
 
   return (
-    <PatientsList patients={patients} onPatientClick={handlePatientClick} />
+    <>
+      <Header />
+      <div className="pt-20">
+        <PatientsList patients={patients} onPatientClick={handlePatientClick} />
+      </div>
+    </>
   );
 };
 

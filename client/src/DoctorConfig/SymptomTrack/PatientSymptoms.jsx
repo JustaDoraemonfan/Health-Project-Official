@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import SymptomCard from "./SymptomCard";
 import LoadingSpinner from "../../components/LoadingSpinner";
-import { formatDate } from "../../utils/dateUtils";
+import { formatDate } from "../../utils/DateHelpers";
 
 const PatientSymptoms = ({ patient, symptoms, loading, onBack }) => {
   const [selectedSymptom, setSelectedSymptom] = useState(null);
@@ -14,8 +14,11 @@ const PatientSymptoms = ({ patient, symptoms, loading, onBack }) => {
       {/* Header with back button */}
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-b from-black/5 to-transparent"></div>
+        {/* Responsive padding */}
         <div className="relative px-4 py-8 md:px-6 md:py-12 lg:px-8">
+          {/* Constrained width and centering */}
           <div className="max-w-6xl mx-auto">
+            {/* Back button sits cleanly on its own */}
             <div className="flex items-center gap-4 mb-6">
               <button
                 onClick={onBack}
@@ -38,7 +41,10 @@ const PatientSymptoms = ({ patient, symptoms, loading, onBack }) => {
               </button>
             </div>
 
+            {/* --- KEY RESPONSIVE LAYOUT --- */}
+            {/* Stacks on mobile (flex-col), row on desktop (md:flex-row) */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              {/* Block 1: Title (responsive text) */}
               <div>
                 <h1
                   className="text-3xl md:text-4xl lg:text-5xl font-light mb-2 tracking-tight"
@@ -54,6 +60,9 @@ const PatientSymptoms = ({ patient, symptoms, loading, onBack }) => {
                   {symptoms.length !== 1 ? "s" : ""} reported
                 </p>
               </div>
+
+              {/* Block 2: Patient Info */}
+              {/* This whole block stacks under the title on mobile */}
               <div className="flex items-center gap-3">
                 <div
                   className="w-16 h-16 rounded-full flex items-center justify-center text-xl font-medium"
@@ -67,7 +76,7 @@ const PatientSymptoms = ({ patient, symptoms, loading, onBack }) => {
                     .map((n) => n[0])
                     .join("")}
                 </div>
-                <div className="text-right">
+                <div className="text-left">
                   <p
                     className="text-lg font-medium"
                     style={{ color: "var(--color-secondary)" }}
@@ -88,6 +97,7 @@ const PatientSymptoms = ({ patient, symptoms, loading, onBack }) => {
       </div>
 
       {/* Loading state for symptoms */}
+      {/* This block correctly uses the same responsive container */}
       {loading && (
         <div className="px-4 pb-12 md:px-6 lg:px-8">
           <div className="max-w-6xl mx-auto">
@@ -97,10 +107,12 @@ const PatientSymptoms = ({ patient, symptoms, loading, onBack }) => {
       )}
 
       {/* Symptoms List */}
+      {/* This block also uses the same responsive container */}
       {!loading && (
         <div className="px-4 pb-12 md:px-6 lg:px-8">
           <div className="max-w-6xl mx-auto">
             {symptoms.length === 0 ? (
+              // Empty state is centered, which is responsive
               <div className="text-center py-16">
                 <p
                   className="text-xl font-light opacity-60"
@@ -110,6 +122,8 @@ const PatientSymptoms = ({ patient, symptoms, loading, onBack }) => {
                 </p>
               </div>
             ) : (
+              // This grid just stacks the SymptomCard components vertically.
+              // This is perfectly responsive.
               <div className="grid gap-3 md:gap-4">
                 {symptoms.map((symptom) => (
                   <SymptomCard
