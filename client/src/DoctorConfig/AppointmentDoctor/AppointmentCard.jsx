@@ -84,25 +84,25 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
 
   return (
     <div
-      className="group relative bg-[var(--color-secondary)] border border-slate-700 rounded-xl p-6  transition-all duration-300 cursor-pointer transform hover:scale-[1.02]"
+      className="group relative bg-[var(--color-secondary)] border border-slate-700 rounded-xl p-4 sm:p-6 transition-all duration-300 cursor-pointer transform hover:scale-[1.02]"
       onClick={() => onCardClick && onCardClick(appointment)}
     >
       {/* Card Header */}
-      <div className="relative z-10 flex items-start justify-between mb-4">
+      <div className="relative z-10 flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4">
         <div className="flex items-center space-x-3">
           <div
-            className={`w-12 h-12 ${getUserAvatarBg(
+            className={`w-10 h-10 sm:w-12 sm:h-12 ${getUserAvatarBg(
               appointment.status
-            )} border rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-300`}
+            )} border rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-300 shrink-0`}
           >
             <User
-              className={`w-6 h-6 ${getUserIconColor(
+              className={`w-5 h-5 sm:w-6 sm:h-6 ${getUserIconColor(
                 appointment.status
               )} group-hover:scale-110 transition-all duration-300`}
             />
           </div>
           <div>
-            <h3 className="text-[var(--color-primary)] font-semibold google-sans-code-400 text-lg group-hover:text-slate-100 transition-colors">
+            <h3 className="text-[var(--color-primary)] font-semibold google-sans-code-400 text-base sm:text-lg group-hover:text-slate-100 transition-colors">
               {appointment.patient?.name ||
                 appointment.patientName ||
                 "Unknown Patient"}
@@ -127,11 +127,11 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
         </div>
 
         {/* Status Badge */}
-        <div className="flex flex-col items-end space-y-2">
+        <div className="flex flex-col items-start sm:items-end space-y-2 mt-3 sm:mt-0">
           {appointment.type && (
             <div className="flex items-center justify-between">
               <span
-                className={`px-3 py-1.5 rounded-lg text-sm google-sans-code-400  ${getTypeColor(
+                className={`px-3 py-1.5 rounded-lg text-sm google-sans-code-400 ${getTypeColor(
                   appointment.type
                 )} group-hover:scale-105 transition-transform duration-300`}
               >
@@ -144,15 +144,13 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
 
       {/* Card Body */}
       <div className="relative z-10 space-y-3">
-        {/* Appointment Type */}
-
         {/* Contact Information */}
         <div className="flex items-center justify-between text-sm">
           <div className="flex items-center text-white ">
             <MailIcon
               className={`w-4 h-4 mr-2 ${getPhoneIconColor()} group-hover:scale-110 transition-all duration-300`}
             />
-            <span className="google-sans-code-400 text-white/70 font-light ">
+            <span className="google-sans-code-400 text-white/70 font-light truncate">
               {appointment.patient?.email ||
                 appointment.phone ||
                 "No contact info"}
@@ -170,7 +168,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
               Dr. {appointment.doctor.name}
             </span>
             {appointment.doctorProfile?.specialization && (
-              <span className="ml-2 text-orange-400">
+              <span className="ml-2 text-orange-400 truncate">
                 • {appointment.doctorProfile.specialization}
               </span>
             )}
@@ -186,15 +184,14 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
           </div>
         )}
 
-        {/* Appointment Date (if different from time) */}
-
+        {/* Appointment Date & Status */}
         <span
-          className={` rounded-full text-xs google-sans-code-400 flex justify-between p-2  ${getStatusColor(
+          className={`rounded-full text-xs google-sans-code-400 flex flex-col sm:flex-row sm:justify-between sm:items-center p-2 ${getStatusColor(
             appointment.status
           )} group-hover:scale-105 transition-transform duration-300`}
         >
           {appointment.appointmentDate && (
-            <div className="text-xs text-slate-500 google-sans-code-400 ">
+            <div className="text-xs text-slate-500 google-sans-code-400 mb-1 sm:mb-0">
               {new Date(appointment.appointmentDate).toLocaleDateString(
                 "en-US",
                 {
@@ -206,7 +203,9 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
               )}
             </div>
           )}
-          <span>{appointment.status || "pending"}</span>
+          <span className="self-end sm:self-auto">
+            {appointment.status || "pending"}
+          </span>
         </span>
       </div>
 

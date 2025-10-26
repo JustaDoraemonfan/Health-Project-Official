@@ -5,6 +5,7 @@ import SearchFilter from "../../DoctorConfig/AppointmentDoctor/SearchFilter";
 import AppointmentCard from "../../DoctorConfig/AppointmentDoctor/AppointmentCard";
 import StatsCard from "../../DoctorConfig/AppointmentDoctor/StatsCard";
 import { useAppointments } from "../..//hooks/useAppointments";
+import OfficialHeader from "../../components/Header";
 
 const DoctorAppointment = () => {
   const {
@@ -82,109 +83,112 @@ const DoctorAppointment = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--color-primary)] text-white google-sans-code-400 relative overflow-hidden">
-      <Header
-        currentDate={currentDate}
-        totalAppointments={appointments.length}
-        confirmedCount={confirmedCount}
-        pendingCount={pendingCount}
-      />
+    <>
+      <OfficialHeader isNotDashboard={true} />
+      <div className="min-h-screen bg-[var(--color-primary)] text-white google-sans-code-400 relative overflow-hidden pt-20">
+        <Header
+          currentDate={currentDate}
+          totalAppointments={appointments.length}
+          confirmedCount={confirmedCount}
+          pendingCount={pendingCount}
+        />
 
-      <SearchFilter
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        filterStatus={filterStatus}
-        setFilterStatus={setFilterStatus}
-      />
+        <SearchFilter
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          filterStatus={filterStatus}
+          setFilterStatus={setFilterStatus}
+        />
 
-      <main className="p-6 max-w-7xl mx-auto w-full relative z-10">
-        {/* Stats Section - Updated to match the clean design */}
-        <div className="grid grid-cols-3 gap-6 mb-8">
-          <StatsCard
-            title="Total"
-            value={appointments.length}
-            color="text-black"
-          />
-          <StatsCard
-            title="Confirmed"
-            value={confirmedCount}
-            color="text-emerald-400"
-          />
-          <StatsCard
-            title="Pending"
-            value={pendingCount}
-            color="text-amber-400"
-          />
-        </div>
-
-        {/* Appointments Section */}
-        <div className="bg-transparent rounded-xl shadow-2xl">
-          <div className="px-6 py-4 ">
-            <h2 className="text-xl font-bold text-[var(--color-secondary)] google-sans-code-400">
-              Today's Appointments
-            </h2>
-            <p className="text-sm text-zinc-400 google-sans-code-400">
-              {filteredAppointments.length} of {appointments.length}{" "}
-              appointments
-            </p>
+        <main className="p-6 max-w-7xl mx-auto w-full relative z-10">
+          {/* Stats Section - Updated to match the clean design */}
+          <div className="grid grid-cols-3 gap-6 mb-8">
+            <StatsCard
+              title="Total"
+              value={appointments.length}
+              color="text-black"
+            />
+            <StatsCard
+              title="Confirmed"
+              value={confirmedCount}
+              color="text-emerald-400"
+            />
+            <StatsCard
+              title="Pending"
+              value={pendingCount}
+              color="text-amber-400"
+            />
           </div>
 
-          <div className="p-6">
-            {filteredAppointments.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {/* Fixed: use filteredAppointments instead of appointments */}
-                {filteredAppointments.map((appointment, index) => (
-                  <div
-                    key={appointment._id || appointment.id || index} // Better key handling
-                    className="transform transition-all duration-300"
-                    style={{
-                      animationDelay: `${index * 100}ms`,
-                      animation: "slideInUp 0.6s ease-out forwards",
-                    }}
-                  >
-                    <AppointmentCard
-                      appointment={appointment}
-                      onCardClick={(apt) =>
-                        console.log("Clicked appointment:", apt)
-                      }
-                    />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center py-20">
-                <div className="w-20 h-20 bg-zinc-800 rounded-xl flex items-center justify-center mb-6">
-                  <Calendar className="w-10 h-10 text-zinc-500" />
+          {/* Appointments Section */}
+          <div className="bg-transparent rounded-xl shadow-2xl">
+            <div className="px-6 py-4 ">
+              <h2 className="text-xl font-bold text-[var(--color-secondary)] google-sans-code-400">
+                Today's Appointments
+              </h2>
+              <p className="text-sm text-zinc-400 google-sans-code-400">
+                {filteredAppointments.length} of {appointments.length}{" "}
+                appointments
+              </p>
+            </div>
+
+            <div className="p-6">
+              {filteredAppointments.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                  {/* Fixed: use filteredAppointments instead of appointments */}
+                  {filteredAppointments.map((appointment, index) => (
+                    <div
+                      key={appointment._id || appointment.id || index} // Better key handling
+                      className="transform transition-all duration-300"
+                      style={{
+                        animationDelay: `${index * 100}ms`,
+                        animation: "slideInUp 0.6s ease-out forwards",
+                      }}
+                    >
+                      <AppointmentCard
+                        appointment={appointment}
+                        onCardClick={(apt) =>
+                          console.log("Clicked appointment:", apt)
+                        }
+                      />
+                    </div>
+                  ))}
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-2">
-                  {filterStatus === "all"
-                    ? "No appointments yet"
-                    : `No ${filterStatus} appointments`}
-                </h3>
-                <p className="text-zinc-400 text-center max-w-md google-sans-code-400">
-                  {filterStatus === "all"
-                    ? "When appointments are scheduled, they'll appear here for easy management."
-                    : `No ${filterStatus} appointments found. Try adjusting your filters.`}
-                </p>
-              </div>
-            )}
+              ) : (
+                <div className="flex flex-col items-center justify-center py-20">
+                  <div className="w-20 h-20 bg-zinc-800 rounded-xl flex items-center justify-center mb-6">
+                    <Calendar className="w-10 h-10 text-zinc-500" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-2">
+                    {filterStatus === "all"
+                      ? "No appointments yet"
+                      : `No ${filterStatus} appointments`}
+                  </h3>
+                  <p className="text-zinc-400 text-center max-w-md google-sans-code-400">
+                    {filterStatus === "all"
+                      ? "When appointments are scheduled, they'll appear here for easy management."
+                      : `No ${filterStatus} appointments found. Try adjusting your filters.`}
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
 
-      <style jsx>{`
-        @keyframes slideInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
+        <style jsx>{`
+          @keyframes slideInUp {
+            from {
+              opacity: 0;
+              transform: translateY(30px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
           }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
-    </div>
+        `}</style>
+      </div>
+    </>
   );
 };
 

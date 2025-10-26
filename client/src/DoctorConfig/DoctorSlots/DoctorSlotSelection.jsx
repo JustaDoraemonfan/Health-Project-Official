@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { doctorAPI } from "../../services/api";
 import Toast from "../../components/Toast";
 import { useNavigate } from "react-router-dom";
+import Header from "../../components/Header";
 
 const DoctorSlotSelection = ({
   onSave = (data) => console.log("Formatted availability:", data),
@@ -160,35 +161,39 @@ const DoctorSlotSelection = ({
   };
 
   return (
-    <div
-      className="min-h-screen p-6"
-      style={{
-        backgroundColor: "var(--color-primary)",
-        color: "var(--color-secondary)",
-        fontFamily: '"Google Sans Code", monospace',
-      }}
-    >
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-normal mb-2">Set Your Availability</h1>
-          <p className="text-sm opacity-70">
-            Click on a day to set your available time slots
-          </p>
-        </div>
+    <>
+      <Header isNotDashboard={true} />
+      <div
+        className="min-h-screen p-4 sm:p-6 py-20"
+        style={{
+          backgroundColor: "var(--color-primary)",
+          color: "var(--color-secondary)",
+          fontFamily: '"Google Sans Code", monospace',
+        }}
+      >
+        <div className="max-w-4xl mx-auto">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-2xl sm:text-3xl font-normal mb-2">
+              Set Your Availability
+            </h1>
+            <p className="text-xs sm:text-sm opacity-70">
+              Click on a day to set your available time slots
+            </p>
+          </div>
 
-        {/* Days of Week Grid */}
-        <div className="grid grid-cols-7 gap-3 mb-8">
-          {days.map((day) => {
-            const slotCount = getDaySlotCount(day.key);
-            const isActive = activeDay === day.key;
+          {/* Days of Week Grid */}
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2 sm:gap-3 mb-8">
+            {days.map((day) => {
+              const slotCount = getDaySlotCount(day.key);
+              const isActive = activeDay === day.key;
 
-            return (
-              <button
-                key={day.key}
-                onClick={() => handleDayClick(day.key)}
-                className={`
-                  p-4 rounded-lg border-2 transition-all duration-200 text-center
+              return (
+                <button
+                  key={day.key}
+                  onClick={() => handleDayClick(day.key)}
+                  className={`
+                  p-3 sm:p-4 rounded-lg border-2 transition-all duration-200 text-center
                   ${
                     isActive
                       ? "border-gray-800 bg-gray-800 text-white shadow-lg"
@@ -197,44 +202,46 @@ const DoctorSlotSelection = ({
                       : "border-gray-200 bg-white hover:border-gray-400"
                   }
                 `}
-              >
-                <div className="text-lg font-medium mb-1">{day.short}</div>
-                <div
-                  className={`text-xs ${
-                    isActive ? "text-gray-300" : "text-gray-500"
-                  }`}
                 >
-                  {day.full}
-                </div>
-                {slotCount > 0 && (
+                  <div className="text-base sm:text-lg font-medium mb-1">
+                    {day.short}
+                  </div>
                   <div
-                    className={`text-xs mt-2 px-2 py-1 rounded-full ${
-                      isActive
-                        ? "bg-gray-700 text-gray-200"
-                        : "bg-gray-100 text-gray-600"
+                    className={`text-xs ${
+                      isActive ? "text-gray-300" : "text-gray-500"
                     }`}
                   >
-                    {slotCount} slot{slotCount !== 1 ? "s" : ""}
+                    {day.full}
                   </div>
-                )}
-              </button>
-            );
-          })}
-        </div>
+                  {slotCount > 0 && (
+                    <div
+                      className={`text-xs mt-2 px-2 py-1 rounded-full ${
+                        isActive
+                          ? "bg-gray-700 text-gray-200"
+                          : "bg-gray-100 text-gray-600"
+                      }`}
+                    >
+                      {slotCount} slot{slotCount !== 1 ? "s" : ""}
+                    </div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
 
-        {/* Time Slots Panel */}
-        {activeDay && (
-          <div className="mb-8 p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
-            <h2 className="text-xl font-medium mb-4">
-              {days.find((d) => d.key === activeDay)?.full} Time Slots
-            </h2>
+          {/* Time Slots Panel */}
+          {activeDay && (
+            <div className="mb-8 p-4 sm:p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+              <h2 className="text-lg sm:text-xl font-medium mb-4">
+                {days.find((d) => d.key === activeDay)?.full} Time Slots
+              </h2>
 
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
-              {timeSlots.map((slot) => (
-                <button
-                  key={`${activeDay}-${slot.value}`}
-                  onClick={() => toggleSlot(activeDay, slot.value)}
-                  className={`
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
+                {timeSlots.map((slot) => (
+                  <button
+                    key={`${activeDay}-${slot.value}`}
+                    onClick={() => toggleSlot(activeDay, slot.value)}
+                    className={`
                     py-3 px-4 text-sm border transition-all duration-200 rounded
                     ${
                       isSlotSelected(activeDay, slot.value)
@@ -242,76 +249,76 @@ const DoctorSlotSelection = ({
                         : "bg-gray-50 border-gray-200 hover:border-gray-400 hover:bg-gray-100"
                     }
                   `}
-                >
-                  {slot.display}
-                </button>
-              ))}
-            </div>
+                  >
+                    {slot.display}
+                  </button>
+                ))}
+              </div>
 
-            <div className="mt-4 pt-4 border-t border-gray-200">
-              <div className="flex items-center justify-between">
-                <div className="text-sm text-gray-600">
-                  {getDaySlotCount(activeDay)} slots selected for{" "}
-                  {days.find((d) => d.key === activeDay)?.full}
+              <div className="mt-4 pt-4 border-t border-gray-200">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0">
+                  <div className="text-xs sm:text-sm text-gray-600">
+                    {getDaySlotCount(activeDay)} slots selected for{" "}
+                    {days.find((d) => d.key === activeDay)?.full}
+                  </div>
+                  <button
+                    onClick={() => setActiveDay(null)}
+                    className="text-xs sm:text-sm text-gray-500 hover:text-gray-700 transition-colors self-end sm:self-auto"
+                  >
+                    Close
+                  </button>
                 </div>
-                <button
-                  onClick={() => setActiveDay(null)}
-                  className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
-                >
-                  Close
-                </button>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Summary and Save */}
-        <div className="border-t border-gray-300 pt-6">
-          <div className="flex items-center justify-between">
-            <div className="text-sm opacity-70">
-              {getTotalSelectedSlots()} total slots selected across the week
-            </div>
+          {/* Summary and Save */}
+          <div className="border-t border-gray-300 pt-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0">
+              <div className="text-xs sm:text-sm opacity-70">
+                {getTotalSelectedSlots()} total slots selected across the week
+              </div>
 
-            <button
-              onClick={handleSave}
-              className="
-                px-6 py-3 bg-gray-800 text-white text-sm font-medium 
+              <button
+                onClick={handleSave}
+                className="
+                w-full sm:w-auto px-6 py-3 bg-gray-800 text-white text-sm font-medium 
                 rounded hover:bg-gray-700 transition-colors duration-200
                 disabled:opacity-50 disabled:cursor-not-allowed
               "
-              disabled={getTotalSelectedSlots() === 0}
-            >
-              Save Availability
-            </button>
+                disabled={getTotalSelectedSlots() === 0}
+              >
+                Save Availability
+              </button>
+            </div>
           </div>
-        </div>
 
-        {/* Instructions */}
-        {!activeDay && (
-          <div className="mt-6 p-4 bg-gray-50 rounded text-xs opacity-70">
-            <p className="mb-2">
-              <strong>How to set your availability:</strong>
-            </p>
-            <ol className="space-y-1 list-decimal list-inside">
-              <li>Click on a day of the week to open the time slot panel</li>
-              <li>Select your available time slots for that day</li>
-              <li>
-                Consecutive slots will be automatically grouped into ranges
-              </li>
-              <li>Click "Save Availability" when finished</li>
-            </ol>
-          </div>
+          {/* Instructions */}
+          {!activeDay && (
+            <div className="mt-6 p-4 bg-gray-50 rounded text-xs opacity-70">
+              <p className="mb-2">
+                <strong>How to set your availability:</strong>
+              </p>
+              <ol className="space-y-1 list-decimal list-inside">
+                <li>Click on a day of the week to open the time slot panel</li>
+                <li>Select your available time slots for that day</li>
+                <li>
+                  Consecutive slots will be automatically grouped into ranges
+                </li>
+                <li>Click "Save Availability" when finished</li>
+              </ol>
+            </div>
+          )}
+        </div>
+        {toast && (
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={handleCloseToast}
+          />
         )}
       </div>
-      {toast && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={handleCloseToast}
-        />
-      )}
-    </div>
+    </>
   );
 };
-
 export default DoctorSlotSelection;

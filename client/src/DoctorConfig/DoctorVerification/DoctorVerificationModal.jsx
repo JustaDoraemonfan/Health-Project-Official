@@ -187,12 +187,12 @@ const DoctorVerificationModal = ({ isOpen, onClose, doctorId }) => {
   return (
     <div className="fixed inset-0 google-sans-code-400 bg-black/60 bg-opacity-60 flex items-center justify-center z-50 p-4">
       <div className="bg-[var(--color-primary)] rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-[var(--color-secondary)] border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-2xl z-10">
+        <div className="sticky top-0 bg-[var(--color-secondary)] border-b border-gray-200 px-4 py-4 sm:px-6 flex items-center justify-between rounded-t-2xl z-10">
           <div>
-            <h2 className="text-2xl font-bold text-[var(--color-primary)]">
+            <h2 className="text-xl sm:text-2xl font-bold text-[var(--color-primary)]">
               Apply for Verification
             </h2>
-            <p className="text-sm text-white mt-1">
+            <p className="text-xs sm:text-sm text-white mt-1">
               Upload your medical credentials and documents
             </p>
           </div>
@@ -205,14 +205,14 @@ const DoctorVerificationModal = ({ isOpen, onClose, doctorId }) => {
           </button>
         </div>
 
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           {success ? (
-            <div className="text-center py-8">
-              <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">
+            <div className="text-center py-6 sm:py-8">
+              <CheckCircle className="w-12 h-12 sm:w-16 sm:h-16 text-green-500 mx-auto mb-4" />
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2">
                 Verification Request Submitted!
               </h3>
-              <p className="text-gray-600">
+              <p className="text-sm sm:text-base text-gray-600">
                 Your documents have been uploaded successfully. Our team will
                 review them soon.
               </p>
@@ -350,12 +350,12 @@ const DoctorVerificationModal = ({ isOpen, onClose, doctorId }) => {
               )}
 
               {/* Action Buttons */}
-              <div className="flex gap-3 mt-8 pt-6 border-t border-gray-200">
+              <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 mt-8 pt-6 border-t border-gray-200">
                 <button
                   type="button"
                   onClick={handleClose}
                   disabled={uploading}
-                  className="flex-1 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold transition-colors disabled:opacity-50"
+                  className="w-full sm:w-auto px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold transition-colors disabled:opacity-50"
                 >
                   Cancel
                 </button>
@@ -363,17 +363,17 @@ const DoctorVerificationModal = ({ isOpen, onClose, doctorId }) => {
                   type="button"
                   onClick={handleSubmit}
                   disabled={uploading}
-                  className="flex-1 px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg font-semibold transition-all hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg font-semibold transition-all hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {uploading ? (
                     <>
                       <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      Uploading Documents...
+                      Uploading...
                     </>
                   ) : (
                     <>
                       <Upload size={20} />
-                      Submit for Verification
+                      Submit
                     </>
                   )}
                 </button>
