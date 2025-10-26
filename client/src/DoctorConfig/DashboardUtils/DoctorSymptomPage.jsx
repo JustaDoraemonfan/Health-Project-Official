@@ -98,7 +98,7 @@ const DoctorSymptomPage = () => {
 
   return (
     <>
-      <Header />
+      <Header isNotDashboard={true} />
       <div className="pt-20">
         <PatientsList patients={patients} onPatientClick={handlePatientClick} />
       </div>
