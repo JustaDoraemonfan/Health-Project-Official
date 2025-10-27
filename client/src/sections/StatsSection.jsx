@@ -39,13 +39,14 @@ export const StatsSection = () => {
     admin: 0,
   });
 
-  // --- NEW STATE ---
+  // --- RE-INTRODUCED STATE ---
   // Tracks which stat card to show on mobile (defaults to the first one)
   const [selectedStatIndex, setSelectedStatIndex] = useState(0);
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
+        // Mocking API call since it's commented out
         const response = await dashboardAPI.getStats();
         setStatsData(response.data.data);
       } catch (err) {
