@@ -35,7 +35,7 @@ const SectionCard = ({ section, onClick, count }) => {
     <div
       onClick={() => onClick(section.id)}
       // Responsive padding: p-6 on mobile, p-8 on medium screens and up
-      className="bg-[var(--color-secondary)]/90 rounded-2xl shadow-lg border google-sans-code-400 border-gray-100 p-6 md:p-8 cursor-pointer transform hover:scale-105 hover:shadow-xl transition-all duration-300 group"
+      className="bg-[var(--color-secondary)] rounded-2xl shadow-lg border google-sans-code-400 border-gray-100 p-6 md:p-8 cursor-pointer transform hover:scale-105 hover:shadow-xl transition-all duration-300 group"
     >
       <div className="flex items-center justify-between mb-6">
         <div
