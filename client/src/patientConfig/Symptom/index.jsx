@@ -82,14 +82,14 @@ export const Button = ({
 
 export const Input = ({ className = "", ...props }) => (
   <input
-    className={`flex h-11 w-full rounded-lg border border-gray-500 bg-[var(--color-primary)] px-4 py-2 text-sm text-[var(--color-secondary)] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 ${className}`}
+    className={`w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 google-sans-code-400 text-sm transition-colors disabled:opacity-50 ${className}`}
     {...props}
   />
 );
 
 export const Textarea = ({ className = "", ...props }) => (
   <textarea
-    className={`flex min-h-[80px] w-full rounded-lg border border-gray-500 bg-[var(--color-primary)] px-4 py-3 text-sm text-[var(--color-secondary)] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 resize-none ${className}`}
+    className={`w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 google-sans-code-400 text-sm transition-colors disabled:opacity-50 ${className}`}
     style={{
       msOverflowStyle: "none",
       scrollbarWidth: "none",
@@ -103,7 +103,7 @@ export const Select = ({ children, value, onValueChange, placeholder }) => {
     <select
       value={value}
       onChange={(e) => onValueChange(e.target.value)}
-      className="flex h-11 w-full rounded-lg border border-gray-500 bg-[var(--color-primary)] px-4 py-2 text-sm text-[var(--color-secondary)] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+      className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 google-sans-code-400 text-sm transition-colors disabled:opacity-50"
     >
       {placeholder && (
         <option value="" className="text-gray-400">

@@ -5,6 +5,7 @@ import Footer from "./Footer";
 import AppointmentDetails, { AppointmentSidebar } from "./AppointmentDetails";
 import AppointmentActions from "./AppointmentActions";
 import { BackIcon } from "../../Icons/Icons";
+import { doctorAPI } from "../../services/api";
 
 const cancellationReasons = [
   "Schedule conflict",
@@ -21,8 +22,13 @@ const DetailedView = ({
   onBackToDashboard,
   onRescheduleAppointment,
   onCancelAppointment,
+  // You might want to add a prop for handling completion
+  // onCompleteAppointment,
 }) => {
   const [showCancelModal, setShowCancelModal] = useState(false);
+  // New state for the "Done" modal
+  const [showDoneModal, setShowDoneModal] = useState(false);
+
   useEffect(() => {
     if (!showCancelModal) {
       setReason("");
@@ -64,6 +70,21 @@ const DetailedView = ({
     setShowCancelModal(false);
   };
 
+  // New handler for completing the appointment
+  const handleCompleteAppointment = async () => {
+    console.log("Unassigning doctor for appointment:", selectedAppointment);
+    console.log(
+      selectedAppointment.doctor._id,
+      selectedAppointment.patient._id
+    );
+    await doctorAPI.unassignPatient(
+      selectedAppointment.doctor._id,
+      selectedAppointment.patient._id
+    );
+    // onCompleteAppointment?.(selectedAppointment); // Call prop if it exists
+    setShowDoneModal(false);
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-[var(--color-primary)] google-sans-code-400 text-white">
       {/* UPDATED: Responsive padding */}
@@ -102,11 +123,20 @@ const DetailedView = ({
                 </span>
               </div>
             ) : (
-              <div className="mt-6 pt-4 border-t border-slate-700">
+              // MODIFIED: Added flex layout to this div to contain actions and new button
+              <div className="mt-6 pt-4 border-t border-slate-700 flex flex-col sm:flex-row gap-4 items-center">
                 <AppointmentActions
                   onReschedule={handleReschedule}
                   onCancel={handleCancel}
                 />
+
+                {/* NEW BUTTON ADDED HERE */}
+                <button
+                  onClick={() => setShowDoneModal(true)}
+                  className="w-full sm:w-auto bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-all duration-200 text-sm whitespace-nowrap"
+                >
+                  Done with appointment?
+                </button>
               </div>
             )}
           </div>
@@ -307,6 +337,90 @@ const DetailedView = ({
           </div>
         </>
       )}
+
+      {/* NEW MODAL FOR "DONE" BUTTON */}
+      {showDoneModal && (
+        <>
+          {/* Re-using modal styles */}
+          <style jsx>{`
+            @keyframes fadeIn {
+              from {
+                opacity: 0;
+              }
+              to {
+                opacity: 1;
+              }
+            }
+            @keyframes fadeOut {
+              from {
+                opacity: 1;
+              }
+              to {
+                opacity: 0;
+              }
+            }
+            @keyframes scaleIn {
+              from {
+                transform: scale(0.9);
+                opacity: 0;
+              }
+              to {
+                transform: scale(1);
+                opacity: 1;
+              }
+            }
+            @keyframes scaleOut {
+              from {
+                transform: scale(1);
+                opacity: 1;
+              }
+              to {
+                transform: scale(0.9);
+                opacity: 0;
+              }
+            }
+          `}</style>
+          <div
+            className="fixed inset-0 bg-[var(--color-secondary)]/80 backdrop-blur-sm bg-opacity-60 flex items-center justify-center z-50 transition-opacity duration-200 p-4"
+            style={{
+              animation: showDoneModal
+                ? "fadeIn 0.2s ease-out"
+                : "fadeOut 0.2s ease-out",
+            }}
+            // Close on backdrop click
+            onClick={() => setShowDoneModal(false)}
+          >
+            <div
+              className="bg-white text-black p-6 rounded-2xl shadow-2xl w-full max-w-md transform transition-all duration-200"
+              style={{
+                animation: showDoneModal
+                  ? "scaleIn 0.25s ease-out"
+                  : "scaleOut 0.25s ease-out",
+              }}
+              // Prevent modal from closing when clicking inside it
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3 className="text-xl text-green-700 font-light mb-3">
+                Appointment Complete
+              </h3>
+              <p className="mb-5 text-sm text-gray-700">
+                Thanks! We are unassigning the doctor.
+              </p>
+
+              {/* Action Buttons */}
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={handleCompleteAppointment} // Using the new handler
+                  className="px-6 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors"
+                >
+                  OK
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
       <Footer />
       <style jsx>{`
         @keyframes fadeIn {

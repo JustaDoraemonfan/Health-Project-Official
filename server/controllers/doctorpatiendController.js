@@ -9,8 +9,8 @@ export const assignPatientToDoctor = async (req, res) => {
   try {
     const { doctorId, patientId } = req.body;
 
-    const doctor = await Doctor.findById(doctorId);
-    const patient = await Patient.findById(patientId);
+    const doctor = await Doctor.findOne({ userId: doctorId });
+    const patient = await Patient.findOne({ userId: patientId });
 
     if (!doctor || !patient) {
       return res.status(404).json({ message: "Doctor or patient not found" });
@@ -66,6 +66,7 @@ export const getPatientsOfDoctor = async (req, res) => {
 };
 
 // Unassign any patient from a doctor
+
 export const unassignPatientFromDoctor = asyncHandler(async (req, res) => {
   const { doctorId, patientId } = req.body;
 
@@ -76,25 +77,31 @@ export const unassignPatientFromDoctor = asyncHandler(async (req, res) => {
     return errorResponse(res, "Invalid doctorId or patientId", 400);
   }
 
-  const doctor = await Doctor.findById(doctorId);
-  const patient = await Patient.findById(patientId);
+  const doctor = await Doctor.findOne({ userId: doctorId });
+
+  const patient = await Patient.findOne({ userId: patientId });
 
   if (!doctor || !patient) {
     return errorResponse(res, "Doctor or Patient not found", 404);
   }
 
-  doctor.patients = doctor.patients.filter((p) => p.toString() !== patientId);
+  doctor.patients = doctor.patients.filter(
+    (p) => p.toString() !== patient._id.toString()
+  );
 
-  if (patient.assignedDoctor?.toString() === doctorId) {
+  if (patient.assignedDoctor?.toString() === doctor._id.toString()) {
     patient.assignedDoctor = null;
   }
 
   await doctor.save();
+
   await patient.save();
 
   return successResponse(
     res,
+
     { doctor, patient },
+
     `Patient ${patient.name} unassigned from Doctor ${doctor.name}`
   );
 });

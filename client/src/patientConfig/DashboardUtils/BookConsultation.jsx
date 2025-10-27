@@ -5,7 +5,7 @@ import DoctorGrid from "../BookConsultant/DoctorGrid";
 import LoadingState from "../BookConsultant/LoadingState";
 import EmptyState from "../BookConsultant/EmptyStates";
 import { useDoctors } from "../../hooks/useDoctors";
-import { appointmentAPI, authAPI } from "../../services/api";
+import { appointmentAPI, authAPI, doctorAPI } from "../../services/api";
 import Header from "../../components/Header";
 
 const BookConsultation = () => {
@@ -42,6 +42,10 @@ const BookConsultation = () => {
 
       const result = await appointmentAPI.bookAppointment(payload);
       console.log("BookConsultation - API result:", result);
+      console.log(payload.doctor);
+      console.log(payload.patient);
+
+      await doctorAPI.assignPatient(payload.doctor, payload.patient);
 
       // Return the result with success info for the modal to handle
       return {

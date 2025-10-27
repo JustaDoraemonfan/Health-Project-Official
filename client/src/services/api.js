@@ -133,13 +133,13 @@ export const doctorAPI = {
   },
 
   // Assign patient to doctor
-  assignPatient: (assignmentData) => {
-    return apiClient.post("/doctors/assign", assignmentData);
+  assignPatient: (doctorId, patientId) => {
+    apiClient.post("/doctors/assign", { doctorId, patientId });
   },
 
   // Unassign patient from doctor
-  unassignPatient: (unassignmentData) => {
-    return apiClient.post("/doctors/unassign", unassignmentData);
+  unassignPatient: (doctorId, patientId) => {
+    return apiClient.post("/doctors/unassign", { doctorId, patientId });
   },
 
   // Get patients assigned to a doctor

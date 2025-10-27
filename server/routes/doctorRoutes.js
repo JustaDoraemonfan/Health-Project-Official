@@ -77,7 +77,7 @@ router
   .route("/assign")
   .post(
     authMiddleware,
-    authorizeRoles("admin", "doctor"),
+    authorizeRoles("admin", "doctor", "patient"),
     assignPatientToDoctor
   );
 
@@ -85,7 +85,7 @@ router
   .route("/unassign")
   .post(
     authMiddleware,
-    authorizeRoles("admin", "doctor"),
+    authorizeRoles("admin", "doctor", "patient"),
     unassignPatientFromDoctor
   );
 
