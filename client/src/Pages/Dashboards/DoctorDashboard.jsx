@@ -9,7 +9,7 @@ import DoctorVerificationModal from "../../DoctorConfig/DoctorVerification/Docto
 import { doctorDashboardSections } from "../../config/doctorDashboardSections";
 import Footer from "./DashboardComponents/Footer";
 import Header from "../../components/Header";
-
+import PopupProfileUpdate from "../../DoctorConfig/DoctorVerification/Popup";
 const DoctorDashboard = () => {
   const [user, setUser] = useState({
     id: "",
@@ -22,6 +22,16 @@ const DoctorDashboard = () => {
   const [error, setError] = useState(null);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isVerificationModalOpen, setIsVerificationModalOpen] = useState(false);
+  const [showProfilePopup, setShowProfilePopup] = useState(false);
+
+  // Updated click handler
+  const handleVerificationClick = () => {
+    if (!doctor?.profileUpdated) {
+      setShowProfilePopup(true);
+      return;
+    }
+    setIsVerificationModalOpen(true);
+  };
 
   const navigate = useNavigate();
 
@@ -94,8 +104,6 @@ const DoctorDashboard = () => {
       <Header />
       <section className="min-h-screen google-sans-code-400 bg-[var(--color-primary)] py-8 pt-20">
         <div className="container mx-auto px-6">
-          {/* --- RESPONSIVE & LOGIC-FIXED ALERT BANNER --- */}
-          {/* Shows for any status that is NOT "verified" */}
           {verificationStatus !== "verified" &&
             (() => {
               // Determine styles based on "rejected" status
@@ -148,8 +156,7 @@ const DoctorDashboard = () => {
                         </div>
                       </div>
                       <button
-                        onClick={() => setIsVerificationModalOpen(true)}
-                        // Full-width on mobile, auto on sm+
+                        onClick={handleVerificationClick}
                         className={`w-full sm:w-auto flex-shrink-0 px-4 py-2 ${buttonBg} ${buttonHoverBg} ${buttonTextColor} rounded-lg text-sm font-semibold transition-colors shadow-sm`}
                       >
                         {buttonText}
@@ -225,11 +232,16 @@ const DoctorDashboard = () => {
       />
 
       {/* Add Verification Modal */}
-      <DoctorVerificationModal
-        isOpen={isVerificationModalOpen}
-        onClose={() => setIsVerificationModalOpen(false)}
-        doctorId={doctor._id}
-      />
+      {doctor.profileUpdated == true && (
+        <DoctorVerificationModal
+          isOpen={isVerificationModalOpen}
+          onClose={() => setIsVerificationModalOpen(false)}
+          doctor={doctor}
+        />
+      )}
+      {showProfilePopup && (
+        <PopupProfileUpdate onClose={() => setShowProfilePopup(false)} />
+      )}
     </>
   );
 };

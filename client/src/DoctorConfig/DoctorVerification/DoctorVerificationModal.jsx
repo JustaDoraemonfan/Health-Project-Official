@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { doctorAPI } from "../../services/api";
 
-const DoctorVerificationModal = ({ isOpen, onClose, doctorId }) => {
+const DoctorVerificationModal = ({ isOpen, onClose, doctor }) => {
   const [formData, setFormData] = useState({
     nmcRegistrationNumber: "",
     documents: {
@@ -142,7 +142,7 @@ const DoctorVerificationModal = ({ isOpen, onClose, doctorId }) => {
           submitData.append(key, formData.documents[key]);
         }
       });
-      submitData.append("doctorId", doctorId);
+      submitData.append("doctorId", doctor._id);
 
       await doctorAPI.submitDoctorVerification(submitData);
 

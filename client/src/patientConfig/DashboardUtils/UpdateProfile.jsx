@@ -95,6 +95,9 @@ const UpdateProfile = () => {
           JSON.stringify(dataToSend, null, 2)
         );
         await doctorAPI.updateDoctor(profile._id, dataToSend);
+        await doctorAPI.updateDoctor(profile._id, {
+          profileUpdated: true,
+        });
       }
 
       setMessage({ type: "success", content: "Profile updated successfully!" });

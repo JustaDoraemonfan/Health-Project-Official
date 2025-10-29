@@ -30,6 +30,7 @@ const doctorSchema = new mongoose.Schema(
     certifications: [{ type: String }],
     about: { type: String },
     phone: { type: String },
+    profileUpdated: { type: Boolean, default: false },
 
     availability: [
       {
