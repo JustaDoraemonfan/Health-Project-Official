@@ -5,7 +5,8 @@ import DoctorGrid from "../BookConsultant/DoctorGrid";
 import LoadingState from "../BookConsultant/LoadingState";
 import EmptyState from "../BookConsultant/EmptyStates";
 import { useDoctor } from "../../hooks/useDoctors";
-import { appointmentAPI, authAPI, doctorAPI } from "../../services/api";
+import { useAppointments } from "../../hooks/useAppointments";
+import { authAPI } from "../../services/api";
 import Header from "../../components/Header";
 
 const BookConsultation = () => {
@@ -19,7 +20,10 @@ const BookConsultation = () => {
     isLoadingDetails,
     searchVerifiedDoctors,
     resetSearch,
+    assignPatient,
   } = useDoctor();
+
+  const { bookAppointment } = useAppointments();
 
   const isLoadingState = isLoadingList || isLoadingDetails;
 
@@ -45,12 +49,9 @@ const BookConsultation = () => {
       };
       console.log("BookConsultation - Booking payload:", payload);
 
-      const result = await appointmentAPI.bookAppointment(payload);
-      console.log("BookConsultation - API result:", result);
-      console.log(payload.doctor);
-      console.log(payload.patient);
+      const result = bookAppointment(payload);
 
-      await doctorAPI.assignPatient(payload.doctor, payload.patient);
+      assignPatient(payload.doctor, payload.patient);
 
       // Return the result with success info for the modal to handle
       return {
