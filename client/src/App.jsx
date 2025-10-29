@@ -36,7 +36,9 @@ const AppRoutes = () => {
   const { isAuthenticated, user, initialized, error } = useAuth();
 
   if (!initialized) {
-    return <LoadingSpinner />;
+    return (
+      <LoadingSpinner message="Wait patiently while we load your info ..." />
+    );
   }
 
   if (error && !isAuthenticated) {
