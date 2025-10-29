@@ -4,7 +4,7 @@ import SearchSection from "../BookConsultant/SearchSection";
 import DoctorGrid from "../BookConsultant/DoctorGrid";
 import LoadingState from "../BookConsultant/LoadingState";
 import EmptyState from "../BookConsultant/EmptyStates";
-import { useDoctors } from "../../hooks/useDoctors";
+import { useDoctor } from "../../hooks/useDoctors";
 import { appointmentAPI, authAPI, doctorAPI } from "../../services/api";
 import Header from "../../components/Header";
 
@@ -13,14 +13,19 @@ const BookConsultation = () => {
   const [searchPerformed, setSearchPerformed] = useState(false);
   const [expandedCards, setExpandedCards] = useState(new Set());
 
-  const { doctors, loading, searchLoading, searchDoctors, resetSearch } =
-    useDoctors();
+  const {
+    doctors,
+    isLoadingList,
+    isLoadingDetails,
+    searchVerifiedDoctors,
+    resetSearch,
+  } = useDoctor();
 
-  const isLoadingState = loading || searchLoading;
+  const isLoadingState = isLoadingList || isLoadingDetails;
 
   const handleSearch = async () => {
     setSearchPerformed(true);
-    await searchDoctors(location);
+    await searchVerifiedDoctors(location);
   };
 
   const handleReset = async () => {
@@ -110,7 +115,10 @@ const BookConsultation = () => {
 
           {/* Content */}
           {isLoadingState ? (
-            <LoadingState loading={loading} searchLoading={searchLoading} />
+            <LoadingState
+              loading={isLoadingList}
+              searchLoading={isLoadingDetails}
+            />
           ) : (
             <>
               <DoctorGrid
