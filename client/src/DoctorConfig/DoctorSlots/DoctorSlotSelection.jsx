@@ -164,20 +164,20 @@ const DoctorSlotSelection = ({
     <>
       <Header isNotDashboard={true} />
       <div
-        className="min-h-screen p-4 sm:p-6 py-20"
+        className="min-h-screen p-4 sm:p-6 py-20 "
         style={{
           backgroundColor: "var(--color-primary)",
           color: "var(--color-secondary)",
           fontFamily: '"Google Sans Code", monospace',
         }}
       >
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto pt-20">
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-2xl sm:text-3xl font-normal mb-2">
               Set Your Availability
             </h1>
-            <p className="text-xs sm:text-sm opacity-70">
+            <p className="text-md sm:text-sm opacity-70">
               Click on a day to set your available time slots
             </p>
           </div>
