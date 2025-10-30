@@ -47,17 +47,21 @@ const PatientCard = ({ patient }) => {
         {/* Basic Info */}
         <div className="grid grid-cols-2 gap-3">
           <div className="flex items-center space-x-2">
-            <Activity className="w-4 h-4 text-gray-500" />
+            <Activity className="w-4 h-4 text-[var(--color-primary)]" />
             <div>
-              <p className="text-xs text-gray-500">Age</p>
-              <p className="text-sm font-medium">{patient.age} years</p>
+              <p className="text-xs text-[var(--color-primary)]">Age</p>
+              <p className="text-sm text-white  font-medium">
+                {patient.age} years
+              </p>
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            <Users className="w-4 h-4 text-gray-500" />
+            <Users className="w-4 h-4 text-[var(--color-primary)]" />
             <div>
-              <p className="text-xs text-gray-500">Gender</p>
-              <p className="text-sm font-medium capitalize">{patient.gender}</p>
+              <p className="text-xs text-[var(--color-primary)]">Gender</p>
+              <p className="text-sm text-white font-medium capitalize">
+                {patient.gender}
+              </p>
             </div>
           </div>
         </div>
@@ -68,17 +72,21 @@ const PatientCard = ({ patient }) => {
             <div className="flex items-center space-x-2">
               <Droplet className="w-4 h-4 text-red-500" />
               <div>
-                <p className="text-xs text-gray-500">Blood Group</p>
-                <p className="text-sm font-medium">{patient.bloodGroup}</p>
+                <p className="text-xs text-[var(--color-primary)]">
+                  Blood Group
+                </p>
+                <p className="text-sm text-white font-medium">
+                  {patient.bloodGroup}
+                </p>
               </div>
             </div>
           )}
           {patient.location && (
             <div className="flex items-center space-x-2">
-              <MapPin className="w-4 h-4 text-gray-500" />
+              <MapPin className="w-4 h-4 text-red-100" />
               <div>
-                <p className="text-xs text-gray-500">Location</p>
-                <p className="text-sm font-medium truncate">
+                <p className="text-xs text-[var(--color-primary)]">Location</p>
+                <p className="text-sm text-white font-medium truncate">
                   {patient.location}
                 </p>
               </div>
@@ -88,11 +96,13 @@ const PatientCard = ({ patient }) => {
 
         {/* Contact */}
         {patient.contactNumber && (
-          <div className="flex items-center space-x-2 pt-2 border-t border-gray-100">
-            <Phone className="w-4 h-4 text-gray-500" />
+          <div className="flex items-center space-x-2 pt-2 ">
+            <Phone className="w-4 h-4 text-green-500" />
             <div>
-              <p className="text-xs text-gray-500">Contact</p>
-              <p className="text-sm font-medium">{patient.contactNumber}</p>
+              <p className="text-xs text-[var(--color-primary)]">Contact</p>
+              <p className="text-sm text-white font-medium">
+                {patient.contactNumber}
+              </p>
             </div>
           </div>
         )}
@@ -100,13 +110,13 @@ const PatientCard = ({ patient }) => {
         {/* Status Badge */}
         <div className="flex items-center justify-between pt-2">
           <span
-            className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
+            className={`px-3 py-1 rounded-full text-white text-xs font-medium ${getStatusColor(
               patient.symptoms?.length > 0
             )}`}
           >
             {patient.symptoms?.length > 0 ? "Active Symptoms" : "No Symptoms"}
           </span>
-          <div className="flex items-center space-x-1 text-gray-500">
+          <div className="flex items-center space-x-1 text-[var(--color-primary)]">
             <Calendar className="w-4 h-4" />
             <span className="text-xs">
               {patient.appointments?.length || 0} Appts

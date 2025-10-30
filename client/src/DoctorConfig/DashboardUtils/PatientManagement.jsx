@@ -5,6 +5,7 @@ import FilterPanel from "../DoctorPatientConnection/FilterPanel";
 import StatsCard from "../DoctorPatientConnection/StatsCard";
 import { useUser } from "../../hooks/useUser";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import Header from "../../components/Header";
 
 const PatientDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -77,8 +78,9 @@ const PatientDashboard = () => {
   // --- REFACTORED LAYOUT STARTS HERE ---
   return (
     <div className="min-h-screen google-sans-code-400 bg-[var(--color-primary)]">
+      <Header isNotDashboard={true} />
       {/* Header */}
-      <div className="bg-white shadow-sm border-b border-gray-200">
+      <div className="bg-[var(--color-primary)]  pt-20">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex flex-col items-start justify-between space-y-4 sm:flex-row sm:items-center sm:space-y-0">
             <div>
@@ -135,13 +137,12 @@ const PatientDashboard = () => {
 
               {/* Desktop Search Bar */}
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
                 <input
                   type="text"
                   placeholder="Search patients..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 py-2.5 pl-10 pr-4 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 google-sans-code-400 text-sm transition-colors disabled:opacity-50"
                 />
               </div>
 
@@ -161,13 +162,12 @@ const PatientDashboard = () => {
             <div className="mb-6 space-y-4 lg:hidden">
               {/* Mobile Search Bar */}
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
                 <input
                   type="text"
                   placeholder="Search patients by name or email..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 py-3 pl-10 pr-4 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 google-sans-code-400 text-sm transition-colors disabled:opacity-50"
                 />
               </div>
 
@@ -182,7 +182,6 @@ const PatientDashboard = () => {
 
             {/* --- Patient Cards Grid --- */}
             {filteredPatients.length > 0 ? (
-              // Use xl: for 3 columns to give cards more space on `lg` screens
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
                 {filteredPatients.map((patient) => (
                   <PatientCard key={patient._id} patient={patient} />
