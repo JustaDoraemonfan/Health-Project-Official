@@ -2,7 +2,6 @@ import React, { useState, useMemo } from "react";
 import { Search, Users, Calendar, Activity, Loader2 } from "lucide-react";
 import PatientCard from "../DoctorPatientConnection/PatientCard";
 import FilterPanel from "../DoctorPatientConnection/FilterPanel";
-import StatsCard from "../DoctorPatientConnection/StatsCard";
 import { useUser } from "../../hooks/useUser";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import Header from "../../components/Header";
@@ -41,20 +40,6 @@ const PatientDashboard = () => {
     });
   }, [searchTerm, filters, patientList]);
 
-  // Calculate stats
-  const stats = useMemo(() => {
-    const totalPatients = patientList.length;
-    const activeSymptoms = patientList.filter(
-      (p) => p.symptoms?.length > 0
-    ).length;
-    const totalAppointments = patientList.reduce(
-      (sum, p) => sum + (p.appointments?.length || 0),
-      0
-    );
-
-    return { totalPatients, activeSymptoms, totalAppointments };
-  }, [patientList]);
-
   if (isLoading) {
     return <LoadingSpinner message="Loading Patient Data" />;
   }
@@ -87,8 +72,9 @@ const PatientDashboard = () => {
               <h1 className="text-3xl font-bold tracking-tight text-gray-900">
                 Patient Management
               </h1>
-              <p className="mt-1 text-base text-gray-600">
-                Dr. {user.name} - {doctorProfile.specialization}
+              <p className="mt-1 text-base text-purple-600">
+                <span className="text-red-400">Dr. {user.name}</span> -{" "}
+                {doctorProfile.specialization}
               </p>
             </div>
             <div className="flex items-center space-x-2 rounded-full bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700">
@@ -104,26 +90,6 @@ const PatientDashboard = () => {
 
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Stats Section */}
-        <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          <StatsCard
-            title="Total Patients"
-            value={stats.totalPatients}
-            icon={Users}
-            color="bg-blue-500"
-          />
-          <StatsCard
-            title="Active Symptoms"
-            value={stats.activeSymptoms}
-            icon={Activity}
-            color="bg-yellow-500"
-          />
-          <StatsCard
-            title="Total Appointments"
-            value={stats.totalAppointments}
-            icon={Calendar}
-            color="bg-green-500"
-          />
-        </div>
 
         {/* --- Main Content Grid (Sidebar + Patient List) --- */}
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
@@ -182,7 +148,7 @@ const PatientDashboard = () => {
 
             {/* --- Patient Cards Grid --- */}
             {filteredPatients.length > 0 ? (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-2">
                 {filteredPatients.map((patient) => (
                   <PatientCard key={patient._id} patient={patient} />
                 ))}
