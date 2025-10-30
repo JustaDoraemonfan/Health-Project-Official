@@ -26,9 +26,9 @@ const PatientCard = ({ patient }) => {
   const userEmail = patient.userId?.email || "No email";
 
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden border border-gray-200">
+    <div className="bg-[var(--color-secondary)] rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden border border-gray-200">
       {/* Card Header */}
-      <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-4">
+      <div className="bg-[var(--color-secondary)] p-4">
         <div className="flex items-center space-x-3">
           <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-blue-600 font-bold text-lg">
             {getInitials(userName)}
@@ -116,7 +116,7 @@ const PatientCard = ({ patient }) => {
       </div>
 
       {/* Card Footer */}
-      <div className="bg-gray-50 px-4 py-3 flex space-x-2">
+      <div className="bg-[var(--color-secondary)] px-4 py-3 flex space-x-2">
         <button className="flex-1 bg-blue-600 text-white py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">
           View Details
         </button>
