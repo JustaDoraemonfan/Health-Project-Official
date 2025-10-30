@@ -1,12 +1,14 @@
 // client/src/components/ProtectedRoute.js
-import React from "react";
+import React, { useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import LoadingSpinner from "./LoadingSpinner";
 
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   const { isAuthenticated, loading, user } = useAuth();
-
+  useEffect(() => {
+    console.log(user.role);
+  }, []);
   if (loading) {
     return <LoadingSpinner />;
   }

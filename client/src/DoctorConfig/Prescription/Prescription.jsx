@@ -55,7 +55,7 @@ const PrescriptionUploadModal = ({ isOpen, onClose }) => {
       const initializeComponent = async () => {
         try {
           const doctor = await authAPI.getCurrentUser();
-          setDoctorId(doctor.data._id);
+          setDoctorId(doctor.data.data._id);
 
           const assignedPatients = await doctorAPI.getDoctorPatients();
           setPatients(assignedPatients.data.patients);

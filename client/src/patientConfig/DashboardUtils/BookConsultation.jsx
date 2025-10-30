@@ -44,7 +44,7 @@ const BookConsultation = () => {
       const user = await authAPI.getCurrentUser();
       const payload = {
         ...data,
-        patient: user.data._id,
+        patient: user.data.data._id,
         createdBy: "patient",
       };
       console.log("BookConsultation - Booking payload:", payload);

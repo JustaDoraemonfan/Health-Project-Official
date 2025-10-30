@@ -39,7 +39,7 @@ export const doctorDashboardSections = (navigate, openUploadModal) => [
     icon: Users,
     color: "green",
     stats: "247 active",
-    onClick: () => navigate("/doctor/patients"),
+    onClick: () => navigate("/doctor/patient-management"),
   },
   {
     id: "medical-records",
