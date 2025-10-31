@@ -9,9 +9,9 @@ import { fileURLToPath } from "url";
 import connectDB from "./config/dataBaseConnection.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import earthquakeRoutes from "./routes/earthquakeRoutes.js";
-import { fetchEarthquakeData } from "./services/earthquakeService.js";
-import cron from "node-cron";
-import { startEarthquakeJob } from "./jobs/earthquakeJob.js";
+// import { fetchEarthquakeData } from "./services/earthquakeService.js";
+// import cron from "node-cron";
+// import { startEarthquakeJob } from "./jobs/earthquakeJob.js";
 
 // Routes
 import authRoutes from "./routes/authRoutes.js";
