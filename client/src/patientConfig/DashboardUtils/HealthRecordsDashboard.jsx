@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { FileText } from "lucide-react";
 import { appointmentAPI, notesAPI, symptomAPI } from "../../services/api";
 
 // Components
@@ -11,12 +10,12 @@ import SymptomCard from "../HealthRecords/SymptomCard";
 import ConsultationNoteCard from "../HealthRecords/ConsultationNoteCard";
 import QuickStats from "../HealthRecords/QuickStats";
 import SecureFooter from "../HealthRecords/SecureFooter";
+import Header from "../../components/Header";
 
 // Constants and Utils
 import { sections, prescriptionsData } from "../HealthRecords/constants";
 import { filterAppointments } from "../../utils/healthRecordUtils";
 import { getPdfUrl } from "../../utils/file";
-import Header from "../../components/Header";
 
 const HealthRecordsDashboard = () => {
   const [appointmentsData, setAppointmentsData] = useState([]);
@@ -28,16 +27,17 @@ const HealthRecordsDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const appointments = await appointmentAPI.getUpcomingAppointments();
+        const [appointments, symptoms, notes] = await Promise.all([
+          appointmentAPI.getUpcomingAppointments(),
+          symptomAPI.getSymptoms(),
+          notesAPI.getPatientNotes(),
+        ]);
+
         setAppointmentsData(appointments.data.data);
-
-        const symptoms = await symptomAPI.getSymptoms();
         setSymptom(symptoms.data.data);
-
-        const notes = await notesAPI.getPatientNotes();
         setConsultationNotesData(notes.data.data);
       } catch (error) {
-        console.log(error);
+        console.log("Failed to fetch dashboard data:", error);
       }
     };
     fetchData();
@@ -73,59 +73,59 @@ const HealthRecordsDashboard = () => {
     }
   };
 
+  // Helper function to render the content of the selected section
+  const renderSectionContent = () => {
+    switch (selectedSection) {
+      case "appointments":
+        return filteredAppointments.map((appointment) => (
+          <AppointmentCard key={appointment.id} appointment={appointment} />
+        ));
+      case "prescriptions":
+        return prescriptionsData.map((prescription) => (
+          <PrescriptionCard key={prescription.id} prescription={prescription} />
+        ));
+      case "symptom":
+        return symptom.map((symptomItem) => (
+          <SymptomCard
+            key={symptomItem._id}
+            symptom={symptomItem}
+            handleDownload={handleDownload}
+          />
+        ));
+      case "consultation-notes":
+        return consultationNotesData.map((note) => (
+          <ConsultationNoteCard key={note._id} note={note} />
+        ));
+      default:
+        return null; // Or a message like "No section selected"
+    }
+  };
+
+  // View for when a specific section is selected
   if (selectedSection) {
     return (
-      <div className="min-h-screen google-sans-code-400 bg-[var(--color-primary)]">
+      <div className="min-h-screen bg-[var(--color-primary)]">
         <SectionHeader
           selectedSection={selectedSection}
           setSelectedSection={setSelectedSection}
           appointmentFilter={appointmentFilter}
           setAppointmentFilter={setAppointmentFilter}
         />
-
-        {/* Responsive padding for content lists */}
         <div className="px-4 sm:px-6 py-6">
-          <div className="grid gap-4">
-            {selectedSection === "appointments" &&
-              filteredAppointments.map((appointment) => (
-                <AppointmentCard
-                  key={appointment.id}
-                  appointment={appointment}
-                />
-              ))}
-
-            {selectedSection === "prescriptions" &&
-              prescriptionsData.map((prescription) => (
-                <PrescriptionCard
-                  key={prescription.id}
-                  prescription={prescription}
-                />
-              ))}
-
-            {selectedSection === "symptom" &&
-              symptom.map((symptom) => (
-                <SymptomCard
-                  key={symptom._id}
-                  symptom={symptom}
-                  handleDownload={handleDownload}
-                />
-              ))}
-
-            {selectedSection === "consultation-notes" &&
-              consultationNotesData.map((note) => (
-                <ConsultationNoteCard key={note._id} note={note} />
-              ))}
+          {/* --- KEY CHANGE HERE --- */}
+          {/* This div now creates a responsive multi-column grid for the cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {renderSectionContent()}
           </div>
         </div>
-
         <SecureFooter />
       </div>
     );
   }
 
+  // Main dashboard view
   return (
-    <div className="min-h-screen google-sans-code-400 bg-[var(--color-primary)]">
-      {/* Header */}
+    <div className="min-h-screen bg-[var(--color-primary)]">
       <Header isNotDashboard={true} />
       <QuickStats
         appointmentsData={appointmentsData}
@@ -133,9 +133,6 @@ const HealthRecordsDashboard = () => {
         symptom={symptom}
         note={consultationNotesData}
       />
-
-      {/* Main Content */}
-      {/* Responsive padding */}
       <div className="px-4 sm:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {sections.map((section) => (
@@ -147,7 +144,6 @@ const HealthRecordsDashboard = () => {
             />
           ))}
         </div>
-
         <SecureFooter isMainView />
       </div>
     </div>
