@@ -50,7 +50,7 @@ export const useAppointments = () => {
 
       // This logic is from the old hook and is preserved for compatibility
       const userResponse =
-        currentUser.role === "patient"
+        currentUser.data.role === "patient"
           ? await dashboardAPI.getPatientDashboard()
           : await dashboardAPI.getDoctorDashboard();
 

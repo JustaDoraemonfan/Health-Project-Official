@@ -1,5 +1,5 @@
 // AppointmentDashboard.js
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DashboardView from "../AppointmentPatient/DashboardView";
 import DetailedView from "../AppointmentPatient/DetailedView";
 import { useAppointments } from "../../hooks/useAppointments";
