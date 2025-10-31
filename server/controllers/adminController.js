@@ -7,6 +7,7 @@ import FrontlineWorker from "../models/FWL.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import { successResponse, errorResponse } from "../utils/response.js";
 import { getSignedUrl } from "../utils/s3Helper.js";
+import { IST_TIMEZONE, nowInIST } from "../utils/dateUtils.js"; // Import IST constant
 
 // ==================== ADMIN MANAGEMENT ====================
 
@@ -70,7 +71,7 @@ export const updateAdmin = asyncHandler(async (req, res) => {
       auditTrail: {
         action: "update_admin",
         targetId: admin._id,
-        at: new Date(),
+        at: nowInIST(), // Use IST time
         notes: `Updated admin: ${admin.userId.name}`,
       },
     },
@@ -185,7 +186,7 @@ export const approveVerification = asyncHandler(async (req, res) => {
 
   // Update doctor verification status
   doctor.verification.status = "verified";
-  doctor.verification.verifiedAt = new Date();
+  doctor.verification.verifiedAt = nowInIST(); // Use IST time
   doctor.verification.verifiedBy = req.user.id;
   await doctor.save();
 
@@ -195,14 +196,14 @@ export const approveVerification = asyncHandler(async (req, res) => {
     admin.handledVerifications.push({
       doctor: doctor._id,
       action: "approved",
-      at: new Date(),
+      at: nowInIST(), // Use IST time
       notes: notes || "Verification approved !",
     });
 
     admin.auditTrail.push({
       action: "approve_verification",
       targetId: doctor._id,
-      at: new Date(),
+      at: nowInIST(), // Use IST time
       notes: notes || "Approved doctor verification",
     });
 
@@ -240,7 +241,7 @@ export const rejectVerification = asyncHandler(async (req, res) => {
   // Update doctor verification status
   doctor.verification.status = "rejected";
   doctor.verification.rejectionReason = reason;
-  doctor.verification.reviewedAt = new Date();
+  doctor.verification.reviewedAt = nowInIST(); // Use IST time
   doctor.verification.reviewedBy = req.user.id;
   await doctor.save();
 
@@ -250,14 +251,14 @@ export const rejectVerification = asyncHandler(async (req, res) => {
     admin.handledVerifications.push({
       doctor: doctor._id,
       action: "rejected",
-      at: new Date(),
+      at: nowInIST(), // Use IST time
       notes: reason,
     });
 
     admin.auditTrail.push({
       action: "reject_verification",
       targetId: doctor._id,
-      at: new Date(),
+      at: nowInIST(), // Use IST time
       notes: `Rejected: ${reason}`,
     });
 
@@ -289,7 +290,7 @@ export const suspendAccount = asyncHandler(async (req, res) => {
   // Add suspended flag to user (you may need to add this field to User model)
   user.isSuspended = true;
   user.suspensionReason = reason;
-  user.suspendedAt = new Date();
+  user.suspendedAt = nowInIST(); // Use IST time
   await user.save();
 
   // Log action
@@ -298,7 +299,7 @@ export const suspendAccount = asyncHandler(async (req, res) => {
     admin.auditTrail.push({
       action: "suspend_account",
       targetId: user._id,
-      at: new Date(),
+      at: nowInIST(), // Use IST time
       notes: reason,
     });
     await admin.save();
@@ -443,7 +444,7 @@ export const updateAdminPassword = asyncHandler(async (req, res) => {
 
   // Update password
   admin.security.passwordHash = newPassword; // Will be hashed by pre-save hook
-  admin.security.lastPasswordChange = new Date();
+  admin.security.lastPasswordChange = nowInIST(); // Use IST time
   await admin.save();
 
   return successResponse(res, null, "Password updated successfully");

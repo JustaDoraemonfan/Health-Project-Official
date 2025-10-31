@@ -75,7 +75,7 @@ const HealthRecordsDashboard = () => {
 
   if (selectedSection) {
     return (
-      <div className="min-h-screen bg-[var(--color-primary)]">
+      <div className="min-h-screen google-sans-code-400 bg-[var(--color-primary)]">
         <SectionHeader
           selectedSection={selectedSection}
           setSelectedSection={setSelectedSection}

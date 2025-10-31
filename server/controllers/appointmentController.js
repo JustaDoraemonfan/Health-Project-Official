@@ -1,13 +1,16 @@
-// controllers/appointmentController.js
 import Appointment from "../models/Appointment.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import Patient from "../models/Patient.js";
 import Doctor from "../models/Doctor.js";
 import { successResponse, errorResponse } from "../utils/response.js";
+import { addDays } from "date-fns"; // Import addDays for date range
+import { IST_TIMEZONE, nowInIST } from "../utils/dateUtils.js"; // Import IST constant
 
-// @desc    Create a new appointment
-// @route   POST /api/appointments
-// @access  Private (Patient/Doctor/Admin)
+// Helper function to get the current time in IST
+
+// @desc Create a new appointment
+// @route  POST /api/appointments
+// @access Private (Patient/Doctor/Admin)
 export const createAppointment = asyncHandler(async (req, res) => {
   try {
     const doctor = await Doctor.findOne({ userId: req.body.doctor });
@@ -47,14 +50,14 @@ export const createAppointment = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Get all appointments
-// @route   GET /api/appointments
-// @access  Private (Admin/Doctor)
+// @desc Get all appointments
+// @route  GET /api/appointments
+// @access Private (Admin/Doctor)
 export const getAppointments = asyncHandler(async (req, res) => {
   try {
     const appointments = await Appointment.find()
       .populate("patient", "name email")
-      .populate("doctor", "name  email")
+      .populate("doctor", "name  email")
       .populate("doctorProfile", " specialization ");
 
     return successResponse(
@@ -68,9 +71,9 @@ export const getAppointments = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Get single appointment
-// @route   GET /api/appointments/:id
-// @access  Private
+// @desc Get single appointment
+// @route  GET /api/appointments/:id
+// @access Private
 export const getAppointmentById = asyncHandler(async (req, res) => {
   try {
     const appointment = await Appointment.findById(req.params.id)
@@ -92,9 +95,9 @@ export const getAppointmentById = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Update appointment
-// @route   PUT /api/appointments/:id
-// @access  Private
+// @desc Update appointment
+// @route  PUT /api/appointments/:id
+// @access Private
 export const updateAppointment = asyncHandler(async (req, res) => {
   try {
     const appointment = await Appointment.findByIdAndUpdate(
@@ -121,9 +124,9 @@ export const updateAppointment = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Delete appointment
-// @route   DELETE /api/appointments/:id
-// @access  Private (Admin/Doctor)
+// @desc Delete appointment
+// @route  DELETE /api/appointments/:id
+// @access Private (Admin/Doctor)
 export const deleteAppointment = asyncHandler(async (req, res) => {
   try {
     const appointment = await Appointment.findById(req.params.id);
@@ -153,14 +156,15 @@ export const deleteAppointment = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Get upcoming appointments (Patient/Doctor)
-// @route   GET /api/appointments/upcoming
-// @access  Private
+// @desc Get upcoming appointments (Patient/Doctor)
+// @route  GET /api/appointments/upcoming
+// @access Private
 export const getUpcomingAppointments = asyncHandler(async (req, res) => {
   const { role, id } = req.user;
 
   try {
-    const query = { appointmentDate: { $gte: new Date() } };
+    // Use IST-aware "now" for comparison
+    const query = { appointmentDate: { $gte: nowInIST() } };
 
     if (role === "patient") {
       query.patient = id;
@@ -192,14 +196,15 @@ export const getUpcomingAppointments = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Get past appointments (Patient/Doctor)
-// @route   GET /api/appointments/past
-// @access  Private
+// @desc Get past appointments (Patient/Doctor)
+// @route  GET /api/appointments/past
+// @access Private
 export const getPastAppointments = asyncHandler(async (req, res) => {
   const { role, id } = req.user;
 
   try {
-    const query = { appointmentDate: { $lt: new Date() } };
+    // Use IST-aware "now" for comparison
+    const query = { appointmentDate: { $lt: nowInIST() } };
 
     if (role === "patient") {
       query.patient = id;
@@ -229,9 +234,9 @@ export const getPastAppointments = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Cancel appointment
-// @route   PATCH /api/appointments/:id/cancel
-// @access  Private
+// @desc Cancel appointment
+// @route  PATCH /api/appointments/:id/cancel
+// @access Private
 
 // A constant for your business rule (e.g., 24-hour cancellation window)
 const CANCELLATION_WINDOW_HOURS = 24;
@@ -259,7 +264,7 @@ export const cancelAppointment = asyncHandler(async (req, res) => {
     }
 
     // --- Business Logic: Check for Late Cancellation ---
-    const now = new Date();
+    const now = nowInIST(); // Use IST-aware "now"
     const appointmentDate = new Date(appointment.appointmentDate);
     // Calculate the difference in milliseconds
     const timeDiffMs = appointmentDate.getTime() - now.getTime();
@@ -274,7 +279,7 @@ export const cancelAppointment = asyncHandler(async (req, res) => {
     // 2. Populate the detailed cancellation object for a clear audit trail
     appointment.cancellationDetails = {
       cancelledBy: role,
-      cancellationTimestamp: now,
+      cancellationTimestamp: now, // Use IST-aware "now"
       cancellationReason: reason || "No reason provided.", // Use reason from body or a default
       isLateCancellation: isLateCancellation,
     };
@@ -295,9 +300,9 @@ export const cancelAppointment = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Confirm appointment
-// @route   PATCH /api/appointments/:id/confirm
-// @access  Private (Doctor/Admin)
+// @desc Confirm appointment
+// @route  PATCH /api/appointments/:id/confirm
+// @access Private (Doctor/Admin)
 export const confirmAppointment = asyncHandler(async (req, res) => {
   try {
     const appointment = await Appointment.findById(req.params.id);
@@ -331,9 +336,9 @@ export const confirmAppointment = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Complete appointment
-// @route   PATCH /api/appointments/:id/complete
-// @access  Private (Doctor/Admin)
+// @desc Complete appointment
+// @route  PATCH /api/appointments/:id/complete
+// @access Private (Doctor/Admin)
 export const completeAppointment = asyncHandler(async (req, res) => {
   try {
     const { notes } = req.body;
@@ -378,9 +383,9 @@ export const completeAppointment = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Get appointments by date range
-// @route   GET /api/appointments/date-range
-// @access  Private
+// @desc Get appointments by date range
+// @route  GET /api/appointments/date-range
+// @access Private
 export const getAppointmentsByDateRange = asyncHandler(async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
@@ -390,10 +395,18 @@ export const getAppointmentsByDateRange = asyncHandler(async (req, res) => {
       return errorResponse(res, "Start date and end date are required", 400);
     }
 
+    // Interpret the input dates as IST
+    // e.g., "2025-10-31" becomes 2025-10-31 00:00:00 IST
+    const startIST = zonedTimeToUtc(new Date(startDate), IST_TIMEZONE);
+
+    // To include the entire end day, we get the start of the *next* day
+    // e.g., "2025-10-31" becomes 2025-11-01 00:00:00 IST
+    const endIST = addDays(zonedTimeToUtc(new Date(endDate), IST_TIMEZONE), 1);
+
     const query = {
       appointmentDate: {
-        $gte: new Date(startDate),
-        $lte: new Date(endDate),
+        $gte: startIST,
+        $lt: endIST, // Use $lt to capture everything *before* the next day starts
       },
     };
 
@@ -422,9 +435,9 @@ export const getAppointmentsByDateRange = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Get appointment statistics
-// @route   GET /api/appointments/stats
-// @access  Private (Admin/Doctor)
+// @desc Get appointment statistics
+// @route  GET /api/appointments/stats
+// @access Private (Admin/Doctor)
 export const getAppointmentStats = asyncHandler(async (req, res) => {
   try {
     const { role, id } = req.user;

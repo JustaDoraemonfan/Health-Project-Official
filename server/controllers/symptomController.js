@@ -3,6 +3,9 @@ import Patient from "../models/Patient.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import { successResponse, errorResponse } from "../utils/response.js";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { IST_TIMEZONE, nowInIST } from "../utils/dateUtils.js"; // Import IST constant
+
+// Helper function to get the current time in IST
 
 // Initialize the Google Gemini client
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -234,8 +237,10 @@ Limit the response to 200-300 words.
     // Add standard disclaimer
     responseText += `\n\nThis information is for educational purposes only and does not replace professional medical advice. Please consult with a healthcare provider for proper evaluation and treatment.`;
 
+    const analysisTime = nowInIST(); // Use IST time
+
     // Optional: Save the analysis back to the symptom record
-    symptom.lastAnalyzed = new Date();
+    symptom.lastAnalyzed = analysisTime;
     await symptom.save();
 
     return successResponse(
@@ -243,7 +248,7 @@ Limit the response to 200-300 words.
       {
         symptomId: symptom._id,
         analysis: responseText,
-        analyzedAt: new Date().toISOString(),
+        analyzedAt: analysisTime, // Use IST time
         symptomData: {
           description: symptom.description,
           severity: symptom.severity,

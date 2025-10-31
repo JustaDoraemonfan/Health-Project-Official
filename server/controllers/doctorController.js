@@ -3,6 +3,9 @@ import Doctor from "../models/Doctor.js";
 import Patient from "../models/Patient.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import { successResponse, errorResponse } from "../utils/response.js";
+import { IST_TIMEZONE, nowInIST } from "../utils/dateUtils.js"; // Import IST constant
+
+// Helper function to get the current time in IST
 
 // Create a new doctor (admin only)
 export const createDoctor = asyncHandler(async (req, res) => {
@@ -144,101 +147,82 @@ export const getAvailability = asyncHandler(async (req, res) => {
   );
 });
 
-export const submitVerification = async (req, res) => {
-  try {
-    if (!req.user || !req.user.id) {
-      return res.status(401).json({
-        success: false,
-        message: "Unauthorized",
-      });
-    }
-
-    const doctorId = req.user.id;
-    const { nmcRegistrationNumber } = req.body;
-
-    // Validate registration number
-    if (!nmcRegistrationNumber) {
-      return res.status(400).json({
-        success: false,
-        message: "NMC Registration Number is required",
-      });
-    }
-
-    // Check if all files are uploaded
-    if (!req.files || Object.keys(req.files).length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: "No files uploaded",
-      });
-    }
-
-    // Validate all required files are present
-    const requiredFiles = [
-      "nmcCertificate",
-      "mbbsCertificate",
-      "internshipCertificate",
-      "aadharCard",
-    ];
-    const missingFiles = requiredFiles.filter((field) => !req.files[field]);
-
-    if (missingFiles.length > 0) {
-      return res.status(400).json({
-        success: false,
-        message: `Missing required files: ${missingFiles.join(", ")}`,
-      });
-    }
-
-    // Extract file URLs from uploaded files
-    const evidence = {
-      nmcCertificate: req.files.nmcCertificate[0].location,
-      mbbsCertificate: req.files.mbbsCertificate[0].location,
-      internshipCertificate: req.files.internshipCertificate[0].location,
-      aadharCard: req.files.aadharCard[0].location,
-    };
-
-    const now = new Date();
-
-    // Update doctor with verification data
-    const updatedDoctor = await Doctor.findOneAndUpdate(
-      { userId: doctorId },
-      {
-        verification: {
-          status: "pending",
-          appliedAt: now,
-          nmcRegistrationNumber,
-          evidence,
-        },
-      },
-      { new: true }
-    );
-
-    if (!updatedDoctor) {
-      return res.status(404).json({
-        success: false,
-        message: "Doctor not found",
-      });
-    }
-
-    // Convert to IST for response
-    const appliedAtIST = now.toLocaleString("en-IN", {
-      timeZone: "Asia/Kolkata",
-    });
-
-    res.json({
-      success: true,
-      message: "Verification submitted successfully",
-      data: {
-        verificationStatus: updatedDoctor.verification.status,
-        appliedAt: appliedAtIST,
-        nmcRegistrationNumber,
-        documentsUploaded: Object.keys(evidence),
-      },
-    });
-  } catch (error) {
-    console.error("Verification error:", error);
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+// @desc Submit verification documents
+// @route POST /api/doctors/submit-verification
+// @access Private (Doctor)
+export const submitVerification = asyncHandler(async (req, res) => {
+  if (!req.user || !req.user.id) {
+    return errorResponse(res, "Unauthorized", 401);
   }
-};
+
+  const doctorId = req.user.id;
+  const { nmcRegistrationNumber } = req.body;
+
+  // Validate registration number
+  if (!nmcRegistrationNumber) {
+    return errorResponse(res, "NMC Registration Number is required", 400);
+  }
+
+  // Check if all files are uploaded
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return errorResponse(res, "No files uploaded", 400);
+  }
+
+  // Validate all required files are present
+  const requiredFiles = [
+    "nmcCertificate",
+    "mbbsCertificate",
+    "internshipCertificate",
+    "aadharCard",
+  ];
+  const missingFiles = requiredFiles.filter((field) => !req.files[field]);
+
+  if (missingFiles.length > 0) {
+    return errorResponse(
+      res,
+      `Missing required files: ${missingFiles.join(", ")}`,
+      400
+    );
+  }
+
+  // Extract file URLs from uploaded files
+  const evidence = {
+    nmcCertificate: req.files.nmcCertificate[0].location,
+    mbbsCertificate: req.files.mbbsCertificate[0].location,
+    internshipCertificate: req.files.internshipCertificate[0].location,
+    aadharCard: req.files.aadharCard[0].location,
+  };
+
+  const now = nowInIST(); // Use IST time
+
+  // Update doctor with verification data
+  const updatedDoctor = await Doctor.findOneAndUpdate(
+    { userId: doctorId },
+    {
+      verification: {
+        status: "pending",
+        appliedAt: now, // Store the IST-aware timestamp
+        nmcRegistrationNumber,
+        evidence,
+      },
+    },
+    { new: true }
+  );
+
+  if (!updatedDoctor) {
+    return errorResponse(res, "Doctor not found", 404);
+  }
+
+  const responseData = {
+    verificationStatus: updatedDoctor.verification.status,
+    appliedAt: updatedDoctor.verification.appliedAt, // Return the stored timestamp
+    nmcRegistrationNumber,
+    documentsUploaded: Object.keys(evidence),
+  };
+
+  return successResponse(
+    res,
+    responseData,
+    "Verification submitted successfully"
+  );
+});

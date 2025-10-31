@@ -1,4 +1,8 @@
 import mongoose from "mongoose";
+// Assuming the path is relative to the models directory
+import { IST_TIMEZONE, nowInIST } from "../utils/dateUtils.js";
+
+// Helper function to get the current time in IST
 
 const symptomSchema = new mongoose.Schema(
   {
@@ -19,7 +23,7 @@ const symptomSchema = new mongoose.Schema(
     },
     onsetDate: {
       type: Date,
-      default: Date.now,
+      default: nowInIST, // Use IST default
     },
     notes: {
       type: String,
@@ -45,14 +49,39 @@ const symptomSchema = new mongoose.Schema(
         size: { type: Number, required: true },
         filePath: { type: String, required: true }, // local or S3 path
         url: { type: String }, // public-facing URL if needed
-        uploadedAt: { type: Date, default: Date.now },
+        uploadedAt: { type: Date, default: nowInIST }, // Use IST default
       },
     ],
+    // --- Timestamps ---
+    // We manage these manually to ensure they use IST
+    createdAt: {
+      type: Date,
+    },
+    updatedAt: {
+      type: Date,
+    },
   },
   {
-    timestamps: true,
+    // Disable default Mongoose timestamps (which use server time)
+    timestamps: false,
   }
 );
+
+// Mongoose hook to set createdAt and updatedAt in IST before saving
+symptomSchema.pre("save", function (next) {
+  const now = nowInIST();
+  this.updatedAt = now;
+  if (this.isNew) {
+    this.createdAt = now;
+  }
+  next();
+});
+
+// Hook for 'findOneAndUpdate' to update 'updatedAt' in IST
+symptomSchema.pre("findOneAndUpdate", function (next) {
+  this.set({ updatedAt: nowInIST() });
+  next();
+});
 
 const Symptom = mongoose.model("Symptom", symptomSchema);
 

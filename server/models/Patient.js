@@ -1,4 +1,8 @@
 import mongoose from "mongoose";
+// Assuming the path is relative to the models directory
+import { IST_TIMEZONE, nowInIST } from "../utils/dateUtils.js";
+
+// Helper function to get the current time in IST
 
 const patientSchema = new mongoose.Schema(
   {
@@ -45,7 +49,7 @@ const patientSchema = new mongoose.Schema(
       {
         title: String,
         fileUrl: String, // link to uploaded report (cloud/local storage)
-        uploadedAt: { type: Date, default: Date.now },
+        uploadedAt: { type: Date, default: nowInIST }, // Use IST default
       },
     ],
 
@@ -69,9 +73,37 @@ const patientSchema = new mongoose.Schema(
         ref: "Appointment", // reference to the Appointment model
       },
     ],
+
+    // --- Timestamps ---
+    // We manage these manually to ensure they use IST
+    createdAt: {
+      type: Date,
+    },
+    updatedAt: {
+      type: Date,
+    },
   },
-  { timestamps: true }
+  {
+    // Disable default Mongoose timestamps (which use server time)
+    timestamps: false,
+  }
 );
+
+// Mongoose hook to set createdAt and updatedAt in IST before saving
+patientSchema.pre("save", function (next) {
+  const now = nowInIST();
+  this.updatedAt = now;
+  if (this.isNew) {
+    this.createdAt = now;
+  }
+  next();
+});
+
+// Hook for 'findOneAndUpdate' to update 'updatedAt' in IST
+patientSchema.pre("findOneAndUpdate", function (next) {
+  this.set({ updatedAt: nowInIST() });
+  next();
+});
 
 const Patient = mongoose.model("Patient", patientSchema);
 export default Patient;

@@ -1,4 +1,8 @@
 import mongoose from "mongoose";
+// Assuming the path is relative to the models directory
+import { IST_TIMEZONE, nowInIST } from "../utils/dateUtils.js";
+
+// Helper function to get the current time in IST
 
 const appointmentSchema = new mongoose.Schema(
   {
@@ -25,7 +29,8 @@ const appointmentSchema = new mongoose.Schema(
       required: true,
       validate: {
         validator: function (value) {
-          return value >= new Date(); // No past appointments allowed
+          // Use IST-aware 'now' for validation
+          return value >= nowInIST();
         },
         message: "Appointment date must be in the future.",
       },
@@ -114,9 +119,38 @@ const appointmentSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+
+    // --- Timestamps ---
+    // We manage these manually to ensure they use IST
+    createdAt: {
+      type: Date,
+    },
+    updatedAt: {
+      type: Date,
+    },
   },
-  { timestamps: true }
+  {
+    // Disable default Mongoose timestamps (which use server time)
+    timestamps: false,
+  }
 );
+
+// Mongoose hook to set createdAt and updatedAt in IST before saving
+appointmentSchema.pre("save", function (next) {
+  const now = nowInIST();
+  this.updatedAt = now;
+  if (this.isNew) {
+    this.createdAt = now;
+  }
+  next();
+});
+
+// Hook for 'findOneAndUpdate' to update 'updatedAt' in IST
+// This is crucial for .findByIdAndUpdate() calls in your controller
+appointmentSchema.pre("findOneAndUpdate", function (next) {
+  this.set({ updatedAt: nowInIST() });
+  next();
+});
 
 const Appointment = mongoose.model("Appointment", appointmentSchema);
 export default Appointment;

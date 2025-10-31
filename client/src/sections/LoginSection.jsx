@@ -8,6 +8,8 @@ import {
   Settings,
   AlertCircle,
   Loader2,
+  Eye, // Added
+  EyeOff, // Added
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -21,6 +23,7 @@ export const LoginSection = ({ onToggleAuth }) => {
     role: "patient",
   });
   const [showError, setShowError] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // Added state for password toggle
 
   const { login, loading, error, clearError, isAuthenticated, user } =
     useAuth();
@@ -195,21 +198,40 @@ export const LoginSection = ({ onToggleAuth }) => {
                   />
                 </div>
 
+                {/* --- MODIFIED PASSWORD FIELD --- */}
                 <div>
                   <label className="block text-slate-200 text-sm google-sans-code-400 mb-2">
                     Password <span className="text-red-400">*</span>
                   </label>
-                  <input
-                    type="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    disabled={loading}
-                    className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 google-sans-code-400 text-sm transition-colors disabled:opacity-50"
-                    placeholder="Enter password"
-                    required
-                  />
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"} // Dynamic type
+                      name="password"
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      disabled={loading}
+                      className="w-full px-4 py-3 pr-10 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 google-sans-code-400 text-sm transition-colors disabled:opacity-50" // Added pr-10
+                      placeholder="Enter password"
+                      required
+                    />
+                    <button
+                      type="button" // Prevent form submission
+                      onClick={() => setShowPassword(!showPassword)}
+                      disabled={loading}
+                      className="absolute inset-y-0 right-0 flex items-center justify-center w-10 text-slate-400 hover:text-slate-200 transition-colors disabled:opacity-50"
+                      aria-label={
+                        showPassword ? "Hide password" : "Show password"
+                      }
+                    >
+                      {showPassword ? (
+                        <EyeOff className="w-5 h-5" />
+                      ) : (
+                        <Eye className="w-5 h-5" />
+                      )}
+                    </button>
+                  </div>
                 </div>
+                {/* --- END OF MODIFICATION --- */}
 
                 <button
                   type="submit"

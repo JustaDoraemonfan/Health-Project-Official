@@ -1,4 +1,8 @@
 import mongoose from "mongoose";
+// Assuming the path is relative to the models directory
+import { IST_TIMEZONE, nowInIST } from "../utils/dateUtils.js";
+
+// Helper function to get the current time in IST
 
 const doctorSchema = new mongoose.Schema(
   {
@@ -60,9 +64,9 @@ const doctorSchema = new mongoose.Schema(
         enum: ["unverified", "pending", "verified", "rejected", "suspended"],
         default: "unverified",
       },
-      appliedAt: { type: Date },
-      verifiedAt: { type: Date }, // When verification was approved
-      reviewedAt: { type: Date }, // When last reviewed (approved or rejected)
+      appliedAt: { type: Date }, // Set by controller in IST
+      verifiedAt: { type: Date }, // Set by controller in IST
+      reviewedAt: { type: Date }, // Set by controller in IST
       reviewedBy: { type: mongoose.Schema.Types.ObjectId, ref: "Admin" },
       verifiedBy: { type: mongoose.Schema.Types.ObjectId, ref: "Admin" }, // Who approved it
       reviewNotes: { type: String },
@@ -99,14 +103,42 @@ const doctorSchema = new mongoose.Schema(
             ],
           },
           by: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-          at: { type: Date, default: Date.now },
+          at: { type: Date, default: nowInIST }, // Use IST for default
           notes: { type: String },
         },
       ],
     },
+
+    // --- Timestamps ---
+    // We manage these manually to ensure they use IST
+    createdAt: {
+      type: Date,
+    },
+    updatedAt: {
+      type: Date,
+    },
   },
-  { timestamps: true }
+  {
+    // Disable default Mongoose timestamps (which use server time)
+    timestamps: false,
+  }
 );
+
+// Mongoose hook to set createdAt and updatedAt in IST before saving
+doctorSchema.pre("save", function (next) {
+  const now = nowInIST();
+  this.updatedAt = now;
+  if (this.isNew) {
+    this.createdAt = now;
+  }
+  next();
+});
+
+// Hook for 'findOneAndUpdate' to update 'updatedAt' in IST
+doctorSchema.pre("findOneAndUpdate", function (next) {
+  this.set({ updatedAt: nowInIST() });
+  next();
+});
 
 const Doctor = mongoose.model("Doctor", doctorSchema);
 export default Doctor;

@@ -7,6 +7,9 @@ import FrontlineWorker from "../models/FWL.js";
 import Admin from "../models/Admin.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import { successResponse, errorResponse } from "../utils/response.js";
+import { IST_TIMEZONE, nowInIST } from "../utils/dateUtils.js"; // Import IST constant
+
+// Helper function to get the current time in IST
 
 // Generate JWT
 const generateToken = (user) => {
@@ -208,11 +211,11 @@ export const loginUser = asyncHandler(async (req, res) => {
     await Admin.findOneAndUpdate(
       { userId: user.id },
       {
-        "activity.lastLogin": new Date(),
+        "activity.lastLogin": nowInIST(), // Use IST time
         $push: {
           auditTrail: {
             action: "login",
-            at: new Date(),
+            at: nowInIST(), // Use IST time
           },
         },
       }
