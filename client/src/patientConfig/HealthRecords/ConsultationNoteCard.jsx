@@ -36,7 +36,7 @@ const ConsultationNoteCard = ({ note }) => {
         </div>
         <div className="flex-1 min-w-0">
           {/* Header (Always Visible) */}
-          <div className="flex flex-col -start gap-1 mb-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col items-start gap-1 mb-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex-1">
               <span className="text-lg font-semibold text-[var(--color-primary)]">
                 {note.title}
