@@ -42,7 +42,7 @@ const ConsultationNoteCard = ({ note }) => {
                 {note.title}
               </span>
               <span className="text-red-400 block text-sm sm:inline sm:ml-2">
-                ({note.} | {note.priority})
+                ({note.category} | {note.priority})
               </span>
             </div>
             <span className="text-[var(--color-primary)] text-sm flex-shrink-0">
