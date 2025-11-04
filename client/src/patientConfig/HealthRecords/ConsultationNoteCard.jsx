@@ -29,7 +29,7 @@ const ConsultationNoteCard = ({ note }) => {
   };
 
   return (
-    <div className="bg-[var(--color-secondary)] rounded-xl shadow-sm  google-sans-code-400 border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
+    <div className="bg-[var(--color-secondary)] rounded-xl shadow-sm border google-sans-code-400 border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
       <div className="flex items-start space-x-4">
         <div className="bg-orange-50 p-3 rounded-lg mt-1 flex-shrink-0">
           <Stethoscope className="w-5 h-5 text-orange-600" />
