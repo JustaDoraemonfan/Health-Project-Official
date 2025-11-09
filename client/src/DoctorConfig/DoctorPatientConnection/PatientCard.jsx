@@ -6,11 +6,14 @@ import {
   MapPin,
   Droplet,
   Activity,
+  Brain,
 } from "lucide-react";
 import PatientDetailsModal from "./PatientDetailModal";
+import AIAnalysisModal from "./AIAnalysisModal";
 
 const PatientCard = ({ patient }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAIModalOpen, setIsAIModalOpen] = useState(false);
 
   const getInitials = (name) => {
     return name
@@ -130,17 +133,6 @@ const PatientCard = ({ patient }) => {
             >
               {patient.symptoms?.length > 0 ? "Active Symptoms" : "No Symptoms"}{" "}
             </span>
-            <span>
-              <button
-                onClick={() => {
-                  // Navigate to symptoms page - implement your navigation logic here
-                  console.log("Navigate to /doctor/symptoms");
-                }}
-                className="text-blue-400 text-xs"
-              >
-                {patient.symptoms?.length > 0 ? "~Go to Symptoms" : ""}{" "}
-              </button>
-            </span>
           </div>
         </div>
 
@@ -152,8 +144,12 @@ const PatientCard = ({ patient }) => {
           >
             View Details
           </button>
-          <button className="px-4 bg-white border border-gray-300 text-gray-700 py-2 rounded-md text-sm font-medium hover:bg-gray-50 transition-colors">
-            Contact
+          <button
+            onClick={() => setIsAIModalOpen(true)}
+            className="px-4 bg-purple-600 hover:cursor-pointer text-white py-2 rounded-md text-sm font-medium hover:bg-purple-700 transition-colors flex items-center gap-2"
+          >
+            <Brain className="w-4 h-4" />
+            AI Analysis
           </button>
         </div>
       </div>
@@ -162,6 +158,12 @@ const PatientCard = ({ patient }) => {
         patient={patient}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+      />
+
+      <AIAnalysisModal
+        patient={patient}
+        isOpen={isAIModalOpen}
+        onClose={() => setIsAIModalOpen(false)}
       />
     </>
   );

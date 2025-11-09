@@ -364,14 +364,14 @@ const PatientDetailsModal = ({
 
         {/* Modal Footer */}
         <div className="bg-[var(--color-secondary)] border-t border-slate-700 px-6 py-4 flex justify-end space-x-3">
-          {/* ... footer buttons (no changes) ... */}
+          {/* ... footer buttons (no changes) ... */}y{" "}
           <button
             onClick={onClose}
-            className="px-4 py-2 border bg-gray-200 border-gray-300 text-gray-800 rounded-md hover:bg-gray-300 transition-colors"
+            className="px-4 py-2 border text-sm bg-gray-200 hover:cursor-point border-gray-300 text-gray-800 rounded-md hover:bg-gray-300 transition-colors"
           >
             Close
           </button>
-          <button className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
+          <button className="px-4 py-2 text-sm bg-green-600 hover:cursor-point text-white rounded-md hover:bg-green-700 transition-colors">
             Edit Patient
           </button>
         </div>
