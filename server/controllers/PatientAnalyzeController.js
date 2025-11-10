@@ -11,7 +11,7 @@ export const analyzePatientProfile = asyncHandler(async (req, res) => {
     const { patientId } = req.params;
 
     // Fetch patient data with all the necessary relationships
-    const patient = await Patient.findOne({ userId: patientId })
+    const  = await Patient.findOne({ userId: patientId })
       .populate("userId", "name email role")
       .populate("symptoms", "description severity category onsetDate notes")
       .populate({
