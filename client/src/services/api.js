@@ -142,6 +142,10 @@ export const doctorAPI = {
     return apiClient.post("/doctors/unassign", { doctorId, patientId });
   },
 
+  analyzePatientProfile: (patientId) => {
+    return apiClient.get(`/patients/${patientId}/analyze`);
+  },
+
   // Get patients assigned to a doctor
   getDoctorPatients: () => {
     return apiClient.get("/doctors/get-patients");
