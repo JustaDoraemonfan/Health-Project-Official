@@ -4,7 +4,7 @@ import asyncHandler from "../middleware/asyncHandler.js";
 import { successResponse, errorResponse } from "../utils/response.js";
 import { nowInIST } from "../utils/dateUtils.js";
 
-const genAI = new GoogleGenerativeAI(.env.GEMINI_API_KEY);
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 export const analyzePatientProfile = asyncHandler(async (req, res) => {
   try {
