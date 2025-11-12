@@ -10,38 +10,7 @@ import {
   FileText,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-// Assuming 'doctorAPI' is correctly imported from your services
-// import { doctorAPI } from "../../services/api";
-
-// A mock API call to simulate the fetch
-const mockDoctorAPI = {
-  analyzePatientProfile: (patientId) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          data: {
-            success: true,
-            message: "Patient profile analysis generated successfully",
-            data: {
-              patient: {
-                id: "68eac99327dfd1b100742301",
-                name: "Souvik Patra",
-                age: 20,
-                gender: "male",
-                bloodGroup: "O+",
-              },
-              analysis:
-                "**Patient Summary**\n\nSouvik Patra is a 20-year-old male from Kolkata with a significant medical history. He has ongoing diagnoses of Hypertension, Type 2 Diabetes, and Asthma. His current medication regimen includes Lisinopril for blood pressure management, Metformin for glycemic control, and an Albuterol inhaler for asthma relief. He has documented allergies to Penicillin, Peanuts, and Pollen. His surgical history includes an appendectomy and a knee arthroscopy.\n\nMr. Patra presents with several current symptoms. He reports moderate headaches, specifically localized to the left side of the brain, which he describes as significant. He also experiences mild coughs in the early morning, lasting approximately 10 minutes upon waking. Additionally, he notes mild, minor digestive issues. These symptoms warrant careful clinical evaluation, particularly the headaches, given his young age and existing chronic conditions. The early morning cough could indicate suboptimal asthma control or be exacerbated by his pollen allergy, while the digestive complaints may be related to medication side effects or dietary factors. A comprehensive assessment is necessary to optimize his overall health management.\n\n---\n\n**Clinical Assessment Report: Souvik Patra**\n\n**1. Overview**\nMr. Souvik Patra is a 20-year-old male with a significant health profile including Hypertension, Type 2 Diabetes, and Asthma. His current medications are Lisinopril, Metformin, and Albuterol Inhaler. Key allergies include Penicillin, Peanuts, and Pollen. Surgical history consists of an appendectomy and knee arthroscopy.\n\n**2. Symptom Interpretation**\n*   **Headaches (Moderate, left-sided):** Given his age and hypertension, these headaches require thorough investigation to rule out secondary causes such as blood pressure fluctuations, medication side effects (Lisinopril can rarely cause headaches), or other neurological etiologies. Migraine or tension-type headaches are also possibilities.\n*   **Early Morning Cough (Mild):** This symptom is highly suggestive of suboptimal asthma control, especially if nocturnal or early morning exacerbations are present. It could also be related to post-nasal drip from his pollen allergy or gastroesophageal reflux given his mild digestive issues.\n*   **Digestive Issues (Mild):** Metformin is a common cause of gastrointestinal side effects. Dietary factors or other underlying digestive conditions should also be considered.\n\n**3. Risks / Alerts**\n*   **Chronic Conditions at Young Age:** Hypertension and Type 2 Diabetes at 20 years old indicate a high-risk profile for future cardiovascular and microvascular complications, necessitating aggressive management.\n*   **Persistent Headaches:** Requires evaluation to exclude serious neurological pathology or uncontrolled hypertension.\n*   **Asthma Control:** Early morning cough suggests potential for inadequate asthma control or exposure to triggers, increasing risk for exacerbations.\n*   **Polypharmacy & Allergies:** Vigilance for drug interactions or adverse effects from current medications, and strict avoidance of known allergens is crucial.\n\n**4. Next Steps**\n*   **Neurological Workup:** Detailed headache history (frequency, intensity, triggers, associated symptoms), neurological examination. Consider blood pressure re-evaluation and potential imaging (CT/MRI brain) if red flags or neurological deficits are present.\n*   **Asthma Review:** Assess current asthma control, inhaler technique, and adherence. Consider spirometry/PFTs and review trigger avoidance strategies, particularly for pollen.\n*   **Metabolic & Cardiovascular Review:** Monitor blood pressure, HbA1c, lipid profile, and renal function. Reinforce lifestyle modifications (diet, exercise) crucial for hypertension and diabetes management.\n*   **GI Assessment:** Explore the nature of digestive issues. If Metformin-related, consider dosage adjustment or alternative agents.\n*   **Allergy Management:** Counsel on strict avoidance of peanut and penicillin, and strategies for pollen allergy.\n\nNote: This AI-generated analysis is for clinical support only. Final decisions should be based on professional medical judgment and diagnostic evaluation.",
-              generatedAt: "2025-11-12T06:21:39.948Z",
-            },
-          },
-        });
-      }, 1500); // Simulate network delay
-    });
-  },
-};
-
-const doctorAPI = mockDoctorAPI; // Use the mock API
+import { doctorAPI } from "../../services/api";
 
 // This helper component renders simple markdown (bold text)
 const SimpleMarkdown = ({ text }) => {
@@ -358,8 +327,8 @@ const AIAnalysisModal = ({ isOpen, onClose, patient }) => {
               </section>
 
               {/* Full Analysis */}
-              <section>
-                <h3 className="text-lg google-sans-code-400 font-semibold text-purple-300 mb-3 flex items-center">
+              <section className="google-sans-code-400">
+                <h3 className="text-lg  font-semibold text-purple-300 mb-3 flex items-center">
                   {/* CHANGELOG: text-white changed to text-purple-300 */}
                   <FileText className="w-5 h-5 mr-2 text-purple-500" />
                   Complete Analysis
