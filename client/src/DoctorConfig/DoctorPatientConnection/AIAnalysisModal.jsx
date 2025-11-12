@@ -90,7 +90,7 @@ const AIAnalysisModal = ({ isOpen, onClose, patient }) => {
         .filter(
           (line) => line.trim().startsWith("*") || line.trim().startsWith("-")
         )
-        .map((line) => line.trim().substring(1).trim().replace(/^ /, "")); // Remove bullet and any leading non-breaking spaces
+        .map((line) => line.trim().substring(1).trim().replace(/^ /, "")); // Remove bullet and any leading non-breaking spaces
       return items;
     };
 
@@ -151,24 +151,28 @@ const AIAnalysisModal = ({ isOpen, onClose, patient }) => {
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[60] p-4">
       <div className="bg-slate-900 rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white relative">
+        {/* CHANGELOG: Added responsive padding (p-4 sm:p-6) and text size (text-xl sm:text-2xl) */}
+        <div className="bg-[var(--color-primary)] p-4 sm:p-6 text-white relative">
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 text-white hover:bg-white/20 rounded-full p-2 transition-colors"
+            className="absolute top-3 right-3 sm:top-4 sm:right-4 text-white hover:bg-white/20 rounded-full p-2 transition-colors"
           >
             <X className="w-6 h-6" />
           </button>
           <div className="flex items-center space-x-3">
-            <Brain className="w-10 h-10" />
+            <Brain className="w-8 h-8 sm:w-10 text-orange-300 sm:h-10" />
             <div>
-              <h2 className="text-2xl font-semibold">AI Health Analysis</h2>
-              <p className="text-blue-100 text-sm">Patient: {userName}</p>
+              <h2 className="text-xl text-slate-700 sm:text-2xl font-light">
+                AI Health Analysis
+              </h2>
+              <p className="text-black text-sm">Patient: {userName}</p>
             </div>
           </div>
         </div>
 
         {/* Body */}
-        <div className="p-6 overflow-y-auto flex-1 bg-slate-900">
+        {/* CHANGELOG: Added responsive padding (p-4 sm:p-6) */}
+        <div className="p-4 sm:p-6 overflow-y-auto flex-1 bg-[var(--color-primary)]">
           {isAnalyzing ? (
             <div className="flex flex-col items-center justify-center py-12">
               <Loader2 className="w-12 h-12 text-blue-500 animate-spin mb-4" />
@@ -181,13 +185,13 @@ const AIAnalysisModal = ({ isOpen, onClose, patient }) => {
             <div className="space-y-6">
               {/* Patient Info Card */}
               {aiAnalysis.patientInfo && (
-                <div className="bg-slate-800 p-4 rounded-lg border border-slate-700">
-                  <h3 className="text-lg font-semibold text-blue-300 mb-2 flex items-center">
-                    {/* CHANGELOG: text-white changed to text-blue-300 */}
+                <div className="bg-[var(--color-secondary)] p-4 rounded-lg border border-slate-700">
+                  <h3 className="text-lg font-semibold text-blue-300 mb-3 flex items-center">
                     <FileText className="w-5 h-5 mr-2 text-blue-500" />
                     Patient Information
                   </h3>
-                  <div className="grid grid-cols-2 gap-3 text-sm">
+                  {/* CHANGELOG: Added responsive grid (grid-cols-1 sm:grid-cols-2) */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                     <div>
                       <span className="text-gray-400">Name:</span>
                       <span className="text-white ml-2">
@@ -237,8 +241,7 @@ const AIAnalysisModal = ({ isOpen, onClose, patient }) => {
                     }`}
                   />
                   <div>
-                    <h3 className="text-lg font-semibold text-white">
-                      {/* CHANGELOG: Kept text-white for contrast on colored bg */}
+                    <h3 className="text-lg font-semibold text-black">
                       Risk Assessment
                     </h3>
                     <p
@@ -258,16 +261,11 @@ const AIAnalysisModal = ({ isOpen, onClose, patient }) => {
 
               {/* Key Findings */}
               <section>
-                <h3 className="text-lg font-semibold text-blue-300 mb-3 flex items-center">
-                  {/* CHANGELOG: text-white changed to text-blue-300 */}
-                  <Activity className="w-5 h-5 mr-2 text-blue-500" />
-                  Key Findings
-                </h3>
                 <div className="space-y-2">
                   {aiAnalysis.keyFindings.map((finding, index) => (
                     <div
                       key={index}
-                      className="bg-slate-800 p-3 rounded-lg border border-slate-700"
+                      className="bg-[var(--color-secondary)] p-3 rounded-lg border border-slate-700"
                     >
                       <p className="text-sm text-gray-200 flex items-start">
                         <span className="text-blue-500 mr-2">•</span>
@@ -281,16 +279,11 @@ const AIAnalysisModal = ({ isOpen, onClose, patient }) => {
               {/* Risks & Alerts */}
               {aiAnalysis.risks && aiAnalysis.risks.length > 0 && (
                 <section>
-                  <h3 className="text-lg font-semibold text-orange-300 mb-3 flex items-center">
-                    {/* CHANGELOG: text-white changed to text-orange-300 */}
-                    <AlertTriangle className="w-5 h-5 mr-2 text-orange-500" />
-                    Risks & Alerts
-                  </h3>
                   <div className="space-y-2">
                     {aiAnalysis.risks.map((risk, index) => (
                       <div
                         key={index}
-                        className="bg-orange-900/20 border border-orange-800 p-3 rounded-lg"
+                        className="bg-orange-900/90 border border-orange-800 p-3 rounded-lg"
                       >
                         <p className="text-sm text-orange-100 flex items-start">
                           <span className="text-orange-500 mr-2">⚠</span>
@@ -304,16 +297,11 @@ const AIAnalysisModal = ({ isOpen, onClose, patient }) => {
 
               {/* Recommendations */}
               <section>
-                <h3 className="text-lg font-semibold text-green-300 mb-3 flex items-center">
-                  {/* CHANGELOG: text-white changed to text-green-300 */}
-                  <TrendingUp className="w-5 h-5 mr-2 text-green-500" />
-                  Recommendations & Next Steps
-                </h3>
                 <div className="space-y-2">
                   {aiAnalysis.recommendations.map((rec, index) => (
                     <div
                       key={index}
-                      className="bg-green-900/20 border border-green-800 p-3 rounded-lg"
+                      className="bg-green-900/90 border border-green-800 p-3 rounded-lg"
                     >
                       <p className="text-sm text-green-100 flex items-start">
                         <span className="text-green-500 mr-2 font-bold">
@@ -328,13 +316,8 @@ const AIAnalysisModal = ({ isOpen, onClose, patient }) => {
 
               {/* Full Analysis */}
               <section className="google-sans-code-400">
-                <h3 className="text-lg  font-semibold text-purple-300 mb-3 flex items-center">
-                  {/* CHANGELOG: text-white changed to text-purple-300 */}
-                  <FileText className="w-5 h-5 mr-2 text-purple-500" />
-                  Complete Analysis
-                </h3>
-                <div className="bg-slate-800 border border-slate-700 p-4 rounded-lg">
-                  <div className="text-sm text-gray-300 font-sans leading-relaxed">
+                <div className="bg-[var(--color-secondary)] border border-slate-700 p-4 rounded-lg">
+                  <div className="text-sm text-gray-300 google-sans-code-400 leading-relaxed">
                     {aiAnalysis.rawAnalysis.split("\n").map((line, index) => {
                       if (line.trim() === "---") {
                         return (
@@ -355,7 +338,7 @@ const AIAnalysisModal = ({ isOpen, onClose, patient }) => {
               </section>
 
               {/* Disclaimer */}
-              <div className="bg-yellow-900/20 border border-yellow-700 p-4 rounded-lg">
+              <div className="bg-yellow-900/90 border border-yellow-700 p-4 rounded-lg">
                 <p className="text-xs text-yellow-100">
                   <strong>Disclaimer:</strong> This AI analysis is for
                   informational purposes only and should not replace
@@ -368,7 +351,8 @@ const AIAnalysisModal = ({ isOpen, onClose, patient }) => {
         </div>
 
         {/* Footer */}
-        <div className="bg-slate-800 border-t border-slate-700 px-6 py-4 flex justify-end">
+        {/* CHANGELOG: Added responsive padding (px-4 sm:px-6) */}
+        <div className="bg-[var(--color-secondary)] border-t border-slate-700 px-4 sm:px-6 py-4 flex justify-end">
           <button
             onClick={onClose}
             className="px-6 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors font-medium"
