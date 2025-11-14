@@ -201,7 +201,7 @@ const AIAnalysisModal = ({ isOpen, onClose, patient }) => {
                     <div>
                       <span className="text-gray-400">Age:</span>
                       <span className="text-white ml-2">
-                        {.patientInfo.age} years
+                        {aiAnalysis.patientInfo.age} years
                       </span>
                     </div>
                     <div>
