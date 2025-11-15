@@ -26,3 +26,28 @@ export const upload = multer({
     fileSize: 5 * 1024 * 1024, // 5MB limit (optional)
   },
 });
+
+export const uploadProfilePhoto = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: "healthymewebsite-verifications",
+    contentType: multerS3.AUTO_CONTENT_TYPE,
+    metadata: (req, file, cb) => {
+      cb(null, { fieldName: file.fieldname });
+    },
+    key: (req, file, cb) => {
+      const userType = req.user.role; // "doctor" or "patient"
+      const userId = req.user.id; // ID of doctor/patient
+
+      const folder =
+        userType === "doctor"
+          ? `profile-photos/doctors/${userId}`
+          : `profile-photos/patients/${userId}`;
+
+      cb(null, `${folder}/photo-${Date.now()}-${file.originalname}`);
+    },
+  }),
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB
+  },
+});

@@ -30,6 +30,7 @@ import reminderLogRoutes from "./routes/Medication/reminderLogRoutes.js";
 import { startReminderJobs } from "./jobs/reminderScheduler.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import AnalyzeRoutes from "./routes/PatientAnalyzeRoute.js";
+import profilePhotoRoutes from "./routes/profilePhotoRoutes.js";
 
 // Load env vars
 dotenv.config();
@@ -79,6 +80,7 @@ app.use("/api/reminders", reminderRoutes);
 app.use("/api/reminder-logs", reminderLogRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/patients", AnalyzeRoutes);
+app.use("/api/profile-photo", profilePhotoRoutes);
 
 // ---------- ERROR HANDLING ----------
 app.use(notFound);

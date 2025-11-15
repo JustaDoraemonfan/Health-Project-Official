@@ -13,6 +13,7 @@ const doctorSchema = new mongoose.Schema(
       unique: true,
     },
     profilePhoto: { type: String, default: "" },
+    profilePhotoKey: { type: String, default: "" },
 
     specialization: { type: String, required: true },
     experience: { type: Number, default: 0 },
