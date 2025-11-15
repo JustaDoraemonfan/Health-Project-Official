@@ -39,7 +39,7 @@ export const getDoctor = asyncHandler(async (req, res) => {
     return errorResponse(res, "Invalid doctor ID", 400);
   }
 
-  const doctor = await Doctor.findById(req..id)
+  const doctor = await Doctor.findById(req.params.id)
     .populate("patients", "name email")
     .lean();
 
