@@ -12,6 +12,7 @@ const patientSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    profilePhoto: { type: String, default: "" },
 
     // Basic Info
     age: { type: Number },
