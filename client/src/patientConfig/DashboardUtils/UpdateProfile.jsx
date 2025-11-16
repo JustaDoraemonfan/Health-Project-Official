@@ -78,15 +78,47 @@ const UpdateProfile = () => {
     }
   };
 
+  // Validate photo file
+  const validatePhotoFile = (file) => {
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+
+    if (!file) {
+      return { valid: false, error: "No file selected" };
+    }
+
+    if (file.size > maxSize) {
+      return {
+        valid: false,
+        error: `File size (${(file.size / (1024 * 1024)).toFixed(
+          2
+        )}MB) exceeds the 5MB limit`,
+      };
+    }
+
+    if (!allowedTypes.includes(file.type)) {
+      return {
+        valid: false,
+        error: "Invalid file type. Please upload JPG, PNG, or WebP images only",
+      };
+    }
+
+    return { valid: true };
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUpdating(true);
     setMessage({ type: "", content: "" });
 
+    let profileUpdateSuccess = false;
+    let photoUploadSuccess = false;
+    let photoUploadError = null;
+
     try {
+      // 1️⃣ Update normal profile fields
       let dataToSend;
 
-      // 1️⃣ Update normal profile fields
       if (profile.userId.role === "patient") {
         dataToSend = prepareDataForSubmission(formData, profile);
         await patientAPI.updatePatient(profile._id, dataToSend);
@@ -96,20 +128,79 @@ const UpdateProfile = () => {
         await doctorAPI.updateDoctor(profile._id, { profileUpdated: true });
       }
 
+      profileUpdateSuccess = true;
+      console.log("✅ Profile updated successfully");
+
       // 2️⃣ Upload profile photo (ONLY IF a new file is selected)
       if (profilePhotoFile) {
-        await photoAPI.uploadProfilePhoto(profilePhotoFile);
+        // Validate file before uploading
+        const validation = validatePhotoFile(profilePhotoFile);
+
+        if (!validation.valid) {
+          photoUploadError = validation.error;
+          console.warn("⚠️ Photo validation failed:", validation.error);
+        } else {
+          try {
+            console.log("📤 Uploading profile photo...", {
+              name: profilePhotoFile.name,
+              size: `${(profilePhotoFile.size / 1024).toFixed(2)} KB`,
+              type: profilePhotoFile.type,
+            });
+
+            const photoResponse = await photoAPI.uploadProfilePhoto(
+              profilePhotoFile
+            );
+            photoUploadSuccess = true;
+            console.log("✅ Photo uploaded successfully:", photoResponse.data);
+          } catch (photoError) {
+            console.error("❌ Photo upload failed:", photoError);
+            photoUploadError =
+              photoError.response?.data?.message ||
+              photoError.message ||
+              "Failed to upload photo";
+          }
+        }
       }
 
-      setMessage({ type: "success", content: "Profile updated successfully!" });
+      // 3️⃣ Set appropriate success/warning message
+      if (profileUpdateSuccess && photoUploadSuccess) {
+        setMessage({
+          type: "success",
+          content: "Profile and photo updated successfully!",
+        });
+      } else if (
+        profileUpdateSuccess &&
+        !photoUploadSuccess &&
+        profilePhotoFile
+      ) {
+        setMessage({
+          type: "warning",
+          content: `Profile updated successfully, but photo upload failed: ${photoUploadError}. Please try uploading the photo again.`,
+        });
+      } else if (profileUpdateSuccess) {
+        setMessage({
+          type: "success",
+          content: "Profile updated successfully!",
+        });
+      }
 
-      setTimeout(() => navigate(-1), 2000);
+      // Only navigate if profile update was successful
+      if (profileUpdateSuccess && (!profilePhotoFile || photoUploadSuccess)) {
+        setTimeout(() => navigate(-1), 2000);
+      }
     } catch (err) {
-      console.error("Error updating profile:", err);
+      console.error("❌ Error updating profile:", err);
+      console.error("Error details:", {
+        message: err.message,
+        response: err.response?.data,
+        status: err.response?.status,
+      });
+
       setMessage({
         type: "error",
         content:
           err.response?.data?.message ||
+          err.message ||
           "Failed to update profile. Please try again.",
       });
     } finally {
