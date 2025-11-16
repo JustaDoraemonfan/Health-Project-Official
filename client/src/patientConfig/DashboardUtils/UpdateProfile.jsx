@@ -1,14 +1,18 @@
 // src/components/Profile/UpdateProfile.jsx
 import React, { useEffect, useState } from "react";
-import { profileAPI } from "../../services/api";
-import { patientAPI } from "../../services/api";
-import { doctorAPI } from "../../services/api";
+import {
+  profileAPI,
+  doctorAPI,
+  patientAPI,
+  photoAPI,
+} from "../../services/api";
 import { useNavigate } from "react-router-dom";
 import { User, Save, ArrowLeft, AlertCircle } from "lucide-react";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import MessageAlert from "../../components/MessageAlert";
 import PatientForm from "../PatientFormSections/PatientForm";
 import DoctorForm from "../../DoctorConfig/DoctorFormSection/DoctorForm";
+import ProfilePhotoUpload from "../../components/ProfilePhotoUpload";
 import {
   transformProfileData,
   prepareDataForSubmission,
@@ -21,6 +25,7 @@ import Header from "../../components/Header";
 
 const UpdateProfile = () => {
   const [profile, setProfile] = useState(null);
+  const [profilePhotoFile, setProfilePhotoFile] = useState(null);
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
@@ -81,34 +86,26 @@ const UpdateProfile = () => {
     try {
       let dataToSend;
 
+      // 1️⃣ Update normal profile fields
       if (profile.userId.role === "patient") {
         dataToSend = prepareDataForSubmission(formData, profile);
-        console.log(
-          "Sending patient data:",
-          JSON.stringify(dataToSend, null, 2)
-        );
         await patientAPI.updatePatient(profile._id, dataToSend);
       } else if (profile.userId.role === "doctor") {
         dataToSend = prepareDoctorDataForSubmission(formData, profile);
-        console.log(
-          "Sending doctor data:",
-          JSON.stringify(dataToSend, null, 2)
-        );
         await doctorAPI.updateDoctor(profile._id, dataToSend);
-        await doctorAPI.updateDoctor(profile._id, {
-          profileUpdated: true,
-        });
+        await doctorAPI.updateDoctor(profile._id, { profileUpdated: true });
+      }
+
+      // 2️⃣ Upload profile photo (ONLY IF a new file is selected)
+      if (profilePhotoFile) {
+        await photoAPI.uploadProfilePhoto(profilePhotoFile);
       }
 
       setMessage({ type: "success", content: "Profile updated successfully!" });
 
-      // Redirect after 2 seconds
-      setTimeout(() => {
-        navigate(-1); // Go back to previous page
-      }, 2000);
+      setTimeout(() => navigate(-1), 2000);
     } catch (err) {
       console.error("Error updating profile:", err);
-      console.error("Error details:", err.response?.data);
       setMessage({
         type: "error",
         content:
@@ -241,6 +238,11 @@ const UpdateProfile = () => {
 
                 {/* Role-specific Forms Container */}
                 <div className="relative">
+                  <ProfilePhotoUpload
+                    initialPhoto={formData.profilePhoto}
+                    onFileSelect={(file) => setProfilePhotoFile(file)}
+                  />
+
                   <div className="relative bg-transparent rounded-2xl p-0 sm:p-8 backdrop-blur-sm">
                     {profile.userId.role === "patient" && (
                       <PatientForm

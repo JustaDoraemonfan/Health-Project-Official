@@ -105,6 +105,15 @@ export const patientAPI = {
   },
 };
 
+export const photoAPI = {
+  uploadProfilePhoto: (file) => {
+    const formData = new FormData();
+    formData.append("photo", file);
+
+    return apiClient.post("/profile-photo/update", formData);
+  },
+};
+
 // Doctor API endpoints
 export const doctorAPI = {
   // Create doctor (admin only)
