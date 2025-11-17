@@ -55,7 +55,7 @@ export default function StatusBar({
     user?.doctorProfile?.profilePhoto ||
     null;
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = false;
   const [doctorStatus, setDoctorStatus] = useState(isAvailable);
 
   const currentStatus = statusOptions.find((s) => s.label === doctorStatus);
