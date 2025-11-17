@@ -25,9 +25,8 @@ const DoctorGrid = ({
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           {/* Left - Results */}
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-green-500/10 rounded-md border border-green-500/20">
-              {/* Note: text-black on a green-500/10 bg might be hard to see. Consider text-green-300 */}
-              <Users className="w-4 h-4 text-green-300" />
+            <div className="p-2 bg-[var(--color-secondary)] rounded-md border border-green-500/20">
+              <Users className="w-4 h-4 text-[var(--color-primary)]" />
             </div>
             <div>
               <h2 className="text-xl font-light text-[var(--color-secondary)]">
@@ -35,8 +34,7 @@ const DoctorGrid = ({
               </h2>
               <div className="flex items-center gap-2 text-sm text-gray-400">
                 <span>Found</span>
-                {/* Note: text-black on a green-500/20 bg might be hard to see. Consider text-green-300 */}
-                <span className="px-2 py-0.5 bg-green-500/20 text-green-300 rounded text-xs font-medium">
+                <span className="px-2 py-0.5 bg-[var(--color-secondary)] text-[var(--color-primary)] rounded text-xs font-medium">
                   {doctors.length}
                 </span>
                 <span>{doctors.length === 1 ? "doctor" : "doctors"}</span>
@@ -48,9 +46,8 @@ const DoctorGrid = ({
           {/* UPDATED: Full-width w/ space-between on mobile, auto-width on sm+ */}
           <div className="flex w-full sm:w-auto items-center justify-between sm:justify-end gap-3">
             <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-800 rounded-md border border-gray-700">
-              <MapPin className="w-3 h-3 text-white" />
               <span className="text-xs text-[var(--color-primary)] google-sans-code-400">
-                {location || "all locations"}
+                {location || "~ Showing All Locations"}
               </span>
             </div>
 

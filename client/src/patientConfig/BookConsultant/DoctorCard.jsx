@@ -35,18 +35,33 @@ const DoctorDetailsModal = ({ doctor, isOpen, onClose }) => {
       >
         {/* Header */}
         <div className="sticky top-0 bg-[var(--color-secondary)] border-b border-gray-700 p-6">
-          {/* UPDATED: Fixed layout by grouping status and close button */}
           <div className="flex items-start justify-between">
             <div className="flex items-center">
-              <div className="w-14 h-14 bg-[var(--color-primary)] rounded-xl flex items-center justify-center mr-4 flex-shrink-0">
-                <User className="w-7 h-7 text-[var(--color-secondary)]" />
+              <div
+                className="w-20 h-20 rounded-xl overflow-hidden relative flex items-center justify-center mr-3 flex-shrink-0
+                bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900 ring-1 ring-white/10 shadow-inner"
+              >
+                {doctor.profilePhoto ? (
+                  <img
+                    src={doctor.profilePhoto}
+                    alt={doctorName}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.src = "/default-doctor.png";
+                    }}
+                  />
+                ) : (
+                  <User className="w-8 h-8 text-gray-400" />
+                )}
               </div>
+
               <div>
                 <h2 className="text-xl font-light text-[var(--color-primary)] mb-1">
                   {doctorName}
                 </h2>
-                <div className="flex items-center text-purple-400 text-xs mb-2 break-all">
-                  <Mail className="w-4 h-4 mr-2 flex-shrink-0" />
+                {/* UPDATED: text-purple-400 -> text-gray-400 for a more subtle look */}
+                <div className="flex items-center text-gray-400 text-xs mb-2 break-all">
+                  <Mail className="w-4 h-4 mr-2 text-red-300 flex-shrink-0" />
                   Email: {doc.userId?.email}
                 </div>
                 <div
@@ -69,8 +84,11 @@ const DoctorDetailsModal = ({ doctor, isOpen, onClose }) => {
               </button>
               <div className="flex items-center gap-2">
                 <span
+                  // UPDATED: Made this a proper badge for better UI
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium ${
-                    doc.isAvailable ? " text-green-300" : " text-red-300" // Removed stray '0'
+                    doc.isAvailable
+                      ? "bg-green-800/30 text-green-300 border border-green-700/50"
+                      : "bg-red-800/30 text-red-300 border border-red-700/50"
                   }`}
                 >
                   {doc.isAvailable ? "Available" : "Busy"}
@@ -91,7 +109,8 @@ const DoctorDetailsModal = ({ doctor, isOpen, onClose }) => {
                   Experience
                 </span>
               </div>
-              <span className="text-white font-medium">
+              {/* UPDATED: text-white -> text-gray-100 (softer) */}
+              <span className="text-gray-100 font-medium">
                 {doc.experience} years
               </span>
             </div>
@@ -103,7 +122,8 @@ const DoctorDetailsModal = ({ doctor, isOpen, onClose }) => {
                   Fee
                 </span>
               </div>
-              <span className="text-white font-medium">
+              {/* UPDATED: text-white -> text-gray-100 (softer) */}
+              <span className="text-gray-100 font-medium">
                 ${doc.consultationFee}
               </span>
             </div>
@@ -115,7 +135,8 @@ const DoctorDetailsModal = ({ doctor, isOpen, onClose }) => {
                   Location
                 </span>
               </div>
-              <span className="text-white font-medium text-xs">
+              {/* UPDATED: text-white -> text-gray-100 (softer) */}
+              <span className="text-gray-100 font-medium text-xs">
                 {doc.location}
               </span>
             </div>
@@ -127,7 +148,8 @@ const DoctorDetailsModal = ({ doctor, isOpen, onClose }) => {
                   Next Available
                 </span>
               </div>
-              <span className="text-white font-medium text-xs">
+              {/* UPDATED: text-white -> text-gray-100 (softer) */}
+              <span className="text-gray-100 font-medium text-xs">
                 {doc.nextAvailable}
               </span>
             </div>
@@ -142,7 +164,8 @@ const DoctorDetailsModal = ({ doctor, isOpen, onClose }) => {
                   Education
                 </span>
               </div>
-              <p className="text-white">{doc.education}</p>
+              {/* UPDATED: text-white -> text-gray-200 (good for paragraphs) */}
+              <p className="text-gray-200">{doc.education}</p>
             </div>
 
             <div className="bg-gray-800/20 p-4 rounded-lg border border-gray-700">
@@ -152,7 +175,8 @@ const DoctorDetailsModal = ({ doctor, isOpen, onClose }) => {
                   Contact
                 </span>
               </div>
-              <p className="text-white font-mono">{doc.phone}</p>
+              {/* UPDATED: text-white -> text-gray-200 */}
+              <p className="text-gray-200 font-mono">{doc.phone}</p>
             </div>
           </div>
 
@@ -166,7 +190,8 @@ const DoctorDetailsModal = ({ doctor, isOpen, onClose }) => {
                 {doc.languages.map((lang, index) => (
                   <span
                     key={index}
-                    className="px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg border border-gray-700"
+                    // UPDATED: text-white -> text-gray-200 (softer on dark bg)
+                    className="px-3 py-1.5 bg-gray-800 text-gray-200 text-xs rounded-lg border border-gray-700"
                   >
                     {lang}
                   </span>
@@ -187,8 +212,10 @@ const DoctorDetailsModal = ({ doctor, isOpen, onClose }) => {
                     key={index}
                     className="flex items-center gap-3 px-3 py-2 bg-blue-900/20 text-blue-300 rounded-lg border border-blue-800/50"
                   >
-                    <Award className="w-4 h-4 flex-shrink-0" />
-                    <span className="text-xs">{cert}</span>
+                    <Award className="w-4 h-4 text-yellow-300 flex-shrink-0" />
+                    <span className="text-xs text-[var(--color-primary)]">
+                      {cert}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -202,7 +229,10 @@ const DoctorDetailsModal = ({ doctor, isOpen, onClose }) => {
                 About
               </h3>
               <div className="bg-gray-800/20 p-4 rounded-lg border border-gray-700">
-                <p className="text-gray-300 leading-relaxed">{doc.about}</p>
+                {/* text-gray-300 is perfect for body copy, no change */}
+                <p className="text-gray-300 leading-7 tracking-wide">
+                  {doc.about}
+                </p>
               </div>
             </div>
           )}
@@ -214,7 +244,7 @@ const DoctorDetailsModal = ({ doctor, isOpen, onClose }) => {
 
 const DoctorCard = ({ doctor, onBookNow, onCall }) => {
   const doc = doctor;
-  const doctorName = getDoctorName(doc);
+  const doctorName = getDoctorName(doc) || "N/A";
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
@@ -226,62 +256,92 @@ const DoctorCard = ({ doctor, onBookNow, onCall }) => {
           <div className="p-5">
             <div className="flex items-start justify-between">
               <div className="flex items-center">
-                <div className="w-11 h-11 bg-[var(--color-primary)] rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                  <User className="w-5 h-5 text-[var(--color-secondary)]" />
+                {/* Image */}
+                <div
+                  className="w-11 h-11 rounded-lg overflow-hidden relative flex items-center justify-center mr-3 flex-shrink-0
+  bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900 ring-1 ring-white/10 shadow-inner"
+                >
+                  {doctor.profilePhoto ? (
+                    <img
+                      src={doctor.profilePhoto}
+                      alt={doctorName}
+                      className="w-full h-full object-cover"
+                      onError={(e) => (e.target.src = "/default-doctor.png")}
+                    />
+                  ) : (
+                    <User className="w-5 h-5 text-gray-400" />
+                  )}
                 </div>
+
+                {/* Name + Email + Specialization */}
                 <div>
                   <h3 className="font-light text-[var(--color-primary)] mb-1">
                     {doctorName}
                   </h3>
-                  <div className="flex items-center text-purple-400 font-light text-xs break-all">
-                    {doc.userId?.email}
+
+                  <div className="flex items-center text-gray-400 font-light text-xs break-all">
+                    {doc.userId?.email || "N/A"}
                   </div>
+
                   <div
                     className={`text-xs mt-1 ${getSpecialtyColor(
                       doc.specialization
                     )}`}
                   >
-                    {doc.specialization}
+                    {doc.specialization || "N/A"}
                   </div>
                 </div>
               </div>
 
+              {/* Verification */}
               <div className="flex flex-col items-end gap-2 ml-2 flex-shrink-0">
                 <div className="flex items-center gap-1 text-xs">
-                  <Star className="w-2 h-2 text-yellow-400 fill-current" />
+                  <Award className="w-4 h-4 text-yellow-400" />
                   <span className="text-yellow-100">
-                    {doc.verification?.status}
+                    {doc.verification?.status || "N/A"}
                   </span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Quick Info - Already Responsive */}
+          {/* Quick Info */}
           <div className="px-5 pb-4">
             <div className="grid grid-cols-2 gap-3 text-xs">
               <div className="flex items-center gap-2 text-gray-400">
-                <Clock className="w-4 h-4 text-red-800" />
-                <span className="text-white">{doc.experience}y experience</span>
+                <Clock className="w-4 h-4 text-blue-400" />
+
+                <span className="text-gray-100">
+                  {doc.experience ? `${doc.experience}y experience` : "N/A"}
+                </span>
               </div>
+
               <div className="flex items-center gap-2 text-gray-400">
-                <DollarSign className="w-4 h-4 text-green-500" />
-                <span className="text-white">${doc.consultationFee}</span>
+                <DollarSign className="w-4 h-4 text-green-400" />
+
+                <span className="text-gray-100">
+                  {doc.consultationFee ? `$${doc.consultationFee}` : "N/A"}
+                </span>
               </div>
+
               <div className="flex items-center gap-2 text-gray-400">
-                <Phone className="w-4 h-4 text-green-600" />
-                <span className="truncate text-blue-300">{doc.phone}</span>
+                <Phone className="w-4 h-4 text-gray-400" />
+                <span className="truncate text-blue-300 hover:text-blue-200 cursor-pointer">
+                  {doc.phone || "N/A"}
+                </span>
               </div>
+
               <div className="flex items-center gap-2 text-gray-400">
-                <MapPin className="w-4 h-4 text-orange-600" />
-                <span className="truncate text-amber-300">{doc.location}</span>
+                <MapPin className="w-4 h-4 text-purple-400" />
+                <span className="truncate text-amber-300">
+                  {doc.location || "N/A"}
+                </span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Action Buttons */}
-        {/* UPDATED: flex-col sm:flex-row */}
         <div className="p-5 flex flex-col sm:flex-row gap-3">
           <button
             onClick={() => setIsDetailsModalOpen(true)}

@@ -90,7 +90,7 @@ const BookConsultation = () => {
   return (
     <section>
       <Header isNotDashboard={true} />
-      <div className="min-h-screen p-6 bg-[var(--color-primary)]">
+      <div className="google-sans-code-400 min-h-screen p-6 bg-[var(--color-primary)]">
         <div className="max-w-6xl mx-auto py-20">
           {/* Header */}
 
