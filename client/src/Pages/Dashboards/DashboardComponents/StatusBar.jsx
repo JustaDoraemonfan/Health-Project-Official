@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   User,
   AlertCircle,
@@ -7,6 +7,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { doctorAPI } from "../../../services/api";
+import { useUser } from "../../../hooks/useUser";
 
 export default function StatusBar({
   name,
@@ -18,6 +19,7 @@ export default function StatusBar({
   verificationStatus = "unverified",
 }) {
   const isDoctor = role === "doctor";
+  const { user } = useUser();
 
   const statusOptions = [
     {
@@ -48,6 +50,11 @@ export default function StatusBar({
     },
   ];
 
+  const profilePhoto =
+    user?.patientProfile?.profilePhoto ||
+    user?.doctorProfile?.profilePhoto ||
+    null;
+
   const [open, setOpen] = useState(false);
   const [doctorStatus, setDoctorStatus] = useState(isAvailable);
 
@@ -57,10 +64,22 @@ export default function StatusBar({
     <section className="mb-6 sm:mb-8">
       {/* Header - Responsive */}
       <div className="text-center mb-6 sm:mb-10">
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl google-sans-code-400 font-bold text-[var(--color-secondary)] mb-2 sm:mb-3">
-          {isDoctor ? "Doctor" : "Patient"}{" "}
-          <span className="text-blue-400">Dashboard</span>
-        </h1>
+        {/* Profile Photo or Default Title */}
+        <div className="flex justify-center mb-4">
+          {profilePhoto ? (
+            <img
+              src={profilePhoto}
+              alt="Profile"
+              className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-blue-400 object-cover shadow-md"
+            />
+          ) : (
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl google-sans-code-400 font-bold text-[var(--color-secondary)] mb-2 sm:mb-3">
+              {isDoctor ? "Doctor" : "Patient"}{" "}
+              <span className="text-blue-400">Dashboard</span>
+            </h1>
+          )}
+        </div>
+
         <p className="text-sm sm:text-base lg:text-lg text-[var(--color-secondary)]/50 google-sans-code-400 mb-1 px-4">
           Welcome back, {isDoctor ? "Dr." : ""}{" "}
           <span className="text-red-400">{name}</span>
