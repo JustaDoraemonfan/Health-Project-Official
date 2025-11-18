@@ -188,9 +188,9 @@ const UpdateProfile = () => {
       }
 
       // Navigate back after delay
-      // if (profileUpdateSuccess && (!profilePhotoFile || photoUploadSuccess)) {
-      //   setTimeout(() => navigate(-1), 5000);
-      // }
+      if (profileUpdateSuccess && (!profilePhotoFile || photoUploadSuccess)) {
+        setTimeout(() => navigate(-1), 5000);
+      }
     } catch (err) {
       console.error("❌ Error updating profile:", err);
 
