@@ -110,7 +110,7 @@ export const patientQuickActions = (navigate) => [
     title: "Emergency Contact",
     description: "Call emergency services",
     icon: Stethoscope,
-    color: "red",
+    color: "orange",
     onClick: () => console.log("Emergency-contact"),
   },
   {
@@ -118,7 +118,7 @@ export const patientQuickActions = (navigate) => [
     title: "Manage your profile",
     description: "View & update profile details",
     icon: CreditCard,
-    color: "blue",
+    color: "slate",
     onClick: () => navigate("/update-profile"),
   },
 ];

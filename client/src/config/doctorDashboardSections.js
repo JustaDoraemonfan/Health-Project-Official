@@ -176,7 +176,7 @@ export const doctorQuickActions = (navigate) => [
     title: "Select Your Slots",
     description: "Select when you are able to take appointments",
     icon: Calendar,
-    color: "red",
+    color: "orange",
     onClick: () => navigate("/doctor/slots"),
   },
 
@@ -185,7 +185,7 @@ export const doctorQuickActions = (navigate) => [
     title: "Your Profile",
     description: "Update your profile",
     icon: UserCheck,
-    color: "blue",
+    color: "slate",
     onClick: () => navigate("/update-profile"),
   },
 ];
