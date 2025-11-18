@@ -7,9 +7,11 @@ import {
   photoAPI,
 } from "../../services/api";
 import { useNavigate } from "react-router-dom";
-import { User, Save, ArrowLeft, AlertCircle } from "lucide-react";
+import { User, Save, AlertCircle } from "lucide-react";
 import LoadingSpinner from "../../components/LoadingSpinner";
-import MessageAlert from "../../components/MessageAlert";
+// Imported the new notification component
+// Adjust the path based on where you saved ProfileNotification.jsx
+import ProfileNotification from "../../components/ProfileNotification";
 import PatientForm from "../PatientFormSections/PatientForm";
 import DoctorForm from "../../DoctorConfig/DoctorFormSection/DoctorForm";
 import ProfilePhotoUpload from "../../components/ProfilePhotoUpload";
@@ -29,7 +31,14 @@ const UpdateProfile = () => {
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
-  const [message, setMessage] = useState({ type: "", content: "" });
+
+  // State for the ProfileNotification
+  const [notification, setNotification] = useState({
+    type: "", // 'success', 'error', or 'warning'
+    title: "", // Optional title
+    message: "", // The content to display
+  });
+
   const navigate = useNavigate();
 
   // Fetch profile on mount
@@ -37,8 +46,6 @@ const UpdateProfile = () => {
     const fetchProfile = async () => {
       try {
         const res = await profileAPI.getProfile();
-        console.log("Profile data:", res.data.data);
-
         const profileData = res.data.data;
         setProfile(profileData);
 
@@ -52,7 +59,11 @@ const UpdateProfile = () => {
         setFormData(transformedData);
       } catch (err) {
         console.error("Error fetching profile", err);
-        setMessage({ type: "error", content: "Failed to load profile data" });
+        setNotification({
+          type: "error",
+          title: "Load Failed",
+          message: "Failed to load profile data. Please refresh.",
+        });
       } finally {
         setLoading(false);
       }
@@ -63,7 +74,7 @@ const UpdateProfile = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Handle nested fields like emergencyContact.name or insurance.provider
+    // Handle nested fields
     if (name.includes(".")) {
       const [parent, child] = name.split(".");
       setFormData((prev) => ({
@@ -83,9 +94,7 @@ const UpdateProfile = () => {
     const maxSize = 5 * 1024 * 1024; // 5MB
     const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
-    if (!file) {
-      return { valid: false, error: "No file selected" };
-    }
+    if (!file) return { valid: false, error: "No file selected" };
 
     if (file.size > maxSize) {
       return {
@@ -106,17 +115,22 @@ const UpdateProfile = () => {
     return { valid: true };
   };
 
+  // Close notification handler
+  const closeNotification = () => {
+    setNotification((prev) => ({ ...prev, message: "" }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUpdating(true);
-    setMessage({ type: "", content: "" });
+    // Clear previous notifications
+    setNotification({ type: "", title: "", message: "" });
 
     let profileUpdateSuccess = false;
     let photoUploadSuccess = false;
     let photoUploadError = null;
 
     try {
-      // 1️⃣ Update normal profile fields
       let dataToSend;
 
       if (profile.userId.role === "patient") {
@@ -129,31 +143,17 @@ const UpdateProfile = () => {
       }
 
       profileUpdateSuccess = true;
-      console.log("✅ Profile updated successfully");
 
-      // 2️⃣ Upload profile photo (ONLY IF a new file is selected)
       if (profilePhotoFile) {
-        // Validate file before uploading
         const validation = validatePhotoFile(profilePhotoFile);
 
         if (!validation.valid) {
           photoUploadError = validation.error;
-          console.warn("⚠️ Photo validation failed:", validation.error);
         } else {
           try {
-            console.log("📤 Uploading profile photo...", {
-              name: profilePhotoFile.name,
-              size: `${(profilePhotoFile.size / 1024).toFixed(2)} KB`,
-              type: profilePhotoFile.type,
-            });
-
-            const photoResponse = await photoAPI.uploadProfilePhoto(
-              profilePhotoFile
-            );
+            await photoAPI.uploadProfilePhoto(profilePhotoFile);
             photoUploadSuccess = true;
-            console.log("✅ Photo uploaded successfully:", photoResponse.data);
           } catch (photoError) {
-            console.error("❌ Photo upload failed:", photoError);
             photoUploadError =
               photoError.response?.data?.message ||
               photoError.message ||
@@ -162,43 +162,42 @@ const UpdateProfile = () => {
         }
       }
 
-      // 3️⃣ Set appropriate success/warning message
+      // 3️⃣ Set appropriate success/warning message using ProfileNotification
       if (profileUpdateSuccess && photoUploadSuccess) {
-        setMessage({
+        setNotification({
           type: "success",
-          content: "Profile and photo updated successfully!",
+          title: "Update Complete",
+          message: "Profile and photo updated successfully!",
         });
       } else if (
         profileUpdateSuccess &&
         !photoUploadSuccess &&
         profilePhotoFile
       ) {
-        setMessage({
+        setNotification({
           type: "warning",
-          content: `Profile updated successfully, but photo upload failed: ${photoUploadError}. Please try uploading the photo again.`,
+          title: "Partial Success",
+          message: `Profile updated, but photo upload failed: ${photoUploadError}`,
         });
       } else if (profileUpdateSuccess) {
-        setMessage({
+        setNotification({
           type: "success",
-          content: "Profile updated successfully!",
+          title: "Success",
+          message: "Profile information updated successfully!",
         });
       }
 
-      // Only navigate if profile update was successful
-      if (profileUpdateSuccess && (!profilePhotoFile || photoUploadSuccess)) {
-        setTimeout(() => navigate(-1), 2000);
-      }
+      // Navigate back after delay
+      // if (profileUpdateSuccess && (!profilePhotoFile || photoUploadSuccess)) {
+      //   setTimeout(() => navigate(-1), 5000);
+      // }
     } catch (err) {
       console.error("❌ Error updating profile:", err);
-      console.error("Error details:", {
-        message: err.message,
-        response: err.response?.data,
-        status: err.response?.status,
-      });
 
-      setMessage({
+      setNotification({
         type: "error",
-        content:
+        title: "Update Failed",
+        message:
           err.response?.data?.message ||
           err.message ||
           "Failed to update profile. Please try again.",
@@ -242,10 +241,19 @@ const UpdateProfile = () => {
   return (
     <>
       <Header isNotDashboard={true} />
+
+      <ProfileNotification
+        type={notification.type}
+        title={notification.title}
+        message={notification.message}
+        onClose={closeNotification}
+        duration={4000}
+      />
+
       <section className="min-h-screen google-sans-code-400 bg-[var(--color-primary)] pt-10 relative overflow-hidden">
         <div className="container mx-auto px-4 sm:px-6 py-8 relative z-10">
           <div className="max-w-4xl mx-auto">
-            {/* Enhanced Header */}
+            {/* Header */}
             <div className="mb-12">
               <div className="text-center">
                 <h1 className="text-3xl sm:text-4xl font-light text-[var(--color-secondary)] mb-3 tracking-tight">
@@ -261,12 +269,9 @@ const UpdateProfile = () => {
               </div>
             </div>
 
-            {/* Message Display */}
-            <MessageAlert message={message} />
-
-            {/* Enhanced Form Layout */}
+            {/* Form Layout */}
             <div className="backdrop-blur-sm bg-transparent rounded-3xl shadow-2xl overflow-hidden">
-              {/* Form Header with Gradient */}
+              {/* Form Header */}
               <div className="bg-[var(--color-secondary)] px-4 sm:px-8 py-6 border-b border-slate-600/50">
                 <h2 className="text-xl sm:text-2xl font-semibold text-slate-100 flex items-center">
                   <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center mr-3">
@@ -277,7 +282,7 @@ const UpdateProfile = () => {
               </div>
 
               <form onSubmit={handleSubmit} className="p-4 sm:p-8 space-y-8">
-                {/* User Information Section with Enhanced Design */}
+                {/* User Information Section */}
                 <div className="relative">
                   <div className="absolute inset-0 bg-gradient-to-r from-stone-900/50 to-slate-900/50 rounded-2xl blur-sm"></div>
                   <div className="relative bg-gradient-to-r from-stone-900 to-slate-900 rounded-2xl p-6 sm:p-8 border border-slate-600/40 backdrop-blur-sm">
@@ -351,7 +356,7 @@ const UpdateProfile = () => {
                   </div>
                 </div>
 
-                {/* Enhanced Submit Buttons */}
+                {/* Submit Buttons */}
                 <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-4 pt-8">
                   <button
                     type="button"
@@ -369,7 +374,7 @@ const UpdateProfile = () => {
                     {updating ? (
                       <div className="flex items-center justify-center">
                         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
-                        <span>Updating Profile...</span>
+                        <span>Updating...</span>
                       </div>
                     ) : (
                       <div className="flex items-center justify-center">
