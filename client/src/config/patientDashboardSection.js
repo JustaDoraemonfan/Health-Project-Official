@@ -100,7 +100,7 @@ export const dashboardSections = (navigate, modalHandlers = {}) => [
     icon: Bell,
     color: "amber",
     badge: "5 active",
-    onClick: () => "/patient/medication",
+    onClick: () => navigate("/patient/medication"),
   },
 ];
 
