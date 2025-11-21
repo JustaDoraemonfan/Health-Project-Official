@@ -102,9 +102,10 @@ export const dashboardSections = (navigate, modalHandlers = {}) => [
     badge: "5 active",
     onClick: () => navigate("/patient/medication"),
   },
+  s,
 ];
 
-export const  = (navigate) => [
+export const patinet = (navigate) => [
   {
     id: "emergency",
     title: "Emergency Contact",
