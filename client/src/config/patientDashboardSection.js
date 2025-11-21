@@ -104,7 +104,7 @@ export const dashboardSections = (navigate, modalHandlers = {}) => [
   },
 ];
 
-export const patientQuickActions = (navigate) => [
+export const  = (navigate) => [
   {
     id: "emergency",
     title: "Emergency Contact",
