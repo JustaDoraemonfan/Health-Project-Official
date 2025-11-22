@@ -109,7 +109,7 @@ export const patientQuickActions = (navigate) => [
     id: "emergency",
     title: "Emergency Contact",
     description: "Call emergency services",
-    icon: ,
+    icon: Stethoscope,
     color: "orange",
     onClick: () => console.log("Emergency-contact"),
   },
