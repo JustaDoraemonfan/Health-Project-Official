@@ -1,6 +1,7 @@
 // client/src/context/AuthContext.js
 import React, { createContext, useContext, useReducer, useEffect } from "react";
 import { authAPI } from "../services/api";
+import { useRef } from "react";
 
 // Safe localStorage helper
 const safeLocalStorage = {
@@ -177,53 +178,89 @@ export const AuthProvider = ({ children }) => {
 
   // Load user on app start
   useEffect(() => {
+    let mounted = true;
     const initializeAuth = async () => {
       console.log("Initializing auth...", {
         hasToken: !!state.token,
-        token: state.token?.substring(0, 10) + "...",
+        tokenPreview: state.token ? state.token.substring(0, 10) + "..." : null,
       });
 
-      if (state.token) {
-        try {
-          await loadUser();
-        } catch (error) {
-          console.error("Failed to load user during initialization:", error);
-          // Don't immediately log out on initialization failure
-          // Just mark as initialized
+      if (!state.token) {
+        // no token -> mark initialized quickly
+        dispatch({ type: AUTH_ACTIONS.INITIALIZE_COMPLETE });
+        return;
+      }
+
+      const controller = new AbortController();
+      // fallback timeout (ms)
+      const TIMEOUT_MS = 8000;
+      const timeoutId = setTimeout(() => {
+        console.warn("loadUser timed out, aborting request");
+        controller.abort();
+      }, TIMEOUT_MS);
+
+      try {
+        await loadUser(controller.signal);
+      } catch (err) {
+        // loadUser already dispatched LOAD_USER_FAIL.
+        // We don't force logout here: just ensure initialization completes.
+        console.warn("Initialization loadUser failed:", err?.message || err);
+      } finally {
+        clearTimeout(timeoutId);
+        if (mounted) {
+          // ensure app doesn't stay stuck in loading
           dispatch({ type: AUTH_ACTIONS.INITIALIZE_COMPLETE });
         }
-      } else {
-        console.log("No token found, marking as initialized");
-        dispatch({ type: AUTH_ACTIONS.INITIALIZE_COMPLETE });
       }
     };
 
     initializeAuth();
-  }, []); // Keep empty dependency array
+
+    return () => {
+      mounted = false;
+    };
+  }, [state.token]);
 
   // Load user profile
-  const loadUser = async () => {
+  const loadUser = async (signal) => {
     try {
       console.log("Loading user...");
       dispatch({ type: AUTH_ACTIONS.LOAD_USER_START });
-      const response = await authAPI.getCurrentUser();
+
+      // If using axios, it now supports AbortController signal:
+      // authAPI.getCurrentUser({ signal })
+      // If your authAPI wraps axios, ensure it forwards the options to axios.
+      const response = await authAPI.getCurrentUser({ signal });
+
       console.log("User loaded successfully:", response.data.data);
       dispatch({
         type: AUTH_ACTIONS.LOAD_USER_SUCCESS,
         payload: response.data.data,
       });
+      return response.data.data;
     } catch (error) {
       console.error("Load user error:", error);
       console.log("Error details:", {
-        status: error.response?.status,
-        message: error.response?.data?.message,
-        url: error.config?.url,
+        status: error?.response?.status,
+        message: error?.response?.data?.message,
+        url: error?.config?.url,
+        code: error?.code,
+        name: error?.name,
       });
+
+      const message =
+        error?.response?.data?.message ||
+        (error.name === "CanceledError" || error.code === "ERR_CANCELED"
+          ? "Request canceled/timeout"
+          : "Failed to load user");
+
       dispatch({
         type: AUTH_ACTIONS.LOAD_USER_FAIL,
-        payload: error.response?.data?.message || "Failed to load user",
+        payload: message,
       });
-      throw error; // Re-throw to handle in initialization
+
+      // rethrow so callers can react if they want
+      throw error;
     }
   };
 

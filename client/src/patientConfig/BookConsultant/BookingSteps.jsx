@@ -9,6 +9,7 @@ import {
   CreditCard,
   Info,
 } from "lucide-react";
+import { useEffect } from "react";
 
 export const BookingSteps = ({
   currentStep,
@@ -19,6 +20,32 @@ export const BookingSteps = ({
   availability = [], // Availability from backend: [{ day: "Monday", slots: ["09:00-11:00", "14:00-16:00"] }]
 }) => {
   // Helper function to get weekday name from date
+
+  useEffect(() => {
+    console.log("🔍 Availability received in BookingSteps:", availability);
+
+    if (availability && Array.isArray(availability)) {
+      availability.forEach((item, index) => {
+        console.log(`➡️ Item ${index}:`, item);
+
+        if (!item?.day) {
+          console.warn(`⚠️ Missing 'day' field in availability[${index}]`);
+        }
+
+        if (!item?.slots) {
+          console.warn(`⚠️ Missing 'slots' for day '${item?.day}'`);
+        } else if (!Array.isArray(item.slots)) {
+          console.warn(
+            `⚠️ 'slots' is not an array for day '${item.day}':`,
+            item.slots
+          );
+        }
+      });
+    } else {
+      console.warn("⚠️ Availability is NOT an array:", availability);
+    }
+  }, [availability]);
+
   const getWeekdayFromDate = (dateString) => {
     if (!dateString) return null;
     const date = new Date(dateString);
