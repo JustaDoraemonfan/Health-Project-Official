@@ -1,6 +1,13 @@
 // client/src/sections/RegisterSection.jsx
 import React, { useState, useEffect } from "react";
-import { User, AlertCircle, Loader2, CheckCircle } from "lucide-react";
+import {
+  User,
+  AlertCircle,
+  Loader2,
+  CheckCircle,
+  Eye,
+  EyeOff,
+} from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 export const RegisterSection = ({ onToggleAuth }) => {
@@ -15,13 +22,17 @@ export const RegisterSection = ({ onToggleAuth }) => {
     specialization: "",
     phone: "",
     location: "",
-    department: "", // for admin
-    adminRole: "verifier", // default admin role
+    department: "",
+    adminRole: "verifier",
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showError, setShowError] = useState(false);
-  const [validationErrors, setValidationErrors] = useState([]);
+  const [validationErrors, setValidationErrors] = useState({});
   const [success, setSuccess] = useState(false);
+  const [touched, setTouched] = useState({});
+  const [isFormValid, setIsFormValid] = useState(false);
 
   const { register, loading, error, clearError, isAuthenticated } = useAuth();
 
@@ -31,6 +42,7 @@ export const RegisterSection = ({ onToggleAuth }) => {
     { value: "frontlineWorker", label: "Frontline Worker" },
     { value: "admin", label: "Admin" },
   ];
+
   const adminRoles = [
     { value: "verifier", label: "Verifier" },
     { value: "support", label: "Support" },
@@ -42,10 +54,53 @@ export const RegisterSection = ({ onToggleAuth }) => {
       clearError();
       setShowError(false);
     }
-    if (validationErrors.length > 0) {
-      setValidationErrors([]);
-    }
-  }, [formData, clearError, error, showError, validationErrors.length]);
+  }, [formData, clearError, error, showError]);
+
+  // Check form validity
+  useEffect(() => {
+    const checkFormValidity = () => {
+      // Check required basic fields
+      if (
+        !formData.name.trim() ||
+        !formData.email.trim() ||
+        !formData.password ||
+        !formData.confirmPassword
+      ) {
+        return false;
+      }
+
+      // Check passwords match
+      if (formData.password !== formData.confirmPassword) {
+        return false;
+      }
+
+      // Check role-specific required fields
+      if (formData.userType === "doctor" && !formData.specialization.trim()) {
+        return false;
+      }
+
+      if (formData.userType === "frontlineWorker") {
+        if (!formData.phone.trim() || !formData.location.trim()) {
+          return false;
+        }
+      }
+
+      if (formData.userType === "admin") {
+        if (!formData.department.trim() || !formData.adminRole.trim()) {
+          return false;
+        }
+      }
+
+      // Check if there are any validation errors
+      if (Object.keys(validationErrors).length > 0) {
+        return false;
+      }
+
+      return true;
+    };
+
+    setIsFormValid(checkFormValidity());
+  }, [formData, validationErrors]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -53,55 +108,172 @@ export const RegisterSection = ({ onToggleAuth }) => {
       ...prev,
       [name]: value,
     }));
+
+    // Clear field-specific error when user starts typing
+    if (validationErrors[name]) {
+      setValidationErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
   };
 
-  // Client-side validation
+  const handleBlur = (field) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+    validateField(field, formData[field]);
+  };
+
+  // Validate individual field
+  const validateField = (fieldName, value) => {
+    const errors = { ...validationErrors };
+
+    switch (fieldName) {
+      case "name":
+        if (!value.trim()) {
+          errors.name = "Full name is required";
+        } else if (value.trim().length < 2) {
+          errors.name = "Name must be at least 2 characters";
+        } else {
+          delete errors.name;
+        }
+        break;
+
+      case "email":
+        if (!value.trim()) {
+          errors.email = "Email is required";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          errors.email = "Please enter a valid email address";
+        } else {
+          delete errors.email;
+        }
+        break;
+
+      case "password":
+        if (!value) {
+          errors.password = "Password is required";
+        } else if (value.length < 8) {
+          errors.password = "Password must be at least 8 characters";
+        } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(value)) {
+          errors.password = "Must contain uppercase, lowercase, and number";
+        } else {
+          delete errors.password;
+        }
+
+        // Also validate confirm password if it's been touched
+        if (touched.confirmPassword && formData.confirmPassword) {
+          if (value !== formData.confirmPassword) {
+            errors.confirmPassword = "Passwords do not match";
+          } else {
+            delete errors.confirmPassword;
+          }
+        }
+        break;
+
+      case "confirmPassword":
+        if (!value) {
+          errors.confirmPassword = "Please confirm your password";
+        } else if (value !== formData.password) {
+          errors.confirmPassword = "Passwords do not match";
+        } else {
+          delete errors.confirmPassword;
+        }
+        break;
+
+      case "specialization":
+        if (formData.userType === "doctor" && !value.trim()) {
+          errors.specialization = "Specialization is required for doctors";
+        } else {
+          delete errors.specialization;
+        }
+        break;
+
+      case "phone":
+        if (formData.userType === "frontlineWorker" && !value.trim()) {
+          errors.phone = "Phone number is required";
+        } else if (value && !/^\+?[\d\s-()]+$/.test(value)) {
+          errors.phone = "Please enter a valid phone number";
+        } else {
+          delete errors.phone;
+        }
+        break;
+
+      case "location":
+        if (formData.userType === "frontlineWorker" && !value.trim()) {
+          errors.location = "Location is required";
+        } else {
+          delete errors.location;
+        }
+        break;
+
+      case "department":
+        if (formData.userType === "admin" && !value.trim()) {
+          errors.department = "Department is required";
+        } else {
+          delete errors.department;
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  // Validate entire form
   const validateForm = () => {
-    const errors = [];
+    const errors = {};
 
     if (!formData.name.trim()) {
-      errors.push("Full name is required");
+      errors.name = "Full name is required";
+    } else if (formData.name.trim().length < 2) {
+      errors.name = "Name must be at least 2 characters";
     }
 
     if (!formData.email.trim()) {
-      errors.push("Email is required");
+      errors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errors.push("Please enter a valid email address");
+      errors.email = "Please enter a valid email address";
     }
 
     if (!formData.password) {
-      errors.push("Password is required");
+      errors.password = "Password is required";
     } else if (formData.password.length < 8) {
-      errors.push("Password must be at least 8 characters long");
+      errors.password = "Password must be at least 8 characters";
     } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-      errors.push(
-        "Password must contain at least one uppercase letter, one lowercase letter, and one number"
-      );
+      errors.password = "Must contain uppercase, lowercase, and number";
     }
 
-    if (formData.password !== formData.confirmPassword) {
-      errors.push("Passwords do not match");
+    if (!formData.confirmPassword) {
+      errors.confirmPassword = "Please confirm your password";
+    } else if (formData.password !== formData.confirmPassword) {
+      errors.confirmPassword = "Passwords do not match";
     }
 
-    // Additional validation based on user type
+    // Role-specific validation
     if (formData.userType === "frontlineWorker") {
       if (!formData.phone.trim()) {
-        errors.push("Phone number is required for frontline workers");
+        errors.phone = "Phone number is required";
+      } else if (!/^\+?[\d\s-()]+$/.test(formData.phone)) {
+        errors.phone = "Please enter a valid phone number";
       }
       if (!formData.location.trim()) {
-        errors.push("Location is required for frontline workers");
+        errors.location = "Location is required";
       }
     }
 
     if (formData.userType === "doctor" && !formData.specialization.trim()) {
-      errors.push("Specialization is required for doctors");
+      errors.specialization = "Specialization is required";
     }
+
     if (formData.userType === "admin") {
       if (!formData.department.trim()) {
-        errors.push("Department is required for admins");
+        errors.department = "Department is required";
       }
       if (!formData.adminRole.trim()) {
-        errors.push("Admin role is required");
+        errors.adminRole = "Admin role is required";
       }
     }
 
@@ -112,9 +284,17 @@ export const RegisterSection = ({ onToggleAuth }) => {
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    // Client-side validation
+    // Mark all fields as touched
+    const allFields = Object.keys(formData);
+    const touchedFields = {};
+    allFields.forEach((field) => {
+      touchedFields[field] = true;
+    });
+    setTouched(touchedFields);
+
+    // Validate form
     const errors = validateForm();
-    if (errors.length > 0) {
+    if (Object.keys(errors).length > 0) {
       setValidationErrors(errors);
       setShowError(true);
       return;
@@ -139,7 +319,7 @@ export const RegisterSection = ({ onToggleAuth }) => {
       registerData.location = formData.location.trim();
     } else if (formData.userType === "admin") {
       registerData.department = formData.department.trim();
-      registerData.adminRole = formData.adminRole; // admin role (verifier/support)
+      registerData.adminRole = formData.adminRole;
     }
 
     const result = await register(registerData);
@@ -148,13 +328,10 @@ export const RegisterSection = ({ onToggleAuth }) => {
       setSuccess(true);
       console.log("Registration successful:", result.data);
 
-      // Show success message and redirect after delay
       setTimeout(() => {
         alert(
           `Welcome ${result.data.name}! Your account has been created successfully. Redirecting to your dashboard...`
         );
-        // You can implement navigation here
-        // For example: navigate(`/${result.data.role}/dashboard`);
       }, 1500);
     } else {
       setShowError(true);
@@ -200,21 +377,12 @@ export const RegisterSection = ({ onToggleAuth }) => {
             </div>
           )}
 
-          {/* Error Display */}
-          {(error || showError) && !success && (
+          {/* Backend Error Display */}
+          {error && showError && !success && (
             <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
               <div className="flex items-start gap-2 text-red-400 text-sm google-sans-code-400">
                 <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                <div>
-                  {error && <div className="mb-1">{error}</div>}
-                  {validationErrors.length > 0 && (
-                    <ul className="list-disc list-inside space-y-1">
-                      {validationErrors.map((err, index) => (
-                        <li key={index}>{err}</li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
+                <div>{error}</div>
               </div>
             </div>
           )}
@@ -230,6 +398,7 @@ export const RegisterSection = ({ onToggleAuth }) => {
               </div>
 
               <div className="p-6 space-y-6 google-sans-code-400">
+                {/* User Type Selection */}
                 <div>
                   <label className="block text-slate-50 text-sm mb-2">
                     Select User Type <span className="text-red-500">*</span>
@@ -249,6 +418,7 @@ export const RegisterSection = ({ onToggleAuth }) => {
                   </select>
                 </div>
 
+                {/* Full Name */}
                 <div>
                   <label className="block text-slate-50 text-sm mb-2">
                     Full Name <span className="text-red-500">*</span>
@@ -258,13 +428,24 @@ export const RegisterSection = ({ onToggleAuth }) => {
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
+                    onBlur={() => handleBlur("name")}
                     disabled={loading}
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50"
+                    className={`w-full px-4 py-3 bg-gray-800 border rounded-md focus:ring-1 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50 ${
+                      touched.name && validationErrors.name
+                        ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                        : "border-gray-600 focus:border-blue-500 focus:ring-blue-500"
+                    }`}
                     placeholder="Enter your full name"
                     required
                   />
+                  {touched.name && validationErrors.name && (
+                    <p className="mt-1 text-xs text-red-400">
+                      {validationErrors.name}
+                    </p>
+                  )}
                 </div>
 
+                {/* Email */}
                 <div>
                   <label className="block text-slate-50 text-sm mb-2">
                     Email Address <span className="text-red-500">*</span>
@@ -274,50 +455,116 @@ export const RegisterSection = ({ onToggleAuth }) => {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
+                    onBlur={() => handleBlur("email")}
                     disabled={loading}
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50"
+                    className={`w-full px-4 py-3 bg-gray-800 border rounded-md focus:ring-1 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50 ${
+                      touched.email && validationErrors.email
+                        ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                        : "border-gray-600 focus:border-blue-500 focus:ring-blue-500"
+                    }`}
                     placeholder="Enter your email"
                     required
                   />
+                  {touched.email && validationErrors.email && (
+                    <p className="mt-1 text-xs text-red-400">
+                      {validationErrors.email}
+                    </p>
+                  )}
                 </div>
 
+                {/* Password */}
                 <div>
                   <label className="block text-slate-50 text-sm mb-2">
                     Password <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    type="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    disabled={loading}
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50"
-                    placeholder="Enter your password"
-                    required
-                  />
-                  <div className="text-xs text-gray-400 mt-1">
-                    Must be at least 8 characters with uppercase, lowercase, and
-                    number
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      onBlur={() => handleBlur("password")}
+                      disabled={loading}
+                      className={`w-full px-4 py-3 pr-12 bg-gray-800 border rounded-md focus:ring-1 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50 ${
+                        touched.password && validationErrors.password
+                          ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                          : "border-gray-600 focus:border-blue-500 focus:ring-blue-500"
+                      }`}
+                      placeholder="Enter your password"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300 transition-colors"
+                      tabIndex={-1}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="w-5 h-5" />
+                      ) : (
+                        <Eye className="w-5 h-5" />
+                      )}
+                    </button>
                   </div>
+                  {touched.password && validationErrors.password && (
+                    <p className="mt-1 text-xs text-red-400">
+                      {validationErrors.password}
+                    </p>
+                  )}
+                  {!validationErrors.password && (
+                    <div className="text-xs text-gray-400 mt-1">
+                      At least 8 characters with uppercase, lowercase, and
+                      number
+                    </div>
+                  )}
                 </div>
 
+                {/* Confirm Password */}
                 <div>
                   <label className="block text-slate-50 text-sm mb-2">
                     Confirm Password <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    type="password"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange}
-                    disabled={loading}
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50"
-                    placeholder="Re-enter your password"
-                    required
-                  />
+                  <div className="relative">
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      name="confirmPassword"
+                      value={formData.confirmPassword}
+                      onChange={handleInputChange}
+                      onBlur={() => handleBlur("confirmPassword")}
+                      disabled={loading}
+                      className={`w-full px-4 py-3 pr-12 bg-gray-800 border rounded-md focus:ring-1 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50 ${
+                        touched.confirmPassword &&
+                        validationErrors.confirmPassword
+                          ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                          : "border-gray-600 focus:border-blue-500 focus:ring-blue-500"
+                      }`}
+                      placeholder="Re-enter your password"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300 transition-colors"
+                      tabIndex={-1}
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className="w-5 h-5" />
+                      ) : (
+                        <Eye className="w-5 h-5" />
+                      )}
+                    </button>
+                  </div>
+                  {touched.confirmPassword &&
+                    validationErrors.confirmPassword && (
+                      <p className="mt-1 text-xs text-red-400">
+                        {validationErrors.confirmPassword}
+                      </p>
+                    )}
                 </div>
 
-                {/* Role-specific fields */}
+                {/* Role-specific fields - Patient */}
                 {formData.userType === "patient" && (
                   <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -333,7 +580,7 @@ export const RegisterSection = ({ onToggleAuth }) => {
                         min="1"
                         max="120"
                         className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50"
-                        placeholder="Age"
+                        placeholder="Age (optional)"
                       />
                     </div>
                     <div>
@@ -355,82 +602,128 @@ export const RegisterSection = ({ onToggleAuth }) => {
                   </div>
                 )}
 
+                {/* Role-specific fields - Doctor */}
                 {formData.userType === "doctor" && (
                   <div>
                     <label className="block text-slate-50 text-sm mb-2">
-                      Specialization *
+                      Specialization <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       name="specialization"
                       value={formData.specialization}
                       onChange={handleInputChange}
+                      onBlur={() => handleBlur("specialization")}
                       disabled={loading}
-                      className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50"
+                      className={`w-full px-4 py-3 bg-gray-800 border rounded-md focus:ring-1 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50 ${
+                        touched.specialization &&
+                        validationErrors.specialization
+                          ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                          : "border-gray-600 focus:border-blue-500 focus:ring-blue-500"
+                      }`}
                       placeholder="e.g., Cardiology, Pediatrics"
                       required
                     />
+                    {touched.specialization &&
+                      validationErrors.specialization && (
+                        <p className="mt-1 text-xs text-red-400">
+                          {validationErrors.specialization}
+                        </p>
+                      )}
                   </div>
                 )}
 
+                {/* Role-specific fields - Frontline Worker */}
                 {formData.userType === "frontlineWorker" && (
                   <div className="grid grid-cols-1 gap-4">
                     <div>
                       <label className="block text-slate-50 text-sm mb-2">
-                        Phone Number *
+                        Phone Number <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="tel"
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
+                        onBlur={() => handleBlur("phone")}
                         disabled={loading}
-                        className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50"
+                        className={`w-full px-4 py-3 bg-gray-800 border rounded-md focus:ring-1 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50 ${
+                          touched.phone && validationErrors.phone
+                            ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                            : "border-gray-600 focus:border-blue-500 focus:ring-blue-500"
+                        }`}
                         placeholder="Enter your phone number"
                         required
                       />
+                      {touched.phone && validationErrors.phone && (
+                        <p className="mt-1 text-xs text-red-400">
+                          {validationErrors.phone}
+                        </p>
+                      )}
                     </div>
                     <div>
                       <label className="block text-slate-50 text-sm mb-2">
-                        Location *
+                        Location <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
                         name="location"
                         value={formData.location}
                         onChange={handleInputChange}
+                        onBlur={() => handleBlur("location")}
                         disabled={loading}
-                        className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50"
+                        className={`w-full px-4 py-3 bg-gray-800 border rounded-md focus:ring-1 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50 ${
+                          touched.location && validationErrors.location
+                            ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                            : "border-gray-600 focus:border-blue-500 focus:ring-blue-500"
+                        }`}
                         placeholder="Enter your location"
                         required
                       />
+                      {touched.location && validationErrors.location && (
+                        <p className="mt-1 text-xs text-red-400">
+                          {validationErrors.location}
+                        </p>
+                      )}
                     </div>
                   </div>
                 )}
+
+                {/* Role-specific fields - Admin */}
                 {formData.userType === "admin" && (
                   <div className="grid grid-cols-1 gap-4">
                     <div>
                       <label className="block text-slate-50 text-sm mb-2">
-                        Department *
+                        Department <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
                         name="department"
                         value={formData.department}
                         onChange={handleInputChange}
+                        onBlur={() => handleBlur("department")}
                         disabled={loading}
-                        className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50"
+                        className={`w-full px-4 py-3 bg-gray-800 border rounded-md focus:ring-1 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50 ${
+                          touched.department && validationErrors.department
+                            ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                            : "border-gray-600 focus:border-blue-500 focus:ring-blue-500"
+                        }`}
                         placeholder="Enter department"
                         required
                       />
+                      {touched.department && validationErrors.department && (
+                        <p className="mt-1 text-xs text-red-400">
+                          {validationErrors.department}
+                        </p>
+                      )}
                     </div>
                     <div>
                       <label className="block text-slate-50 text-sm mb-2">
-                        Admin Role *
+                        Admin Role <span className="text-red-500">*</span>
                       </label>
                       <select
-                        name="role"
-                        value={formData.role}
+                        name="adminRole"
+                        value={formData.adminRole}
                         onChange={handleInputChange}
                         disabled={loading}
                         className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50"
@@ -445,10 +738,11 @@ export const RegisterSection = ({ onToggleAuth }) => {
                   </div>
                 )}
 
+                {/* Submit Button */}
                 <button
                   type="submit"
-                  disabled={loading || success}
-                  className="w-full py-3 px-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white google-sans-code-400 rounded-md hover:from-purple-600 hover:to-purple-700 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:transform-none hover:cursor-pointer disabled:hover:from-purple-500 disabled:hover:to-purple-600"
+                  disabled={loading || success || !isFormValid}
+                  className="w-full py-3 px-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white google-sans-code-400 rounded-md hover:from-purple-600 hover:to-purple-700 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:transform-none hover:cursor-pointer disabled:cursor-not-allowed disabled:hover:from-purple-500 disabled:hover:to-purple-600"
                 >
                   {loading ? (
                     <>
@@ -462,13 +756,19 @@ export const RegisterSection = ({ onToggleAuth }) => {
                     </>
                   ) : (
                     <>
-                      <User className="w-4 h-4 inline mr-2 " />
+                      <User className="w-4 h-4 inline mr-2" />
                       Create Account
                     </>
                   )}
                 </button>
 
-                <div className="text-gray-500 text-sm">
+                {!isFormValid && !loading && !success && (
+                  <div className="text-gray-400 text-xs text-center -mt-2">
+                    Please fill in all required fields to continue
+                  </div>
+                )}
+
+                <div className="text-gray-500 text-sm text-center">
                   Your account will be securely created with the latest security
                   standards.
                 </div>
