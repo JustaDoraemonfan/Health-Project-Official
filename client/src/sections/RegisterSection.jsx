@@ -49,12 +49,6 @@ export const RegisterSection = ({ onToggleAuth }) => {
   ];
 
   // Clear errors when form data changes
-  useEffect(() => {
-    if (error && showError) {
-      clearError();
-      setShowError(false);
-    }
-  }, [formData, clearError, error, showError]);
 
   // Check form validity
   useEffect(() => {
@@ -379,14 +373,13 @@ export const RegisterSection = ({ onToggleAuth }) => {
 
           {/* Backend Error Display */}
           {error && showError && !success && (
-            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
-              <div className="flex items-start gap-2 text-red-400 text-sm google-sans-code-400">
-                <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/10 rounded-lg">
+              <div className="flex items-start gap-2 text-red-500 text-sm google-sans-code-400">
+                <AlertCircle className="w-4 h-4 mt-0.5 text-red-800 flex-shrink-0" />
                 <div>{error}</div>
               </div>
             </div>
           )}
-
           <form onSubmit={handleRegister}>
             <div className="bg-[var(--color-secondary)] border border-gray-700 rounded-lg overflow-hidden">
               {/* Form Header */}
