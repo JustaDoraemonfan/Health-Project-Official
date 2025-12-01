@@ -22,7 +22,7 @@ export const BookingSteps = ({
   // Helper function to get weekday name from date
 
   useEffect(() => {
-    console.log("🔍 Availability received in BookingSteps:", availability);
+    console.log("🔍 Availability  in BookingSteps:", availability);
 
     if (availability && Array.isArray(availability)) {
       availability.forEach((item, index) => {
