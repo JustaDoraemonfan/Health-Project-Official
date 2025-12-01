@@ -1,7 +1,6 @@
 // client/src/context/AuthContext.js
 import React, { createContext, useContext, useReducer, useEffect } from "react";
 import { authAPI } from "../services/api";
-import { useRef } from "react";
 
 // Safe localStorage helper
 const safeLocalStorage = {
@@ -9,7 +8,6 @@ const safeLocalStorage = {
     try {
       if (typeof Storage !== "undefined") {
         const item = localStorage.getItem(key);
-        // Check if the item is null, undefined, or the string "undefined"
         if (item === null || item === "undefined" || item === undefined) {
           return null;
         }
@@ -41,24 +39,59 @@ const safeLocalStorage = {
   },
 };
 
+// Helper to check if token is expired
+const isTokenExpired = (token) => {
+  if (!token) return true;
+
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    const expiryTime = payload.exp * 1000; // Convert to milliseconds
+    return Date.now() >= expiryTime;
+  } catch (error) {
+    console.error("Error checking token expiry:", error);
+    return true; // Treat invalid tokens as expired
+  }
+};
+
 // Initial state
 const initialState = {
   user: (() => {
     try {
       const userData = safeLocalStorage.getItem("user");
+      const token = safeLocalStorage.getItem("token");
+
+      // Check if token is expired before loading user
+      if (token && isTokenExpired(token)) {
+        console.log("Token expired on initialization, clearing data");
+        safeLocalStorage.removeItem("user");
+        safeLocalStorage.removeItem("token");
+        return null;
+      }
+
       return userData ? JSON.parse(userData) : null;
     } catch (error) {
       console.warn("Error parsing user data from localStorage:", error);
-      // Clear the corrupted data
       safeLocalStorage.removeItem("user");
+      safeLocalStorage.removeItem("token");
       return null;
     }
   })(),
-  token: safeLocalStorage.getItem("token"),
-  isAuthenticated: !!safeLocalStorage.getItem("token"),
+  token: (() => {
+    const token = safeLocalStorage.getItem("token");
+    if (token && isTokenExpired(token)) {
+      console.log("Token expired, removing");
+      safeLocalStorage.removeItem("token");
+      return null;
+    }
+    return token;
+  })(),
+  isAuthenticated: (() => {
+    const token = safeLocalStorage.getItem("token");
+    return !!(token && !isTokenExpired(token));
+  })(),
   loading: true,
   error: null,
-  initialized: false, // Add this to track if auth has been initialized
+  initialized: false,
 };
 
 // Action types
@@ -127,11 +160,14 @@ const authReducer = (state, action) => {
       };
 
     case AUTH_ACTIONS.LOAD_USER_FAIL:
-      // Don't clear localStorage immediately on load user fail
-      // Let the user stay logged in locally, but mark as not authenticated
-      console.log("Load user failed:", action.payload);
+      // Clear localStorage on load failure (likely expired token)
+      safeLocalStorage.removeItem("token");
+      safeLocalStorage.removeItem("user");
+      console.log("Load user failed, clearing auth data:", action.payload);
       return {
         ...state,
+        user: null,
+        token: null,
         isAuthenticated: false,
         loading: false,
         error: action.payload,
@@ -182,18 +218,19 @@ export const AuthProvider = ({ children }) => {
     const initializeAuth = async () => {
       console.log("Initializing auth...", {
         hasToken: !!state.token,
-        tokenPreview: state.token ? state.token.substring(0, 10) + "..." : null,
+        tokenExpired: state.token ? isTokenExpired(state.token) : null,
       });
 
-      if (!state.token) {
-        // no token -> mark initialized quickly
+      // If no token or token is expired, mark initialized immediately
+      if (!state.token || isTokenExpired(state.token)) {
+        console.log("No valid token, skipping loadUser");
         dispatch({ type: AUTH_ACTIONS.INITIALIZE_COMPLETE });
         return;
       }
 
       const controller = new AbortController();
-      // fallback timeout (ms)
-      const TIMEOUT_MS = 8000;
+      // Reduced timeout for faster failure detection
+      const TIMEOUT_MS = 5000; // 5 seconds instead of 8
       const timeoutId = setTimeout(() => {
         console.warn("loadUser timed out, aborting request");
         controller.abort();
@@ -202,13 +239,15 @@ export const AuthProvider = ({ children }) => {
       try {
         await loadUser(controller.signal);
       } catch (err) {
-        // loadUser already dispatched LOAD_USER_FAIL.
-        // We don't force logout here: just ensure initialization completes.
         console.warn("Initialization loadUser failed:", err?.message || err);
+        // If it's a 401, the token is invalid/expired
+        if (err?.response?.status === 401) {
+          console.log("Unauthorized - clearing auth data");
+          dispatch({ type: AUTH_ACTIONS.LOGOUT });
+        }
       } finally {
         clearTimeout(timeoutId);
         if (mounted) {
-          // ensure app doesn't stay stuck in loading
           dispatch({ type: AUTH_ACTIONS.INITIALIZE_COMPLETE });
         }
       }
@@ -219,7 +258,7 @@ export const AuthProvider = ({ children }) => {
     return () => {
       mounted = false;
     };
-  }, [state.token]);
+  }, []); // Remove state.token dependency to avoid re-initialization
 
   // Load user profile
   const loadUser = async (signal) => {
@@ -227,9 +266,6 @@ export const AuthProvider = ({ children }) => {
       console.log("Loading user...");
       dispatch({ type: AUTH_ACTIONS.LOAD_USER_START });
 
-      // If using axios, it now supports AbortController signal:
-      // authAPI.getCurrentUser({ signal })
-      // If your authAPI wraps axios, ensure it forwards the options to axios.
       const response = await authAPI.getCurrentUser({ signal });
 
       console.log("User loaded successfully:", response.data.data);
@@ -259,7 +295,6 @@ export const AuthProvider = ({ children }) => {
         payload: message,
       });
 
-      // rethrow so callers can react if they want
       throw error;
     }
   };
