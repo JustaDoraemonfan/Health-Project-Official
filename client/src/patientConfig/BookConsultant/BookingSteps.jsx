@@ -24,7 +24,7 @@ export const BookingSteps = ({
   useEffect(() => {
     console.log("🔍 Availability received in BookingSteps:", availability);
 
-    if (availability && Array.(availability)) {
+    if (availability && Array.isArray(availability)) {
       availability.forEach((item, index) => {
         console.log(`➡️ Item ${index}:`, item);
 
