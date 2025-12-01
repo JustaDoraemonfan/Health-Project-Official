@@ -29,7 +29,7 @@ export const BookingSteps = ({
         console.log(`➡️ Item ${index}:`, item);
 
         if (!item?.day) {
-          console.warn(`⚠️ Missing '' field in availability[${index}]`);
+          console.warn(`⚠️ Missing 'day' field in availability[${index}]`);
         }
 
         if (!item?.slots) {
