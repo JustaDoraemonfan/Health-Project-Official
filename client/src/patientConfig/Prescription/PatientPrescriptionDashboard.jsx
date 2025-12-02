@@ -17,7 +17,6 @@ export const PatientPrescriptionDashboard = () => {
       try {
         const res = await prescriptionAPI.getMyPrescriptions();
 
-        // ✅ Attach pdfUrl to each prescription
         const prescriptionsWithUrls = res.data.data.map((p) => ({
           ...p,
           pdfUrl: getPdfUrl(p.filePath),

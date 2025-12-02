@@ -1,5 +1,5 @@
 // utils/file.js
 export const getPdfUrl = (filePath) => {
-  const baseURL = "http://localhost:5000"; // or your deployed API URL
+  const baseURL = import.meta.BASE_VITE_API_URL || "http://localhost:5000";
   return `${baseURL}/${filePath.replace(/\\/g, "/")}`;
 };
