@@ -337,10 +337,10 @@ export const RegisterSection = ({ onToggleAuth }) => {
     return (
       <section id="register" className="py-20 bg-zinc-700/50">
         <div className="container mx-auto px-6 text-center">
-          <h2 className="text-4xl google-sans-code-400 font-bold text-gray-100 mb-4">
+          <h2 className="text-4xl spline-sans-mono-400 font-bold text-gray-100 mb-4">
             You're already registered!
           </h2>
-          <p className="text-slate-50 google-sans-code-400">
+          <p className="text-slate-50 spline-sans-mono-400">
             Welcome to <span className="text-blue-400">HealthyMe</span>
           </p>
         </div>
@@ -352,10 +352,10 @@ export const RegisterSection = ({ onToggleAuth }) => {
     <section id="register" className="py-20 bg-[var(--color-primary)]">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl google-sans-code-400 font-bold text-[var(--color-secondary)] mb-4">
+          <h2 className="text-4xl spline-sans-mono-400 font-bold text-[var(--color-secondary)] mb-4">
             Create Your <span className="text-blue-400">HealthyMe</span> Account
           </h2>
-          <p className="text-slate-500 google-sans-code-400">
+          <p className="text-slate-500 spline-sans-mono-400">
             Fill in your details to get started
           </p>
         </div>
@@ -364,7 +364,7 @@ export const RegisterSection = ({ onToggleAuth }) => {
           {/* Success Message */}
           {success && (
             <div className="mb-6 p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
-              <div className="flex items-center gap-2 text-green-400 text-sm google-sans-code-400">
+              <div className="flex items-center gap-2 text-green-400 text-sm spline-sans-mono-400">
                 <CheckCircle className="w-4 h-4" />
                 <span>Account created successfully! Welcome to HealthyMe!</span>
               </div>
@@ -374,7 +374,7 @@ export const RegisterSection = ({ onToggleAuth }) => {
           {/* Backend Error Display */}
           {error && showError && !success && (
             <div className="mb-6 p-4 bg-red-500/10 border border-red-500/10 rounded-lg">
-              <div className="flex items-start gap-2 text-red-500 text-sm google-sans-code-400">
+              <div className="flex items-start gap-2 text-red-500 text-sm spline-sans-mono-400">
                 <AlertCircle className="w-4 h-4 mt-0.5 text-red-800 flex-shrink-0" />
                 <div>{error}</div>
               </div>
@@ -384,13 +384,13 @@ export const RegisterSection = ({ onToggleAuth }) => {
             <div className="bg-[var(--color-secondary)] border border-gray-700 rounded-lg overflow-hidden">
               {/* Form Header */}
               <div className="flex items-center justify-between px-4 py-3 bg-[var(--color-primary)] border-b border-gray-700">
-                <div className="text-black text-sm google-sans-code-400">
+                <div className="text-black text-sm spline-sans-mono-400">
                   Registration Form
                 </div>
                 <div className="w-12"></div>
               </div>
 
-              <div className="p-6 space-y-6 google-sans-code-400">
+              <div className="p-6 space-y-6 spline-sans-mono-400">
                 {/* User Type Selection */}
                 <div>
                   <label className="block text-slate-50 text-sm mb-2">
@@ -401,7 +401,7 @@ export const RegisterSection = ({ onToggleAuth }) => {
                     value={formData.userType}
                     onChange={handleInputChange}
                     disabled={loading}
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-slate-500 focus:ring-1 focus:ring-blue-500 text-white google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50"
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-slate-500 focus:ring-1 focus:ring-blue-500 text-white spline-sans-mono-400 text-sm transition-all duration-200 disabled:opacity-50"
                   >
                     {userTypes.map((type) => (
                       <option key={type.value} value={type.value}>
@@ -423,7 +423,7 @@ export const RegisterSection = ({ onToggleAuth }) => {
                     onChange={handleInputChange}
                     onBlur={() => handleBlur("name")}
                     disabled={loading}
-                    className={`w-full px-4 py-3 bg-gray-800 border rounded-md focus:ring-1 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50 ${
+                    className={`w-full px-4 py-3 bg-gray-800 border rounded-md focus:ring-1 text-white placeholder-gray-500 spline-sans-mono-400 text-sm transition-all duration-200 disabled:opacity-50 ${
                       touched.name && validationErrors.name
                         ? "border-red-500 focus:border-red-500 focus:ring-red-500"
                         : "border-gray-600 focus:border-blue-500 focus:ring-blue-500"
@@ -450,7 +450,7 @@ export const RegisterSection = ({ onToggleAuth }) => {
                     onChange={handleInputChange}
                     onBlur={() => handleBlur("email")}
                     disabled={loading}
-                    className={`w-full px-4 py-3 bg-gray-800 border rounded-md focus:ring-1 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50 ${
+                    className={`w-full px-4 py-3 bg-gray-800 border rounded-md focus:ring-1 text-white placeholder-gray-500 spline-sans-mono-400 text-sm transition-all duration-200 disabled:opacity-50 ${
                       touched.email && validationErrors.email
                         ? "border-red-500 focus:border-red-500 focus:ring-red-500"
                         : "border-gray-600 focus:border-blue-500 focus:ring-blue-500"
@@ -478,7 +478,7 @@ export const RegisterSection = ({ onToggleAuth }) => {
                       onChange={handleInputChange}
                       onBlur={() => handleBlur("password")}
                       disabled={loading}
-                      className={`w-full px-4 py-3 pr-12 bg-gray-800 border rounded-md focus:ring-1 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50 ${
+                      className={`w-full px-4 py-3 pr-12 bg-gray-800 border rounded-md focus:ring-1 text-white placeholder-gray-500 spline-sans-mono-400 text-sm transition-all duration-200 disabled:opacity-50 ${
                         touched.password && validationErrors.password
                           ? "border-red-500 focus:border-red-500 focus:ring-red-500"
                           : "border-gray-600 focus:border-blue-500 focus:ring-blue-500"
@@ -525,7 +525,7 @@ export const RegisterSection = ({ onToggleAuth }) => {
                       onChange={handleInputChange}
                       onBlur={() => handleBlur("confirmPassword")}
                       disabled={loading}
-                      className={`w-full px-4 py-3 pr-12 bg-gray-800 border rounded-md focus:ring-1 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50 ${
+                      className={`w-full px-4 py-3 pr-12 bg-gray-800 border rounded-md focus:ring-1 text-white placeholder-gray-500 spline-sans-mono-400 text-sm transition-all duration-200 disabled:opacity-50 ${
                         touched.confirmPassword &&
                         validationErrors.confirmPassword
                           ? "border-red-500 focus:border-red-500 focus:ring-red-500"
@@ -572,7 +572,7 @@ export const RegisterSection = ({ onToggleAuth }) => {
                         disabled={loading}
                         min="1"
                         max="120"
-                        className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50"
+                        className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-500 spline-sans-mono-400 text-sm transition-all duration-200 disabled:opacity-50"
                         placeholder="Age (optional)"
                       />
                     </div>
@@ -585,7 +585,7 @@ export const RegisterSection = ({ onToggleAuth }) => {
                         value={formData.gender}
                         onChange={handleInputChange}
                         disabled={loading}
-                        className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50"
+                        className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white spline-sans-mono-400 text-sm transition-all duration-200 disabled:opacity-50"
                       >
                         <option value="male">Male</option>
                         <option value="female">Female</option>
@@ -608,7 +608,7 @@ export const RegisterSection = ({ onToggleAuth }) => {
                       onChange={handleInputChange}
                       onBlur={() => handleBlur("specialization")}
                       disabled={loading}
-                      className={`w-full px-4 py-3 bg-gray-800 border rounded-md focus:ring-1 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50 ${
+                      className={`w-full px-4 py-3 bg-gray-800 border rounded-md focus:ring-1 text-white placeholder-gray-500 spline-sans-mono-400 text-sm transition-all duration-200 disabled:opacity-50 ${
                         touched.specialization &&
                         validationErrors.specialization
                           ? "border-red-500 focus:border-red-500 focus:ring-red-500"
@@ -640,7 +640,7 @@ export const RegisterSection = ({ onToggleAuth }) => {
                         onChange={handleInputChange}
                         onBlur={() => handleBlur("phone")}
                         disabled={loading}
-                        className={`w-full px-4 py-3 bg-gray-800 border rounded-md focus:ring-1 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50 ${
+                        className={`w-full px-4 py-3 bg-gray-800 border rounded-md focus:ring-1 text-white placeholder-gray-500 spline-sans-mono-400 text-sm transition-all duration-200 disabled:opacity-50 ${
                           touched.phone && validationErrors.phone
                             ? "border-red-500 focus:border-red-500 focus:ring-red-500"
                             : "border-gray-600 focus:border-blue-500 focus:ring-blue-500"
@@ -665,7 +665,7 @@ export const RegisterSection = ({ onToggleAuth }) => {
                         onChange={handleInputChange}
                         onBlur={() => handleBlur("location")}
                         disabled={loading}
-                        className={`w-full px-4 py-3 bg-gray-800 border rounded-md focus:ring-1 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50 ${
+                        className={`w-full px-4 py-3 bg-gray-800 border rounded-md focus:ring-1 text-white placeholder-gray-500 spline-sans-mono-400 text-sm transition-all duration-200 disabled:opacity-50 ${
                           touched.location && validationErrors.location
                             ? "border-red-500 focus:border-red-500 focus:ring-red-500"
                             : "border-gray-600 focus:border-blue-500 focus:ring-blue-500"
@@ -696,7 +696,7 @@ export const RegisterSection = ({ onToggleAuth }) => {
                         onChange={handleInputChange}
                         onBlur={() => handleBlur("department")}
                         disabled={loading}
-                        className={`w-full px-4 py-3 bg-gray-800 border rounded-md focus:ring-1 text-white placeholder-gray-500 google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50 ${
+                        className={`w-full px-4 py-3 bg-gray-800 border rounded-md focus:ring-1 text-white placeholder-gray-500 spline-sans-mono-400 text-sm transition-all duration-200 disabled:opacity-50 ${
                           touched.department && validationErrors.department
                             ? "border-red-500 focus:border-red-500 focus:ring-red-500"
                             : "border-gray-600 focus:border-blue-500 focus:ring-blue-500"
@@ -719,7 +719,7 @@ export const RegisterSection = ({ onToggleAuth }) => {
                         value={formData.adminRole}
                         onChange={handleInputChange}
                         disabled={loading}
-                        className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white google-sans-code-400 text-sm transition-all duration-200 disabled:opacity-50"
+                        className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white spline-sans-mono-400 text-sm transition-all duration-200 disabled:opacity-50"
                       >
                         {adminRoles.map((role) => (
                           <option key={role.value} value={role.value}>
@@ -735,7 +735,7 @@ export const RegisterSection = ({ onToggleAuth }) => {
                 <button
                   type="submit"
                   disabled={loading || success || !isFormValid}
-                  className="w-full py-3 px-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white google-sans-code-400 rounded-md hover:from-purple-600 hover:to-purple-700 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:transform-none hover:cursor-pointer disabled:cursor-not-allowed disabled:hover:from-purple-500 disabled:hover:to-purple-600"
+                  className="w-full py-3 px-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white spline-sans-mono-400 rounded-md hover:from-purple-600 hover:to-purple-700 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:transform-none hover:cursor-pointer disabled:cursor-not-allowed disabled:hover:from-purple-500 disabled:hover:to-purple-600"
                 >
                   {loading ? (
                     <>
@@ -772,7 +772,7 @@ export const RegisterSection = ({ onToggleAuth }) => {
           <div className="mt-6 text-center">
             <button
               onClick={onToggleAuth}
-              className="text-blue-500 hover:text-blue-300 google-sans-code-400 text-sm transition-colors duration-200 bg-transparent border-none cursor-pointer"
+              className="text-blue-500 hover:text-blue-300 spline-sans-mono-400 text-sm transition-colors duration-200 bg-transparent border-none cursor-pointer"
             >
               Already have an account? Login here
             </button>

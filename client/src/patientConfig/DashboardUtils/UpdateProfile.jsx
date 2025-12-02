@@ -250,7 +250,7 @@ const UpdateProfile = () => {
         duration={4000}
       />
 
-      <section className="min-h-screen google-sans-code-400 bg-[var(--color-primary)] pt-10 relative overflow-hidden">
+      <section className="min-h-screen spline-sans-mono-400 bg-[var(--color-primary)] pt-10 relative overflow-hidden">
         <div className="container mx-auto px-4 sm:px-6 py-8 relative z-10">
           <div className="max-w-4xl mx-auto">
             {/* Header */}

@@ -177,7 +177,7 @@ const PrescriptionUploadModal = ({ isOpen, onClose }) => {
       />
 
       {/* Modal */}
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 google-sans-code-400">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 spline-sans-mono-400">
         <div
           className={`bg-zinc-900 border border-zinc-800 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto transition-all duration-300 ease-out transform ${
             isVisible

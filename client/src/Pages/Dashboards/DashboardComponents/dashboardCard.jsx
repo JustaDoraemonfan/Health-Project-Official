@@ -38,13 +38,13 @@ const DashboardCard = ({
       >
         <div className="flex items-center gap-2">
           <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white flex-shrink-0" />
-          <span className="text-white text-xs sm:text-sm google-sans-code-400 font-semibold truncate">
+          <span className="text-white text-xs sm:text-sm spline-sans-mono-400 font-semibold truncate">
             {title}
           </span>
         </div>
         <div className="flex items-center flex-col">
           {stats && (
-            <span className="bg-transparent bg-opacity-20 text-white text-xs google-sans-code-400 px-2 py-1 rounded-full whitespace-nowrap">
+            <span className="bg-transparent bg-opacity-20 text-white text-xs spline-sans-mono-400 px-2 py-1 rounded-full whitespace-nowrap">
               {stats}
             </span>
           )}
@@ -53,13 +53,13 @@ const DashboardCard = ({
 
       {/* Card Content - Responsive */}
       <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
-        <p className="text-slate-50 text-xs sm:text-sm google-sans-code-400 leading-relaxed line-clamp-2">
+        <p className="text-slate-50 text-xs sm:text-sm spline-sans-mono-400 leading-relaxed line-clamp-2">
           {description}
         </p>
 
         <div className="flex items-center justify-between">
           <button
-            className={`text-xs google-sans-code-400 px-2.5 sm:px-3 py-1 rounded border bg-gradient-to-r ${getColorClasses(
+            className={`text-xs spline-sans-mono-400 px-2.5 sm:px-3 py-1 rounded border bg-gradient-to-r ${getColorClasses(
               color
             )} text-white hover:opacity-90 transition-opacity`}
           >

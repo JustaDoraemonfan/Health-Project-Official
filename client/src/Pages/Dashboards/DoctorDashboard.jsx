@@ -79,7 +79,7 @@ const DoctorDashboard = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#161515] flex items-center justify-center">
-        <div className="text-white text-xl google-sans-code-400">
+        <div className="text-white text-xl spline-sans-mono-400">
           Loading doctor dashboard...
         </div>
       </div>
@@ -89,7 +89,7 @@ const DoctorDashboard = () => {
   if (error && !user.name) {
     return (
       <div className="min-h-screen bg-[#161515] flex items-center justify-center">
-        <div className="text-red-400 text-xl google-sans-code-400">
+        <div className="text-red-400 text-xl spline-sans-mono-400">
           Error loading dashboard: {error}
         </div>
       </div>
@@ -102,7 +102,7 @@ const DoctorDashboard = () => {
   return (
     <>
       <Header />
-      <section className="min-h-screen google-sans-code-400 bg-[var(--color-primary)] py-8 pt-20">
+      <section className="min-h-screen spline-sans-mono-400 bg-[var(--color-primary)] py-8 pt-20">
         <div className="container mx-auto px-6">
           {verificationStatus !== "verified" &&
             (() => {

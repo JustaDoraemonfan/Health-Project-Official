@@ -20,7 +20,7 @@ const ResultModal = ({
   const isSuccess = type === "success";
 
   return (
-    <div className="google-sans-code-400 fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-[60] p-4">
+    <div className="spline-sans-mono-400 fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-[60] p-4">
       <div
         className={`bg-[var(--color-primary)] rounded-2xl shadow-2xl w-full max-w-md border ${
           isSuccess ? "border-green-500/30" : "border-red-500/30"

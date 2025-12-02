@@ -315,9 +315,9 @@ const AIAnalysisModal = ({ isOpen, onClose, patient }) => {
               </section>
 
               {/* Full Analysis */}
-              <section className="google-sans-code-400">
+              <section className="spline-sans-mono-400">
                 <div className="bg-[var(--color-secondary)] border border-slate-700 p-4 rounded-lg">
-                  <div className="text-sm text-gray-300 google-sans-code-400 leading-relaxed">
+                  <div className="text-sm text-gray-300 spline-sans-mono-400 leading-relaxed">
                     {aiAnalysis.rawAnalysis.split("\n").map((line, index) => {
                       if (line.trim() === "---") {
                         return (

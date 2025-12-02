@@ -17,12 +17,12 @@ const HeroSection = () => {
                   <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-yellow-500"></div>
                   <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-green-500"></div>
                 </div>
-                <div className="text-gray-400 text-xs sm:text-sm google-sans-code-400">
+                <div className="text-gray-400 text-xs sm:text-sm spline-sans-mono-400">
                   System Console
                 </div>
                 <div className="w-8 sm:w-12"></div>
               </div>
-              <div className="p-4 sm:p-6 google-sans-code-400 text-left text-sm sm:text-base">
+              <div className="p-4 sm:p-6 spline-sans-mono-400 text-left text-sm sm:text-base">
                 <div className="text-blue-400">
                   ✓ Healthcare platform initialized
                 </div>
@@ -36,14 +36,14 @@ const HeroSection = () => {
             </div>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl google-sans-code-400 font-bold mb-4 sm:mb-6 text-black px-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl spline-sans-mono-400 font-bold mb-4 sm:mb-6 text-black px-4">
             Empowering <span className="text-blue-400">Healthcare</span>
           </h1>
-          <h2 className="text-xl sm:text-2xl md:text-3xl google-sans-code-400 font-medium mb-6 sm:mb-8 text-gray-400 px-4">
+          <h2 className="text-xl sm:text-2xl md:text-3xl spline-sans-mono-400 font-medium mb-6 sm:mb-8 text-gray-400 px-4">
             Your <span className="text-green-400">trusted</span> digital health
             platform
           </h2>
-          <p className="text-base sm:text-lg text-gray-800 mb-8 sm:mb-12 max-w-3xl mx-auto google-sans-code-400 leading-relaxed px-4">
+          <p className="text-base sm:text-lg text-gray-800 mb-8 sm:mb-12 max-w-3xl mx-auto spline-sans-mono-400 leading-relaxed px-4">
             Transforming healthcare with{" "}
             <span className="text-blue-400">modern technology</span>
             <br className="hidden sm:block" />
@@ -53,7 +53,7 @@ const HeroSection = () => {
             <span className="text-yellow-400">frontline workers</span>, and{" "}
             <span className="text-red-400">administrators</span>.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center google-sans-code-400 px-4">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center spline-sans-mono-400 px-4">
             <button
               onClick={() => {
                 document.querySelector("#register")?.scrollIntoView({

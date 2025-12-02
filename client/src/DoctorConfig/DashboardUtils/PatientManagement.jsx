@@ -62,7 +62,7 @@ const PatientDashboard = () => {
 
   // --- REFACTORED LAYOUT STARTS HERE ---
   return (
-    <div className="min-h-screen google-sans-code-400 bg-[var(--color-primary)]">
+    <div className="min-h-screen spline-sans-mono-400 bg-[var(--color-primary)]">
       <Header isNotDashboard={true} />
       {/* Header */}
       <div className="bg-[var(--color-primary)]  pt-20">
@@ -108,7 +108,7 @@ const PatientDashboard = () => {
                   placeholder="Search patients..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 google-sans-code-400 text-sm transition-colors disabled:opacity-50"
+                  className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 spline-sans-mono-400 text-sm transition-colors disabled:opacity-50"
                 />
               </div>
 
@@ -133,7 +133,7 @@ const PatientDashboard = () => {
                   placeholder="Search patients by name or email..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 google-sans-code-400 text-sm transition-colors disabled:opacity-50"
+                  className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 spline-sans-mono-400 text-sm transition-colors disabled:opacity-50"
                 />
               </div>
 

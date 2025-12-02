@@ -82,14 +82,14 @@ export const Button = ({
 
 export const Input = ({ className = "", ...props }) => (
   <input
-    className={`w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 google-sans-code-400 text-sm transition-colors disabled:opacity-50 ${className}`}
+    className={`w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 spline-sans-mono-400 text-sm transition-colors disabled:opacity-50 ${className}`}
     {...props}
   />
 );
 
 export const Textarea = ({ className = "", ...props }) => (
   <textarea
-    className={`w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 google-sans-code-400 text-sm transition-colors disabled:opacity-50 ${className}`}
+    className={`w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 spline-sans-mono-400 text-sm transition-colors disabled:opacity-50 ${className}`}
     style={{
       msOverflowStyle: "none",
       scrollbarWidth: "none",
@@ -103,7 +103,7 @@ export const Select = ({ children, value, onValueChange, placeholder }) => {
     <select
       value={value}
       onChange={(e) => onValueChange(e.target.value)}
-      className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 google-sans-code-400 text-sm transition-colors disabled:opacity-50"
+      className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 spline-sans-mono-400 text-sm transition-colors disabled:opacity-50"
     >
       {placeholder && (
         <option value="" className="text-gray-400">

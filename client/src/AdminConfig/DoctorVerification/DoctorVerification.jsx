@@ -133,7 +133,7 @@ const DoctorVerificationDashboard = () => {
   }
 
   return (
-    <div className="flex h-screen google-sans-code-400 bg-[var(--color-primary)]">
+    <div className="flex h-screen spline-sans-mono-400 bg-[var(--color-primary)]">
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}

@@ -26,7 +26,7 @@ const Header = ({ isNotDashboard = false }) => {
   };
 
   return (
-    <header className="fixed top-0 google-sans-code-400 w-full bg-[var(--color-primary)]/95 backdrop-blur-md z-50 border-b border-white/10">
+    <header className="fixed top-0 spline-sans-mono-400 w-full bg-[var(--color-primary)]/95 backdrop-blur-md z-50 border-b border-white/10">
       <div
         className="absolute inset-0 opacity-20"
         style={{
@@ -38,7 +38,7 @@ const Header = ({ isNotDashboard = false }) => {
       <nav className="container mx-auto px-6 py-4 flex justify-between items-center relative">
         {/* Logo */}
         <div className="flex items-center space-x-3">
-          <div className="text-2xl google-sans-code-400 font-bold text-[var(--color-secondary)]">
+          <div className="text-2xl spline-sans-mono-400 font-bold text-[var(--color-secondary)]">
             Healthy<span className="text-blue-400">Me</span>
           </div>
         </div>

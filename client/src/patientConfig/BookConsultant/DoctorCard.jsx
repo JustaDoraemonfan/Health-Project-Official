@@ -24,7 +24,7 @@ const DoctorDetailsModal = ({ doctor, isOpen, onClose }) => {
   const doctorName = getDoctorName(doc);
 
   return (
-    <div className="fixed inset-0 bg-black/50 google-sans-code-400 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/50 spline-sans-mono-400 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div
         className="bg-[var(--color-secondary)] rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
         style={{
@@ -250,7 +250,7 @@ const DoctorCard = ({ doctor, onBookNow, onCall }) => {
 
   return (
     <>
-      <div className="bg-[var(--color-secondary)] google-sans-code-400 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex flex-col justify-between">
+      <div className="bg-[var(--color-secondary)] spline-sans-mono-400 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex flex-col justify-between">
         <div>
           {/* Header */}
           <div className="p-5">

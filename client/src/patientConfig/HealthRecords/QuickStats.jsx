@@ -36,7 +36,7 @@ const QuickStats = ({ appointmentsData, prescriptionsData, symptom, note }) => {
   ];
 
   return (
-    <div className="bg-transparent rounded-2xl google-sans-code-400 p-6 md:p-8">
+    <div className="bg-transparent rounded-2xl spline-sans-mono-400 p-6 md:p-8">
       {/* Mobile Dropdown View: Hidden on 'sm' screens and up */}
       <div className="sm:hidden">
         <button

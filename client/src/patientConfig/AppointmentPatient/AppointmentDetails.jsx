@@ -117,7 +117,7 @@ export const AppointmentSidebar = ({ appointment, userName }) => {
           {/* UPDATED: Stacked layout for mobile */}
           <div className="flex flex-col items-start sm:flex-row sm:justify-between sm:items-start gap-1">
             <span className="text-slate-400 text-sm">Patient ID</span>
-            <span className="text-white google-sans-code-400 text-sm bg-slate-700 px-2 py-1 rounded">
+            <span className="text-white spline-sans-mono-400 text-sm bg-slate-700 px-2 py-1 rounded">
               {userName}
             </span>
           </div>

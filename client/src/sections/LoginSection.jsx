@@ -123,10 +123,10 @@ export const LoginSection = ({ onToggleAuth }) => {
     <section className="py-20 bg-[var(--color-primary)]">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl google-sans-code-400 font-bold text-[var(--color-secondary)] mb-4">
+          <h2 className="text-4xl spline-sans-mono-400 font-bold text-[var(--color-secondary)] mb-4">
             Login to <span className="text-blue-400">HealthyMe</span>
           </h2>
-          <p className="text-[var(--color-secondary)] google-sans-code-400">
+          <p className="text-[var(--color-secondary)] spline-sans-mono-400">
             Select your role to continue
           </p>
         </div>
@@ -135,7 +135,7 @@ export const LoginSection = ({ onToggleAuth }) => {
           {/* Error Display */}
           {(error || showError) && (
             <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
-              <div className="flex items-center gap-2 text-red-400 text-sm google-sans-code-400">
+              <div className="flex items-center gap-2 text-red-400 text-sm spline-sans-mono-400">
                 <AlertCircle className="w-4 h-4" />
                 <span>{error || "Please fill in all required fields"}</span>
               </div>
@@ -151,7 +151,7 @@ export const LoginSection = ({ onToggleAuth }) => {
                     key={type.id}
                     onClick={() => setActiveTab(type.id)}
                     disabled={loading}
-                    className={`flex items-center justify-center gap-2 py-3 px-4 rounded-md text-sm google-sans-code-400 transition-all duration-200 disabled:opacity-50 ${
+                    className={`flex items-center justify-center gap-2 py-3 px-4 rounded-md text-sm spline-sans-mono-400 transition-all duration-200 disabled:opacity-50 ${
                       activeTab === type.id
                         ? `bg-gradient-to-r ${
                             getColorClasses(type.color).split(" ")[0]
@@ -174,7 +174,7 @@ export const LoginSection = ({ onToggleAuth }) => {
             <div className="bg-[var(--color-secondary)] rounded-lg border border-slate-600 shadow-xl">
               {/* Header */}
               <div className="px-6 py-4 bg-slate-100 border-b border-black">
-                <h2 className="text-slate-900 text-sm google-sans-code-400 font-semibold">
+                <h2 className="text-slate-900 text-sm spline-sans-mono-400 font-semibold">
                   {userTypes.find((t) => t.id === activeTab)?.label}{" "}
                   Authentication
                 </h2>
@@ -183,7 +183,7 @@ export const LoginSection = ({ onToggleAuth }) => {
               {/* Form Fields */}
               <div className="p-6 space-y-6">
                 <div>
-                  <label className="block text-slate-200 text-sm google-sans-code-400 mb-2">
+                  <label className="block text-slate-200 text-sm spline-sans-mono-400 mb-2">
                     Email Address <span className="text-red-400">*</span>
                   </label>
                   <input
@@ -192,7 +192,7 @@ export const LoginSection = ({ onToggleAuth }) => {
                     value={formData.email}
                     onChange={handleInputChange}
                     disabled={loading}
-                    className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 google-sans-code-400 text-sm transition-colors disabled:opacity-50"
+                    className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 spline-sans-mono-400 text-sm transition-colors disabled:opacity-50"
                     placeholder="Enter email address"
                     required
                   />
@@ -200,7 +200,7 @@ export const LoginSection = ({ onToggleAuth }) => {
 
                 {/* --- MODIFIED PASSWORD FIELD --- */}
                 <div>
-                  <label className="block text-slate-200 text-sm google-sans-code-400 mb-2">
+                  <label className="block text-slate-200 text-sm spline-sans-mono-400 mb-2">
                     Password <span className="text-red-400">*</span>
                   </label>
                   <div className="relative">
@@ -210,7 +210,7 @@ export const LoginSection = ({ onToggleAuth }) => {
                       value={formData.password}
                       onChange={handleInputChange}
                       disabled={loading}
-                      className="w-full px-4 py-3 pr-10 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 google-sans-code-400 text-sm transition-colors disabled:opacity-50" // Added pr-10
+                      className="w-full px-4 py-3 pr-10 bg-slate-800 border border-slate-600 rounded-md focus:border-blue-400 focus:ring-1 focus:ring-blue-400/50 text-white placeholder-slate-400 spline-sans-mono-400 text-sm transition-colors disabled:opacity-50" // Added pr-10
                       placeholder="Enter password"
                       required
                     />
@@ -242,7 +242,7 @@ export const LoginSection = ({ onToggleAuth }) => {
                   }
                   className={`w-full py-3 px-4 bg-gradient-to-r ${getColorClasses(
                     userTypes.find((t) => t.id === activeTab)?.color
-                  )} text-white google-sans-code-400 font-medium rounded-md hover:opacity-90 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed`}
+                  )} text-white spline-sans-mono-400 font-medium rounded-md hover:opacity-90 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed`}
                 >
                   {loading ? (
                     <span className="flex items-center justify-center">
@@ -257,7 +257,7 @@ export const LoginSection = ({ onToggleAuth }) => {
                   )}
                 </button>
 
-                <p className="text-slate-400 text-xs google-sans-code-400 text-center">
+                <p className="text-slate-400 text-xs spline-sans-mono-400 text-center">
                   Secure authentication required
                 </p>
               </div>
@@ -266,7 +266,7 @@ export const LoginSection = ({ onToggleAuth }) => {
           <div className="mt-6 text-center">
             <button
               onClick={onToggleAuth}
-              className="text-blue-500 hover:text-blue-300 google-sans-code-400 text-sm transition-colors duration-200 bg-transparent border-none cursor-pointer"
+              className="text-blue-500 hover:text-blue-300 spline-sans-mono-400 text-sm transition-colors duration-200 bg-transparent border-none cursor-pointer"
             >
               Don't have an account? Register here
             </button>

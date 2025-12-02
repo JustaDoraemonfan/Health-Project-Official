@@ -86,7 +86,7 @@ const DetailedView = ({
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[var(--color-primary)] google-sans-code-400 text-white">
+    <div className="flex flex-col min-h-screen bg-[var(--color-primary)] spline-sans-mono-400 text-white">
       {/* UPDATED: Responsive padding */}
       <main className="flex-1 p-4 sm:p-6 max-w-6xl mx-auto w-full">
         {/* UPDATED: Stacks on mobile, row on sm+ screens */}

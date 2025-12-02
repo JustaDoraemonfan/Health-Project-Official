@@ -59,7 +59,7 @@ const AdminDashboard = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#161515] flex items-center justify-center">
-        <div className="text-white text-xl google-sans-code-400">
+        <div className="text-white text-xl spline-sans-mono-400">
           Loading admin dashboard...
         </div>
       </div>
@@ -70,7 +70,7 @@ const AdminDashboard = () => {
   if (error && !user.name) {
     return (
       <div className="min-h-screen bg-[#161515] flex items-center justify-center">
-        <div className="text-red-400 text-xl google-sans-code-400">
+        <div className="text-red-400 text-xl spline-sans-mono-400">
           Error loading dashboard: {error}
         </div>
       </div>

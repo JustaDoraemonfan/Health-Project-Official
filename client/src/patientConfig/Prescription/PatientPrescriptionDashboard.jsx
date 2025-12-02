@@ -53,7 +53,7 @@ export const PatientPrescriptionDashboard = () => {
   return (
     <section>
       <Header isNotDashboard={true} />
-      <div className="min-h-screen google-sans-code-400 bg-[var(--color-primary)] pt-20">
+      <div className="min-h-screen spline-sans-mono-400 bg-[var(--color-primary)] pt-20">
         {/* ✅ Use responsive padding: p-4 on mobile, p-6 on larger screens */}
         <div className="max-w-6xl mx-auto p-4 sm:p-6">
           {/* Header */}

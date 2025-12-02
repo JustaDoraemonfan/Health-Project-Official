@@ -89,7 +89,7 @@ const DashboardView = ({
   // ========================================
 
   return (
-    <div className=" flex flex-col min-h-screen google-sans-code-400 bg-[var(--color-primary)] text-white relative overflow-hidden">
+    <div className=" flex flex-col min-h-screen spline-sans-mono-400 bg-[var(--color-primary)] text-white relative overflow-hidden">
       <main className="flex-1 p-4 sm:p-6 md:p-8 max-w-7xl mx-auto w-full relative z-10">
         <div className="mb-10 ">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-6">

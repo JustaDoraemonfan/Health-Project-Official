@@ -11,7 +11,7 @@ import AboutSection from "./AboutSection";
 const DoctorForm = ({ formData, handleChange }) => {
   return (
     <>
-      <h3 className="text-xl google-sans-code-400 font-semibold text-[var(--color-secondary)] mb-4 border-b border-gray-600 pb-2">
+      <h3 className="text-xl spline-sans-mono-400 font-semibold text-[var(--color-secondary)] mb-4 border-b border-gray-600 pb-2">
         Doctor Profile
       </h3>
 

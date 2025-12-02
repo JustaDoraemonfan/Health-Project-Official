@@ -15,10 +15,10 @@ const Header = ({
             <Calendar className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h1 className="text-lg sm:text-xl font-semibold text-white google-sans-code-400 tracking-tight">
+            <h1 className="text-lg sm:text-xl font-semibold text-white spline-sans-mono-400 tracking-tight">
               Appointments
             </h1>
-            <p className="text-sm text-zinc-400 google-sans-code-400">
+            <p className="text-sm text-zinc-400 spline-sans-mono-400">
               {currentDate}
             </p>
           </div>
@@ -28,10 +28,10 @@ const Header = ({
         {/* On mobile, this div will be below the title, full-width, with content pushed to the right */}
         <div className="flex items-center justify-end w-full sm:w-auto space-x-4 sm:space-x-6">
           <div className="text-right">
-            <div className="text-xl sm:text-2xl font-bold text-white google-sans-code-400">
+            <div className="text-xl sm:text-2xl font-bold text-white spline-sans-mono-400">
               {totalAppointments}
             </div>
-            <div className="text-xs text-zinc-500 google-sans-code-400 uppercase tracking-wider">
+            <div className="text-xs text-zinc-500 spline-sans-mono-400 uppercase tracking-wider">
               Today
             </div>
           </div>
@@ -41,14 +41,14 @@ const Header = ({
 
           <div className="flex items-center space-x-1.5">
             <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
-            <span className="text-sm text-zinc-300 google-sans-code-400">
+            <span className="text-sm text-zinc-300 spline-sans-mono-400">
               {confirmedCount}
             </span>
           </div>
 
           <div className="flex items-center space-x-1.5">
             <div className="w-2 h-2 bg-amber-400 rounded-full"></div>
-            <span className="text-sm text-zinc-300 google-sans-code-400">
+            <span className="text-sm text-zinc-300 spline-sans-mono-400">
               {pendingCount}
             </span>
           </div>

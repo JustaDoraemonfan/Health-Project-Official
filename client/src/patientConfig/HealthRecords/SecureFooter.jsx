@@ -7,7 +7,7 @@ const SecureFooter = ({ isMainView = false }) => {
   const containerClasses = isMainView ? "mt-6" : "mt-8";
 
   return (
-    <div className={`${baseClasses} google-sans-code-400 ${containerClasses}`}>
+    <div className={`${baseClasses} spline-sans-mono-400 ${containerClasses}`}>
       {/* - Mobile: Stacks vertically (flex-col), items are centered.
         - Small screens (sm) & up: Becomes a horizontal row.
       */}

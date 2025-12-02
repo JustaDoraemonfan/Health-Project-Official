@@ -46,7 +46,7 @@ const DoctorGrid = ({
           {/* UPDATED: Full-width w/ space-between on mobile, auto-width on sm+ */}
           <div className="flex w-full sm:w-auto items-center justify-between sm:justify-end gap-3">
             <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-800 rounded-md border border-gray-700">
-              <span className="text-xs text-[var(--color-primary)] google-sans-code-400">
+              <span className="text-xs text-[var(--color-primary)] spline-sans-mono-400">
                 {location || "~ Showing All Locations"}
               </span>
             </div>

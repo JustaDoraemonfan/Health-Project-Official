@@ -3,7 +3,7 @@ import React from "react";
 
 const AllergiesSection = ({ formData, handleChange }) => {
   return (
-    <div className="mb-6 google-sans-code-400">
+    <div className="mb-6 spline-sans-mono-400">
       <h4 className="text-lg font-medium text-[var(--color-secondary)] mb-3">
         Allergies
       </h4>

@@ -36,7 +36,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
   return (
     <>
       <div
-        className="bg-[var(--color-secondary)] border google-sans-code-400 border-slate-700 rounded-md p-4 cursor-pointer hover:border-slate-600 relative flex flex-col justify-between"
+        className="bg-[var(--color-secondary)] border spline-sans-mono-400 border-slate-700 rounded-md p-4 cursor-pointer hover:border-slate-600 relative flex flex-col justify-between"
         onClick={() => onCardClick(appointment._id)}
       >
         <div>

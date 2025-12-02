@@ -124,7 +124,7 @@ export const BookingSteps = ({
     const selectedWeekday = getWeekdayFromDate(formData.appointmentDate);
 
     return (
-      <div className="space-y-6 google-sans-code-400">
+      <div className="space-y-6 spline-sans-mono-400">
         {/* Date Input */}
         <div>
           <label className="block text-xs font-medium text-[var(--color-primary)] mb-2">
@@ -262,7 +262,7 @@ export const BookingSteps = ({
   };
 
   const renderStep2 = () => (
-    <div className="google-sans-code-400 space-y-6">
+    <div className="spline-sans-mono-400 space-y-6">
       {/* Appointment Type */}
       <div>
         <label className="block text-xs font-medium text-[var(--color-primary)] mb-3">
@@ -463,7 +463,7 @@ export const BookingSteps = ({
   );
 
   const renderStep3 = () => (
-    <div className="google-sans-code-400 space-y-4">
+    <div className="spline-sans-mono-400 space-y-4">
       <div className="text-center mb-6">
         <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
           <Check className="w-6 h-6 text-green-400" />

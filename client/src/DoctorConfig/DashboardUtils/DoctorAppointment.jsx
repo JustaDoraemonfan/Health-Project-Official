@@ -56,7 +56,7 @@ const DoctorAppointment = () => {
   // Handle loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#161515] text-white google-sans-code-400 flex items-center justify-center">
+      <div className="min-h-screen bg-[#161515] text-white spline-sans-mono-400 flex items-center justify-center">
         <div className="text-center">
           <div className="w-12 h-12 border-4 border-zinc-700 border-t-emerald-400 rounded-full animate-spin mb-4 mx-auto"></div>
           <p className="text-zinc-400">Loading appointments...</p>
@@ -68,7 +68,7 @@ const DoctorAppointment = () => {
   // Handle error state
   if (error) {
     return (
-      <div className="min-h-screen bg-[#161515] text-white google-sans-code-400 flex items-center justify-center">
+      <div className="min-h-screen bg-[#161515] text-white spline-sans-mono-400 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 bg-red-900/20 border border-red-800 rounded-full flex items-center justify-center mb-4 mx-auto">
             <Bell className="w-8 h-8 text-red-400" />
@@ -85,7 +85,7 @@ const DoctorAppointment = () => {
   return (
     <>
       <OfficialHeader isNotDashboard={true} />
-      <div className="min-h-screen bg-[var(--color-primary)] text-white google-sans-code-400 relative overflow-hidden pt-20">
+      <div className="min-h-screen bg-[var(--color-primary)] text-white spline-sans-mono-400 relative overflow-hidden pt-20">
         <Header
           currentDate={currentDate}
           totalAppointments={appointments.length}
@@ -123,10 +123,10 @@ const DoctorAppointment = () => {
           {/* Appointments Section */}
           <div className="bg-transparent rounded-xl shadow-2xl">
             <div className="px-6 py-4 ">
-              <h2 className="text-xl font-bold text-[var(--color-secondary)] google-sans-code-400">
+              <h2 className="text-xl font-bold text-[var(--color-secondary)] spline-sans-mono-400">
                 Today's Appointments
               </h2>
-              <p className="text-sm text-zinc-400 google-sans-code-400">
+              <p className="text-sm text-zinc-400 spline-sans-mono-400">
                 {filteredAppointments.length} of {appointments.length}{" "}
                 appointments
               </p>
@@ -164,7 +164,7 @@ const DoctorAppointment = () => {
                       ? "No appointments yet"
                       : `No ${filterStatus} appointments`}
                   </h3>
-                  <p className="text-zinc-400 text-center max-w-md google-sans-code-400">
+                  <p className="text-zinc-400 text-center max-w-md spline-sans-mono-400">
                     {filterStatus === "all"
                       ? "When appointments are scheduled, they'll appear here for easy management."
                       : `No ${filterStatus} appointments found. Try adjusting your filters.`}

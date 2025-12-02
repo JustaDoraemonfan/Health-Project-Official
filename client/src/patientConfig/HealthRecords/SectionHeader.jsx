@@ -11,7 +11,7 @@ const SectionHeader = ({
   const section = sections.find((s) => s.id === selectedSection);
 
   return (
-    <div className="bg-[var(--color-secondary)]/90 shadow-sm border-b google-sans-code-400 border-gray-200 sticky top-0 z-10">
+    <div className="bg-[var(--color-secondary)]/90 shadow-sm border-b spline-sans-mono-400 border-gray-200 sticky top-0 z-10">
       {/* Responsive padding */}
       <div className="px-4 sm:px-6 py-4">
         {/* Layout stacks on mobile, becomes a row on medium screens */}

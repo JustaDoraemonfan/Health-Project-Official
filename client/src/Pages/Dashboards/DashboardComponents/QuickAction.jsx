@@ -22,10 +22,10 @@ export default function QuickAction({ role = "patient", actions = null }) {
       {/* Quick Actions Section - Responsive */}
       <div className="max-w-6xl mx-auto mt-8 sm:mt-12">
         <div className="text-center mb-4 sm:mb-6">
-          <h3 className="text-lg sm:text-xl google-sans-code-400 font-semibold text-[var(--color-secondary)] mb-1 sm:mb-2">
+          <h3 className="text-lg sm:text-xl spline-sans-mono-400 font-semibold text-[var(--color-secondary)] mb-1 sm:mb-2">
             Quick Actions
           </h3>
-          <p className="text-xs sm:text-sm text-[var(--color-secondary)]/50 google-sans-code-400 px-4">
+          <p className="text-xs sm:text-sm text-[var(--color-secondary)]/50 spline-sans-mono-400 px-4">
             {isDoctor
               ? "Essential tools for efficient patient care"
               : "Frequently used features for faster access"}
@@ -60,10 +60,10 @@ export default function QuickAction({ role = "patient", actions = null }) {
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-slate-50 google-sans-code-400 font-semibold text-xs sm:text-sm truncate">
+                    <h4 className="text-slate-50 spline-sans-mono-400 font-semibold text-xs sm:text-sm truncate">
                       {action.title}
                     </h4>
-                    <p className="text-gray-400 google-sans-code-400 text-xs line-clamp-1">
+                    <p className="text-gray-400 spline-sans-mono-400 text-xs line-clamp-1">
                       {action.description}
                     </p>
                   </div>

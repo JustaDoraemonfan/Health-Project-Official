@@ -6,7 +6,7 @@ import PatientCard from "./PatientCard";
 const PatientsList = ({ patients, onPatientClick }) => {
   return (
     // min-h-screen ensures the background color fills the viewport
-    <div className="min-h-screen google-sans-code-400 bg-[var(--color-primary)]">
+    <div className="min-h-screen spline-sans-mono-400 bg-[var(--color-primary)]">
       {/* Header */}
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-b from-black/5 to-transparent"></div>

@@ -27,7 +27,7 @@ export default function Footer({ role = "patient" }) {
 
   return (
     <div className="text-center mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-700">
-      <p className="text-gray-500 google-sans-code-400 text-xs sm:text-sm px-4">
+      <p className="text-gray-500 spline-sans-mono-400 text-xs sm:text-sm px-4">
         {message}
       </p>
       <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 mt-2 sm:mt-3 px-4">
@@ -38,7 +38,7 @@ export default function Footer({ role = "patient" }) {
             )}
             <button
               onClick={link.onClick}
-              className="text-blue-400 hover:text-blue-300 hover:cursor-pointer google-sans-code-400 text-xs sm:text-sm transition-colors duration-200"
+              className="text-blue-400 hover:text-blue-300 hover:cursor-pointer spline-sans-mono-400 text-xs sm:text-sm transition-colors duration-200"
             >
               {link.text}
             </button>

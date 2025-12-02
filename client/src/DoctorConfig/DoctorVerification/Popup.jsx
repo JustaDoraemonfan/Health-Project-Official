@@ -9,7 +9,7 @@ export default function PopupProfileUpdate({ onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 google-sans-code-400 bg-black/40 bg-opacity-50 flex justify-center items-center z-[9999]">
+    <div className="fixed inset-0 spline-sans-mono-400 bg-black/40 bg-opacity-50 flex justify-center items-center z-[9999]">
       <div className="bg-white p-6 rounded-xl shadow-lg text-center max-w-xs w-full">
         <p className="text-lg font-semibold text-gray-800">
           Please update your profile before verification.

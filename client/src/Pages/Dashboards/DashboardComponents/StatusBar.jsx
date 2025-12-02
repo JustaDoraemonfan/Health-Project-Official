@@ -73,14 +73,14 @@ export default function StatusBar({
               className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-blue-400 object-cover shadow-md"
             />
           ) : (
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl google-sans-code-400 font-bold text-[var(--color-secondary)] mb-2 sm:mb-3">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl spline-sans-mono-400 font-bold text-[var(--color-secondary)] mb-2 sm:mb-3">
               {isDoctor ? "Doctor" : "Patient"}{" "}
               <span className="text-blue-400">Dashboard</span>
             </h1>
           )}
         </div>
 
-        <p className="text-sm sm:text-base lg:text-lg text-[var(--color-secondary)]/50 google-sans-code-400 mb-1 px-4">
+        <p className="text-sm sm:text-base lg:text-lg text-[var(--color-secondary)]/50 spline-sans-mono-400 mb-1 px-4">
           Welcome back, {isDoctor ? "Dr." : ""}{" "}
           <span className="text-red-400">{name}</span>
           {isDoctor && (
@@ -105,7 +105,7 @@ export default function StatusBar({
             </span>
           )}
         </p>
-        <p className="text-xs sm:text-sm text-purple-400 google-sans-code-400 px-4">
+        <p className="text-xs sm:text-sm text-purple-400 spline-sans-mono-400 px-4">
           {isDoctor
             ? `${
                 specialization ? `${specialization} • ` : ""
@@ -117,7 +117,7 @@ export default function StatusBar({
       {/* Status Bar - Responsive */}
       <div className="max-w-5xl mx-auto">
         <div className="bg-[var(--color-secondary)] rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-700">
-          <div className="google-sans-code-400">
+          <div className="spline-sans-mono-400">
             {/* Mobile Layout - Stack everything */}
             <div className="flex flex-col gap-3 sm:hidden">
               {/* Top Row: Status */}

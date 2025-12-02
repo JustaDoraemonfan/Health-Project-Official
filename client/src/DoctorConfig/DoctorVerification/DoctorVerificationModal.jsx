@@ -185,7 +185,7 @@ const DoctorVerificationModal = ({ isOpen, onClose, doctor }) => {
   };
 
   return (
-    <div className="fixed inset-0 google-sans-code-400 bg-black/60 bg-opacity-60 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 spline-sans-mono-400 bg-black/60 bg-opacity-60 flex items-center justify-center z-50 p-4">
       <div className="bg-[var(--color-primary)] rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-[var(--color-secondary)] border-b border-gray-200 px-4 py-4 sm:px-6 flex items-center justify-between rounded-t-2xl z-10">
           <div>

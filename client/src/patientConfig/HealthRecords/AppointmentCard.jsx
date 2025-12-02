@@ -48,7 +48,7 @@ const AppointmentCard = ({ appointment }) => {
   });
 
   return (
-    <div className="bg-[var(--color-secondary)] rounded-xl shadow-sm border google-sans-code-400 border-gray-200 p-4 sm:p-6 hover:shadow-md transition-shadow duration-200">
+    <div className="bg-[var(--color-secondary)] rounded-xl shadow-sm border spline-sans-mono-400 border-gray-200 p-4 sm:p-6 hover:shadow-md transition-shadow duration-200">
       {/* Main layout: Icon on left, content on right */}
       <div className="flex items-start space-x-4">
         {/* Icon (Always visible) */}

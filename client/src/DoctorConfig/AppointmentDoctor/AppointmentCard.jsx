@@ -102,7 +102,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
             />
           </div>
           <div>
-            <h3 className="text-[var(--color-primary)] font-semibold google-sans-code-400 text-base sm:text-lg group-hover:text-slate-100 transition-colors">
+            <h3 className="text-[var(--color-primary)] font-semibold spline-sans-mono-400 text-base sm:text-lg group-hover:text-slate-100 transition-colors">
               {appointment.patient?.name ||
                 appointment.patientName ||
                 "Unknown Patient"}
@@ -111,13 +111,13 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
               <Clock
                 className={`w-4 h-4 ${getClockIconColor()} group-hover:scale-110 transition-all duration-300`}
               />
-              <span className="google-sans-code-400">
+              <span className="spline-sans-mono-400">
                 {formatTime(appointment.time)}
               </span>
               {appointment.duration && (
                 <>
                   <span className="text-slate-500">•</span>
-                  <span className="google-sans-code-400">
+                  <span className="spline-sans-mono-400">
                     {appointment.duration}
                   </span>
                 </>
@@ -131,7 +131,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
           {appointment.type && (
             <div className="flex items-center justify-between">
               <span
-                className={`px-3 py-1.5 rounded-lg text-sm google-sans-code-400 ${getTypeColor(
+                className={`px-3 py-1.5 rounded-lg text-sm spline-sans-mono-400 ${getTypeColor(
                   appointment.type
                 )} group-hover:scale-105 transition-transform duration-300`}
               >
@@ -150,7 +150,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
             <MailIcon
               className={`w-4 h-4 mr-2 ${getPhoneIconColor()} group-hover:scale-110 transition-all duration-300`}
             />
-            <span className="google-sans-code-400 text-white/70 font-light truncate">
+            <span className="spline-sans-mono-400 text-white/70 font-light truncate">
               {appointment.patient?.email ||
                 appointment.phone ||
                 "No contact info"}
@@ -164,7 +164,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
             <User
               className={`w-4 h-4 mr-2 ${getDoctorIconColor()} group-hover:scale-110 transition-all duration-300`}
             />
-            <span className="google-sans-code-400">
+            <span className="spline-sans-mono-400">
               Dr. {appointment.doctor.name}
             </span>
             {appointment.doctorProfile?.specialization && (
@@ -178,7 +178,7 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
         {/* Notes Section */}
         {appointment.notes && (
           <div className="bg-[var(--color-primary)] rounded-lg p-3 mt-3">
-            <p className="text-sm text-[var(--color-secondary)] google-sans-code-400 leading-relaxed">
+            <p className="text-sm text-[var(--color-secondary)] spline-sans-mono-400 leading-relaxed">
               {appointment.notes}
             </p>
           </div>
@@ -186,12 +186,12 @@ const AppointmentCard = ({ appointment, onCardClick }) => {
 
         {/* Appointment Date & Status */}
         <span
-          className={`rounded-full text-xs google-sans-code-400 flex flex-col sm:flex-row sm:justify-between sm:items-center p-2 ${getStatusColor(
+          className={`rounded-full text-xs spline-sans-mono-400 flex flex-col sm:flex-row sm:justify-between sm:items-center p-2 ${getStatusColor(
             appointment.status
           )} group-hover:scale-105 transition-transform duration-300`}
         >
           {appointment.appointmentDate && (
-            <div className="text-xs text-slate-500 google-sans-code-400 mb-1 sm:mb-0">
+            <div className="text-xs text-slate-500 spline-sans-mono-400 mb-1 sm:mb-0">
               {new Date(appointment.appointmentDate).toLocaleDateString(
                 "en-US",
                 {

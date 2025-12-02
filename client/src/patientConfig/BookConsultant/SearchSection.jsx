@@ -10,7 +10,7 @@ const SearchSection = ({ location, setLocation, onSearch, isLoading }) => {
   };
 
   return (
-    <div className="mb-8 google-sans-code-400">
+    <div className="mb-8 spline-sans-mono-400">
       {/* UPDATED: flex-col sm:flex-row */}
       <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
         <div className="relative flex-1">

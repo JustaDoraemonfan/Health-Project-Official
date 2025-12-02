@@ -131,7 +131,7 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen google-sans-code-400 bg-[#fffdf2]">
+    <div className="min-h-screen spline-sans-mono-400 bg-[#fffdf2]">
       <Header isNotDashboard={true} />
       <div className="max-w-4xl mx-auto pt-20 p-4">
         {/* Navigation */}

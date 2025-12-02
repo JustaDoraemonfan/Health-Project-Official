@@ -8,7 +8,7 @@ const PatientSymptoms = ({ patient, symptoms, loading, onBack }) => {
 
   return (
     <div
-      className="min-h-screen google-sans-code-400"
+      className="min-h-screen spline-sans-mono-400"
       style={{ backgroundColor: "var(--color-primary)" }}
     >
       {/* Header with back button */}

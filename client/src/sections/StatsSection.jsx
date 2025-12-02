@@ -8,7 +8,7 @@ const StatCard = ({ stat }) => (
   <div className="group">
     <div className="bg-[var(--color-secondary)] border border-gray-700 rounded-lg sm:rounded-xl p-4 sm:p-6 hover:border-blue-500/50 transition-all duration-300 transform hover:-translate-y-1">
       {/* Metric */}
-      <div className="google-sans-code-400 text-xs uppercase tracking-wider text-gray-400 mb-2">
+      <div className="spline-sans-mono-400 text-xs uppercase tracking-wider text-gray-400 mb-2">
         {stat.metric}
       </div>
 
@@ -17,14 +17,14 @@ const StatCard = ({ stat }) => (
         <div className="text-blue-400 mr-2 sm:mr-3 group-hover:scale-110 transition-transform duration-300">
           {stat.icon}
         </div>
-        <div className="text-2xl sm:text-3xl google-sans-code-400 font-bold text-white">
+        <div className="text-2xl sm:text-3xl spline-sans-mono-400 font-bold text-white">
           {/* Show a loading state briefly */}
           {stat.number === 0 ? "..." : stat.number.toLocaleString()}
         </div>
       </div>
 
       {/* Label */}
-      <div className="text-gray-400 google-sans-code-400 text-xs sm:text-sm">
+      <div className="text-gray-400 spline-sans-mono-400 text-xs sm:text-sm">
         {stat.label}
       </div>
     </div>
@@ -107,10 +107,10 @@ export const StatsSection = () => {
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header (unchanged) */}
         <div className="text-center mb-10 sm:mb-16">
-          <h2 className="text-3xl sm:text-4xl google-sans-code-400 font-bold text-[var(--color-secondary)] mb-3 sm:mb-4">
+          <h2 className="text-3xl sm:text-4xl spline-sans-mono-400 font-bold text-[var(--color-secondary)] mb-3 sm:mb-4">
             Platform Analytics
           </h2>
-          <p className="text-sm sm:text-base text-gray-400 google-sans-code-400">
+          <p className="text-sm sm:text-base text-gray-400 spline-sans-mono-400">
             Real-time insights about our platform
           </p>
         </div>
@@ -128,7 +128,7 @@ export const StatsSection = () => {
             id="stat-select"
             value={selectedStatIndex}
             onChange={(e) => setSelectedStatIndex(Number(e.target.value))}
-            className="w-full p-4 bg-[var(--color-secondary)] border border-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 google-sans-code-400"
+            className="w-full p-4 bg-[var(--color-secondary)] border border-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 spline-sans-mono-400"
           >
             {stats.map((stat, index) => (
               <option key={index} value={index}>

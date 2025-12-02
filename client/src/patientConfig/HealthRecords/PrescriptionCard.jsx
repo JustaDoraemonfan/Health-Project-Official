@@ -3,7 +3,7 @@ import { Pill } from "lucide-react";
 
 const PrescriptionCard = ({ prescription }) => {
   return (
-    <div className="bg-white rounded-xl shadow-sm border google-sans-code-400 border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
+    <div className="bg-white rounded-xl shadow-sm border spline-sans-mono-400 border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
       {/* Use items-start for better alignment if text wraps */}
       <div className="flex items-start space-x-4">
         <div className="bg-green-50 p-3 rounded-lg flex-shrink-0">
