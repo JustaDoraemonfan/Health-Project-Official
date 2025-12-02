@@ -15,7 +15,7 @@ const safeLocalStorage = {
       }
       return null;
     } catch (error) {
-      console.warn("localStorage not :", error);
+      console.warn("localStorage  :", error);
       return null;
     }
   },
