@@ -18,7 +18,7 @@ const HeroSection = () => {
                   <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-green-500"></div>
                 </div>
                 <div className="text-gray-400 text-xs sm:text-sm spline-sans-mono-400">
-                  System Console
+                  System
                 </div>
                 <div className="w-8 sm:w-12"></div>
               </div>
