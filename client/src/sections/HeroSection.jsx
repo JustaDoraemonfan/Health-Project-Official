@@ -45,7 +45,7 @@ const HeroSection = () => {
           </h2>
           <p className="text-base sm:text-lg text-gray-800 mb-8 sm:mb-12 max-w-3xl mx-auto spline-sans-mono-400 leading-relaxed px-4">
             Transforming healthcare with{" "}
-            <span className="text-blue-400">modern technology</span>
+            <span className="text-blue-400">modern </span>
             <br className="hidden sm:block" />
             <span className="sm:hidden"> </span>
             Connecting <span className="text-green-400">patients</span>,{" "}
