@@ -18,7 +18,7 @@ const HeroSection = () => {
                   <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-green-500"></div>
                 </div>
                 <div className="text-gray-400 text-xs sm:text-sm spline-sans-mono-400">
-                  System
+                  System Console
                 </div>
                 <div className="w-8 sm:w-12"></div>
               </div>
@@ -45,7 +45,7 @@ const HeroSection = () => {
           </h2>
           <p className="text-base sm:text-lg text-gray-800 mb-8 sm:mb-12 max-w-3xl mx-auto spline-sans-mono-400 leading-relaxed px-4">
             Transforming healthcare with{" "}
-            <span className="text-blue-400">modern </span>
+            <span className="text-blue-400">modern technology</span>
             <br className="hidden sm:block" />
             <span className="sm:hidden"> </span>
             Connecting <span className="text-green-400">patients</span>,{" "}
