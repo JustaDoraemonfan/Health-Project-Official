@@ -444,17 +444,28 @@ export const BookingSteps = ({
         <label className="block text-xs font-medium text-[var(--color-primary)] mb-2">
           Payment Reference
         </label>
+
         <div className="relative">
-          <CreditCard className="absolute left-3 top-3 w-6 h-6 text-gray-400" />
-          <input
-            type="text"
+          <CreditCard className="absolute left-3 top-2 w-6 h-6 text-gray-400 pointer-events-none" />
+
+          <select
             name="paymentReference"
-            value={formData.paymentReference}
+            value={formData.paymentReference || ""}
             onChange={onChange}
-            placeholder="Insurance ID, payment confirmation, etc."
-            className="w-full pl-10 p-3 bg-slate-800 border border-slate-600 rounded-md focus:border-slate-400 focus:ring-1 focus:ring-slate-400 text-white placeholder-slate-400 text-sm transition-colors disabled:opacity-50"
-          />
+            aria-label="Payment Reference"
+            className="w-full pl-12 pr-3 py-3 bg-slate-800 border border-slate-600 rounded-md text-white text-xs"
+          >
+            <option value="" disabled>
+              Select payment type
+            </option>
+            <option value="upi">UPI</option>
+            <option value="cash">Cash</option>
+            <option value="credit_card">Credit Card</option>
+            <option value="debit_card">Debit Card</option>
+            <option value="net_banking">Net Banking</option>
+          </select>
         </div>
+
         <div className="text-xs text-gray-400 mt-1">
           Optional: Add payment or insurance information
         </div>

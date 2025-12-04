@@ -117,7 +117,7 @@ const appointmentSchema = new mongoose.Schema(
     },
     paymentReference: {
       type: String,
-      trim: true,
+      enum: ["upi", "cash", "credit_card", "debit_card", "net_banking"],
     },
 
     // --- Timestamps ---
