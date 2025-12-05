@@ -190,7 +190,7 @@ export const BookingSteps = ({
                       className={`p-3 rounded-lg border text-center transition-all duration-200 hover:border-gray-600 ${
                         formData.appointmentTime === timeSlot
                           ? "border-[var(--color-secondary)] bg-[var(--color-primary)]/20 text-white"
-                          : "border-gray-700 bg-[var(--color-primary)]/5 text-[var(--color-primary)]"
+                          : "border-gray-700 -[var(--color-primary)]/5 text-[var(--color-primary)]"
                       }`}
                     >
                       <div className="flex items-center justify-center gap-2">
