@@ -262,7 +262,7 @@ export const BookingSteps = ({
   };
 
   const renderStep2 = () => (
-    <div className="-sans-mono-400 space-y-6">
+    <div className="spline--mono-400 space-y-6">
       {/* Appointment Type */}
       <div>
         <label className="block text-xs font-medium text-[var(--color-primary)] mb-3">
