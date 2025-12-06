@@ -218,7 +218,7 @@ export const BookingSteps = ({
             {errors.appointmentTime && (
               <div className="flex items-center gap-2 mt-2 text-red-400 text-xs">
                 <AlertCircle className="w-4 h-4" />
-                {errors.appointmentTime}
+                {errors.}
               </div>
             )}
           </div>
