@@ -212,7 +212,7 @@ export const BookingSteps = ({
                 <p className="text-gray-400 text-xs mt-1">
                   Please choose a different date
                 </p>
-              </div>
+              </div>asafa
             )}
 
             {errors.appointmentTime && (
