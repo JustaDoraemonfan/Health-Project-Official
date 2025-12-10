@@ -207,12 +207,12 @@ export const BookingSteps = ({
               <div className="bg-gray-800/50 rounded-lg p-4 text-center">
                 <AlertCircle className="w-6 h-6 text-gray-400 mx-auto mb-2" />
                 <p className="text-gray-400 text-xs">
-                  No available time slots {selectedWeekday}
+                  No available time slots for {selectedWeekday}
                 </p>
                 <p className="text-gray-400 text-xs mt-1">
                   Please choose a different date
                 </p>
-              </div>
+              </div>asafa
             )}
 
             {errors.appointmentTime && (
