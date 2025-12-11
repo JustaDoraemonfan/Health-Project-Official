@@ -210,7 +210,7 @@ export const BookingSteps = ({
                   No available time slots for {selectedWeekday}
                 </p>
                 <p className="text-gray-400 text-xs mt-1">
-                  Please choose a different date
+                  Please choose a date
                 </p>
               </div>
             )}
