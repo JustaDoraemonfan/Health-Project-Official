@@ -93,7 +93,6 @@ const ConsultationNoteCard = ({ note }) => {
               ) : (
                 <span>Acknowledge</span>
               )}
-              Player
             </button>
           </div>
         </div>
