@@ -80,7 +80,7 @@ const ConsultationNoteCard = ({ note }) => {
               {isExpanded ? "Hide Details" : "View Details"}
             </button>
             <button
-              onClick={}
+              onClick={acknowledge}
               disabled={note.isRead}
               className="bg-[var(--color-primary)] hover:cursor-pointer hover:bg-[var(--color-primary)]/90 text-black px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center space-x-2 shadow-sm hover:shadow-md hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/30 focus:ring-offset-1
               w-full sm:w-auto" // Responsive width
