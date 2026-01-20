@@ -90,14 +90,12 @@ export const LoginSection = ({ onToggleAuth }) => {
     const result = await login({
       email: formData.email.trim(),
       password: formData.password,
-      expectedRole: formData.role, // Optional: to verify role matches
+      expectedRole: formData.role,
     });
 
     if (result.success) {
-      // Redirect based on user role
       const userRole = result.data.data.role;
       console.log(`Login successful for ${userRole}:`, result.data.data);
-
       navigate(`/${userRole}/dashboard`);
     } else {
       setShowError(true);
@@ -241,7 +239,7 @@ export const LoginSection = ({ onToggleAuth }) => {
                     !formData.password.trim()
                   }
                   className={`w-full py-3 px-4 bg-gradient-to-r ${getColorClasses(
-                    userTypes.find((t) => t.id === activeTab)?.color
+                    userTypes.find((t) => t.id === activeTab)?.color,
                   )} text-white spline-sans-mono-400 font-medium rounded-md hover:opacity-90 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed`}
                 >
                   {loading ? (
