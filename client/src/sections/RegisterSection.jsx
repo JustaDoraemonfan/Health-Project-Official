@@ -37,11 +37,24 @@ export const RegisterSection = ({ onToggleAuth }) => {
   const { register, loading, error, clearError, isAuthenticated } = useAuth();
 
   const userTypes = [
-    { value: "patient", label: "Patient" },
-    { value: "doctor", label: "Doctor" },
-    { value: "frontlineWorker", label: "Frontline Worker" },
-    { value: "admin", label: "Admin" },
+    { value: "patient", label: "Patient", color: "blue" },
+    { value: "doctor", label: "Doctor", color: "green" },
+    { value: "frontlineWorker", label: "Frontline Worker", color: "red" },
+    { value: "admin", label: "Admin", color: "orange" },
   ];
+
+  const getButtonColorClasses = (userType) => {
+    const colorMap = {
+      blue: "from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700",
+      green:
+        "from-green-500 to-green-600 hover:from-green-600 hover:to-green-700",
+      red: "from-red-500 to-red-600 hover:from-red-600 hover:to-red-700",
+      orange:
+        "from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700",
+    };
+    const userTypeObj = userTypes.find((t) => t.value == userType);
+    return colorMap[userTypeObj?.color] || colorMap.blue;
+  };
 
   const adminRoles = [
     { value: "verifier", label: "Verifier" },
@@ -324,7 +337,7 @@ export const RegisterSection = ({ onToggleAuth }) => {
 
       setTimeout(() => {
         alert(
-          `Welcome ${result.data.name}! Your account has been created successfully. Redirecting to your dashboard...`
+          `Welcome ${result.data.name}! Your account has been created successfully. Redirecting to your dashboard...`,
         );
       }, 1500);
     } else {
@@ -735,7 +748,11 @@ export const RegisterSection = ({ onToggleAuth }) => {
                 <button
                   type="submit"
                   disabled={loading || success || !isFormValid}
-                  className="w-full py-3 px-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white spline-sans-mono-400 rounded-md hover:from-purple-600 hover:to-purple-700 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:transform-none hover:cursor-pointer disabled:cursor-not-allowed disabled:hover:from-purple-500 disabled:hover:to-purple-600"
+                  className={`w-full py-3 px-4 bg-gradient-to-r text-white spline-sans-mono-400 rounded-md transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:transform-none hover:cursor-pointer disabled:cursor-not-allowed ${getButtonColorClasses(formData.userType)} ${
+                    loading || success || !isFormValid
+                      ? "disabled:hover:from-current disabled:hover:to-current"
+                      : ""
+                  }`}
                 >
                   {loading ? (
                     <>
