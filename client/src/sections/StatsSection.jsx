@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Users, Stethoscope, Building2 } from "lucide-react";
+import { Users, Stethoscope, Building2, User } from "lucide-react";
 import { dashboardAPI } from "../services/api"; // Commented out to fix import error
 
 // Helper component for rendering a single stat card
@@ -65,22 +65,22 @@ export const StatsSection = () => {
       metric: "Patients",
     },
     {
-      icon: <Users className="w-5 h-5 sm:w-6 sm:h-6 text-green-500" />,
+      icon: <Stethoscope className="w-5 h-5 sm:w-6 sm:h-6 text-green-500" />,
       number: statsData.doctors,
       label: "Verified Doctors",
       metric: "Doctors",
     },
     {
-      icon: <Stethoscope className="w-5 h-5 sm:w-6 sm:h-6 text-purple-500" />,
+      icon: <Building2 className="w-5 h-5 sm:w-6 sm:h-6 text-red-500" />,
       number: statsData.frontline,
-      label: "Frontline Workers",
-      metric: "FWL",
+      label: "Partnered Hospitals",
+      metric: "Hospitals",
     },
     {
-      icon: <Building2 className="w-5 h-5 sm:w-6 sm:h-6 text-red-500" />,
+      icon: <User className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500" />,
       number: statsData.admin,
-      label: "Partner Hospitals",
-      metric: "Hospitals",
+      label: "Get in touch",
+      metric: "Admin",
     },
   ];
 

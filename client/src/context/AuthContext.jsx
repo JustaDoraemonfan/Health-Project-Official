@@ -155,7 +155,10 @@ const authReducer = (state, action) => {
         token: null,
         isAuthenticated: false,
         loading: false,
-        error: action.payload,
+        error:
+          typeof action.payload === "string"
+            ? { message: action.payload }
+            : action.payload,
         initialized: true,
       };
 
@@ -311,9 +314,16 @@ export const AuthProvider = ({ children }) => {
       return { success: true, data: response.data.data };
     } catch (error) {
       console.error("Login error:", error);
-      const errorMessage = error.response?.data?.message || "Login failed";
-      dispatch({ type: AUTH_ACTIONS.LOGIN_FAIL, payload: errorMessage });
-      return { success: false, error: errorMessage };
+      const backendError = error.response?.data || {
+        message: "Login failed",
+      };
+
+      dispatch({
+        type: AUTH_ACTIONS.LOGIN_FAIL,
+        payload: backendError,
+      });
+
+      return { success: false, error: backendError };
     }
   };
 
@@ -329,10 +339,16 @@ export const AuthProvider = ({ children }) => {
       return { success: true, data: response.data.data };
     } catch (error) {
       console.error("Register error:", error);
-      const errorMessage =
-        error.response?.data?.message || "Registration failed";
-      dispatch({ type: AUTH_ACTIONS.REGISTER_FAIL, payload: errorMessage });
-      return { success: false, error: errorMessage };
+      const backendError = error.response?.data || {
+        message: "Registration failed",
+      };
+
+      dispatch({
+        type: AUTH_ACTIONS.REGISTER_FAIL,
+        payload: backendError,
+      });
+
+      return { success: false, error: backendError };
     }
   };
 

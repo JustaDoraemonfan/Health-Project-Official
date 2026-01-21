@@ -43,7 +43,7 @@ const AppRoutes = () => {
   }
 
   if (error && !isAuthenticated) {
-    console.log("Auth error occurred:", error);
+    console.log("Auth error occurred:", error.message);
   }
 
   return (
@@ -57,10 +57,10 @@ const AppRoutes = () => {
                 user.role === "patient"
                   ? "/patient/dashboard"
                   : user.role === "doctor"
-                  ? "/doctor/dashboard"
-                  : user.role === "fwl"
-                  ? "/fwl/dashboard"
-                  : "/admin/dashboard"
+                    ? "/doctor/dashboard"
+                    : user.role === "fwl"
+                      ? "/fwl/dashboard"
+                      : "/admin/dashboard"
               }
               replace
             />

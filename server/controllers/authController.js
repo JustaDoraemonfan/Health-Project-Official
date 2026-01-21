@@ -23,7 +23,7 @@ const generateToken = (user) => {
       role: user.role,
     },
     process.env.JWT_SECRET,
-    { expiresIn: "30d" }
+    { expiresIn: "30d" },
   );
 };
 
@@ -59,7 +59,7 @@ export const registerUser = asyncHandler(async (req, res) => {
     return errorResponse(
       res,
       "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number",
-      400
+      400,
     );
   }
 
@@ -69,7 +69,7 @@ export const registerUser = asyncHandler(async (req, res) => {
     return errorResponse(
       res,
       `Invalid role. Must be one of: ${validRoles.join(", ")}`,
-      400
+      400,
     );
   }
 
@@ -112,7 +112,7 @@ export const registerUser = asyncHandler(async (req, res) => {
       return errorResponse(
         res,
         "Phone number and location are required for frontline workers",
-        400
+        400,
       );
     }
     await FrontlineWorker.create({
@@ -131,7 +131,7 @@ export const registerUser = asyncHandler(async (req, res) => {
       return errorResponse(
         res,
         `Invalid admin role. Must be one of: ${validAdminRoles.join(", ")}`,
-        400
+        400,
       );
     }
 
@@ -180,13 +180,13 @@ export const registerUser = asyncHandler(async (req, res) => {
     res,
     userResponse,
     "User registered successfully",
-    201
+    201,
   );
 });
 
 // Login
 export const loginUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, expectedRole } = req.body;
 
   const validationErrors = validateInput({ email, password });
   if (validationErrors.length > 0) {
@@ -195,8 +195,14 @@ export const loginUser = asyncHandler(async (req, res) => {
   if (!isValidEmail(email)) {
     return errorResponse(res, "Invalid email format", 400);
   }
+  if (!expectedRole) {
+    return errorResponse(res, "Valid role required!");
+  }
 
-  const user = await User.findOne({ email: email.toLowerCase() });
+  const user = await User.findOne({
+    email: email.toLowerCase(),
+    role: expectedRole.toLowerCase(),
+  });
   if (!user) {
     return errorResponse(res, "Invalid credentials", 401);
   }
@@ -218,7 +224,7 @@ export const loginUser = asyncHandler(async (req, res) => {
             at: nowInIST(), // Use IST time
           },
         },
-      }
+      },
     );
   }
 

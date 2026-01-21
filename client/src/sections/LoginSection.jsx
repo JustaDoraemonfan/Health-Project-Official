@@ -22,7 +22,6 @@ export const LoginSection = ({ onToggleAuth }) => {
     password: "",
     role: "patient",
   });
-  const [showError, setShowError] = useState(false);
   const [showPassword, setShowPassword] = useState(false); // Added state for password toggle
 
   const { login, loading, error, clearError, isAuthenticated, user } =
@@ -60,13 +59,9 @@ export const LoginSection = ({ onToggleAuth }) => {
     setFormData((prev) => ({ ...prev, role: activeTab }));
   }, [activeTab]);
 
-  // Clear error when form data changes
   useEffect(() => {
-    if (error && showError) {
-      clearError();
-      setShowError(false);
-    }
-  }, [formData.email, formData.password, clearError, error, showError]);
+    clearError();
+  }, [formData.email, formData.password]);
 
   // Handle input changes
   const handleInputChange = (e) => {
@@ -79,11 +74,11 @@ export const LoginSection = ({ onToggleAuth }) => {
 
   // Handle form submission
   const handleLogin = async (e) => {
+    console.log("ERROR:", error);
+
     e.preventDefault();
 
-    // Basic validation
     if (!formData.email.trim() || !formData.password.trim()) {
-      setShowError(true);
       return;
     }
 
@@ -97,8 +92,6 @@ export const LoginSection = ({ onToggleAuth }) => {
       const userRole = result.data.data.role;
       console.log(`Login successful for ${userRole}:`, result.data.data);
       navigate(`/${userRole}/dashboard`);
-    } else {
-      setShowError(true);
     }
   };
 
@@ -130,12 +123,20 @@ export const LoginSection = ({ onToggleAuth }) => {
         </div>
 
         <div className="max-w-md mx-auto">
-          {/* Error Display */}
-          {(error || showError) && (
-            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
-              <div className="flex items-center gap-2 text-red-400 text-sm spline-sans-mono-400">
-                <AlertCircle className="w-4 h-4" />
-                <span>{error || "Please fill in all required fields"}</span>
+          {error && (
+            <div className="mb-6 p-4 bg-red-500/20 border border-red-500/20 rounded-lg">
+              <div className="flex flex-col gap-1 text-red-500 text-sm spline-sans-mono-400">
+                <div className="flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 text-red-700" />
+                  <span>{error.message}</span>
+                </div>
+
+                {Array.isArray(error.errors) &&
+                  error.errors.map((err, idx) => (
+                    <span key={idx} className="ml-6">
+                      • {err}
+                    </span>
+                  ))}
               </div>
             </div>
           )}
