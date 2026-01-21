@@ -112,7 +112,7 @@ export const LoginSection = ({ onToggleAuth }) => {
     return colors[color];
   };
 
-  // Don't show login if already authenticated
+  // If user is already logged in → redirect to their dashboard
   if (isAuthenticated && user) {
     return <Navigate to={`/${user.role}/dashboard`} replace />;
   }
