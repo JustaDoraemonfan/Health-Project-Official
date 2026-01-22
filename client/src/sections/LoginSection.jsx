@@ -141,7 +141,7 @@ export const LoginSection = ({ onToggleAuth }) => {
             </div>
           )}
 
-          {/* User Type Selection */}
+          {/* User Type Selection that now fortunately works */}
           <div className="mb-8">
             <div className="bg-[var(--color-secondary)] rounded-lg p-1">
               <div className="grid grid-cols-2 gap-1">
