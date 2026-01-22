@@ -131,7 +131,7 @@ export const LoginSection = ({ onToggleAuth }) => {
                   <span>{error.message}</span>
                 </div>
 
-                {Array.isArray(error.errors) &&
+                {Array.isArray(error.errors) && //This is the error that is shown on top of the login board
                   error.errors.map((err, idx) => (
                     <span key={idx} className="ml-6">
                       • {err}
