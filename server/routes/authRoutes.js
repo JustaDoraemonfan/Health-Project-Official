@@ -1,5 +1,9 @@
 import express from "express";
-import { registerUser, loginUser } from "../controllers/authController.js";
+import {
+  registerUser,
+  loginUser,
+  refreshAccessToken,
+} from "../controllers/authController.js";
 import { getCurrentUser } from "../controllers/userController.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 
@@ -13,5 +17,7 @@ router.post("/login", loginUser);
 
 // Get current user profile
 router.get("/me", authMiddleware, getCurrentUser);
+
+router.post("/refresh-token", refreshAccessToken);
 
 export default router;

@@ -9,6 +9,7 @@ const API_BASE_URL =
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: 50000,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
@@ -32,25 +33,47 @@ apiClient.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
-// Response interceptor for error handling
 apiClient.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    // Handle token expiration
-    if (error.response?.status === 401) {
-      localStorage.removeItem("token");
-      // Redirect to login page if needed
-      if (window.location.pathname !== "/") {
+  (response) => response,
+
+  async (error) => {
+    const originalRequest = error.config;
+
+    const status = error.response?.status;
+    const message = error.response?.data?.message;
+
+    // ❗ Do NOT refresh token for login errors
+    const isLoginError =
+      message === "Incorrect role selected" ||
+      message === "Invalid credentials" ||
+      message === "Wrong password" ||
+      message === "Email not registered";
+
+    if (isLoginError) {
+      return Promise.reject(error);
+    }
+    if (status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        const refresh = await apiClient.post("/auth/refresh-token");
+        const newToken = refresh.data.data.token;
+
+        localStorage.setItem("token", newToken);
+
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        return apiClient(originalRequest);
+      } catch (refreshError) {
+        localStorage.removeItem("token");
         window.location.href = "/";
       }
     }
+
     return Promise.reject(error);
-  }
+  },
 );
 
 // Authentication API endpoints
@@ -163,7 +186,7 @@ export const doctorAPI = {
   // 🔍 Search doctors by location
   searchDoctors: (location) => {
     return apiClient.get(
-      `/doctors/search?location=${encodeURIComponent(location)}`
+      `/doctors/search?location=${encodeURIComponent(location)}`,
     );
   },
   setAvailability: (availability) => {
@@ -185,7 +208,7 @@ export const doctorAPI = {
     } catch (error) {
       console.error(
         "API: Doctor verification submission error",
-        error.response?.data || error.message
+        error.response?.data || error.message,
       );
       throw error;
     }
@@ -374,8 +397,8 @@ export const appointmentAPI = {
   getAppointmentsByDateRange: (startDate, endDate) =>
     apiClient.get(
       `/appointments/date-range?startDate=${encodeURIComponent(
-        startDate
-      )}&endDate=${encodeURIComponent(endDate)}`
+        startDate,
+      )}&endDate=${encodeURIComponent(endDate)}`,
     ),
 
   // Get appointment statistics (admin/doctor)
@@ -397,7 +420,7 @@ export const symptomAPI = {
       for (let [key, value] of symptomData.entries()) {
         if (value instanceof File) {
           console.log(
-            `${key}: File(${value.name}, ${value.size} bytes, ${value.type})`
+            `${key}: File(${value.name}, ${value.size} bytes, ${value.type})`,
           );
         } else {
           console.log(`${key}: ${value}`);
@@ -413,7 +436,7 @@ export const symptomAPI = {
     } catch (error) {
       console.error(
         "API: Add symptom error",
-        error.response?.data || error.message
+        error.response?.data || error.message,
       );
       throw error;
     }
@@ -436,7 +459,7 @@ export const symptomAPI = {
       for (let [key, value] of updates.entries()) {
         if (value instanceof File) {
           console.log(
-            `${key}: File(${value.name}, ${value.size} bytes, ${value.type})`
+            `${key}: File(${value.name}, ${value.size} bytes, ${value.type})`,
           );
         } else {
           console.log(`${key}: ${value}`);
@@ -452,7 +475,7 @@ export const symptomAPI = {
     } catch (error) {
       console.error(
         "API: Update symptom error",
-        error.response?.data || error.message
+        error.response?.data || error.message,
       );
       throw error;
     }
@@ -508,7 +531,7 @@ export const prescriptionAPI = {
     } catch (error) {
       console.error(
         "API: Upload prescription error",
-        error.response?.data || error.message
+        error.response?.data || error.message,
       );
       throw error;
     }
@@ -610,8 +633,8 @@ export const earthquakeAPI = {
   getEarthquakesByRange: (startDate, endDate) =>
     apiClient.get(
       `/earthquakes/range?start=${encodeURIComponent(
-        startDate
-      )}&end=${encodeURIComponent(endDate)}`
+        startDate,
+      )}&end=${encodeURIComponent(endDate)}`,
     ),
 
   // Get significant earthquakes above a magnitude

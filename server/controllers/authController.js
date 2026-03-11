@@ -11,20 +11,20 @@ import { IST_TIMEZONE, nowInIST } from "../utils/dateUtils.js"; // Import IST co
 
 // Helper function to get the current time in IST
 
-// Generate JWT
-const generateToken = (user) => {
-  if (!process.env.JWT_SECRET) {
-    throw new Error("JWT_SECRET environment variable is not set");
-  }
-
+// Generate short-lived access token
+const generateAccessToken = (user) => {
   return jwt.sign(
-    {
-      id: user.id,
-      role: user.role,
-    },
+    { id: user.id, role: user.role },
     process.env.JWT_SECRET,
-    { expiresIn: "30d" },
+    { expiresIn: "10m" }, // short lifespan
   );
+};
+
+// Generate long-lived refresh token
+const generateRefreshToken = (user) => {
+  return jwt.sign({ id: user.id }, process.env.JWT_REFRESH_SECRET, {
+    expiresIn: "30d",
+  });
 };
 
 // Validation helpers
@@ -173,7 +173,7 @@ export const registerUser = asyncHandler(async (req, res) => {
     name: user.name,
     email: user.email,
     role: user.role,
-    token: generateToken(user),
+    token: generateAccessToken(user),
   };
 
   return successResponse(
@@ -198,19 +198,22 @@ export const loginUser = asyncHandler(async (req, res) => {
   if (!expectedRole) {
     return errorResponse(res, "Valid role required!");
   }
+  const userByEmail = await User.findOne({ email: email.toLowerCase() });
 
-  const user = await User.findOne({
-    email: email.toLowerCase(),
-    role: expectedRole.toLowerCase(),
-  });
-  if (!user) {
-    return errorResponse(res, "Invalid credentials", 401);
+  if (!userByEmail) {
+    return errorResponse(res, "Email not found", 404);
   }
 
-  const isMatch = await bcrypt.compare(password, user.password);
+  if (userByEmail.role !== expectedRole.toLowerCase()) {
+    return errorResponse(res, "Incorrect role selected", 400);
+  }
+
+  const isMatch = await bcrypt.compare(password, userByEmail.password);
   if (!isMatch) {
-    return errorResponse(res, "Invalid credentials", 401);
+    return errorResponse(res, "Incorrect password", 401);
   }
+
+  const user = userByEmail;
 
   // Update last login for admin users
   if (user.role === "admin") {
@@ -228,12 +231,28 @@ export const loginUser = asyncHandler(async (req, res) => {
     );
   }
 
+  // Generate tokens
+  const accessToken = generateAccessToken(user);
+  const refreshToken = generateRefreshToken(user);
+
+  // Save refresh token in DB
+  user.refreshToken = refreshToken;
+  await user.save();
+
+  // Send refresh token in HttpOnly cookie
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: false, // true in production with HTTPS
+    sameSite: "lax",
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+  });
+
   const userResponse = {
     id: user.id,
     name: user.name,
     email: user.email,
     role: user.role,
-    token: generateToken(user),
+    token: accessToken,
   };
 
   return successResponse(res, userResponse, "Login successful");
@@ -272,4 +291,30 @@ export const getUserProfile = asyncHandler(async (req, res) => {
   }
 
   return successResponse(res, profileData);
+});
+
+export const refreshAccessToken = asyncHandler(async (req, res) => {
+  const token = req.cookies.refreshToken;
+  if (!token) {
+    return errorResponse(res, "No refresh token provided", 401);
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+
+    const user = await User.findById(decoded.id);
+    if (!user || user.refreshToken !== token) {
+      return errorResponse(res, "Invalid refresh token", 401);
+    }
+
+    const newAccessToken = generateAccessToken(user);
+
+    return successResponse(
+      res,
+      { token: newAccessToken },
+      "Access token refreshed",
+    );
+  } catch (error) {
+    return errorResponse(res, "Refresh token expired or invalid", 401);
+  }
 });

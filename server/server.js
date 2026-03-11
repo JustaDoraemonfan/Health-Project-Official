@@ -2,6 +2,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import morgan from "morgan";
 import path from "path";
@@ -47,11 +48,12 @@ const app = express();
 
 // ---------- MIDDLEWARE ----------
 app.use(express.json());
+app.use(cookieParser());
 app.use(
   cors({
-    origin: "*",
-    credentials: true,
-  })
+    origin: CLIENT_URL,
+    credentials: true, // I added
+  }),
 );
 app.use(helmet()); // Secure HTTP headers
 if (NODE_ENV === "development") app.use(morgan("dev")); // Logging only in dev

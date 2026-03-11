@@ -21,8 +21,11 @@ const userSchema = new mongoose.Schema(
       enum: ["patient", "doctor", "frontlineWorker", "admin"],
       default: "patient",
     },
+    refreshToken: {
+      type: String,
+    },
   },
-  { timestamps: true } // Automatically adds `createdAt` and `updatedAt` fields to the schema
+  { timestamps: true }, // Automatically adds `createdAt` and `updatedAt` fields to the schema
 );
 
 const User = mongoose.model("User", userSchema);
