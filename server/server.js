@@ -49,10 +49,21 @@ const app = express();
 // ---------- MIDDLEWARE ----------
 app.use(express.json());
 app.use(cookieParser());
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://health-project-official-y3y6.vercel.app",
+];
+
 app.use(
   cors({
-    origin: CLIENT_URL,
-    credentials: true, // I added
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS not allowed"));
+      }
+    },
+    credentials: true,
   }),
 );
 app.use(helmet()); // Secure HTTP headers
