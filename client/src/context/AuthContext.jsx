@@ -219,89 +219,59 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     let mounted = true;
     const initializeAuth = async () => {
-      console.log("Initializing auth...", {
-        hasToken: !!state.token,
-        tokenExpired: state.token ? isTokenExpired(state.token) : null,
-      });
-
-      // If no token or token is expired, mark initialized immediately
+      // No valid token? Done immediately.
       if (!state.token || isTokenExpired(state.token)) {
-        console.log("No valid token, skipping loadUser");
         dispatch({ type: AUTH_ACTIONS.INITIALIZE_COMPLETE });
         return;
       }
 
-      const controller = new AbortController();
-      // Reduced timeout for faster failure detection
-      const TIMEOUT_MS = 5000; // 5 seconds instead of 8
-      const timeoutId = setTimeout(() => {
-        console.warn("loadUser timed out, aborting request");
-        controller.abort();
-      }, TIMEOUT_MS);
+      // ✅ KEY CHANGE: Mark initialized immediately using localStorage data
+      // The user sees the dashboard right away instead of a spinner
+      dispatch({ type: AUTH_ACTIONS.INITIALIZE_COMPLETE });
 
+      // Then silently verify token with server in the background
+      // In initializeAuth:
       try {
-        await loadUser(controller.signal);
+        await loadUser(undefined, true); // ✅ pass isBackgroundCheck = true
       } catch (err) {
-        console.warn("Initialization loadUser failed:", err?.message || err);
-        // If it's a 401, the token is invalid/expired
-        if (err?.response?.status === 401) {
-          console.log("Unauthorized - clearing auth data");
-          dispatch({ type: AUTH_ACTIONS.LOGOUT });
-        }
-      } finally {
-        clearTimeout(timeoutId);
-        if (mounted) {
-          dispatch({ type: AUTH_ACTIONS.INITIALIZE_COMPLETE });
-        }
+        console.warn("Background auth check failed:", err?.message);
       }
     };
 
     initializeAuth();
-
     return () => {
       mounted = false;
     };
   }, []); // Remove state.token dependency to avoid re-initialization
 
   // Load user profile
-  const loadUser = async (signal) => {
+  const loadUser = async (signal, isBackgroundCheck = false) => {
     try {
-      console.log("Loading user...");
       dispatch({ type: AUTH_ACTIONS.LOAD_USER_START });
-
       const response = await authAPI.getCurrentUser({ signal });
-
-      console.log("User loaded successfully:", response.data.data);
       dispatch({
         type: AUTH_ACTIONS.LOAD_USER_SUCCESS,
         payload: response.data.data,
       });
       return response.data.data;
     } catch (error) {
-      console.error("Load user error:", error);
-      console.log("Error details:", {
-        status: error?.response?.status,
-        message: error?.response?.data?.message,
-        url: error?.config?.url,
-        code: error?.code,
-        name: error?.name,
-      });
-
       const message =
         error?.response?.data?.message ||
         (error.name === "CanceledError" || error.code === "ERR_CANCELED"
           ? "Request canceled/timeout"
           : "Failed to load user");
 
-      dispatch({
-        type: AUTH_ACTIONS.LOAD_USER_FAIL,
-        payload: message,
-      });
+      // ✅ Only log out user if it's a real 401, not a cold-start/network failure
+      if (isBackgroundCheck && error?.response?.status !== 401) {
+        // Silent fail — keep user logged in, just stop loading
+        dispatch({ type: AUTH_ACTIONS.INITIALIZE_COMPLETE });
+      } else {
+        dispatch({ type: AUTH_ACTIONS.LOAD_USER_FAIL, payload: message });
+      }
 
       throw error;
     }
   };
-
   // Login function
   const login = async (credentials) => {
     try {
