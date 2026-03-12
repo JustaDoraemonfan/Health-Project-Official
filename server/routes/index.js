@@ -20,6 +20,7 @@ import AnalyzeRoutes from "./PatientAnalyzeRoute.js";
 import profilePhotoRoutes from "./profilePhotoRoutes.js";
 
 export function registerRoutes(app) {
+  app.get("/api/ping", (req, res) => res.json({ ok: true }));
   const routes = [
     ["/api/auth", authRoutes],
     ["/api/patients", patientRoutes],

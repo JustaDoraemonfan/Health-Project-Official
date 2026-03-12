@@ -11,7 +11,6 @@ async function startServer() {
   startReminderJobs();
 
   const app = createApp();
-  app.get("/ping", (req, res) => res.json({ ok: true }));
   const server = app.listen(PORT, () => {
     console.log(`✅ Server running in ${NODE_ENV} mode on port ${PORT}`);
   });
