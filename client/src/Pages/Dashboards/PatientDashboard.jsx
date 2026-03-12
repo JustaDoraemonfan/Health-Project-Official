@@ -1,17 +1,13 @@
-// ============================================
-// 1. RESPONSIVE PatientDashboard.jsx
-// ============================================
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardCard from "./DashboardComponents/dashboardCard";
 import StatusBar from "./DashboardComponents/StatusBar";
 import QuickAction from "./DashboardComponents/QuickAction";
 import UpdateSymptomModal from "../../patientConfig/DashboardUtils/UpdateSymptomModal";
-import { dashboardAPI } from "../../services/api";
 import { dashboardSections } from "../../config/patientDashboardSection";
 import Footer from "./DashboardComponents/Footer";
 import Header from "../../components/Header";
-import { symptomAPI } from "../../services/api";
+import { dashboardAPI, symptomAPI } from "../../services/api";
 
 const PatientDashboard = () => {
   const [user, setUser] = useState({
@@ -33,10 +29,11 @@ const PatientDashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await dashboardAPI.getPatientDashboard();
+        const [response, symptomResp] = await Promise.all([
+          dashboardAPI.getPatientDashboard(),
+          symptomAPI.getSymptoms(),
+        ]);
         const data = response.data.data;
-        const symptomResp = await symptomAPI.getSymptoms();
-
         setUser(data.user);
         setPatient(data.patient);
         setSymptoms(symptomResp.data.data || []);
@@ -50,39 +47,30 @@ const PatientDashboard = () => {
 
   const navigate = useNavigate();
 
-  const sections = dashboardSections(navigate, {
-    onSymptomsClick: () => {
-      setSelectedSymptom(null);
-      setModalOpen(true);
-    },
-    onEditSymptom: (symptom) => {
-      setSelectedSymptom(symptom);
-      setModalOpen(true);
-    },
-  });
+  const sections = useMemo(
+    () =>
+      dashboardSections(navigate, {
+        onSymptomsClick: () => {
+          setSelectedSymptom(null);
+          setModalOpen(true);
+        },
+        onEditSymptom: (symptom) => {
+          setSelectedSymptom(symptom);
+          setModalOpen(true);
+        },
+      }),
+    [navigate],
+  );
 
   const handleSymptomSubmit = async (formData) => {
     try {
-      const token = localStorage.getItem("token");
-      console.log("Token exists:", !!token);
-      console.log("Form data being sent:", formData);
-
       if (selectedSymptom) {
-        console.log("Updating symptom:", selectedSymptom._id);
-        const response = await symptomAPI.updateSymptom(
-          selectedSymptom._id,
-          formData
-        );
-        console.log("Update response:", response);
+        await symptomAPI.updateSymptom(selectedSymptom._id, formData);
       } else {
-        console.log("Creating new symptom");
-        const response = await symptomAPI.addSymptom(formData);
-        console.log("Create response:", response);
+        await symptomAPI.addSymptom(formData);
       }
     } catch (error) {
-      console.error("Full error object:", error);
-      console.error("Error response:", error.response?.data);
-      console.error("Error status:", error.response?.status);
+      console.error("Failed to submit symptom:", error.response?.data);
     }
   };
 
@@ -98,7 +86,6 @@ const PatientDashboard = () => {
         <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
           <StatusBar name={user.name} email={user.email} />
 
-          {/* Dashboard Grid - Responsive */}
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {sections.map((section) => (

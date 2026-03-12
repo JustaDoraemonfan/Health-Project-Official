@@ -8,8 +8,8 @@ import {
   Settings,
   AlertCircle,
   Loader2,
-  Eye, // Added
-  EyeOff, // Added
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -22,7 +22,7 @@ export const LoginSection = ({ onToggleAuth }) => {
     password: "",
     role: "patient",
   });
-  const [showPassword, setShowPassword] = useState(false); // Added state for password toggle
+  const [showPassword, setShowPassword] = useState(false);
 
   const { login, loading, error, clearError, isAuthenticated, user } =
     useAuth();

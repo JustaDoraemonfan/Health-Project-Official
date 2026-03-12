@@ -1,29 +1,23 @@
 import { useEffect, useState } from "react";
 import { Users, Stethoscope, Building2, User } from "lucide-react";
-import { dashboardAPI } from "../services/api"; // Commented out to fix import error
+import { dashboardAPI } from "../services/api";
 
-// Helper component for rendering a single stat card
-// This avoids duplicating the Tailwind classes
 const StatCard = ({ stat }) => (
   <div className="group">
     <div className="bg-[var(--color-secondary)] border border-gray-700 rounded-lg sm:rounded-xl p-4 sm:p-6 hover:border-blue-500/50 transition-all duration-300 transform hover:-translate-y-1">
-      {/* Metric */}
       <div className="spline-sans-mono-400 text-xs uppercase tracking-wider text-gray-400 mb-2">
         {stat.metric}
       </div>
 
-      {/* Icon + Number */}
       <div className="flex items-center mb-3 sm:mb-4">
         <div className="text-blue-400 mr-2 sm:mr-3 group-hover:scale-110 transition-transform duration-300">
           {stat.icon}
         </div>
         <div className="text-2xl sm:text-3xl spline-sans-mono-400 font-bold text-white">
-          {/* Show a loading state briefly */}
           {stat.number === 0 ? "..." : stat.number.toLocaleString()}
         </div>
       </div>
 
-      {/* Label */}
       <div className="text-gray-400 spline-sans-mono-400 text-xs sm:text-sm">
         {stat.label}
       </div>
@@ -39,14 +33,11 @@ export const StatsSection = () => {
     admin: 0,
   });
 
-  // --- RE-INTRODUCED STATE ---
-  // Tracks which stat card to show on mobile (defaults to the first one)
   const [selectedStatIndex, setSelectedStatIndex] = useState(0);
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        // Mocking API call since it's commented out
         const response = await dashboardAPI.getStats();
         setStatsData(response.data.data);
       } catch (err) {
@@ -117,13 +108,11 @@ export const StatsSection = () => {
 
         {/* --- RESPONSIVE CHANGE --- */}
 
-        {/* 1. Mobile View: Dropdown + Single Card */}
-        {/* Visible only on small screens (up to sm breakpoint) */}
         <div className="sm:hidden space-y-4">
           <label htmlFor="stat-select" className="sr-only">
             Select a statistic
           </label>
-          {/* The dropdown selector */}
+
           <select
             id="stat-select"
             value={selectedStatIndex}
@@ -137,13 +126,9 @@ export const StatsSection = () => {
             ))}
           </select>
 
-          {/* The single selected stat card */}
-          {/* We find the correct stat from the array using the index from state */}
           <StatCard stat={stats[selectedStatIndex]} />
         </div>
 
-        {/* 2. Desktop View: Original Grid */}
-        {/* Hidden on small screens, visible from sm breakpoint up */}
         <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {stats.map((stat, index) => (
             <StatCard stat={stat} key={index} />
