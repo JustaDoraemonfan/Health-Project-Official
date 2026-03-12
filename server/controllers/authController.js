@@ -242,8 +242,8 @@ export const loginUser = asyncHandler(async (req, res) => {
   // Send refresh token in HttpOnly cookie
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: false, // true in production with HTTPS
-    sameSite: "lax",
+    secure: true, // ← was false
+    sameSite: "none", // ← was "lax"
     maxAge: 30 * 24 * 60 * 60 * 1000,
   });
 
