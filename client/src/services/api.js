@@ -55,7 +55,11 @@ apiClient.interceptors.response.use(
     if (isLoginError) {
       return Promise.reject(error);
     }
-    if (status === 401 && !originalRequest._retry) {
+    if (
+      status === 401 &&
+      !originalRequest._retry &&
+      !originalRequest.url.includes("/auth/refresh-token")
+    ) {
       originalRequest._retry = true;
 
       try {
@@ -68,7 +72,8 @@ apiClient.interceptors.response.use(
         return apiClient(originalRequest);
       } catch (refreshError) {
         localStorage.removeItem("token");
-        window.location.href = "/";
+        localStorage.removeItem("user"); // ← you're missing this
+        window.location.href = "/login"; // ← should go to /login not /
       }
     }
 
@@ -89,14 +94,18 @@ export const authAPI = {
   },
 
   // Get current user profile
-  getCurrentUser: () => {
-    return apiClient.get("/auth/me");
+  getCurrentUser: (config = {}) => {
+    return apiClient.get("/auth/me", config);
   },
 
   // Logout (client-side token removal)
-  logout: () => {
-    localStorage.removeItem("token");
-    return Promise.resolve();
+  logout: () => apiClient.post("/auth/logout"),
+  refresh: () => apiClient.post("/auth/refresh-token"),
+};
+
+export const aiAPI = {
+  handleChat: (message) => {
+    return apiClient.post("/chat", { message });
   },
 };
 

@@ -16,7 +16,7 @@ const generateAccessToken = (user) => {
   return jwt.sign(
     { id: user.id, role: user.role },
     process.env.JWT_SECRET,
-    { expiresIn: "10m" }, // short lifespan
+    { expiresIn: "30m" }, // short lifespan
   );
 };
 
@@ -242,8 +242,8 @@ export const loginUser = asyncHandler(async (req, res) => {
   // Send refresh token in HttpOnly cookie
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: true, // ← was false
-    sameSite: "none", // ← was "lax"
+    secure: true,
+    sameSite: "none",
     maxAge: 30 * 24 * 60 * 60 * 1000,
   });
 
@@ -291,6 +291,22 @@ export const getUserProfile = asyncHandler(async (req, res) => {
   }
 
   return successResponse(res, profileData);
+});
+
+export const logoutUser = asyncHandler(async (req, res) => {
+  const token = req.cookies.refreshToken;
+  if (token) {
+    await User.findOneAndUpdate(
+      { refreshToken: token },
+      { refreshToken: null },
+    );
+  }
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+  });
+  return successResponse(res, null, "Logged out successfully");
 });
 
 export const refreshAccessToken = asyncHandler(async (req, res) => {

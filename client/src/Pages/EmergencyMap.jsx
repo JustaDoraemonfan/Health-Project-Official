@@ -25,23 +25,19 @@ export default function EmergencyMap() {
   const [userMarker, setUserMarker] = useState(null);
   const [hospitalMarkers, setHospitalMarkers] = useState([]);
   const [initialLocationSet, setInitialLocationSet] = useState(false);
-  //Earthquake
   const [earthquakes, setEarthquakes] = useState([]);
   const [quakeMarkers, setQuakeMarkers] = useState([]);
 
   useEffect(() => {
     if (!map) return;
-
     const fetchEarthquakes = async () => {
       try {
         const response = await earthquakeAPI.getRecentEarthquakes(30);
-        const quakeData = response.data; // adjust if your backend returns differently
-        setEarthquakes(quakeData);
+        setEarthquakes(response.data);
       } catch (err) {
         console.error("Failed to fetch earthquakes:", err);
       }
     };
-
     fetchEarthquakes();
   }, [map]);
 
@@ -105,100 +101,96 @@ export default function EmergencyMap() {
     }
   };
 
-  const findNearbyHospitals = (userLocation) => {
-    // Add validation for location
-    if (!userLocation || !userLocation.lat || !userLocation.lng) {
+  // ── NEW: uses google.maps.places.Place.searchNearby ──────────────────────
+  const findNearbyHospitals = async (userLocation) => {
+    if (!userLocation?.lat || !userLocation?.lng) {
       console.error("Invalid user location for hospital search");
       return;
     }
 
-    // Check if Places service is available
-    if (!window.google?.maps?.places?.PlacesService) {
-      console.error("Google Places service not available");
-      setLocationError(
-        "Places service unavailable. Please check your API key."
-      );
-      return;
-    }
+    try {
+      // Import the new Places library dynamically
+      const { Place } = await window.google.maps.importLibrary("places");
 
-    const service = new window.google.maps.places.PlacesService(map);
+      const request = {
+        fields: [
+          "displayName",
+          "location",
+          "formattedAddress",
+          "businessStatus",
+        ],
+        locationRestriction: {
+          center: { lat: userLocation.lat, lng: userLocation.lng },
+          radius: 3000,
+        },
+        includedPrimaryTypes: ["hospital"],
+        maxResultCount: 20,
+      };
 
-    const request = {
-      location: userLocation,
-      radius: 3000, // 3km radius
-      type: ["hospital"],
-    };
+      console.log("Searching for hospitals with request:", request);
 
-    console.log("Searching for hospitals with request:", request);
+      const { places } = await Place.searchNearby(request);
 
-    service.nearbySearch(request, (results, status, pagination) => {
-      console.log("Hospital search status:", status);
-      console.log("Hospital search results:", results);
+      console.log(`Found ${places.length} hospitals`);
 
-      // Handle different status codes
-      if (
-        status === window.google.maps.places.PlacesServiceStatus.OK &&
-        results
-      ) {
-        // Clear previous hospital markers
-        hospitalMarkers.forEach((m) => m.setMap(null));
+      // Clear previous hospital markers
+      hospitalMarkers.forEach((m) => m.setMap(null));
 
-        const markers = results.map((place) => {
-          const hospitalMarker = new window.google.maps.Marker({
-            position: place.geometry.location,
-            map,
-            title: place.name,
-            icon: {
-              path: window.google.maps.SymbolPath.CIRCLE,
-              scale: 8,
-              fillColor: "#ef4444",
-              fillOpacity: 1,
-              strokeColor: "#ffffff",
-              strokeWeight: 2,
-            },
-          });
+      const markers = places.map((place) => {
+        const position = {
+          lat: place.location.lat(),
+          lng: place.location.lng(),
+        };
 
-          const infowindow = new window.google.maps.InfoWindow({
-            content: `<div style="color:#000; padding: 8px;"><strong style="color:#ef4444;">${place.name}</strong><br><span style="color:#666;">${place.vicinity}</span></div>`,
-          });
-
-          hospitalMarker.addListener("click", () =>
-            infowindow.open(map, hospitalMarker)
-          );
-
-          return hospitalMarker;
+        const hospitalMarker = new window.google.maps.Marker({
+          position,
+          map,
+          title: place.displayName,
+          icon: {
+            path: window.google.maps.SymbolPath.CIRCLE,
+            scale: 8,
+            fillColor: "#ef4444",
+            fillOpacity: 1,
+            strokeColor: "#ffffff",
+            strokeWeight: 2,
+          },
         });
 
-        setHospitalMarkers(markers);
-        console.log(`Found ${markers.length} hospitals`);
+        const infowindow = new window.google.maps.InfoWindow({
+          content: `<div style="color:#000;padding:8px;">
+            <strong style="color:#ef4444;">${place.displayName}</strong><br/>
+            <span style="color:#666;">${place.formattedAddress ?? ""}</span>
+          </div>`,
+        });
+
+        hospitalMarker.addListener("click", () =>
+          infowindow.open(map, hospitalMarker),
+        );
+
+        return hospitalMarker;
+      });
+
+      setHospitalMarkers(markers);
+    } catch (err) {
+      console.error("Hospital search failed:", err);
+
+      // Friendly message for billing errors
+      const msg = err?.message ?? "";
+      if (msg.includes("BillingNotEnabled") || msg.includes("billing")) {
+        setLocationError(
+          "Google Maps billing not enabled on your API key. Enable it at console.cloud.google.com.",
+        );
+      } else if (msg.includes("REQUEST_DENIED")) {
+        setLocationError(
+          "Hospital search denied. Check that the Places API is enabled for your key.",
+        );
       } else {
-        // Handle specific error cases
-        let errorMessage = "Failed to find nearby hospitals.";
-
-        switch (status) {
-          case window.google.maps.places.PlacesServiceStatus.ZERO_RESULTS:
-            errorMessage = "No hospitals found in your area.";
-            break;
-          case window.google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT:
-            errorMessage = "Search limit exceeded. Please try again later.";
-            break;
-          case window.google.maps.places.PlacesServiceStatus.REQUEST_DENIED:
-            errorMessage = "Hospital search denied. Check API permissions.";
-            break;
-          case window.google.maps.places.PlacesServiceStatus.INVALID_REQUEST:
-            errorMessage = "Invalid hospital search request.";
-            break;
-          case window.google.maps.places.PlacesServiceStatus.UNKNOWN_ERROR:
-            errorMessage = "Unknown error occurred. Please try again.";
-            break;
-        }
-
-        console.error("Hospital search failed:", status, errorMessage);
-        setLocationError(errorMessage);
-        setTimeout(() => setLocationError(""), 5000);
+        setLocationError("Failed to find nearby hospitals. Please try again.");
       }
-    });
+      setTimeout(() => setLocationError(""), 6000);
+    }
   };
+  // ─────────────────────────────────────────────────────────────────────────
 
   const setUserLocationAndHospitals = (position, isInitialLoad = false) => {
     try {
@@ -209,20 +201,16 @@ export default function EmergencyMap() {
 
       console.log("Setting user location:", userLocation);
 
-      // Validate coordinates
       if (Math.abs(userLocation.lat) > 90 || Math.abs(userLocation.lng) > 180) {
         throw new Error("Invalid coordinates received");
       }
 
-      // Clear previous markers
       if (userMarker) userMarker.setMap(null);
       hospitalMarkers.forEach((m) => m.setMap(null));
 
-      // Set map center and zoom
       map.setCenter(userLocation);
       map.setZoom(15);
 
-      // Create user marker
       const marker = new window.google.maps.Marker({
         position: userLocation,
         map,
@@ -237,7 +225,6 @@ export default function EmergencyMap() {
         },
       });
 
-      // Create accuracy circle
       new window.google.maps.Circle({
         strokeColor: "#3b82f6",
         strokeOpacity: 0.3,
@@ -252,15 +239,11 @@ export default function EmergencyMap() {
       setUserMarker(marker);
       setLocationStatus("success");
 
-      // Search for nearby hospitals with delay to avoid API rate limits
       setTimeout(() => {
         findNearbyHospitals(userLocation);
       }, 500);
 
-      if (isInitialLoad) {
-        setInitialLocationSet(true);
-      }
-
+      if (isInitialLoad) setInitialLocationSet(true);
       setTimeout(() => setLocationStatus("idle"), 3000);
     } catch (error) {
       console.error("Error setting user location:", error);
@@ -275,27 +258,22 @@ export default function EmergencyMap() {
       setLocationStatus("error");
       return;
     }
-
     const permissionStatus = await checkLocationPermission();
     if (permissionStatus === "denied") {
       setLocationError("Location access denied. Please enable permissions.");
       setLocationStatus("error");
       return;
     }
-
     setLocationStatus("loading");
     setLocationError("");
-
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setUserLocationAndHospitals(position, true);
-      },
+      (position) => setUserLocationAndHospitals(position, true),
       (error) => {
         setLocationError(getLocationErrorMessage(error));
         setLocationStatus("error");
         setTimeout(() => setLocationStatus("idle"), 5000);
       },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 300000 }
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 300000 },
     );
   };
 
@@ -305,27 +283,22 @@ export default function EmergencyMap() {
       setLocationStatus("error");
       return;
     }
-
     const permissionStatus = await checkLocationPermission();
     if (permissionStatus === "denied") {
       setLocationError("Location access denied. Please enable permissions.");
       setLocationStatus("error");
       return;
     }
-
     setLocationStatus("loading");
     setLocationError("");
-
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setUserLocationAndHospitals(position);
-      },
+      (position) => setUserLocationAndHospitals(position),
       (error) => {
         setLocationError(getLocationErrorMessage(error));
         setLocationStatus("error");
         setTimeout(() => setLocationStatus("idle"), 5000);
       },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 300000 }
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 300000 },
     );
   };
 
@@ -333,17 +306,13 @@ export default function EmergencyMap() {
     const initMap = () => {
       if (window.google && window.google.maps) {
         console.log("Initializing Google Maps...");
-
         const mapInstance = new window.google.maps.Map(mapRef.current, {
           center: { lat: 28.6139, lng: 77.209 },
           zoom: 12,
           disableDefaultUI: true,
           zoomControl: true,
           styles: [
-            {
-              featureType: "poi.business",
-              stylers: [{ visibility: "off" }],
-            },
+            { featureType: "poi.business", stylers: [{ visibility: "off" }] },
             {
               featureType: "poi.park",
               elementType: "labels.text",
@@ -351,7 +320,6 @@ export default function EmergencyMap() {
             },
           ],
         });
-
         setMap(mapInstance);
         setIsMapLoaded(true);
         console.log("Google Maps initialized successfully");
@@ -364,14 +332,11 @@ export default function EmergencyMap() {
       initMap();
     } else {
       window.initMap = initMap;
-      console.log("Waiting for Google Maps API to load...");
     }
   }, []);
 
   useEffect(() => {
     if (!map || !earthquakes.length) return;
-
-    // Clear previous markers
     quakeMarkers.forEach((marker) => marker.setMap(null));
 
     const markers = earthquakes.map((quake) => {
@@ -395,21 +360,19 @@ export default function EmergencyMap() {
 
       const infowindow = new window.google.maps.InfoWindow({
         content: `<div>
-        <strong>${place}</strong><br/>
-        Magnitude: ${magnitude}<br/>
-        Time: ${new Date(time).toLocaleString()}<br/>
-        <a href="https://earthquake.usgs.gov/earthquakes/eventpage/${usgsId}" target="_blank">USGS Link</a>
-      </div>`,
+          <strong>${place}</strong><br/>
+          Magnitude: ${magnitude}<br/>
+          Time: ${new Date(time).toLocaleString()}<br/>
+          <a href="https://earthquake.usgs.gov/earthquakes/eventpage/${usgsId}" target="_blank">USGS Link</a>
+        </div>`,
       });
 
       marker.addListener("click", () => infowindow.open(map, marker));
-
       return marker;
     });
 
     setQuakeMarkers(markers);
 
-    // Adjust map bounds to show user + earthquakes
     const bounds = new window.google.maps.LatLngBounds();
     if (userMarker) bounds.extend(userMarker.getPosition());
     markers.forEach((m) => bounds.extend(m.getPosition()));
@@ -418,9 +381,7 @@ export default function EmergencyMap() {
 
   useEffect(() => {
     if (map && isMapLoaded && !initialLocationSet) {
-      setTimeout(() => {
-        getUserLocationAutomatically();
-      }, 1000); // Increased delay to ensure map is fully loaded
+      setTimeout(() => getUserLocationAutomatically(), 1000);
     }
   }, [map, isMapLoaded, initialLocationSet]);
 
@@ -458,9 +419,7 @@ export default function EmergencyMap() {
       <div className="relative flex h-[calc(100vh-80px)]">
         {/* Emergency Services Panel */}
         <div
-          className={`${
-            isPanelOpen ? "w-80" : "w-0"
-          } transition-all duration-300 overflow-hidden bg-zinc-900 border-r border-slate-700`}
+          className={`${isPanelOpen ? "w-80" : "w-0"} transition-all duration-300 overflow-hidden bg-zinc-900 border-r border-slate-700`}
         >
           <div className="p-6 h-full overflow-y-auto">
             <h2 className="text-xl font-bold text-white mb-6 flex items-center space-x-2">
@@ -538,7 +497,6 @@ export default function EmergencyMap() {
         <div className="flex-1 relative bg-slate-900">
           <div ref={mapRef} className="w-full h-full"></div>
 
-          {/* Status Messages */}
           {locationStatus === "loading" && (
             <div className="absolute top-4 left-4 right-4 bg-blue-600/90 backdrop-blur-sm text-white p-4 rounded-xl shadow-lg flex items-center space-x-3 border border-blue-500/50">
               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -566,7 +524,6 @@ export default function EmergencyMap() {
             </div>
           )}
 
-          {/* Action Buttons */}
           <div className="absolute bottom-6 right-6 flex flex-col space-y-3">
             <button
               onClick={handleLocateMe}

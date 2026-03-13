@@ -5,11 +5,14 @@ import { useAuth } from "../context/AuthContext";
 import LoadingSpinner from "./LoadingSpinner";
 
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
-  const { isAuthenticated, loading, user } = useAuth();
+  const { isAuthenticated, loading, initialized, user } = useAuth();
+
   useEffect(() => {
-    console.log(user.role);
-  }, []);
-  if (loading) {
+    if (user) console.log(user.role);
+  }, [user]);
+
+  // Wait for auth to fully resolve (including silent refresh)
+  if (loading || !initialized) {
     return <LoadingSpinner />;
   }
 
@@ -17,7 +20,6 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
     return <Navigate to="/" replace />;
   }
 
-  // Check if user has the required role
   if (allowedRoles.length > 0 && !allowedRoles.includes(user?.role)) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">

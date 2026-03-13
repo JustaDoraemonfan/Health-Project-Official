@@ -108,6 +108,7 @@ const AUTH_ACTIONS = {
   LOAD_USER_FAIL: "LOAD_USER_FAIL",
   CLEAR_ERROR: "CLEAR_ERROR",
   INITIALIZE_COMPLETE: "INITIALIZE_COMPLETE",
+  TOKEN_REFRESHED: "TOKEN_REFRESHED",
 };
 
 // Reducer
@@ -202,6 +203,12 @@ const authReducer = (state, action) => {
         loading: false,
         initialized: true,
       };
+    case AUTH_ACTIONS.TOKEN_REFRESHED:
+      return {
+        ...state,
+        token: action.payload,
+        isAuthenticated: true,
+      };
 
     default:
       return state;
@@ -214,37 +221,6 @@ const AuthContext = createContext();
 // Auth Provider component
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
-
-  // Load user on app start
-  useEffect(() => {
-    let mounted = true;
-    const initializeAuth = async () => {
-      // No valid token? Done immediately.
-      if (!state.token || isTokenExpired(state.token)) {
-        dispatch({ type: AUTH_ACTIONS.INITIALIZE_COMPLETE });
-        return;
-      }
-
-      // ✅ KEY CHANGE: Mark initialized immediately using localStorage data
-      // The user sees the dashboard right away instead of a spinner
-      dispatch({ type: AUTH_ACTIONS.INITIALIZE_COMPLETE });
-
-      // Then silently verify token with server in the background
-      // In initializeAuth:
-      try {
-        await loadUser(undefined, true); // ✅ pass isBackgroundCheck = true
-      } catch (err) {
-        console.warn("Background auth check failed:", err?.message);
-      }
-    };
-
-    initializeAuth();
-    return () => {
-      mounted = false;
-    };
-  }, []); // Remove state.token dependency to avoid re-initialization
-
-  // Load user profile
   const loadUser = async (signal, isBackgroundCheck = false) => {
     try {
       dispatch({ type: AUTH_ACTIONS.LOAD_USER_START });
@@ -272,6 +248,44 @@ export const AuthProvider = ({ children }) => {
       throw error;
     }
   };
+  const refreshToken = async () => {
+    const response = await authAPI.refresh();
+    const newToken = response.data.data.token;
+    safeLocalStorage.setItem("token", newToken);
+    dispatch({ type: AUTH_ACTIONS.TOKEN_REFRESHED, payload: newToken });
+    return newToken;
+  };
+  // Load user on app start
+  useEffect(() => {
+    let mounted = true;
+    const initializeAuth = async () => {
+      const token = safeLocalStorage.getItem("token");
+
+      if (!token || isTokenExpired(token)) {
+        // Token missing or expired — attempt silent refresh via HttpOnly cookie
+        try {
+          await refreshToken(); // Uses the 30-day refresh cookie
+          dispatch({ type: AUTH_ACTIONS.INITIALIZE_COMPLETE });
+          await loadUser(undefined, true);
+        } catch {
+          // Refresh cookie also expired or missing — user must log in
+          dispatch({ type: AUTH_ACTIONS.INITIALIZE_COMPLETE });
+        }
+        return;
+      }
+
+      dispatch({ type: AUTH_ACTIONS.INITIALIZE_COMPLETE });
+      await loadUser(undefined, true).catch(console.warn);
+    };
+
+    initializeAuth();
+    return () => {
+      mounted = false;
+    };
+  }, []); // Remove state.token dependency to avoid re-initialization
+
+  // Load user profile
+
   // Login function
   const login = async (credentials) => {
     try {
@@ -323,7 +337,10 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Logout function
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await authAPI.logout();
+    } catch {} // best effort
     dispatch({ type: AUTH_ACTIONS.LOGOUT });
   };
 

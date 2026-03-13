@@ -8,7 +8,7 @@ import {
   Award,
   Calendar,
   Phone,
-  DollarSign,
+  IndianRupee,
   Mail,
   MapPin,
   Eye,
@@ -66,7 +66,7 @@ const DoctorDetailsModal = ({ doctor, isOpen, onClose }) => {
                 </div>
                 <div
                   className={`text-xs font-medium ${getSpecialtyColor(
-                    doc.specialization
+                    doc.specialization,
                   )}`}
                 >
                   {doc.specialization}
@@ -117,7 +117,7 @@ const DoctorDetailsModal = ({ doctor, isOpen, onClose }) => {
 
             <div className="bg-gray-800/30 p-4 rounded-lg border border-gray-700">
               <div className="flex items-center gap-2 mb-2">
-                <DollarSign className="w-4 h-4 text-green-400" />
+                <IndianRupee className="w-4 h-4 text-green-400" />
                 <span className="text-xs text-gray-500 uppercase tracking-wide">
                   Fee
                 </span>
@@ -285,7 +285,7 @@ const DoctorCard = ({ doctor, onBookNow, onCall }) => {
 
                   <div
                     className={`text-xs mt-1 ${getSpecialtyColor(
-                      doc.specialization
+                      doc.specialization,
                     )}`}
                   >
                     {doc.specialization || "N/A"}
@@ -317,10 +317,10 @@ const DoctorCard = ({ doctor, onBookNow, onCall }) => {
               </div>
 
               <div className="flex items-center gap-2 text-gray-400">
-                <DollarSign className="w-4 h-4 text-green-400" />
+                <IndianRupee className="w-4 h-4 text-green-400" />
 
                 <span className="text-gray-100">
-                  {doc.consultationFee ? `$${doc.consultationFee}` : "N/A"}
+                  {doc.consultationFee ? `${doc.consultationFee}` : "N/A"}
                 </span>
               </div>
 

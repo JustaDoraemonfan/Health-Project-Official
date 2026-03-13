@@ -32,6 +32,7 @@ import DoctorSlotSelection from "./DoctorConfig/DoctorSlots/DoctorSlotSelection"
 import DoctorCalendar from "./DoctorConfig/Calendar/DoctorCalendar";
 import DoctorVerificationDashboard from "./AdminConfig/DoctorVerification/DoctorVerification";
 import PatientManagement from "./DoctorConfig/DashboardUtils/PatientManagement";
+import HealthyAI from "./ChatBot/HealthyAI";
 
 const AppRoutes = () => {
   const { isAuthenticated, user, initialized, error } = useAuth();
@@ -131,7 +132,7 @@ const AppRoutes = () => {
       />
 
       {/* Emergency Page - Accessible to all authenticated users */}
-      {/* {
+      {
         <Route
           path="/emergency"
           element={
@@ -142,7 +143,7 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
-      } */}
+      }
 
       {/* Patient Appointments - Only patients */}
       <Route
@@ -233,6 +234,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
             <DoctorVerificationDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/chat"
+        element={
+          <ProtectedRoute allowedRoles={["patient", "doctor", "fwl", "admin"]}>
+            <HealthyAI />
           </ProtectedRoute>
         }
       />

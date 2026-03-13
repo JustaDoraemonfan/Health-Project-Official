@@ -10,6 +10,7 @@ import {
   Menu,
   ArrowLeft,
   X,
+  BookOpenTextIcon,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -49,19 +50,26 @@ const Header = ({ isNotDashboard = false }) => {
             <>
               <button
                 onClick={() => navigate("/notification")}
-                className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 hover:text-zinc-500 text-[var(--color-secondary)] text-sm rounded-lg transition-all duration-200 border border-transparent hover:border-white/20"
+                className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 hover:cursor-pointer hover:text-zinc-500 text-[var(--color-secondary)] text-sm rounded-lg transition-all duration-200 border border-transparent hover:border-white/20"
               >
                 <Bell className="w-4 h-4 text-amber-500" />~ notifications
               </button>
               <button
                 onClick={() => navigate("/emergency")}
-                className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 hover:text-zinc-500 text-[var(--color-secondary)] text-sm rounded-lg transition-all duration-200 border border-transparent hover:border-white/20"
+                className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 hover:cursor-pointer hover:text-zinc-500 text-[var(--color-secondary)] text-sm rounded-lg transition-all duration-200 border border-transparent hover:border-white/20"
               >
                 <MapPin className="w-4 h-4 text-red-500" />~ emergency
               </button>
               <button
+                onClick={() => navigate("/chat")}
+                className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 hover:cursor-pointer hover:text-zinc-500 text-[var(--color-secondary)] text-sm rounded-lg transition-all duration-200 border border-transparent hover:border-white/20"
+              >
+                <BookOpenTextIcon className="w-4 h-4 text-green-700" />{" "}
+                ~healthyAI
+              </button>
+              <button
                 onClick={logout}
-                className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-red-500/20 hover:text-red-400 text-[var(--color-secondary)] text-sm rounded-lg transition-all duration-200 border border-transparent hover:border-red-500/30"
+                className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-red-500/20 hover:cursor-pointer hover:text-red-400 text-[var(--color-secondary)] text-sm rounded-lg transition-all duration-200 border border-transparent hover:border-red-500/30"
               >
                 <LogOut className="w-4 h-4 text-red-500" />~ logout
               </button>
@@ -130,6 +138,13 @@ const Header = ({ isNotDashboard = false }) => {
                   className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-white/10"
                 >
                   <MapPin className="w-4 h-4 text-red-500" /> ~emergency
+                </button>
+                <button
+                  onClick={() => navigate("/chat")}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-red-500/20"
+                >
+                  <BookOpenTextIcon className="w-4 h-4 text-red-500" />{" "}
+                  ~healthyAI
                 </button>
                 <button
                   onClick={logout}

@@ -88,7 +88,7 @@ const patientSchema = new mongoose.Schema(
   {
     // Disable default Mongoose timestamps (which use server time)
     timestamps: false,
-  }
+  },
 );
 
 // Mongoose hook to set createdAt and updatedAt in IST before saving

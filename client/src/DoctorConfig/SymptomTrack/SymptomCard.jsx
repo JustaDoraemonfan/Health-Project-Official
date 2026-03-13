@@ -20,8 +20,8 @@ const SymptomCard = ({ symptom, isExpanded, onToggle }) => {
             symptom.priority === "severe" || symptom.priority === "high"
               ? 1
               : symptom.priority === "moderate" || symptom.priority === "medium"
-              ? 0.6
-              : 0.3,
+                ? 0.6
+                : 0.3,
         }}
       ></div>
 
@@ -124,9 +124,6 @@ const SymptomCard = ({ symptom, isExpanded, onToggle }) => {
             )}
           </div>
 
-          {/* Block 2: Date/Time (doesn't shrink) */}
-          {/* --- KEY RESPONSIVE CHANGE --- */}
-          {/* Left-aligned on mobile, right-aligned on medium+ */}
           <div className="flex flex-col items-start md:items-end gap-2 flex-shrink-0">
             <div className="text-left md:text-right">
               <p

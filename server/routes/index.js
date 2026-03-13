@@ -18,6 +18,7 @@ import reminderLogRoutes from "./Medication/reminderLogRoutes.js";
 import adminRoutes from "./adminRoutes.js";
 import AnalyzeRoutes from "./PatientAnalyzeRoute.js";
 import profilePhotoRoutes from "./profilePhotoRoutes.js";
+import chatRoutes from "./chatRoutes.js";
 
 export function registerRoutes(app) {
   app.get("/api/ping", (req, res) => res.json({ ok: true }));
@@ -39,6 +40,7 @@ export function registerRoutes(app) {
     ["/api", statsRoutes],
     ["/api/dashboard", dashboardRoutes],
     ["/api/patients", AnalyzeRoutes],
+    ["/api/chat", chatRoutes],
   ];
 
   for (const [path, router] of routes) {
