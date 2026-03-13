@@ -33,6 +33,7 @@ import DoctorCalendar from "./DoctorConfig/Calendar/DoctorCalendar";
 import DoctorVerificationDashboard from "./AdminConfig/DoctorVerification/DoctorVerification";
 import PatientManagement from "./DoctorConfig/DashboardUtils/PatientManagement";
 import HealthyAI from "./ChatBot/HealthyAI";
+import DoctorNotes from "./DoctorConfig/DoctorNotes/DoctorNotes";
 
 const AppRoutes = () => {
   const { isAuthenticated, user, initialized, error } = useAuth();
@@ -240,12 +241,19 @@ const AppRoutes = () => {
       <Route
         path="/chat"
         element={
-          <ProtectedRoute allowedRoles={["patient", "doctor", "fwl", "admin"]}>
+          <ProtectedRoute allowedRoles={["patient", "fwl", "admin"]}>
             <HealthyAI />
           </ProtectedRoute>
         }
       />
-
+      <Route
+        path="/doctor/messages"
+        element={
+          <ProtectedRoute allowedRoles={["doctor"]}>
+            <DoctorNotes />
+          </ProtectedRoute>
+        }
+      />
       {/* Catch-all for unknown routes */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

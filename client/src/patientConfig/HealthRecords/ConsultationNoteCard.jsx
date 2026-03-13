@@ -1,20 +1,6 @@
 import React, { useState } from "react";
 import { Stethoscope, Check, Eye } from "lucide-react";
-// import { notesAPI } from "../../services/api"; // Removed failing import
-
-// --- ADDED MOCK API ---
-// Added a mock notesAPI object to resolve the import error.
-const notesAPI = {
-  markNoteAsRead: async (noteId) => {
-    console.log(`Mock API: Marking note ${noteId} as read.`);
-    return Promise.resolve();
-  },
-  acknowledgeNote: async (noteId) => {
-    console.log(`Mock API: Acknowledging note ${noteId}.`);
-    return Promise.resolve();
-  },
-};
-// --- END OF MOCK API ---
+import { notesAPI } from "../../services/api";
 
 const ConsultationNoteCard = ({ note }) => {
   // --- NEW STATE ---
@@ -24,8 +10,6 @@ const ConsultationNoteCard = ({ note }) => {
   const acknowledge = async () => {
     await notesAPI.markNoteAsRead(note._id);
     await notesAPI.acknowledgeNote(note._id);
-    // Note: In a real app, you'd also update the 'note.isRead' state
-    // here to make the change reflect immediately without a page reload.
   };
 
   return (

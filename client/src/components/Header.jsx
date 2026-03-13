@@ -16,7 +16,7 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const Header = ({ isNotDashboard = false }) => {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, user } = useAuth();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -60,13 +60,15 @@ const Header = ({ isNotDashboard = false }) => {
               >
                 <MapPin className="w-4 h-4 text-red-500" />~ emergency
               </button>
-              <button
-                onClick={() => navigate("/chat")}
-                className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 hover:cursor-pointer hover:text-zinc-500 text-[var(--color-secondary)] text-sm rounded-lg transition-all duration-200 border border-transparent hover:border-white/20"
-              >
-                <BookOpenTextIcon className="w-4 h-4 text-green-700" />{" "}
-                ~healthyAI
-              </button>
+              {user?.role !== "doctor" && (
+                <button
+                  onClick={() => navigate("/chat")}
+                  className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 hover:cursor-pointer hover:text-zinc-500 text-[var(--color-secondary)] text-sm rounded-lg transition-all duration-200 border border-transparent hover:border-white/20"
+                >
+                  <BookOpenTextIcon className="w-4 h-4 text-green-700" />{" "}
+                  ~healthyAI
+                </button>
+              )}
               <button
                 onClick={logout}
                 className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-red-500/20 hover:cursor-pointer hover:text-red-400 text-[var(--color-secondary)] text-sm rounded-lg transition-all duration-200 border border-transparent hover:border-red-500/30"
@@ -139,13 +141,15 @@ const Header = ({ isNotDashboard = false }) => {
                 >
                   <MapPin className="w-4 h-4 text-red-500" /> ~emergency
                 </button>
-                <button
-                  onClick={() => navigate("/chat")}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-red-500/20"
-                >
-                  <BookOpenTextIcon className="w-4 h-4 text-red-500" />{" "}
-                  ~healthyAI
-                </button>
+                {user?.role !== "doctor" && (
+                  <button
+                    onClick={() => navigate("/chat")}
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-red-500/20"
+                  >
+                    <BookOpenTextIcon className="w-4 h-4 text-red-500" />{" "}
+                    ~healthyAI
+                  </button>
+                )}
                 <button
                   onClick={logout}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-red-500/20"
