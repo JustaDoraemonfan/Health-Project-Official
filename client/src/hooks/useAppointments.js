@@ -40,34 +40,38 @@ export const useAppointments = () => {
     setIsLoadingList(true);
     setError(null);
     try {
-      // Fetch upcoming appointments and current user in parallel
-      const [response, currentUserResponse] = await Promise.all([
+      const [appointmentsResponse, currentUserResponse] = await Promise.all([
         appointmentAPI.getUpcomingAppointments(),
         authAPI.getCurrentUser(),
       ]);
 
-      const currentUser = currentUserResponse.data;
+      const role = currentUserResponse.data?.data?.role;
 
-      // This logic is from the old hook and is preserved for compatibility
-      const userResponse =
-        currentUser.data.role === "patient"
-          ? await dashboardAPI.getPatientDashboard()
-          : await dashboardAPI.getDoctorDashboard();
+      // Run dashboard fetch separately so a failure doesn't kill appointments
+      let userData = null;
+      try {
+        const dashboardResponse =
+          role === "patient"
+            ? await dashboardAPI.getPatientDashboard()
+            : await dashboardAPI.getDoctorDashboard();
+        userData = dashboardResponse.data?.data;
+      } catch (dashErr) {
+        console.warn(
+          "Dashboard fetch failed, continuing without user info:",
+          dashErr,
+        );
+      }
 
-      const data = response.data.data || [];
-      const userData = userResponse.data.data;
-
-      console.log("Fetched appointments:", data);
-      setUserName(userData.user.name);
-      console.log(userData.user.name);
-
+      const data = appointmentsResponse.data?.data || [];
       setAppointments(data);
+
+      if (userData?.user?.name) {
+        setUserName(userData.user.name);
+      }
     } catch (err) {
       console.error("Failed to fetch appointments:", err);
-      const errorMsg =
-        err.response?.data?.message || "Failed to load appointments";
-      setError(errorMsg);
-      setAppointments([]); // Clear on error
+      setError(err.response?.data?.message || "Failed to load appointments");
+      setAppointments([]);
     } finally {
       setIsLoadingList(false);
     }
@@ -97,7 +101,7 @@ export const useAppointments = () => {
       try {
         await appointmentAPI.cancelAppointment(
           appointment._id,
-          reasonForCancellation
+          reasonForCancellation,
         );
         await fetchAppointments(); // Refresh the list
       } catch (err) {
@@ -110,7 +114,7 @@ export const useAppointments = () => {
         setIsUpdating(false);
       }
     },
-    [fetchAppointments]
+    [fetchAppointments],
   );
 
   /**
@@ -135,7 +139,7 @@ export const useAppointments = () => {
         setIsUpdating(false);
       }
     },
-    [fetchAppointments]
+    [fetchAppointments],
   );
 
   /**
@@ -160,7 +164,7 @@ export const useAppointments = () => {
         setIsUpdating(false);
       }
     },
-    [fetchAppointments]
+    [fetchAppointments],
   );
 
   // === NEW COMPREHENSIVE FUNCTIONS ===
@@ -186,7 +190,7 @@ export const useAppointments = () => {
         setIsUpdating(false);
       }
     },
-    [fetchAppointments]
+    [fetchAppointments],
   );
 
   /**
@@ -249,7 +253,7 @@ export const useAppointments = () => {
         setIsUpdating(false);
       }
     },
-    [fetchAppointments, fetchPastAppointments]
+    [fetchAppointments, fetchPastAppointments],
   );
 
   /**
@@ -272,7 +276,7 @@ export const useAppointments = () => {
         setIsUpdating(false);
       }
     },
-    [fetchAppointments]
+    [fetchAppointments],
   );
 
   /**

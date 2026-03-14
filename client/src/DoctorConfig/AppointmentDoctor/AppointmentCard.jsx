@@ -1,222 +1,162 @@
-import { Clock, User, MailIcon, LucideDot } from "lucide-react";
+import { Clock, User, MailIcon } from "lucide-react";
+
+const getInitials = (name) => {
+  if (!name) return "?";
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+};
+
+const STATUS_STYLES = {
+  confirmed: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+  scheduled: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+  pending: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
+  completed: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
+  cancelled: "bg-red-500/10 text-red-500 dark:text-red-400",
+};
+
+const AVATAR_STYLES = {
+  confirmed: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+  scheduled: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+  pending: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
+  completed: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
+  cancelled: "bg-red-500/10 text-red-500 dark:text-red-400",
+};
 
 const AppointmentCard = ({ appointment, onCardClick }) => {
-  const getStatusColor = (status) => {
-    switch (status?.toLowerCase()) {
-      case "confirmed":
-      case "scheduled":
-        return "bg-transparent text-green-300 border-green-800";
-      case "pending":
-        return "bg-transparent text-yellow-300 border-yellow-800";
-      case "completed":
-        return "bg-transparent text-blue-300 border-blue-800";
-      case "cancelled":
-        return "bg-transparent text-red-300 border-red-800";
-      default:
-        return "bg-transparent text-gray-300 border-gray-600";
-    }
-  };
+  const status = appointment.status?.toLowerCase() || "pending";
 
-  const getTypeColor = (type) => {
-    switch ((type || "").toLowerCase()) {
-      case "consultation":
-        return "bg-transparent text-teal-800 border-teal-300";
-      case "emergency":
-        return "bg-transparent text-red-300";
-      case "follow-up":
-        return "bg-transparent text-emerald-800 border-emerald-300";
-      case "check-up":
-        return "bg-transparent text-amber-800 border-amber-300";
-      default:
-        return "bg-transparent text-gray-700 border-gray-300";
-    }
-  };
+  const statusStyle = STATUS_STYLES[status] || "bg-slate-500/10 text-slate-400";
 
-  // Get icon colors based on status and context
-  const getUserIconColor = (status) => {
-    switch (status?.toLowerCase()) {
-      case "scheduled":
-        return "text-emerald-400";
-      case "completed":
-        return "text-blue-400";
-      case "cancelled":
-        return "text-red-400";
-      default:
-        return "text-indigo-400";
-    }
-  };
+  const avatarStyle = AVATAR_STYLES[status] || "bg-slate-500/10 text-slate-400";
 
-  const getClockIconColor = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return "text-orange-400"; // Morning - sunrise colors
-    if (hour < 17) return "text-yellow-400"; // Afternoon - sun colors
-    return "text-purple-400"; // Evening - twilight colors
-  };
+  const patientName =
+    appointment.patient?.name || appointment.patientName || "Unknown Patient";
 
-  const getPhoneIconColor = () => "text-cyan-400";
+  const contactInfo = appointment.patient?.email || appointment.phone || null;
 
-  const getDoctorIconColor = () => "text-rose-400";
+  const formattedTime = appointment.time
+    ? appointment.time
+    : appointment.appointmentDate
+      ? new Date(appointment.appointmentDate).toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      : "Time TBD";
 
-  const getUserAvatarBg = (status) => {
-    switch (status?.toLowerCase()) {
-      case "scheduled":
-        return "bg-emerald-500/20 border-emerald-500/30";
-      case "completed":
-        return "bg-blue-500/20 border-blue-500/30";
-      case "cancelled":
-        return "bg-red-500/20 border-red-500/30";
-      default:
-        return "bg-indigo-500/20 border-indigo-500/30";
-    }
-  };
-
-  const formatTime = (timeStr) => {
-    if (timeStr) return timeStr;
-    // If appointment has a date, format it
-    if (appointment.appointmentDate) {
-      return new Date(appointment.appointmentDate).toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-    }
-    return "Time TBD";
-  };
+  const formattedDate = appointment.appointmentDate
+    ? new Date(appointment.appointmentDate).toLocaleDateString("en-US", {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : null;
 
   return (
     <div
-      className="group relative bg-[var(--color-secondary)] border border-slate-700 rounded-xl p-4 sm:p-6 transition-all duration-300 cursor-pointer transform hover:scale-[1.02]"
-      onClick={() => onCardClick && onCardClick(appointment)}
+      onClick={() => onCardClick?.(appointment)}
+      className="group relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/60 rounded-xl p-5 cursor-pointer transition-all duration-200 hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm"
     >
-      {/* Card Header */}
-      <div className="relative z-10 flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4">
-        <div className="flex items-center space-x-3">
+      {/* Header */}
+      <div className="flex items-start justify-between mb-4">
+        <div className="flex items-center gap-3">
+          {/* Avatar with initials */}
           <div
-            className={`w-10 h-10 sm:w-12 sm:h-12 ${getUserAvatarBg(
-              appointment.status
-            )} border rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-300 shrink-0`}
+            className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium shrink-0 ${avatarStyle}`}
           >
-            <User
-              className={`w-5 h-5 sm:w-6 sm:h-6 ${getUserIconColor(
-                appointment.status
-              )} group-hover:scale-110 transition-all duration-300`}
-            />
+            {getInitials(patientName)}
           </div>
+
           <div>
-            <h3 className="text-[var(--color-primary)] font-semibold spline-sans-mono-400 text-base sm:text-lg group-hover:text-slate-100 transition-colors">
-              {appointment.patient?.name ||
-                appointment.patientName ||
-                "Unknown Patient"}
-            </h3>
-            <div className="flex items-center space-x-2 text-sm text-white">
-              <Clock
-                className={`w-4 h-4 ${getClockIconColor()} group-hover:scale-110 transition-all duration-300`}
-              />
-              <span className="spline-sans-mono-400">
-                {formatTime(appointment.time)}
-              </span>
+            <p className="text-sm font-semibold text-slate-900 dark:text-slate-100 leading-tight">
+              {patientName}
+            </p>
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5 flex items-center gap-1.5">
+              <Clock className="w-3 h-3" />
+              {formattedTime}
               {appointment.duration && (
-                <>
-                  <span className="text-slate-500">•</span>
-                  <span className="spline-sans-mono-400">
-                    {appointment.duration}
-                  </span>
-                </>
+                <span className="text-slate-300 dark:text-slate-600">·</span>
               )}
-            </div>
+              {appointment.duration && <span>{appointment.duration}</span>}
+            </p>
           </div>
         </div>
 
-        {/* Status Badge */}
-        <div className="flex flex-col items-start sm:items-end space-y-2 mt-3 sm:mt-0">
-          {appointment.type && (
-            <div className="flex items-center justify-between">
-              <span
-                className={`px-3 py-1.5 rounded-lg text-sm spline-sans-mono-400 ${getTypeColor(
-                  appointment.type
-                )} group-hover:scale-105 transition-transform duration-300`}
-              >
-                {appointment.type}
-              </span>
-            </div>
-          )}
-        </div>
+        {/* Status pill */}
+        <span
+          className={`text-xs font-medium px-2.5 py-1 rounded-full capitalize ${statusStyle}`}
+        >
+          {appointment.status || "pending"}
+        </span>
       </div>
 
-      {/* Card Body */}
-      <div className="relative z-10 space-y-3">
-        {/* Contact Information */}
-        <div className="flex items-center justify-between text-sm">
-          <div className="flex items-center text-white ">
-            <MailIcon
-              className={`w-4 h-4 mr-2 ${getPhoneIconColor()} group-hover:scale-110 transition-all duration-300`}
-            />
-            <span className="spline-sans-mono-400 text-white/70 font-light truncate">
-              {appointment.patient?.email ||
-                appointment.phone ||
-                "No contact info"}
-            </span>
-          </div>
+      {/* Body */}
+      <div className="space-y-2 text-sm">
+        {/* Metadata rows */}
+        <div className="grid grid-cols-[72px_1fr] gap-y-2 text-xs">
+          {appointment.type && (
+            <>
+              <span className="text-slate-400 dark:text-slate-500 pt-px">
+                Type
+              </span>
+              <span className="text-slate-700 dark:text-slate-300">
+                {appointment.type}
+              </span>
+            </>
+          )}
+
+          {appointment.doctor && (
+            <>
+              <span className="text-slate-400 dark:text-slate-500 pt-px">
+                Doctor
+              </span>
+              <span className="text-slate-700 dark:text-slate-300">
+                Dr. {appointment.doctor.name}
+                {appointment.doctorProfile?.specialization && (
+                  <span className="text-slate-400 dark:text-slate-500">
+                    {" "}
+                    · {appointment.doctorProfile.specialization}
+                  </span>
+                )}
+              </span>
+            </>
+          )}
+
+          {contactInfo && (
+            <>
+              <span className="text-slate-400 dark:text-slate-500 pt-px">
+                Contact
+              </span>
+              <span className="text-blue-500 dark:text-blue-400 truncate">
+                {contactInfo}
+              </span>
+            </>
+          )}
+
+          {formattedDate && (
+            <>
+              <span className="text-slate-400 dark:text-slate-500 pt-px">
+                Date
+              </span>
+              <span className="text-slate-700 dark:text-slate-300">
+                {formattedDate}
+              </span>
+            </>
+          )}
         </div>
 
-        {/* Doctor Information (if viewing as patient) */}
-        {appointment.doctor && (
-          <div className="flex items-center text-sm text-white">
-            <User
-              className={`w-4 h-4 mr-2 ${getDoctorIconColor()} group-hover:scale-110 transition-all duration-300`}
-            />
-            <span className="spline-sans-mono-400">
-              Dr. {appointment.doctor.name}
-            </span>
-            {appointment.doctorProfile?.specialization && (
-              <span className="ml-2 text-orange-400 truncate">
-                • {appointment.doctorProfile.specialization}
-              </span>
-            )}
-          </div>
-        )}
-
-        {/* Notes Section */}
+        {/* Notes */}
         {appointment.notes && (
-          <div className="bg-[var(--color-primary)] rounded-lg p-3 mt-3">
-            <p className="text-sm text-[var(--color-secondary)] spline-sans-mono-400 leading-relaxed">
+          <div className="bg-slate-50 dark:bg-slate-800/50 rounded-lg px-3 py-2.5 mt-3">
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
               {appointment.notes}
             </p>
           </div>
         )}
-
-        {/* Appointment Date & Status */}
-        <span
-          className={`rounded-full text-xs spline-sans-mono-400 flex flex-col sm:flex-row sm:justify-between sm:items-center p-2 ${getStatusColor(
-            appointment.status
-          )} group-hover:scale-105 transition-transform duration-300`}
-        >
-          {appointment.appointmentDate && (
-            <div className="text-xs text-slate-500 spline-sans-mono-400 mb-1 sm:mb-0">
-              {new Date(appointment.appointmentDate).toLocaleDateString(
-                "en-US",
-                {
-                  weekday: "short",
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                }
-              )}
-            </div>
-          )}
-          <span className="self-end sm:self-auto">
-            {appointment.status || "pending"}
-          </span>
-        </span>
-      </div>
-
-      {/* Hover indicator */}
-      <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <div
-          className={`w-2 h-2 ${getUserIconColor(appointment.status).replace(
-            "text-",
-            "bg-"
-          )} rounded-full animate-pulse`}
-        ></div>
       </div>
     </div>
   );

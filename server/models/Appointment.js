@@ -2,8 +2,6 @@ import mongoose from "mongoose";
 // Assuming the path is relative to the models directory
 import { IST_TIMEZONE, nowInIST } from "../utils/dateUtils.js";
 
-// Helper function to get the current time in IST
-
 const appointmentSchema = new mongoose.Schema(
   {
     patient: {
@@ -29,10 +27,20 @@ const appointmentSchema = new mongoose.Schema(
       required: true,
       validate: {
         validator: function (value) {
-          // Use IST-aware 'now' for validation
-          return value >= nowInIST();
+          const now = nowInIST();
+          const today = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+          );
+          const apptDate = new Date(
+            value.getFullYear(),
+            value.getMonth(),
+            value.getDate(),
+          );
+          return apptDate >= today;
         },
-        message: "Appointment date must be in the future.",
+        message: "Appointment date cannot be in the past.",
       },
     },
     appointmentTime: {
@@ -51,6 +59,7 @@ const appointmentSchema = new mongoose.Schema(
       type: String,
       enum: [
         "scheduled",
+        "confirmed", // ← add this
         "completed",
         "cancelled-by-patient",
         "cancelled-by-doctor",
@@ -58,7 +67,6 @@ const appointmentSchema = new mongoose.Schema(
       ],
       default: "scheduled",
     },
-
     // NEW: A dedicated object for cancellation info
     cancellationDetails: {
       cancelledBy: {
@@ -132,7 +140,7 @@ const appointmentSchema = new mongoose.Schema(
   {
     // Disable default Mongoose timestamps (which use server time)
     timestamps: false,
-  }
+  },
 );
 
 // Mongoose hook to set createdAt and updatedAt in IST before saving

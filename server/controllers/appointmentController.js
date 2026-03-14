@@ -30,20 +30,20 @@ export const createAppointment = asyncHandler(async (req, res) => {
     // Add to doctor's appointments
     await Doctor.findOneAndUpdate(
       { userId: appointment.doctor },
-      { $push: { appointments: appointment._id } }
+      { $push: { appointments: appointment._id } },
     );
 
     // Add to patient's appointments
     await Patient.findOneAndUpdate(
       { userId: appointment.patient },
-      { $push: { appointments: appointment._id } }
+      { $push: { appointments: appointment._id } },
     );
 
     return successResponse(
       res,
       appointment,
       "Appointment created successfully",
-      201
+      201,
     );
   } catch (error) {
     return errorResponse(res, error.message, 400);
@@ -64,7 +64,7 @@ export const getAppointments = asyncHandler(async (req, res) => {
       res,
       appointments,
       "Appointments retrieved successfully",
-      200
+      200,
     );
   } catch (error) {
     return errorResponse(res, error.message, 500);
@@ -88,7 +88,7 @@ export const getAppointmentById = asyncHandler(async (req, res) => {
       res,
       appointment,
       "Appointment retrieved successfully",
-      200
+      200,
     );
   } catch (error) {
     return errorResponse(res, error.message, 500);
@@ -106,7 +106,7 @@ export const updateAppointment = asyncHandler(async (req, res) => {
       {
         new: true,
         runValidators: true,
-      }
+      },
     );
 
     if (!appointment) {
@@ -117,7 +117,7 @@ export const updateAppointment = asyncHandler(async (req, res) => {
       res,
       appointment,
       "Appointment updated successfully",
-      200
+      200,
     );
   } catch (error) {
     return errorResponse(res, error.message, 400);
@@ -138,13 +138,13 @@ export const deleteAppointment = asyncHandler(async (req, res) => {
     // Remove appointment from doctor's appointments array
     await Doctor.findOneAndUpdate(
       { userId: appointment.doctor },
-      { $pull: { appointments: appointment._id } }
+      { $pull: { appointments: appointment._id } },
     );
 
     // Remove appointment from patient's appointments array
     await Patient.findOneAndUpdate(
       { userId: appointment.patient },
-      { $pull: { appointments: appointment._id } }
+      { $pull: { appointments: appointment._id } },
     );
 
     // Delete the appointment
@@ -163,8 +163,21 @@ export const getUpcomingAppointments = asyncHandler(async (req, res) => {
   const { role, id } = req.user;
 
   try {
-    // Use IST-aware "now" for comparison
-    const query = { appointmentDate: { $gte: nowInIST() } };
+    // Start of today in IST, not the current moment
+    const now = nowInIST();
+    const startOfToday = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+    );
+
+    const query = {
+      appointmentDate: { $gte: startOfToday },
+      // Exclude terminal statuses
+      status: {
+        $nin: ["cancelled-by-patient", "cancelled-by-doctor", "no-show"],
+      },
+    };
 
     if (role === "patient") {
       query.patient = id;
@@ -174,7 +187,7 @@ export const getUpcomingAppointments = asyncHandler(async (req, res) => {
       return errorResponse(
         res,
         "Only patients or doctors can view upcoming appointments",
-        403
+        403,
       );
     }
 
@@ -182,14 +195,13 @@ export const getUpcomingAppointments = asyncHandler(async (req, res) => {
       .populate("patient", "name email role")
       .populate("doctor", "name email role")
       .populate("doctorProfile", "specialization experience")
-
       .sort({ appointmentDate: 1 });
 
     return successResponse(
       res,
       appointments,
       "Upcoming appointments retrieved successfully",
-      200
+      200,
     );
   } catch (error) {
     return errorResponse(res, error.message, 500);
@@ -214,7 +226,7 @@ export const getPastAppointments = asyncHandler(async (req, res) => {
       return errorResponse(
         res,
         "Only patients or doctors can view past appointments",
-        403
+        403,
       );
     }
 
@@ -227,7 +239,7 @@ export const getPastAppointments = asyncHandler(async (req, res) => {
       res,
       appointments,
       "Past appointments retrieved successfully",
-      200
+      200,
     );
   } catch (error) {
     return errorResponse(res, error.message, 500);
@@ -259,7 +271,7 @@ export const cancelAppointment = asyncHandler(async (req, res) => {
       return errorResponse(
         res,
         `Cannot cancel appointment with status: ${appointment.status}`,
-        400
+        400,
       );
     }
 
@@ -293,7 +305,7 @@ export const cancelAppointment = asyncHandler(async (req, res) => {
       res,
       appointment,
       "Appointment cancelled successfully",
-      200
+      200,
     );
   } catch (error) {
     return errorResponse(res, error.message, 500);
@@ -316,7 +328,7 @@ export const confirmAppointment = asyncHandler(async (req, res) => {
       return errorResponse(
         res,
         `Cannot confirm appointment with status: ${appointment.status}`,
-        400
+        400,
       );
     }
 
@@ -329,7 +341,7 @@ export const confirmAppointment = asyncHandler(async (req, res) => {
       res,
       appointment,
       "Appointment confirmed successfully",
-      200
+      200,
     );
   } catch (error) {
     return errorResponse(res, error.message, 500);
@@ -357,7 +369,7 @@ export const completeAppointment = asyncHandler(async (req, res) => {
       return errorResponse(
         res,
         `Cannot complete appointment with status: ${appointment.status}`,
-        400
+        400,
       );
     }
 
@@ -376,7 +388,7 @@ export const completeAppointment = asyncHandler(async (req, res) => {
       res,
       appointment,
       "Appointment completed successfully",
-      200
+      200,
     );
   } catch (error) {
     return errorResponse(res, error.message, 500);
@@ -428,7 +440,7 @@ export const getAppointmentsByDateRange = asyncHandler(async (req, res) => {
       res,
       appointments,
       "Appointments retrieved successfully",
-      200
+      200,
     );
   } catch (error) {
     return errorResponse(res, error.message, 500);
@@ -471,7 +483,7 @@ export const getAppointmentStats = asyncHandler(async (req, res) => {
       res,
       statsFormatted,
       "Appointment statistics retrieved successfully",
-      200
+      200,
     );
   } catch (error) {
     return errorResponse(res, error.message, 500);
