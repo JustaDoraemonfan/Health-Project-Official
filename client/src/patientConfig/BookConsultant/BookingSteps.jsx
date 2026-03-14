@@ -37,7 +37,7 @@ export const BookingSteps = ({
         } else if (!Array.isArray(item.slots)) {
           console.warn(
             `⚠️ 'slots' is not an array for day '${item.day}':`,
-            item.slots
+            item.slots,
           );
         }
       });
@@ -48,7 +48,8 @@ export const BookingSteps = ({
 
   const getWeekdayFromDate = (dateString) => {
     if (!dateString) return null;
-    const date = new Date(dateString);
+    const [year, month, day] = dateString.split("-").map(Number);
+    const date = new Date(year, month - 1, day); // local time, no UTC shift
     const weekdays = [
       "Sunday",
       "Monday",
@@ -66,13 +67,24 @@ export const BookingSteps = ({
     const timeSlots = [];
 
     slots.forEach((slot) => {
-      const [start, end] = slot.split("-");
+      // Guard: skip if slot is undefined/null or not a string
+      if (!slot || typeof slot !== "string") {
+        console.warn("⚠️ Invalid slot value:", slot);
+        return;
+      }
+
+      const parts = slot.split("-");
+      if (parts.length < 2) {
+        console.warn("⚠️ Slot format invalid (expected HH:MM-HH:MM):", slot);
+        return;
+      }
+
+      const [start, end] = parts;
       const startHour = parseInt(start.split(":")[0]);
       const startMinute = parseInt(start.split(":")[1]);
       const endHour = parseInt(end.split(":")[0]);
       const endMinute = parseInt(end.split(":")[1]);
 
-      // Generate 30-minute slots
       let currentHour = startHour;
       let currentMinute = startMinute;
 
@@ -80,9 +92,9 @@ export const BookingSteps = ({
         currentHour < endHour ||
         (currentHour === endHour && currentMinute < endMinute)
       ) {
-        const timeString = `${currentHour
+        const timeString = `${currentHour.toString().padStart(2, "0")}:${currentMinute
           .toString()
-          .padStart(2, "0")}:${currentMinute.toString().padStart(2, "0")}`;
+          .padStart(2, "0")}`;
         timeSlots.push(timeString);
 
         currentMinute += 30;
@@ -102,10 +114,10 @@ export const BookingSteps = ({
 
     const weekday = getWeekdayFromDate(formData.appointmentDate);
     const dayAvailability = availability.find(
-      (avail) => avail.day.toLowerCase() === weekday?.toLowerCase()
+      (avail) => avail?.day?.toLowerCase() === weekday?.toLowerCase(),
     );
 
-    if (!dayAvailability) return [];
+    if (!dayAvailability || !Array.isArray(dayAvailability.slots)) return [];
 
     return generateTimeSlots(dayAvailability.slots);
   };
