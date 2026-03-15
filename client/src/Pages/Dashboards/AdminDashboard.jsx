@@ -40,8 +40,9 @@ const AdminDashboard = () => {
   }, []);
 
   const sections = useMemo(
-    () => adminDashboardSections(navigate, () => {}),
-    [navigate],
+    () =>
+      adminDashboardSections(navigate, () => {}, admin?.role === "superadmin"),
+    [navigate, admin],
   );
 
   if (loading) {

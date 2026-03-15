@@ -333,6 +333,11 @@ export const adminAPI = {
   updateAdminPassword: (passwordData) => {
     return apiClient.put("/admin/password", passwordData);
   },
+
+  // Create a new admin account (superadmin only)
+  createAdmin: (adminData) => {
+    return apiClient.post("/admin/create-admin", adminData);
+  },
 };
 
 // Dashboard API endpoints

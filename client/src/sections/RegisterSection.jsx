@@ -22,8 +22,6 @@ export const RegisterSection = ({ onToggleAuth }) => {
     specialization: "",
     phone: "",
     location: "",
-    department: "",
-    adminRole: "verifier",
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -40,7 +38,6 @@ export const RegisterSection = ({ onToggleAuth }) => {
     { value: "patient", label: "Patient", color: "blue" },
     { value: "doctor", label: "Doctor", color: "green" },
     { value: "frontlineWorker", label: "Frontline Worker", color: "red" },
-    { value: "admin", label: "Admin", color: "orange" },
   ];
 
   const getButtonColorClasses = (userType) => {
@@ -55,11 +52,6 @@ export const RegisterSection = ({ onToggleAuth }) => {
     const userTypeObj = userTypes.find((t) => t.value == userType);
     return colorMap[userTypeObj?.color] || colorMap.blue;
   };
-
-  const adminRoles = [
-    { value: "verifier", label: "Verifier" },
-    { value: "support", label: "Support" },
-  ];
 
   // Clear errors when form data changes
 
@@ -88,12 +80,6 @@ export const RegisterSection = ({ onToggleAuth }) => {
 
       if (formData.userType === "frontlineWorker") {
         if (!formData.phone.trim() || !formData.location.trim()) {
-          return false;
-        }
-      }
-
-      if (formData.userType === "admin") {
-        if (!formData.department.trim() || !formData.adminRole.trim()) {
           return false;
         }
       }
@@ -213,14 +199,6 @@ export const RegisterSection = ({ onToggleAuth }) => {
         }
         break;
 
-      case "department":
-        if (formData.userType === "admin" && !value.trim()) {
-          errors.department = "Department is required";
-        } else {
-          delete errors.department;
-        }
-        break;
-
       default:
         break;
     }
@@ -275,15 +253,6 @@ export const RegisterSection = ({ onToggleAuth }) => {
       errors.specialization = "Specialization is required";
     }
 
-    if (formData.userType === "admin") {
-      if (!formData.department.trim()) {
-        errors.department = "Department is required";
-      }
-      if (!formData.adminRole.trim()) {
-        errors.adminRole = "Admin role is required";
-      }
-    }
-
     return errors;
   };
 
@@ -324,9 +293,6 @@ export const RegisterSection = ({ onToggleAuth }) => {
     } else if (formData.userType === "frontlineWorker") {
       registerData.phone = formData.phone.trim();
       registerData.location = formData.location.trim();
-    } else if (formData.userType === "admin") {
-      registerData.department = formData.department.trim();
-      registerData.adminRole = formData.adminRole;
     }
 
     const result = await register(registerData);
@@ -691,55 +657,6 @@ export const RegisterSection = ({ onToggleAuth }) => {
                           {validationErrors.location}
                         </p>
                       )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Role-specific fields - Admin */}
-                {formData.userType === "admin" && (
-                  <div className="grid grid-cols-1 gap-4">
-                    <div>
-                      <label className="block text-slate-50 text-sm mb-2">
-                        Department <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        name="department"
-                        value={formData.department}
-                        onChange={handleInputChange}
-                        onBlur={() => handleBlur("department")}
-                        disabled={loading}
-                        className={`w-full px-4 py-3 bg-gray-800 border rounded-md focus:ring-1 text-white placeholder-gray-500 spline-sans-mono-400 text-sm transition-all duration-200 disabled:opacity-50 ${
-                          touched.department && validationErrors.department
-                            ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-                            : "border-gray-600 focus:border-blue-500 focus:ring-blue-500"
-                        }`}
-                        placeholder="Enter department"
-                        required
-                      />
-                      {touched.department && validationErrors.department && (
-                        <p className="mt-1 text-xs text-red-400">
-                          {validationErrors.department}
-                        </p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="block text-slate-50 text-sm mb-2">
-                        Admin Role <span className="text-red-500">*</span>
-                      </label>
-                      <select
-                        name="adminRole"
-                        value={formData.adminRole}
-                        onChange={handleInputChange}
-                        disabled={loading}
-                        className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white spline-sans-mono-400 text-sm transition-all duration-200 disabled:opacity-50"
-                      >
-                        {adminRoles.map((role) => (
-                          <option key={role.value} value={role.value}>
-                            {role.label}
-                          </option>
-                        ))}
-                      </select>
                     </div>
                   </div>
                 )}

@@ -3,8 +3,11 @@ import asyncHandler from "../middleware/asyncHandler.js";
 import Patient from "../models/Patient.js";
 import Doctor from "../models/Doctor.js";
 import { successResponse, errorResponse } from "../utils/response.js";
-import { addDays } from "date-fns"; // Import addDays for date range
-import { IST_TIMEZONE, nowInIST } from "../utils/dateUtils.js"; // Import IST constant
+import { toZonedTime, fromZonedTime } from "date-fns-tz";
+import { IST_TIMEZONE, nowInIST } from "../utils/dateUtils.js";
+
+// Pagination default for getAppointments — prevents fetching entire collection
+const DEFAULT_PAGE_LIMIT = 50;
 
 // Helper function to get the current time in IST
 
@@ -55,14 +58,37 @@ export const createAppointment = asyncHandler(async (req, res) => {
 // @access Private (Admin/Doctor)
 export const getAppointments = asyncHandler(async (req, res) => {
   try {
-    const appointments = await Appointment.find()
-      .populate("patient", "name email")
-      .populate("doctor", "name  email")
-      .populate("doctorProfile", " specialization ");
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(
+      100,
+      parseInt(req.query.limit) || DEFAULT_PAGE_LIMIT,
+    );
+    const skip = (page - 1) * limit;
+
+    const [appointments, total] = await Promise.all([
+      Appointment.find()
+        .populate("patient", "name email")
+        .populate("doctor", "name email")
+        .populate("doctorProfile", "specialization")
+        .sort({ appointmentDate: -1 })
+        .skip(skip)
+        .limit(limit),
+      Appointment.countDocuments(),
+    ]);
 
     return successResponse(
       res,
-      appointments,
+      {
+        appointments,
+        pagination: {
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit),
+          hasNextPage: page < Math.ceil(total / limit),
+          hasPrevPage: page > 1,
+        },
+      },
       "Appointments retrieved successfully",
       200,
     );
@@ -407,18 +433,20 @@ export const getAppointmentsByDateRange = asyncHandler(async (req, res) => {
       return errorResponse(res, "Start date and end date are required", 400);
     }
 
-    // Interpret the input dates as IST
-    // e.g., "2025-10-31" becomes 2025-10-31 00:00:00 IST
-    const startIST = zonedTimeToUtc(new Date(startDate), IST_TIMEZONE);
+    // Parse the date strings as IST midnight using fromZonedTime
+    // e.g. "2025-10-31" → 2025-10-30T18:30:00.000Z (IST midnight in UTC)
+    // fromZonedTime correctly handles DST boundaries, unlike addDays on a UTC date
+    const startUTC = fromZonedTime(`${startDate}T00:00:00`, IST_TIMEZONE);
 
-    // To include the entire end day, we get the start of the *next* day
-    // e.g., "2025-10-31" becomes 2025-11-01 00:00:00 IST
-    const endIST = addDays(zonedTimeToUtc(new Date(endDate), IST_TIMEZONE), 1);
+    // End of the end date — use the start of the NEXT day in IST
+    // so $lt catches every appointment on the end date itself
+    const endUTC = fromZonedTime(`${endDate}T00:00:00`, IST_TIMEZONE);
+    endUTC.setDate(endUTC.getDate() + 1);
 
     const query = {
       appointmentDate: {
-        $gte: startIST,
-        $lt: endIST, // Use $lt to capture everything *before* the next day starts
+        $gte: startUTC,
+        $lt: endUTC, // Use $lt to capture everything *before* the next day starts
       },
     };
 

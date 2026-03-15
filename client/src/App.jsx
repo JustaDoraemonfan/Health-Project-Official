@@ -31,6 +31,7 @@ import DoctorSymptomPage from "./DoctorConfig/DashboardUtils/DoctorSymptomPage";
 import DoctorSlotSelection from "./DoctorConfig/DoctorSlots/DoctorSlotSelection";
 import DoctorCalendar from "./DoctorConfig/Calendar/DoctorCalendar";
 import DoctorVerificationDashboard from "./AdminConfig/DoctorVerification/DoctorVerification";
+import CreateAdmin from "./AdminConfig/CreateAdmin/CreateAdmin";
 import PatientManagement from "./DoctorConfig/DashboardUtils/PatientManagement";
 import HealthyAI from "./ChatBot/HealthyAI";
 import DoctorNotes from "./DoctorConfig/DoctorNotes/DoctorNotes";
@@ -235,6 +236,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
             <DoctorVerificationDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/create-admin"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <CreateAdmin />
           </ProtectedRoute>
         }
       />

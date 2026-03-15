@@ -10,10 +10,16 @@ import {
   MessageCircle,
   Upload,
   TrendingUp,
+  UserPlus,
 } from "lucide-react";
 
 // Admin Dashboard Sections
-export const adminDashboardSections = (navigate, openUploadModal) => [
+// isSuperadmin is passed in so we can show/hide the Create Admin card
+export const adminDashboardSections = (
+  navigate,
+  openUploadModal,
+  isSuperadmin = false,
+) => [
   {
     id: "user-management",
     title: "User Management",
@@ -94,6 +100,21 @@ export const adminDashboardSections = (navigate, openUploadModal) => [
     stats: "7 new",
     onClick: () => navigate("/admin/messages"),
   },
+  // Only superadmins see this card
+  ...(isSuperadmin
+    ? [
+        {
+          id: "create-admin",
+          title: "Create Admin",
+          description:
+            "Create new admin accounts with specific roles and permissions.",
+          icon: UserPlus,
+          color: "orange",
+          badge: "Superadmin only",
+          onClick: () => navigate("/admin/create-admin"),
+        },
+      ]
+    : []),
 ];
 
 // Admin Quick Actions

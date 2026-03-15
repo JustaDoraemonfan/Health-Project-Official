@@ -63,7 +63,9 @@ export const registerUser = asyncHandler(async (req, res) => {
     );
   }
 
-  const validRoles = ["patient", "doctor", "frontlineWorker", "admin"];
+  // "admin" is intentionally excluded — admins can only be created
+  // by an existing superadmin via POST /api/admin/create-admin
+  const validRoles = ["patient", "doctor", "frontlineWorker"];
   const userRole = role || "patient";
   if (!validRoles.includes(userRole)) {
     return errorResponse(
@@ -120,54 +122,7 @@ export const registerUser = asyncHandler(async (req, res) => {
       phone,
       location,
     });
-  } else if (userRole === "admin") {
-    const { adminRole, department } = req.body;
-
-    // Validate admin role
-    const validAdminRoles = ["superadmin", "verifier", "support"];
-    const selectedAdminRole = adminRole || "verifier";
-
-    if (!validAdminRoles.includes(selectedAdminRole)) {
-      return errorResponse(
-        res,
-        `Invalid admin role. Must be one of: ${validAdminRoles.join(", ")}`,
-        400,
-      );
-    }
-
-    // Set permissions based on admin role
-    let permissions = {
-      canApproveDoctors: false,
-      canManageAdmins: false,
-      canViewAnalytics: false,
-      canSuspendAccounts: false,
-    };
-
-    if (selectedAdminRole === "superadmin") {
-      permissions = {
-        canApproveDoctors: true,
-        canManageAdmins: true,
-        canViewAnalytics: true,
-        canSuspendAccounts: true,
-      };
-    } else if (selectedAdminRole === "verifier") {
-      permissions.canApproveDoctors = true;
-    } else if (selectedAdminRole === "support") {
-      permissions.canViewAnalytics = true;
-    }
-
-    await Admin.create({
-      userId: user.id,
-      role: selectedAdminRole,
-      department: department || "Verification",
-      permissions,
-      security: {
-        passwordHash: hashedPassword,
-        isActive: true,
-      },
-    });
   }
-
   const userResponse = {
     id: user.id,
     name: user.name,
@@ -333,4 +288,112 @@ export const refreshAccessToken = asyncHandler(async (req, res) => {
   } catch (error) {
     return errorResponse(res, "Refresh token expired or invalid", 401);
   }
+});
+
+// -----------------------------------Create Admin (Superadmin only)----------------------------------------
+// This is the ONLY way to create a new admin account.
+// Route: POST /api/admin/create-admin
+// Access: Superadmin only (protected by authMiddleware + requireSuperadmin)
+
+export const createAdmin = asyncHandler(async (req, res) => {
+  const { name, email, password, adminRole, department } = req.body;
+
+  const validationErrors = validateInput({ name, email, password });
+  if (validationErrors.length > 0) {
+    return errorResponse(res, "Validation failed", 400, validationErrors);
+  }
+  if (!isValidEmail(email)) {
+    return errorResponse(res, "Invalid email format", 400);
+  }
+  if (!isValidPassword(password)) {
+    return errorResponse(
+      res,
+      "Password must be at least 8 characters with uppercase, lowercase, and a number",
+      400,
+    );
+  }
+
+  const validAdminRoles = ["superadmin", "verifier", "support"];
+  const selectedAdminRole = adminRole || "verifier";
+  if (!validAdminRoles.includes(selectedAdminRole)) {
+    return errorResponse(
+      res,
+      `Invalid admin role. Must be one of: ${validAdminRoles.join(", ")}`,
+      400,
+    );
+  }
+
+  const existingUser = await User.findOne({ email: email.toLowerCase() });
+  if (existingUser) {
+    return errorResponse(res, "A user with this email already exists", 409);
+  }
+
+  let permissions = {
+    canApproveDoctors: false,
+    canManageAdmins: false,
+    canViewAnalytics: false,
+    canSuspendAccounts: false,
+  };
+  if (selectedAdminRole === "superadmin") {
+    permissions = {
+      canApproveDoctors: true,
+      canManageAdmins: true,
+      canViewAnalytics: true,
+      canSuspendAccounts: true,
+    };
+  } else if (selectedAdminRole === "verifier") {
+    permissions.canApproveDoctors = true;
+  } else if (selectedAdminRole === "support") {
+    permissions.canViewAnalytics = true;
+  }
+
+  // Hash once here for the User record (User model has no pre-save hook)
+  const hashedPassword = await bcrypt.hash(password, 12);
+
+  const user = await User.create({
+    name: name.trim(),
+    email: email.toLowerCase().trim(),
+    password: hashedPassword,
+    role: "admin",
+  });
+
+  // IMPORTANT: Pass the RAW password into security.passwordHash
+  // The Admin model pre("save") hook hashes it automatically.
+  // Passing hashedPassword here would hash it a second time and
+  // the admin would never be able to log in.
+  await Admin.create({
+    userId: user.id,
+    role: selectedAdminRole,
+    department: department || "Verification",
+    permissions,
+    security: { passwordHash: password, isActive: true },
+  });
+
+  // Audit trail — "create_admin" is already in the Admin model enum
+  await Admin.findOneAndUpdate(
+    { userId: req.user.id },
+    {
+      $push: {
+        auditTrail: {
+          action: "create_admin",
+          at: nowInIST(),
+          notes: `Created admin account for ${email} with role ${selectedAdminRole}`,
+        },
+      },
+    },
+  );
+
+  return successResponse(
+    res,
+    {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      adminRole: selectedAdminRole,
+      department: department || "Verification",
+      permissions,
+    },
+    "Admin account created successfully",
+    201,
+  );
 });
