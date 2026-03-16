@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
+import mongoose from "mongoose";
 import User from "../models/User.js";
 import Patient from "../models/Patient.js";
 import Doctor from "../models/Doctor.js";
@@ -88,34 +89,9 @@ export const registerUser = asyncHandler(async (req, res) => {
     return errorResponse(res, "User already exists", 409);
   }
 
-  // Create User
-  const hashedPassword = await bcrypt.hash(password, 12);
-  const user = await User.create({
-    name: name.trim(),
-    email: email.toLowerCase().trim(),
-    password: hashedPassword,
-    role: userRole,
-  });
-
-  // Create role-specific record linked by userId
-  if (userRole === "patient") {
-    const { age, gender } = req.body;
-    await Patient.create({
-      userId: user.id,
-      age: age ? parseInt(age) : null,
-      gender: gender || "other",
-      assignedDoctor: null,
-    });
-  } else if (userRole === "doctor") {
-    const { phone, location, specialization } = req.body;
-    await Doctor.create({
-      userId: user.id,
-      phone: phone,
-      location: location,
-      specialization: specialization || "",
-      patients: [],
-    });
-  } else if (userRole === "frontlineWorker") {
+  // Validate role-specific required fields BEFORE touching the DB.
+  // Catching this here avoids starting a transaction that we know will fail.
+  if (userRole === "frontlineWorker") {
     const { phone, location } = req.body;
     if (!phone || !location) {
       return errorResponse(
@@ -124,26 +100,85 @@ export const registerUser = asyncHandler(async (req, res) => {
         400,
       );
     }
-    await FrontlineWorker.create({
-      userId: user.id,
-      phone,
-      location,
-    });
   }
-  const userResponse = {
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    role: user.role,
-    token: generateAccessToken(user),
-  };
 
-  return successResponse(
-    res,
-    userResponse,
-    "User registered successfully",
-    201,
-  );
+  // Use a session so User + role-profile are created atomically.
+  // If the profile create fails, the User record is rolled back —
+  // no orphaned accounts that block re-registration on the same email.
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 12);
+    const [user] = await User.create(
+      [
+        {
+          name: name.trim(),
+          email: email.toLowerCase().trim(),
+          password: hashedPassword,
+          role: userRole,
+        },
+      ],
+      { session },
+    );
+
+    // Create role-specific record linked by userId
+    if (userRole === "patient") {
+      const { age, gender } = req.body;
+      await Patient.create(
+        [
+          {
+            userId: user.id,
+            age: age ? parseInt(age) : null,
+            gender: gender || "other",
+            assignedDoctor: null,
+          },
+        ],
+        { session },
+      );
+    } else if (userRole === "doctor") {
+      const { phone, location, specialization } = req.body;
+      await Doctor.create(
+        [
+          {
+            userId: user.id,
+            phone,
+            location,
+            specialization: specialization || "",
+            patients: [],
+          },
+        ],
+        { session },
+      );
+    } else if (userRole === "frontlineWorker") {
+      const { phone, location } = req.body;
+      await FrontlineWorker.create([{ userId: user.id, phone, location }], {
+        session,
+      });
+    }
+
+    await session.commitTransaction();
+
+    const userResponse = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      token: generateAccessToken(user),
+    };
+
+    return successResponse(
+      res,
+      userResponse,
+      "User registered successfully",
+      201,
+    );
+  } catch (err) {
+    await session.abortTransaction();
+    throw err; // re-throw so asyncHandler / errorMiddleware returns a clean 500
+  } finally {
+    session.endSession();
+  }
 });
 
 // Login
@@ -359,50 +394,73 @@ export const createAdmin = asyncHandler(async (req, res) => {
   // Hash once here for the User record (User model has no pre-save hook)
   const hashedPassword = await bcrypt.hash(password, 12);
 
-  const user = await User.create({
-    name: name.trim(),
-    email: email.toLowerCase().trim(),
-    password: hashedPassword,
-    role: "admin",
-  });
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-  // Pass the RAW password to Admin.create — the Admin pre-save hook hashes it.
-  // Do NOT pass hashedPassword here: the hook would hash an already-hashed value,
-  // making Admin.security.passwordHash out of sync with User.password.
-  // Both fields must hash the same original password to stay in sync.
-  await Admin.create({
-    userId: user.id,
-    role: selectedAdminRole,
-    department: department || "Verification",
-    permissions,
-    security: { passwordHash: password, isActive: true },
-  });
+  try {
+    const [user] = await User.create(
+      [
+        {
+          name: name.trim(),
+          email: email.toLowerCase().trim(),
+          password: hashedPassword,
+          role: "admin",
+        },
+      ],
+      { session },
+    );
 
-  // Audit trail — "create_admin" is already in the Admin model enum
-  await Admin.findOneAndUpdate(
-    { userId: req.user.id },
-    {
-      $push: {
-        auditTrail: {
-          action: "create_admin",
-          at: nowInIST(),
-          notes: `Created admin account for ${email} with role ${selectedAdminRole}`,
+    // Pass the RAW password to Admin.create — the Admin pre-save hook hashes it.
+    // Do NOT pass hashedPassword here: the hook would hash an already-hashed value,
+    // making Admin.security.passwordHash out of sync with User.password.
+    // Both fields must hash the same original password to stay in sync.
+    await Admin.create(
+      [
+        {
+          userId: user.id,
+          role: selectedAdminRole,
+          department: department || "Verification",
+          permissions,
+          security: { passwordHash: password, isActive: true },
+        },
+      ],
+      { session },
+    );
+
+    await session.commitTransaction();
+
+    // Audit trail — outside the transaction so a logging failure doesn't
+    // roll back the successfully created admin account
+    await Admin.findOneAndUpdate(
+      { userId: req.user.id },
+      {
+        $push: {
+          auditTrail: {
+            action: "create_admin",
+            at: nowInIST(),
+            notes: `Created admin account for ${email} with role ${selectedAdminRole}`,
+          },
         },
       },
-    },
-  );
+    );
 
-  return successResponse(
-    res,
-    {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      adminRole: selectedAdminRole,
-      department: department || "Verification",
-      permissions,
-    },
-    "Admin account created successfully",
-    201,
-  );
+    return successResponse(
+      res,
+      {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        adminRole: selectedAdminRole,
+        department: department || "Verification",
+        permissions,
+      },
+      "Admin account created successfully",
+      201,
+    );
+  } catch (err) {
+    await session.abortTransaction();
+    throw err;
+  } finally {
+    session.endSession();
+  }
 });
