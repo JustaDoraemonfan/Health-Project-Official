@@ -1,10 +1,11 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Search, Users, Calendar, Activity, Loader2 } from "lucide-react";
 import PatientCard from "../DoctorPatientConnection/PatientCard";
 import FilterPanel from "../DoctorPatientConnection/FilterPanel";
 import { useUser } from "../../hooks/useUser";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import Header from "../../components/Header";
+import { doctorAPI } from "../../services/api";
 
 const PatientDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -14,9 +15,25 @@ const PatientDashboard = () => {
     location: "all",
   });
   const { user, doctorProfile, isLoading } = useUser();
+  const [patientList, setPatientList] = useState([]);
+  const [patientsLoading, setPatientsLoading] = useState(true);
 
-  // Safely get the patient list, defaulting to an empty array
-  const patientList = doctorProfile?.patients || [];
+  // Fetch patients from the dedicated endpoint — doctorProfile no longer
+  // carries the patients array since we removed that populate for performance.
+  useEffect(() => {
+    const fetchPatients = async () => {
+      try {
+        const res = await doctorAPI.getDoctorPatients();
+        setPatientList(res.data.data || []);
+      } catch (err) {
+        console.error("Failed to fetch patients:", err);
+        setPatientList([]);
+      } finally {
+        setPatientsLoading(false);
+      }
+    };
+    fetchPatients();
+  }, []);
 
   // Filter patients based on search and filters
   const filteredPatients = useMemo(() => {
@@ -40,7 +57,7 @@ const PatientDashboard = () => {
     });
   }, [searchTerm, filters, patientList]);
 
-  if (isLoading) {
+  if (isLoading || patientsLoading) {
     return <LoadingSpinner message="Loading Patient Data" />;
   }
 

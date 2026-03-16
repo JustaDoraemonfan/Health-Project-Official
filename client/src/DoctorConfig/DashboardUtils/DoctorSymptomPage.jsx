@@ -20,7 +20,7 @@ const DoctorSymptomPage = () => {
     try {
       setLoading(true);
       const assignedPatientResponse = await doctorAPI.getDoctorPatients();
-      const assignedPatients = assignedPatientResponse.data.patients || [];
+      const assignedPatients = assignedPatientResponse.data.data || [];
 
       const patientsWithDefaults = assignedPatients.map((patient) => ({
         ...patient,
@@ -47,7 +47,7 @@ const DoctorSymptomPage = () => {
       setSelectedPatient(patient);
 
       const symptomResponse = await symptomAPI.getSymptomForDoctor(
-        patient.userId._id
+        patient.userId._id,
       );
       const symptomsData = symptomResponse.data.data || [];
 

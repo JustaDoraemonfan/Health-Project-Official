@@ -58,7 +58,8 @@ const PrescriptionUploadModal = ({ isOpen, onClose }) => {
           setDoctorId(doctor.data.data._id);
 
           const assignedPatients = await doctorAPI.getDoctorPatients();
-          setPatients(assignedPatients.data.patients);
+          // Server wraps data in successResponse: { success, message, data: [...] }
+          setPatients(assignedPatients.data.data || []);
         } catch (error) {
           console.error("Error initializing component:", error);
           showToast("Error loading data. Please refresh the page.", "error");
@@ -140,7 +141,7 @@ const PrescriptionUploadModal = ({ isOpen, onClose }) => {
     try {
       const response = await prescriptionAPI.uploadPrescription(
         selectedPatientId,
-        selectedFile
+        selectedFile,
       );
 
       if (response.data.success) {
@@ -153,7 +154,7 @@ const PrescriptionUploadModal = ({ isOpen, onClose }) => {
       console.error("Upload error:", error);
       showToast(
         error.message || "Failed to upload prescription. Please try again.",
-        "error"
+        "error",
       );
     } finally {
       setIsLoading(false);
@@ -161,7 +162,7 @@ const PrescriptionUploadModal = ({ isOpen, onClose }) => {
   };
 
   const selectedPatient = patients.find(
-    (p) => p.userId._id === selectedPatientId
+    (p) => p.userId._id === selectedPatientId,
   );
 
   if (!shouldRender) return null;
