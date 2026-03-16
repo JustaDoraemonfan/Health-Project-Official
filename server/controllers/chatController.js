@@ -1,9 +1,9 @@
 import { askGemini } from "../services/geminiService.js";
 import Doctor from "../models/Doctor.js";
-import User from "../models/User.js";
+import asyncHandler from "../middleware/asyncHandler.js";
 
-export const handleChat = async (req, res) => {
-  try {
+export const handleChat = asyncHandler(async (req, res) => {
+  {
     const { message } = req.body;
     if (!message) return res.status(400).json({ error: "Message is required" });
 
@@ -86,8 +86,5 @@ User question: ${message}
       })),
       matchedSpecialization: matchedSpec !== "none" ? matchedSpec : null,
     });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Server error" });
   }
-};
+});

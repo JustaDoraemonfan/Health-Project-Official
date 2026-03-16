@@ -338,9 +338,19 @@ export const AuthProvider = ({ children }) => {
 
   // Logout function
   const logout = async () => {
+    // Always attempt the server call first — it clears the HttpOnly refresh
+    // cookie. If we skip this and only clear localStorage, the cookie survives
+    // and the user gets silently re-logged-in on the next page refresh.
     try {
       await authAPI.logout();
-    } catch {} // best effort
+    } catch (error) {
+      // Network failure or server error — still clear local state so the UI
+      // reflects logged-out, but log so it is visible in devtools.
+      console.warn(
+        "Logout request failed — clearing local session anyway:",
+        error?.response?.status,
+      );
+    }
     dispatch({ type: AUTH_ACTIONS.LOGOUT });
   };
 

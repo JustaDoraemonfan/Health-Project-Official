@@ -26,6 +26,14 @@ export const authMiddleware = async (req, res, next) => {
         return res.status(401).json({ message: "User not found" });
       }
 
+      // Suspended accounts must not use any protected route even with
+      // a valid token issued before the suspension took effect.
+      if (req.user.isSuspended) {
+        return res.status(403).json({
+          message: "Your account has been suspended. Please contact support.",
+        });
+      }
+
       next();
     } else {
       return res.status(401).json({ message: "No token provided" });

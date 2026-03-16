@@ -5,68 +5,56 @@ import asyncHandler from "../middleware/asyncHandler.js";
 import { successResponse, errorResponse } from "../utils/response.js";
 
 // Assign a patient to a doctor
-export const assignPatientToDoctor = async (req, res) => {
-  try {
-    const { doctorId, patientId } = req.body;
+export const assignPatientToDoctor = asyncHandler(async (req, res) => {
+  const { doctorId, patientId } = req.body;
 
-    const doctor = await Doctor.findOne({ userId: doctorId });
-    const patient = await Patient.findOne({ userId: patientId });
+  const doctor = await Doctor.findOne({ userId: doctorId });
+  const patient = await Patient.findOne({ userId: patientId });
 
-    if (!doctor || !patient) {
-      return res.status(404).json({ message: "Doctor or patient not found" });
-    }
-
-    // Prevent duplicates
-    if (!doctor.patients.includes(patient._id)) {
-      doctor.patients.push(patient._id);
-    }
-
-    // Always overwrite patient assignment
-    patient.assignedDoctor = doctor._id;
-
-    await doctor.save();
-    await patient.save();
-
-    res.status(200).json({
-      message: "Patient assigned successfully",
-      doctor,
-      patient,
-    });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  if (!doctor || !patient) {
+    return errorResponse(res, "Doctor or patient not found", 404);
   }
-};
+
+  // Prevent duplicates
+  if (!doctor.patients.includes(patient._id)) {
+    doctor.patients.push(patient._id);
+  }
+
+  // Always overwrite patient assignment
+  patient.assignedDoctor = doctor._id;
+
+  await doctor.save();
+  await patient.save();
+
+  return successResponse(
+    res,
+    { doctor, patient },
+    "Patient assigned successfully",
+  );
+});
 
 // Get all the assigned patients of a doctor
-export const getPatientsOfDoctor = async (req, res) => {
-  try {
-    const { id } = req.user;
-    console.log(id);
-    const doctor = await Doctor.findOne({ userId: id }).populate({
-      path: "patients",
-      model: "Patient",
-      populate: {
-        path: "userId",
-        model: "User",
-        select: "name email role",
-      },
-    });
+export const getPatientsOfDoctor = asyncHandler(async (req, res) => {
+  const { id } = req.user;
 
-    if (!doctor) {
-      return res.status(404).json({ message: "Doctor not found" });
-    }
+  const doctor = await Doctor.findOne({ userId: id }).populate({
+    path: "patients",
+    model: "Patient",
+    populate: {
+      path: "userId",
+      model: "User",
+      select: "name email role",
+    },
+  });
 
-    res.status(200).json({
-      message: "Patients fetched successfully",
-      patients: doctor.patients,
-    });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  if (!doctor) {
+    return errorResponse(res, "Doctor not found", 404);
   }
-};
+
+  return successResponse(res, doctor.patients, "Patients fetched successfully");
+});
 
 // Unassign any patient from a doctor
-
 export const unassignPatientFromDoctor = asyncHandler(async (req, res) => {
   const { doctorId, patientId } = req.body;
 
@@ -78,7 +66,6 @@ export const unassignPatientFromDoctor = asyncHandler(async (req, res) => {
   }
 
   const doctor = await Doctor.findOne({ userId: doctorId });
-
   const patient = await Patient.findOne({ userId: patientId });
 
   if (!doctor || !patient) {
@@ -86,7 +73,7 @@ export const unassignPatientFromDoctor = asyncHandler(async (req, res) => {
   }
 
   doctor.patients = doctor.patients.filter(
-    (p) => p.toString() !== patient._id.toString()
+    (p) => p.toString() !== patient._id.toString(),
   );
 
   if (patient.assignedDoctor?.toString() === doctor._id.toString()) {
@@ -94,14 +81,11 @@ export const unassignPatientFromDoctor = asyncHandler(async (req, res) => {
   }
 
   await doctor.save();
-
   await patient.save();
 
   return successResponse(
     res,
-
     { doctor, patient },
-
-    `Patient ${patient.name} unassigned from Doctor ${doctor.name}`
+    `Patient unassigned successfully`,
   );
 });

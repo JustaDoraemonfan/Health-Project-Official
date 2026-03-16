@@ -2,6 +2,7 @@ import express from "express";
 import {
   registerUser,
   loginUser,
+  logoutUser,
   refreshAccessToken,
 } from "../controllers/authController.js";
 import { getCurrentUser } from "../controllers/userController.js";
@@ -15,6 +16,9 @@ router.post("/register", registerLimiter, registerUser);
 
 // POST /api/auth/login
 router.post("/login", loginLimiter, loginUser);
+
+// POST /api/auth/logout — must clear the HttpOnly refresh cookie server-side
+router.post("/logout", authMiddleware, logoutUser);
 
 // Get current user profile
 router.get("/me", authMiddleware, getCurrentUser);
