@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 import Admin from "../models/Admin.js";
 import Doctor from "../models/Doctor.js";
 import User from "../models/User.js";
@@ -140,7 +141,7 @@ export const getPendingVerifications = asyncHandler(async (req, res) => {
   return successResponse(
     res,
     updatedDoctors,
-    "Pending verifications fetched successfully"
+    "Pending verifications fetched successfully",
   );
 });
 
@@ -180,7 +181,7 @@ export const approveVerification = asyncHandler(async (req, res) => {
     return errorResponse(
       res,
       `Verification is already ${doctor.verification.status}`,
-      400
+      400,
     );
   }
 
@@ -234,7 +235,7 @@ export const rejectVerification = asyncHandler(async (req, res) => {
     return errorResponse(
       res,
       `Verification is already ${doctor.verification.status}`,
-      400
+      400,
     );
   }
 
@@ -419,7 +420,7 @@ export const getAllUsers = asyncHandler(async (req, res) => {
         pages: Math.ceil(total / limit),
       },
     },
-    "Users fetched successfully"
+    "Users fetched successfully",
   );
 });
 
@@ -433,19 +434,35 @@ export const updateAdminPassword = asyncHandler(async (req, res) => {
     return errorResponse(res, "Current and new password are required", 400);
   }
 
-  const admin = await Admin.findOne({ userId: req.user.id });
-  if (!admin) return errorResponse(res, "Admin profile not found", 404);
+  // Login always verifies against User.password (see loginUser → bcrypt.compare).
+  // We verify the current password against that same source of truth.
+  const user = await User.findById(req.user.id);
+  if (!user) return errorResponse(res, "User not found", 404);
 
-  // Verify current password
-  const isMatch = await admin.matchPassword(currentPassword);
+  const isMatch = await bcrypt.compare(currentPassword, user.password);
   if (!isMatch) {
     return errorResponse(res, "Current password is incorrect", 401);
   }
 
-  // Update password
-  admin.security.passwordHash = newPassword; // Will be hashed by pre-save hook
-  admin.security.lastPasswordChange = nowInIST(); // Use IST time
-  await admin.save();
+  const admin = await Admin.findOne({ userId: req.user.id });
+  if (!admin) return errorResponse(res, "Admin profile not found", 404);
+
+  // Hash once and write to BOTH records so login (User.password) and
+  // Admin.matchPassword (security.passwordHash) always stay in sync.
+  const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+  user.password = hashedPassword;
+  await user.save();
+
+  // Use updateOne to bypass the Admin pre-save hook — the hash is already
+  // applied, so we must not let the hook hash it a second time.
+  await Admin.updateOne(
+    { userId: req.user.id },
+    {
+      "security.passwordHash": hashedPassword,
+      "security.lastPasswordChange": nowInIST(),
+    },
+  );
 
   return successResponse(res, null, "Password updated successfully");
 });

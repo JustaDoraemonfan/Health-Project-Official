@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 import User from "../models/User.js";
 import Patient from "../models/Patient.js";
 import Doctor from "../models/Doctor.js";
@@ -26,6 +27,12 @@ const generateRefreshToken = (user) => {
     expiresIn: "30d",
   });
 };
+
+// One-way hash for storing refresh tokens in the DB.
+// The raw token lives only in the HttpOnly cookie — the DB stores only
+// the hash, so a database breach can't be used to hijack sessions.
+const hashToken = (token) =>
+  crypto.createHash("sha256").update(token).digest("hex");
 
 // Validation helpers
 const validateInput = (fields) => {
@@ -190,8 +197,9 @@ export const loginUser = asyncHandler(async (req, res) => {
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);
 
-  // Save refresh token in DB
-  user.refreshToken = refreshToken;
+  // Store only the hash in the DB — raw token stays in the HttpOnly cookie.
+  // If the DB is compromised, the hashes are useless without the raw tokens.
+  user.refreshToken = hashToken(refreshToken);
   await user.save();
 
   // Send refresh token in HttpOnly cookie
@@ -251,8 +259,9 @@ export const getUserProfile = asyncHandler(async (req, res) => {
 export const logoutUser = asyncHandler(async (req, res) => {
   const token = req.cookies.refreshToken;
   if (token) {
+    // Query by hash — the DB never holds raw tokens
     await User.findOneAndUpdate(
-      { refreshToken: token },
+      { refreshToken: hashToken(token) },
       { refreshToken: null },
     );
   }
@@ -274,7 +283,7 @@ export const refreshAccessToken = asyncHandler(async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
 
     const user = await User.findById(decoded.id);
-    if (!user || user.refreshToken !== token) {
+    if (!user || user.refreshToken !== hashToken(token)) {
       return errorResponse(res, "Invalid refresh token", 401);
     }
 
@@ -357,10 +366,10 @@ export const createAdmin = asyncHandler(async (req, res) => {
     role: "admin",
   });
 
-  // IMPORTANT: Pass the RAW password into security.passwordHash
-  // The Admin model pre("save") hook hashes it automatically.
-  // Passing hashedPassword here would hash it a second time and
-  // the admin would never be able to log in.
+  // Pass the RAW password to Admin.create — the Admin pre-save hook hashes it.
+  // Do NOT pass hashedPassword here: the hook would hash an already-hashed value,
+  // making Admin.security.passwordHash out of sync with User.password.
+  // Both fields must hash the same original password to stay in sync.
   await Admin.create({
     userId: user.id,
     role: selectedAdminRole,

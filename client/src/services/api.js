@@ -513,6 +513,12 @@ export const symptomAPI = {
   deleteSymptom: (symptomId) => {
     return apiClient.delete(`/symptoms/${symptomId}`);
   },
+
+  // Get a short-lived signed URL for a private S3 attachment.
+  // Pass the S3 key stored in attachment.filePath.
+  getAttachmentUrl: (key) => {
+    return apiClient.get("/symptoms/attachment-url", { params: { key } });
+  },
 };
 
 // Profile

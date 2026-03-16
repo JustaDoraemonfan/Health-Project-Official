@@ -45,17 +45,17 @@ const HealthRecordsDashboard = () => {
 
   const filteredAppointments = filterAppointments(
     appointmentsData,
-    appointmentFilter
+    appointmentFilter,
   );
 
-  const handleDownload = (file) => {
-    const link = document.createElement("a");
-    const url = getPdfUrl(file.filePath);
-    link.href = url;
-    link.download = file.originalName;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleDownload = async (file) => {
+    try {
+      const res = await symptomAPI.getAttachmentUrl(file.filePath);
+      const signedUrl = res.data.data.url;
+      window.open(signedUrl, "_blank", "noopener,noreferrer");
+    } catch (err) {
+      console.error("Failed to open attachment", err);
+    }
   };
 
   const getSectionCount = (sectionId) => {

@@ -4,6 +4,13 @@ import asyncHandler from "../middleware/asyncHandler.js";
 import { successResponse, errorResponse } from "../utils/response.js";
 import { nowInIST } from "../utils/dateUtils.js";
 import { askGemini } from "../services/geminiService.js";
+import { getSignedUrl } from "../utils/s3Helper.js";
+
+// Strip all HTML tags from a string, leaving only plain text.
+// Prevents stored XSS — a patient can't embed scripts in symptom descriptions
+// that would later execute when a doctor views the symptom list.
+const stripHtml = (str) =>
+  typeof str === "string" ? str.replace(/<[^>]*>/g, "").trim() : str;
 
 const EMERGENCY_KEYWORDS = [
   "chest pain",
@@ -22,18 +29,18 @@ export const addSymptom = asyncHandler(async (req, res) => {
 
   const symptom = await Symptom.create({
     patient: patientId,
-    description,
+    description: stripHtml(description),
     severity,
     onsetDate,
-    notes,
+    notes: stripHtml(notes),
     category,
     attachments:
       req.files?.map((file) => ({
         originalName: file.originalname,
         mime: file.mimetype,
         size: file.size,
-        filePath: file.path,
-        url: `/uploads/symptoms/${file.filename}`,
+        filePath: file.key, // S3 object key — used for future deletion
+        url: file.location, // Full S3 HTTPS URL — used by the client to view/download
       })) ?? [],
   });
 
@@ -49,6 +56,10 @@ export const addSymptom = asyncHandler(async (req, res) => {
 export const updateSymptom = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { deletedAttachments, ...updates } = req.body;
+
+  // Sanitize free-text fields in the update payload before persisting
+  if (updates.description) updates.description = stripHtml(updates.description);
+  if (updates.notes) updates.notes = stripHtml(updates.notes);
 
   const symptom = await Symptom.findOne({ _id: id, patient: req.user.id });
   if (!symptom) return errorResponse(res, "Symptom not found", 404);
@@ -66,8 +77,8 @@ export const updateSymptom = asyncHandler(async (req, res) => {
         originalName: file.originalname,
         mime: file.mimetype,
         size: file.size,
-        filePath: file.path,
-        url: `/uploads/symptoms/${file.filename}`,
+        filePath: file.key, // S3 object key
+        url: file.location, // Full S3 HTTPS URL
       })),
     );
   }
@@ -189,4 +200,28 @@ Keep the tone warm, supportive, and conversational. Limit to 200-300 words.
       500,
     );
   }
+});
+
+// @desc  Generate a short-lived signed URL for a symptom attachment
+// @route GET /api/symptoms/attachment-url?key=<s3key>
+// @access Private (patient who owns the symptom OR assigned doctor)
+export const getAttachmentUrl = asyncHandler(async (req, res) => {
+  const { key } = req.query;
+
+  if (!key) {
+    return errorResponse(res, "Attachment key is required", 400);
+  }
+
+  // Only allow keys under the symptoms/ prefix — prevents using this
+  // endpoint as a general-purpose S3 proxy for other buckets/paths
+  if (!key.startsWith("symptoms/")) {
+    return errorResponse(res, "Invalid attachment key", 403);
+  }
+
+  const signedUrl = getSignedUrl(key, 3600); // expires in 1 hour
+  if (!signedUrl) {
+    return errorResponse(res, "Could not generate attachment URL", 500);
+  }
+
+  return successResponse(res, { url: signedUrl }, "Signed URL generated");
 });

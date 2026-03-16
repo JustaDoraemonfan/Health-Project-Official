@@ -10,11 +10,23 @@ AWS.config.update({
 
 const s3 = new AWS.S3();
 
+const BUCKET = "healthymewebsite-verifications";
+
+// Allowed MIME types for symptom attachments
+const SYMPTOM_ALLOWED_MIMES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+];
+
 export const upload = multer({
   storage: multerS3({
     s3: s3,
-    bucket: "healthymewebsite-verifications",
-    contentType: multerS3.AUTO_CONTENT_TYPE, // Add this
+    bucket: BUCKET,
+    contentType: multerS3.AUTO_CONTENT_TYPE,
     metadata: (req, file, cb) => {
       cb(null, { fieldName: file.fieldname });
     },
@@ -30,14 +42,14 @@ export const upload = multer({
 export const uploadProfilePhoto = multer({
   storage: multerS3({
     s3: s3,
-    bucket: "healthymewebsite-verifications",
+    bucket: BUCKET,
     contentType: multerS3.AUTO_CONTENT_TYPE,
     metadata: (req, file, cb) => {
       cb(null, { fieldName: file.fieldname });
     },
     key: (req, file, cb) => {
-      const userType = req.user.role; // "doctor" or "patient"
-      const userId = req.user.id; // ID of doctor/patient
+      const userType = req.user.role;
+      const userId = req.user.id;
 
       const folder =
         userType === "doctor"
@@ -49,5 +61,39 @@ export const uploadProfilePhoto = multer({
   }),
   limits: {
     fileSize: 5 * 1024 * 1024, // 5MB
+  },
+});
+
+// Symptom attachments — stored under symptoms/<userId>/ in S3.
+// Using S3 instead of local disk means files survive server restarts
+// and redeployments on ephemeral hosts (Railway, Render, Heroku, etc.)
+export const uploadSymptomFiles = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: BUCKET,
+    contentType: multerS3.AUTO_CONTENT_TYPE,
+    metadata: (req, file, cb) => {
+      cb(null, { fieldName: file.fieldname });
+    },
+    key: (req, file, cb) => {
+      const userId = req.user.id;
+      cb(null, `symptoms/${userId}/${Date.now()}-${file.originalname}`);
+    },
+  }),
+  fileFilter: (req, file, cb) => {
+    if (SYMPTOM_ALLOWED_MIMES.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(
+        new Error(
+          "Only images, PDF, and Word documents are allowed for symptoms",
+        ),
+        false,
+      );
+    }
+  },
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB — same as the old local config
+    files: 10,
   },
 });

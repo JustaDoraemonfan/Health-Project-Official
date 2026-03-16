@@ -8,23 +8,31 @@ import {
   getSymptomsForDoctors,
   deleteSymptom,
   analyzeSymptom,
+  getAttachmentUrl,
 } from "../controllers/symptomController.js";
 import {
   authMiddleware,
   authorizeRoles,
 } from "../middleware/authMiddleware.js";
-import { symptomUpload } from "../middleware/multer.js";
+import { uploadSymptomFiles } from "../config/s3.js";
 
 const router = express.Router();
 
 router.use(authMiddleware);
 
+// Signed URL for viewing attachments — patients and doctors both need this
+router.get(
+  "/attachment-url",
+  authorizeRoles("patient", "doctor"),
+  getAttachmentUrl,
+);
+
 // Patient routes
 router.post(
-  "/add", // Changed path to avoid conflict
+  "/add",
   authorizeRoles("patient"),
-  symptomUpload.array("symptomFiles", 10),
-  addSymptom
+  uploadSymptomFiles.array("symptomFiles", 10),
+  addSymptom,
 );
 
 router.post("/:id/analyze", authorizeRoles("patient"), analyzeSymptom);
@@ -32,8 +40,8 @@ router.post("/:id/analyze", authorizeRoles("patient"), analyzeSymptom);
 router.put(
   "/:id",
   authorizeRoles("patient"),
-  symptomUpload.array("symptomFiles", 10),
-  updateSymptom
+  uploadSymptomFiles.array("symptomFiles", 10),
+  updateSymptom,
 );
 
 router.get("/", authorizeRoles("patient"), getSymptoms);
@@ -44,7 +52,7 @@ router.delete("/:id", authorizeRoles("patient"), deleteSymptom);
 router.post(
   "/doctorpatientsymptoms",
   authorizeRoles("doctor"),
-  getSymptomsForDoctors
+  getSymptomsForDoctors,
 );
 
 export default router;

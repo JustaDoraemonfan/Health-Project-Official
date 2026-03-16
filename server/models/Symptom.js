@@ -47,9 +47,9 @@ const symptomSchema = new mongoose.Schema(
         originalName: { type: String, required: true },
         mime: { type: String, required: true },
         size: { type: Number, required: true },
-        filePath: { type: String, required: true }, // local or S3 path
-        url: { type: String }, // public-facing URL if needed
-        uploadedAt: { type: Date, default: nowInIST }, // Use IST default
+        filePath: { type: String, required: true }, // S3 object key (used for deletion)
+        url: { type: String }, // Full S3 HTTPS URL (used by client)
+        uploadedAt: { type: Date, default: nowInIST },
       },
     ],
     // --- Timestamps ---

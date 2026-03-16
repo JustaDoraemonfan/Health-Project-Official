@@ -1,4 +1,5 @@
 import React from "react";
+import DOMPurify from "dompurify";
 import {
   Brain,
   X,
@@ -74,14 +75,14 @@ const SymptomAnalysisModal = ({
 
       const formatted = section.replace(
         /\*\*(.*?)\*\*/g,
-        "<strong class='font-semibold text-gray-100'>$1</strong>"
+        "<strong class='font-semibold text-gray-100'>$1</strong>",
       );
 
       return (
         <div
           key={index}
           className="text-gray-300 text-sm leading-relaxed mb-4"
-          dangerouslySetInnerHTML={{ __html: formatted }}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(formatted) }}
         />
       );
     });
@@ -152,8 +153,8 @@ const SymptomAnalysisModal = ({
                         symptomData.severity === "Severe"
                           ? "text-red-400"
                           : symptomData.severity === "Moderate"
-                          ? "text-orange-400"
-                          : "text-green-400"
+                            ? "text-orange-400"
+                            : "text-green-400"
                       }`}
                     >
                       {symptomData.severity}
