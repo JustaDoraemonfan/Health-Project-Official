@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { formatDate, getTimeAgo } from "../../utils/dateUtils";
+import { formatDate, getTimeAgo } from "../../utils/DateHelpers";
 import { getPriorityIndicator } from "../../utils/symptomUtils";
 import { FileText, Eye, Paperclip, Loader2 } from "lucide-react";
 import { symptomAPI } from "../../services/api";
@@ -147,7 +147,7 @@ const SymptomCard = ({ symptom, isExpanded, onToggle }) => {
                           <button
                             key={att._id || i}
                             onClick={(e) => openAttachment(e, att)}
-                            className="relative block w-24 h-24 rounded-lg overflow-hidden border bg-amber-50 border-white hover:opacity-90 transition-opacity flex-shrink-0 cursor-pointer"
+                            className="relative block w-24 h-24 rounded-lg overflow-hidden border border-black/10 hover:opacity-90 transition-opacity flex-shrink-0 cursor-pointer"
                             title={att.originalName}
                             disabled={loadingKey === att.filePath}
                           >

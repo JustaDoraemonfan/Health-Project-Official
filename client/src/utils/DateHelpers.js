@@ -9,7 +9,7 @@ const IST_TIMEZONE = "Asia/Kolkata";
 export const getTodayIST = () => {
   const now = new Date();
   const istDate = new Date(
-    now.toLocaleString("en-US", { timeZone: IST_TIMEZONE })
+    now.toLocaleString("en-US", { timeZone: IST_TIMEZONE }),
   );
   istDate.setHours(0, 0, 0, 0);
   return istDate;
@@ -31,7 +31,7 @@ export const getYesterdayIST = () => {
 export const normalizeToISTMidnight = (date) => {
   const d = new Date(date);
   const istDate = new Date(
-    d.toLocaleString("en-US", { timeZone: IST_TIMEZONE })
+    d.toLocaleString("en-US", { timeZone: IST_TIMEZONE }),
   );
   istDate.setHours(0, 0, 0, 0);
   return istDate;
@@ -42,7 +42,7 @@ export const normalizeToISTMidnight = (date) => {
  */
 export const getISTDateKey = (date = new Date()) => {
   const istDate = new Date(
-    date.toLocaleString("en-US", { timeZone: IST_TIMEZONE })
+    date.toLocaleString("en-US", { timeZone: IST_TIMEZONE }),
   );
   return istDate.toISOString().split("T")[0];
 };
@@ -146,8 +146,8 @@ export const getMissedDates = (reminder) => {
   const checkUntil = new Date(
     Math.min(
       endDate.getTime(),
-      today.getTime() - 86400000 // yesterday
-    )
+      today.getTime() - 86400000, // yesterday
+    ),
   );
 
   if (startDate > checkUntil) return []; // Medication hasn't started yet
@@ -204,4 +204,20 @@ export const calculateAdherence = (reminder) => {
   }
 
   return totalDays > 0 ? Math.round((takenDays / totalDays) * 100) : 0;
+};
+
+/**
+ * Get a human-readable "time ago" string from a date
+ * e.g. "Just now", "3h ago", "5d ago"
+ */
+export const getTimeAgo = (dateString) => {
+  if (!dateString) return "N/A";
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
+
+  if (diffInHours < 1) return "Just now";
+  if (diffInHours < 24) return `${diffInHours}h ago`;
+  const diffInDays = Math.floor(diffInHours / 24);
+  return `${diffInDays}d ago`;
 };
