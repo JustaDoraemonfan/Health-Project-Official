@@ -23,21 +23,11 @@ export const getCurrentUser = async (req, res) => {
 
     switch (userRole) {
       case "doctor": {
+        // patients[] and appointments[] are fetched on-demand by their own
+        // hooks — loading them here on every auth check is wasteful.
         const doctor = await Doctor.findOne({ userId })
           .populate("userId", "name email role")
-          .populate({
-            path: "patients",
-            populate: { path: "userId", select: "name email" },
-          })
-          .populate({
-            path: "appointments",
-            populate: [
-              { path: "patient", select: "userId age gender" },
-              { path: "doctor", select: "userId specialization" },
-            ],
-          })
-          .populate("verification.reviewedBy", "name email role")
-          .populate("verification.verifiedBy", "name email role");
+          .select("-patients -appointments");
 
         if (doctor) {
           userData.doctorProfile = doctor;
@@ -47,17 +37,16 @@ export const getCurrentUser = async (req, res) => {
       }
 
       case "patient": {
+        // symptoms[] is fetched on-demand — excluded here.
+        // assignedDoctor is kept for the dashboard status bar.
         const patient = await Patient.findOne({ userId })
           .populate("userId", "name email role")
-          .populate("symptoms", "name severity category")
           .populate({
             path: "assignedDoctor",
-            populate: {
-              path: "userId",
-              select:
-                "name email specialization experience consultationFee rating",
-            },
-          });
+            select: "userId specialization experience consultationFee rating",
+            populate: { path: "userId", select: "name email" },
+          })
+          .select("-symptoms");
 
         if (patient) {
           userData.patientProfile = patient;
@@ -70,13 +59,16 @@ export const getCurrentUser = async (req, res) => {
       case "superadmin":
       case "verifier":
       case "support": {
+        // auditTrail.targetId loads arbitrary documents on every auth check.
+        // Removed — audit trail is only needed on the dedicated audit page.
         const admin = await Admin.findOne({ userId })
           .populate("userId", "name email role")
           .populate({
             path: "handledVerifications.doctor",
+            select: "userId specialization verification.status",
             populate: { path: "userId", select: "name email" },
           })
-          .populate("auditTrail.targetId");
+          .select("-auditTrail");
 
         if (admin) {
           userData.adminProfile = admin;

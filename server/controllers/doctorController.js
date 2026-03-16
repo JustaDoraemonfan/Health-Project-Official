@@ -15,7 +15,7 @@ export const createDoctor = asyncHandler(async (req, res) => {
     return errorResponse(
       res,
       "Name, email, and specialization are required",
-      400
+      400,
     );
   }
 
@@ -23,11 +23,17 @@ export const createDoctor = asyncHandler(async (req, res) => {
   return successResponse(res, doctor, "Doctor created successfully", 201);
 });
 
-// Get all doctors (admin only)
+// Get all doctors
+// Accepts optional ?status=verified query param so patient-facing calls
+// only receive verified doctors — filtering belongs on the server, not the client.
 export const getDoctors = asyncHandler(async (req, res) => {
-  const doctors = await Doctor.find()
-    .populate("patients", "name email") // patients -> name, email
-    .populate("userId", "name email") // doctor (userId) -> name, email
+  const filter = {};
+  if (req.query.status) {
+    filter["verification.status"] = req.query.status;
+  }
+
+  const doctors = await Doctor.find(filter)
+    .populate("userId", "name email")
     .lean();
 
   return successResponse(res, doctors, "Doctors fetched successfully");
@@ -124,7 +130,7 @@ export const setAvailability = asyncHandler(async (req, res) => {
     res,
     doctor.availability,
     "Availability updated successfully",
-    200
+    200,
   );
 });
 
@@ -143,7 +149,7 @@ export const getAvailability = asyncHandler(async (req, res) => {
     res,
     doctor.availability,
     "Availability fetched successfully",
-    200
+    200,
   );
 });
 
@@ -181,7 +187,7 @@ export const submitVerification = asyncHandler(async (req, res) => {
     return errorResponse(
       res,
       `Missing required files: ${missingFiles.join(", ")}`,
-      400
+      400,
     );
   }
 
@@ -206,7 +212,7 @@ export const submitVerification = asyncHandler(async (req, res) => {
         evidence,
       },
     },
-    { new: true }
+    { new: true },
   );
 
   if (!updatedDoctor) {
@@ -223,6 +229,6 @@ export const submitVerification = asyncHandler(async (req, res) => {
   return successResponse(
     res,
     responseData,
-    "Verification submitted successfully"
+    "Verification submitted successfully",
   );
 });

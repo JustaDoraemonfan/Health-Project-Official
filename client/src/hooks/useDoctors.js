@@ -45,12 +45,10 @@ export const useDoctor = () => {
     setIsLoadingList(true);
     setError(null);
     try {
-      const response = await doctorAPI.getDoctors();
+      // Pass status filter to server — avoids sending unverified records over the wire
+      const response = await doctorAPI.getDoctors({ status: "verified" });
       const data = response.data.data || [];
-      const verifiedDoctors = data.filter(
-        (doc) => doc.verification?.status === "verified"
-      );
-      setDoctors(verifiedDoctors);
+      setDoctors(data);
     } catch (err) {
       console.error("Failed to fetch verified doctors:", err);
       setError(err.response?.data?.message || "Failed to fetch doctors");
@@ -72,12 +70,11 @@ export const useDoctor = () => {
       setIsLoadingList(true);
       setError(null);
       try {
+        // Server already returns only verified doctors via ?status=verified on getDoctors.
+        // searchDoctors filters by location — verified filter applied server-side there too.
         const response = await doctorAPI.searchDoctors(location);
         const data = response.data.data || response.data || [];
-        const verifiedDoctors = data.filter(
-          (doc) => doc.verification?.status === "verified"
-        );
-        setDoctors(verifiedDoctors);
+        setDoctors(data);
       } catch (err) {
         console.error("Failed to search doctors:", err);
         setError(err.response?.data?.message || "Failed to search doctors");
@@ -86,7 +83,7 @@ export const useDoctor = () => {
         setIsLoadingList(false);
       }
     },
-    [fetchVerifiedDoctors]
+    [fetchVerifiedDoctors],
   );
 
   /**
@@ -160,7 +157,7 @@ export const useDoctor = () => {
         setIsUpdating(false);
       }
     },
-    [fetchAllDoctorsAdmin]
+    [fetchAllDoctorsAdmin],
   );
 
   /**
@@ -188,7 +185,7 @@ export const useDoctor = () => {
         setIsUpdating(false);
       }
     },
-    [fetchAllDoctorsAdmin, fetchDoctorById, currentDoctor?._id]
+    [fetchAllDoctorsAdmin, fetchDoctorById, currentDoctor?._id],
   );
 
   /**
@@ -212,7 +209,7 @@ export const useDoctor = () => {
         setIsUpdating(false);
       }
     },
-    [fetchAllDoctorsAdmin]
+    [fetchAllDoctorsAdmin],
   );
 
   // === DOCTOR DASHBOARD ACTIONS ===
@@ -276,7 +273,7 @@ export const useDoctor = () => {
         setIsUpdating(false);
       }
     },
-    [fetchDoctorPatients]
+    [fetchDoctorPatients],
   );
 
   /**

@@ -153,9 +153,9 @@ export const doctorAPI = {
     return apiClient.post("/doctors", doctorData);
   },
 
-  // Get all doctors (admin only)
-  getDoctors: () => {
-    return apiClient.get("/doctors");
+  // Get all doctors — accepts optional params e.g. { status: "verified" }
+  getDoctors: (params) => {
+    return apiClient.get("/doctors", { params });
   },
 
   // Get single doctor by ID

@@ -48,3 +48,30 @@ export const chatLimiter = rateLimit({
   legacyHeaders: false,
   handler: rateLimitHandler,
 });
+
+// ── AI Analysis — Gemini cost protection ─────────────────────────────────────
+// Symptom analyze + patient profile analyze both call Gemini once per request.
+// 10 per minute per IP is generous for genuine clinical use but stops abuse.
+export const analyzeLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 10,
+  message: "Too many analysis requests. Please wait a moment.",
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: rateLimitHandler,
+});
+
+// ── General API — blanket abuse protection ───────────────────────────────────
+// Applied to all /api/* routes as a last-resort ceiling.
+// 200 requests per minute per IP covers any realistic user session
+// (dashboard load fires ~6 requests, so 200 = ~33 full page loads/min)
+// while blocking scrapers, enumeration attacks, and runaway clients.
+// Route-specific limiters (login, chat, analyze) remain stricter on top of this.
+export const generalLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 200,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: rateLimitHandler,
+  skip: (req) => req.method === "OPTIONS", // never block preflight requests
+});
