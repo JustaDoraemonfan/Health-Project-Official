@@ -21,7 +21,17 @@ const ReminderLogSchema = new mongoose.Schema(
     respondedAt: { type: Date, default: null },
     note: { type: String, default: "" },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
+
+// --- Indexes ---
+// Core fetch: all logs for a user sorted by scheduled time (getReminderLogs)
+ReminderLogSchema.index({ userId: 1, scheduledFor: -1 });
+
+// Cron job query (runs every 5 min): pending logs past their scheduled time
+ReminderLogSchema.index({ status: 1, scheduledFor: 1 });
+
+// Fetch logs for a specific reminder (populate/detail views)
+ReminderLogSchema.index({ reminderId: 1, scheduledFor: -1 });
 
 export default mongoose.model("ReminderLog", ReminderLogSchema);

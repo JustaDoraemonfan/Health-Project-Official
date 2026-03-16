@@ -47,7 +47,20 @@ const noteSchema = new mongoose.Schema(
       default: false,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
+
+// --- Indexes ---
+// getDoctorNotes: all notes by a doctor sorted by date
+noteSchema.index({ doctorId: 1, createdAt: -1 });
+
+// getPatientNotes: all notes for a patient sorted by date
+noteSchema.index({ patientId: 1, createdAt: -1 });
+
+// Doctor viewing notes for a specific patient (doctorId + patientId always queried together)
+noteSchema.index({ doctorId: 1, patientId: 1 });
+
+// Unread notes count/filter for a patient
+noteSchema.index({ patientId: 1, isRead: 1 });
 
 export default mongoose.model("Note", noteSchema);

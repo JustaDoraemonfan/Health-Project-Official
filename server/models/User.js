@@ -28,5 +28,10 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }, // Automatically adds `createdAt` and `updatedAt` fields to the schema
 );
 
+// --- Indexes ---
+// email already has unique: true which auto-creates an index
+// role index supports admin queries listing all doctors/patients/admins
+userSchema.index({ role: 1 });
+
 const User = mongoose.model("User", userSchema);
 export default User;

@@ -38,7 +38,14 @@ const ReminderSchema = new mongoose.Schema(
       default: {}, // starts empty
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
+
+// --- Indexes ---
+// Core fetch: all reminders for a user sorted by creation date (getReminders)
+ReminderSchema.index({ userId: 1, createdAt: -1 });
+
+// Active reminder filtering: isActive + date range queries
+ReminderSchema.index({ userId: 1, isActive: 1 });
 
 export default mongoose.model("Reminder", ReminderSchema);

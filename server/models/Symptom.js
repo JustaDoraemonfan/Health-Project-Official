@@ -64,7 +64,7 @@ const symptomSchema = new mongoose.Schema(
   {
     // Disable default Mongoose timestamps (which use server time)
     timestamps: false,
-  }
+  },
 );
 
 // Mongoose hook to set createdAt and updatedAt in IST before saving
@@ -82,6 +82,14 @@ symptomSchema.pre("findOneAndUpdate", function (next) {
   this.set({ updatedAt: nowInIST() });
   next();
 });
+
+// --- Indexes ---
+// Core lookup: patient symptom list (getSymptoms, getSymptomsForDoctors)
+symptomSchema.index({ patient: 1, createdAt: -1 });
+
+// Filtering by severity or category within a patient's symptoms
+symptomSchema.index({ patient: 1, severity: 1 });
+symptomSchema.index({ patient: 1, category: 1 });
 
 const Symptom = mongoose.model("Symptom", symptomSchema);
 

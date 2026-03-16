@@ -97,7 +97,7 @@ const adminSchema = new mongoose.Schema(
       },
     ],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // --- Password Hashing Middleware ---
@@ -106,7 +106,7 @@ adminSchema.pre("save", async function (next) {
   const salt = await bcrypt.genSalt(10);
   this.security.passwordHash = await bcrypt.hash(
     this.security.passwordHash,
-    salt
+    salt,
   );
   next();
 });
@@ -115,6 +115,10 @@ adminSchema.pre("save", async function (next) {
 adminSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.security.passwordHash);
 };
+
+// --- Indexes ---
+// Auth + dashboard: Admin.findOne({ userId }) runs on every admin request
+adminSchema.index({ userId: 1 }, { unique: true });
 
 // --- Export Model ---
 const Admin = mongoose.model("Admin", adminSchema);

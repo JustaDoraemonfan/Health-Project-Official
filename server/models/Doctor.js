@@ -123,7 +123,7 @@ const doctorSchema = new mongoose.Schema(
   {
     // Disable default Mongoose timestamps (which use server time)
     timestamps: false,
-  }
+  },
 );
 
 // Mongoose hook to set createdAt and updatedAt in IST before saving
@@ -141,6 +141,19 @@ doctorSchema.pre("findOneAndUpdate", function (next) {
   this.set({ updatedAt: nowInIST() });
   next();
 });
+
+// --- Indexes ---
+// Admin verification queue: doctors pending review (most common admin query)
+doctorSchema.index({ "verification.status": 1 });
+
+// Admin verification list sorted by application date
+doctorSchema.index({ "verification.status": 1, "verification.appliedAt": -1 });
+
+// Public doctor search: filter by specialization + availability
+doctorSchema.index({ specialization: 1, isAvailable: 1 });
+
+// Doctor search by location
+doctorSchema.index({ location: 1 });
 
 const Doctor = mongoose.model("Doctor", doctorSchema);
 export default Doctor;

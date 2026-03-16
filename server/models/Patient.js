@@ -107,5 +107,11 @@ patientSchema.pre("findOneAndUpdate", function (next) {
   next();
 });
 
+// --- Indexes ---
+// Doctor filtering their patient list by gender or blood group
+patientSchema.index({ assignedDoctor: 1 });
+patientSchema.index({ gender: 1 });
+patientSchema.index({ bloodGroup: 1 });
+
 const Patient = mongoose.model("Patient", patientSchema);
 export default Patient;

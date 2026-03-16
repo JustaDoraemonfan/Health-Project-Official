@@ -32,7 +32,7 @@ const prescriptionSchema = new mongoose.Schema(
   {
     // Disable default Mongoose timestamps (which use server time)
     timestamps: false,
-  }
+  },
 );
 
 // Mongoose hook to set createdAt and updatedAt in IST before saving
@@ -50,5 +50,12 @@ prescriptionSchema.pre("findOneAndUpdate", function (next) {
   this.set({ updatedAt: nowInIST() });
   next();
 });
+
+// --- Indexes ---
+// getMyPrescriptions: patient fetching their own prescriptions
+prescriptionSchema.index({ patientId: 1, uploadedAt: -1 });
+
+// getPatientPrescriptions: doctor fetching a specific patient's prescriptions
+prescriptionSchema.index({ doctorId: 1, patientId: 1 });
 
 export default mongoose.model("Prescription", prescriptionSchema);

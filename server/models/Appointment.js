@@ -160,5 +160,22 @@ appointmentSchema.pre("findOneAndUpdate", function (next) {
   next();
 });
 
+// --- Indexes ---
+// Patient dashboard & calendar: fetch all appointments for a patient sorted by date
+appointmentSchema.index({ patient: 1, appointmentDate: -1 });
+
+// Doctor dashboard & calendar: fetch all appointments for a doctor sorted by date
+appointmentSchema.index({ doctor: 1, appointmentDate: -1 });
+
+// Upcoming/past appointment queries filter by patient/doctor + date + status together
+appointmentSchema.index({ patient: 1, status: 1, appointmentDate: 1 });
+appointmentSchema.index({ doctor: 1, status: 1, appointmentDate: 1 });
+
+// Admin appointment list: sort entire collection by date (no user filter)
+appointmentSchema.index({ appointmentDate: -1 });
+
+// Aggregate stats query filters by doctor field alone
+appointmentSchema.index({ doctor: 1 });
+
 const Appointment = mongoose.model("Appointment", appointmentSchema);
 export default Appointment;
