@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Users, Stethoscope, Building2, User } from "lucide-react";
+import { Users, Stethoscope, Building2 } from "lucide-react";
 import { dashboardAPI } from "../services/api";
 
 const StatCard = ({ stat }) => (
@@ -30,7 +30,6 @@ export const StatsSection = () => {
     patients: 0,
     doctors: 0,
     frontline: 0,
-    admin: 0,
   });
 
   const [selectedStatIndex, setSelectedStatIndex] = useState(0);
@@ -64,14 +63,8 @@ export const StatsSection = () => {
     {
       icon: <Building2 className="w-5 h-5 sm:w-6 sm:h-6 text-red-500" />,
       number: statsData.frontline,
-      label: "Partnered Hospitals",
-      metric: "Hospitals",
-    },
-    {
-      icon: <User className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500" />,
-      number: statsData.admin,
-      label: "Get in touch",
-      metric: "Admin",
+      label: "Frontline Workers",
+      metric: "Frontline",
     },
   ];
 
@@ -129,7 +122,7 @@ export const StatsSection = () => {
           <StatCard stat={stats[selectedStatIndex]} />
         </div>
 
-        <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+        <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {stats.map((stat, index) => (
             <StatCard stat={stat} key={index} />
           ))}

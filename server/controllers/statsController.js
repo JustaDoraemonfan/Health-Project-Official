@@ -1,25 +1,26 @@
 import Patient from "../models/Patient.js";
 import Doctor from "../models/Doctor.js";
 import Frontline from "../models/FWL.js";
-import Admin from "../models/Admin.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import { successResponse } from "../utils/response.js";
 
-// Get platform statistics
+// Get public platform statistics — used on the landing page.
+// Admin count is intentionally excluded: internal headcount has no place
+// in a public-facing endpoint. Doctor count is scoped to verified only.
 export const getStats = asyncHandler(async (req, res) => {
-  const totalPatients = await Patient.countDocuments();
-  const totalDoctors = await Doctor.countDocuments();
-  const totalFrontline = await Frontline.countDocuments();
-  const totalAdmin = await Admin.countDocuments();
+  const [totalPatients, verifiedDoctors, totalFrontline] = await Promise.all([
+    Patient.countDocuments(),
+    Doctor.countDocuments({ "verification.status": "verified" }),
+    Frontline.countDocuments(),
+  ]);
 
   return successResponse(
     res,
     {
       patients: totalPatients,
-      doctors: totalDoctors,
+      doctors: verifiedDoctors,
       frontline: totalFrontline,
-      admin: totalAdmin,
     },
-    "Stats fetched successfully"
+    "Stats fetched successfully",
   );
 });

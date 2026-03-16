@@ -1,4 +1,5 @@
 import React from "react";
+import { AlertCircle, RefreshCw } from "lucide-react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -9,7 +10,52 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import LandingPage from "./sections/LandingPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LoadingSpinner from "./components/LoadingSpinner";
-// ERROR ZONE
+// Global error boundary — catches any render error in the entire tree.
+// Without this, a single component crash produces a blank white screen.
+class GlobalErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, info) {
+    console.error(
+      "[GlobalErrorBoundary] Uncaught error:",
+      error,
+      info.componentStack,
+    );
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex flex-col items-center justify-center min-h-screen gap-6 text-center p-8 bg-gray-50">
+          <AlertCircle className="w-16 h-16 text-red-400" />
+          <div>
+            <h2 className="text-2xl font-semibold text-gray-800 mb-2">
+              Something went wrong
+            </h2>
+            <p className="text-gray-500 text-sm max-w-md">
+              An unexpected error occurred. Your data is safe — refreshing the
+              page should fix this.
+            </p>
+          </div>
+          <button
+            onClick={() => window.location.reload()}
+            className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            <RefreshCw className="w-4 h-4" /> Refresh page
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 import PatientDashboard from "./Pages/Dashboards/PatientDashboard";
 import DoctorDashboard from "./Pages/Dashboards/DoctorDashboard";
@@ -271,13 +317,15 @@ const AppRoutes = () => {
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <AuthProvider>
-          <AppRoutes />
-        </AuthProvider>
-      </div>
-    </Router>
+    <GlobalErrorBoundary>
+      <Router>
+        <div className="App">
+          <AuthProvider>
+            <AppRoutes />
+          </AuthProvider>
+        </div>
+      </Router>
+    </GlobalErrorBoundary>
   );
 }
 
