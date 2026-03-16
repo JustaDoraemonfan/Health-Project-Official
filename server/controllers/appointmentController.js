@@ -3,183 +3,143 @@ import asyncHandler from "../middleware/asyncHandler.js";
 import Patient from "../models/Patient.js";
 import Doctor from "../models/Doctor.js";
 import { successResponse, errorResponse } from "../utils/response.js";
-import { toZonedTime, fromZonedTime } from "date-fns-tz";
+import { fromZonedTime } from "date-fns-tz";
 import { IST_TIMEZONE, nowInIST } from "../utils/dateUtils.js";
 
 // Pagination default for getAppointments — prevents fetching entire collection
 const DEFAULT_PAGE_LIMIT = 50;
 
-// Helper function to get the current time in IST
-
 // @desc Create a new appointment
 // @route  POST /api/appointments
 // @access Private (Patient/Doctor/Admin)
 export const createAppointment = asyncHandler(async (req, res) => {
-  try {
-    const doctor = await Doctor.findOne({ userId: req.body.doctor });
-    const patient = await Patient.findOne({ userId: req.body.patient });
+  const doctor = await Doctor.findOne({ userId: req.body.doctor });
+  const patient = await Patient.findOne({ userId: req.body.patient });
 
-    if (!doctor) return errorResponse(res, "Doctor not found", 404);
-    if (!patient) return errorResponse(res, "Patient not found", 404);
+  if (!doctor) return errorResponse(res, "Doctor not found", 404);
+  if (!patient) return errorResponse(res, "Patient not found", 404);
 
-    // ✅ Set doctorProfile explicitly
-    const appointment = new Appointment({
-      ...req.body,
-      doctorProfile: doctor._id,
-    });
+  const appointment = new Appointment({
+    ...req.body,
+    doctorProfile: doctor._id,
+  });
 
-    await appointment.save();
+  await appointment.save();
 
-    // Add to doctor's appointments
-    await Doctor.findOneAndUpdate(
-      { userId: appointment.doctor },
-      { $push: { appointments: appointment._id } },
-    );
+  await Doctor.findOneAndUpdate(
+    { userId: appointment.doctor },
+    { $push: { appointments: appointment._id } },
+  );
 
-    // Add to patient's appointments
-    await Patient.findOneAndUpdate(
-      { userId: appointment.patient },
-      { $push: { appointments: appointment._id } },
-    );
+  await Patient.findOneAndUpdate(
+    { userId: appointment.patient },
+    { $push: { appointments: appointment._id } },
+  );
 
-    return successResponse(
-      res,
-      appointment,
-      "Appointment created successfully",
-      201,
-    );
-  } catch (error) {
-    return errorResponse(res, error.message, 400);
-  }
+  return successResponse(
+    res,
+    appointment,
+    "Appointment created successfully",
+    201,
+  );
 });
 
 // @desc Get all appointments
 // @route  GET /api/appointments
 // @access Private (Admin/Doctor)
 export const getAppointments = asyncHandler(async (req, res) => {
-  try {
-    const page = Math.max(1, parseInt(req.query.page) || 1);
-    const limit = Math.min(
-      100,
-      parseInt(req.query.limit) || DEFAULT_PAGE_LIMIT,
-    );
-    const skip = (page - 1) * limit;
+  const page = Math.max(1, parseInt(req.query.page) || 1);
+  const limit = Math.min(100, parseInt(req.query.limit) || DEFAULT_PAGE_LIMIT);
+  const skip = (page - 1) * limit;
 
-    const [appointments, total] = await Promise.all([
-      Appointment.find()
-        .populate("patient", "name email")
-        .populate("doctor", "name email")
-        .populate("doctorProfile", "specialization")
-        .sort({ appointmentDate: -1 })
-        .skip(skip)
-        .limit(limit),
-      Appointment.countDocuments(),
-    ]);
+  const [appointments, total] = await Promise.all([
+    Appointment.find()
+      .populate("patient", "name email")
+      .populate("doctor", "name email")
+      .populate("doctorProfile", "specialization")
+      .sort({ appointmentDate: -1 })
+      .skip(skip)
+      .limit(limit),
+    Appointment.countDocuments(),
+  ]);
 
-    return successResponse(
-      res,
-      {
-        appointments,
-        pagination: {
-          total,
-          page,
-          limit,
-          totalPages: Math.ceil(total / limit),
-          hasNextPage: page < Math.ceil(total / limit),
-          hasPrevPage: page > 1,
-        },
+  return successResponse(
+    res,
+    {
+      appointments,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+        hasNextPage: page < Math.ceil(total / limit),
+        hasPrevPage: page > 1,
       },
-      "Appointments retrieved successfully",
-      200,
-    );
-  } catch (error) {
-    return errorResponse(res, error.message, 500);
-  }
+    },
+    "Appointments retrieved successfully",
+    200,
+  );
 });
 
 // @desc Get single appointment
 // @route  GET /api/appointments/:id
 // @access Private
 export const getAppointmentById = asyncHandler(async (req, res) => {
-  try {
-    const appointment = await Appointment.findById(req.params.id)
-      .populate("patient", "name email")
-      .populate("doctor", "name specialization email");
+  const appointment = await Appointment.findById(req.params.id)
+    .populate("patient", "name email")
+    .populate("doctor", "name specialization email");
 
-    if (!appointment) {
-      return errorResponse(res, "Appointment not found", 404);
-    }
+  if (!appointment) return errorResponse(res, "Appointment not found", 404);
 
-    return successResponse(
-      res,
-      appointment,
-      "Appointment retrieved successfully",
-      200,
-    );
-  } catch (error) {
-    return errorResponse(res, error.message, 500);
-  }
+  return successResponse(
+    res,
+    appointment,
+    "Appointment retrieved successfully",
+    200,
+  );
 });
 
 // @desc Update appointment
 // @route  PUT /api/appointments/:id
 // @access Private
 export const updateAppointment = asyncHandler(async (req, res) => {
-  try {
-    const appointment = await Appointment.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      {
-        new: true,
-        runValidators: true,
-      },
-    );
+  const appointment = await Appointment.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    { new: true, runValidators: true },
+  );
 
-    if (!appointment) {
-      return errorResponse(res, "Appointment not found", 404);
-    }
+  if (!appointment) return errorResponse(res, "Appointment not found", 404);
 
-    return successResponse(
-      res,
-      appointment,
-      "Appointment updated successfully",
-      200,
-    );
-  } catch (error) {
-    return errorResponse(res, error.message, 400);
-  }
+  return successResponse(
+    res,
+    appointment,
+    "Appointment updated successfully",
+    200,
+  );
 });
 
 // @desc Delete appointment
 // @route  DELETE /api/appointments/:id
 // @access Private (Admin/Doctor)
 export const deleteAppointment = asyncHandler(async (req, res) => {
-  try {
-    const appointment = await Appointment.findById(req.params.id);
+  const appointment = await Appointment.findById(req.params.id);
 
-    if (!appointment) {
-      return errorResponse(res, "Appointment not found", 404);
-    }
+  if (!appointment) return errorResponse(res, "Appointment not found", 404);
 
-    // Remove appointment from doctor's appointments array
-    await Doctor.findOneAndUpdate(
-      { userId: appointment.doctor },
-      { $pull: { appointments: appointment._id } },
-    );
+  await Doctor.findOneAndUpdate(
+    { userId: appointment.doctor },
+    { $pull: { appointments: appointment._id } },
+  );
 
-    // Remove appointment from patient's appointments array
-    await Patient.findOneAndUpdate(
-      { userId: appointment.patient },
-      { $pull: { appointments: appointment._id } },
-    );
+  await Patient.findOneAndUpdate(
+    { userId: appointment.patient },
+    { $pull: { appointments: appointment._id } },
+  );
 
-    // Delete the appointment
-    await Appointment.findByIdAndDelete(req.params.id);
+  await Appointment.findByIdAndDelete(req.params.id);
 
-    return successResponse(res, null, "Appointment deleted successfully", 200);
-  } catch (error) {
-    return errorResponse(res, error.message, 500);
-  }
+  return successResponse(res, null, "Appointment deleted successfully", 200);
 });
 
 // @desc Get upcoming appointments (Patient/Doctor)
@@ -188,50 +148,44 @@ export const deleteAppointment = asyncHandler(async (req, res) => {
 export const getUpcomingAppointments = asyncHandler(async (req, res) => {
   const { role, id } = req.user;
 
-  try {
-    // Start of today in IST, not the current moment
-    const now = nowInIST();
-    const startOfToday = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-    );
+  const now = nowInIST();
+  const startOfToday = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+  );
 
-    const query = {
-      appointmentDate: { $gte: startOfToday },
-      // Exclude terminal statuses
-      status: {
-        $nin: ["cancelled-by-patient", "cancelled-by-doctor", "no-show"],
-      },
-    };
+  const query = {
+    appointmentDate: { $gte: startOfToday },
+    status: {
+      $nin: ["cancelled-by-patient", "cancelled-by-doctor", "no-show"],
+    },
+  };
 
-    if (role === "patient") {
-      query.patient = id;
-    } else if (role === "doctor") {
-      query.doctor = id;
-    } else {
-      return errorResponse(
-        res,
-        "Only patients or doctors can view upcoming appointments",
-        403,
-      );
-    }
-
-    const appointments = await Appointment.find(query)
-      .populate("patient", "name email role")
-      .populate("doctor", "name email role")
-      .populate("doctorProfile", "specialization experience")
-      .sort({ appointmentDate: 1 });
-
-    return successResponse(
+  if (role === "patient") {
+    query.patient = id;
+  } else if (role === "doctor") {
+    query.doctor = id;
+  } else {
+    return errorResponse(
       res,
-      appointments,
-      "Upcoming appointments retrieved successfully",
-      200,
+      "Only patients or doctors can view upcoming appointments",
+      403,
     );
-  } catch (error) {
-    return errorResponse(res, error.message, 500);
   }
+
+  const appointments = await Appointment.find(query)
+    .populate("patient", "name email role")
+    .populate("doctor", "name email role")
+    .populate("doctorProfile", "specialization experience")
+    .sort({ appointmentDate: 1 });
+
+  return successResponse(
+    res,
+    appointments,
+    "Upcoming appointments retrieved successfully",
+    200,
+  );
 });
 
 // @desc Get past appointments (Patient/Doctor)
@@ -240,280 +194,205 @@ export const getUpcomingAppointments = asyncHandler(async (req, res) => {
 export const getPastAppointments = asyncHandler(async (req, res) => {
   const { role, id } = req.user;
 
-  try {
-    // Use IST-aware "now" for comparison
-    const query = { appointmentDate: { $lt: nowInIST() } };
+  const query = { appointmentDate: { $lt: nowInIST() } };
 
-    if (role === "patient") {
-      query.patient = id;
-    } else if (role === "doctor") {
-      query.doctor = id;
-    } else {
-      return errorResponse(
-        res,
-        "Only patients or doctors can view past appointments",
-        403,
-      );
-    }
-
-    const appointments = await Appointment.find(query)
-      .populate("patient", "userId name email")
-      .populate("doctor", "userId name specialization email")
-      .sort({ appointmentDate: -1 });
-
-    return successResponse(
+  if (role === "patient") {
+    query.patient = id;
+  } else if (role === "doctor") {
+    query.doctor = id;
+  } else {
+    return errorResponse(
       res,
-      appointments,
-      "Past appointments retrieved successfully",
-      200,
+      "Only patients or doctors can view past appointments",
+      403,
     );
-  } catch (error) {
-    return errorResponse(res, error.message, 500);
   }
+
+  const appointments = await Appointment.find(query)
+    .populate("patient", "userId name email")
+    .populate("doctor", "userId name specialization email")
+    .sort({ appointmentDate: -1 });
+
+  return successResponse(
+    res,
+    appointments,
+    "Past appointments retrieved successfully",
+    200,
+  );
 });
 
 // @desc Cancel appointment
 // @route  PATCH /api/appointments/:id/cancel
 // @access Private
-
-// A constant for your business rule (e.g., 24-hour cancellation window)
 const CANCELLATION_WINDOW_HOURS = 24;
 
 export const cancelAppointment = asyncHandler(async (req, res) => {
-  try {
-    const appointment = await Appointment.findById(req.params.id);
-    const { role } = req.user; // Assuming role is on the req.user object
-    const { reason } = req.body; // Get optional reason from request body
+  const appointment = await Appointment.findById(req.params.id);
+  const { role } = req.user;
+  const { reason } = req.body;
 
-    if (!appointment) {
-      return errorResponse(res, "Appointment not found", 404);
-    }
+  if (!appointment) return errorResponse(res, "Appointment not found", 404);
 
-    // A more robust check to see if the appointment is already cancelled
-    if (
-      appointment.status.startsWith("cancelled-by") ||
-      appointment.status === "completed"
-    ) {
-      return errorResponse(
-        res,
-        `Cannot cancel appointment with status: ${appointment.status}`,
-        400,
-      );
-    }
-
-    // --- Business Logic: Check for Late Cancellation ---
-    const now = nowInIST(); // Use IST-aware "now"
-    const appointmentDate = new Date(appointment.appointmentDate);
-    // Calculate the difference in milliseconds
-    const timeDiffMs = appointmentDate.getTime() - now.getTime();
-    const isLateCancellation =
-      timeDiffMs < CANCELLATION_WINDOW_HOURS * 60 * 60 * 1000;
-
-    // --- Update Appointment Document ---
-
-    // 1. Set the new, more descriptive status
-    appointment.status = `cancelled-by-${role}`;
-
-    // 2. Populate the detailed cancellation object for a clear audit trail
-    appointment.cancellationDetails = {
-      cancelledBy: role,
-      cancellationTimestamp: now, // Use IST-aware "now"
-      cancellationReason: reason || "No reason provided.", // Use reason from body or a default
-      isLateCancellation: isLateCancellation,
-    };
-
-    // 3. Keep track of the last user to modify the record
-    appointment.lastUpdatedBy = role;
-
-    await appointment.save();
-
-    return successResponse(
+  if (
+    appointment.status.startsWith("cancelled-by") ||
+    appointment.status === "completed"
+  ) {
+    return errorResponse(
       res,
-      appointment,
-      "Appointment cancelled successfully",
-      200,
+      `Cannot cancel appointment with status: ${appointment.status}`,
+      400,
     );
-  } catch (error) {
-    return errorResponse(res, error.message, 500);
   }
+
+  const now = nowInIST();
+  const timeDiffMs =
+    new Date(appointment.appointmentDate).getTime() - now.getTime();
+  const isLateCancellation =
+    timeDiffMs < CANCELLATION_WINDOW_HOURS * 60 * 60 * 1000;
+
+  appointment.status = `cancelled-by-${role}`;
+  appointment.cancellationDetails = {
+    cancelledBy: role,
+    cancellationTimestamp: now,
+    cancellationReason: reason || "No reason provided.",
+    isLateCancellation,
+  };
+  appointment.lastUpdatedBy = role;
+
+  await appointment.save();
+
+  return successResponse(
+    res,
+    appointment,
+    "Appointment cancelled successfully",
+    200,
+  );
 });
 
 // @desc Confirm appointment
 // @route  PATCH /api/appointments/:id/confirm
 // @access Private (Doctor/Admin)
 export const confirmAppointment = asyncHandler(async (req, res) => {
-  try {
-    const appointment = await Appointment.findById(req.params.id);
+  const appointment = await Appointment.findById(req.params.id);
 
-    if (!appointment) {
-      return errorResponse(res, "Appointment not found", 404);
-    }
+  if (!appointment) return errorResponse(res, "Appointment not found", 404);
 
-    // Check if appointment can be confirmed
-    if (appointment.status !== "scheduled") {
-      return errorResponse(
-        res,
-        `Cannot confirm appointment with status: ${appointment.status}`,
-        400,
-      );
-    }
-
-    // Update appointment status to confirmed
-    appointment.status = "confirmed";
-    appointment.lastUpdatedBy = req.user.role;
-    await appointment.save();
-
-    return successResponse(
+  if (appointment.status !== "scheduled") {
+    return errorResponse(
       res,
-      appointment,
-      "Appointment confirmed successfully",
-      200,
+      `Cannot confirm appointment with status: ${appointment.status}`,
+      400,
     );
-  } catch (error) {
-    return errorResponse(res, error.message, 500);
   }
+
+  appointment.status = "confirmed";
+  appointment.lastUpdatedBy = req.user.role;
+  await appointment.save();
+
+  return successResponse(
+    res,
+    appointment,
+    "Appointment confirmed successfully",
+    200,
+  );
 });
 
 // @desc Complete appointment
 // @route  PATCH /api/appointments/:id/complete
 // @access Private (Doctor/Admin)
 export const completeAppointment = asyncHandler(async (req, res) => {
-  try {
-    const { notes } = req.body;
+  const { notes } = req.body;
+  const appointment = await Appointment.findById(req.params.id);
 
-    const appointment = await Appointment.findById(req.params.id);
+  if (!appointment) return errorResponse(res, "Appointment not found", 404);
 
-    if (!appointment) {
-      return errorResponse(res, "Appointment not found", 404);
-    }
-
-    // Check if appointment can be completed
-    if (
-      appointment.status === "completed" ||
-      appointment.status === "cancelled"
-    ) {
-      return errorResponse(
-        res,
-        `Cannot complete appointment with status: ${appointment.status}`,
-        400,
-      );
-    }
-
-    // Update appointment status to completed
-    appointment.status = "completed";
-    appointment.lastUpdatedBy = req.user.role;
-
-    // Add notes if provided
-    if (notes) {
-      appointment.notes = notes;
-    }
-
-    await appointment.save();
-
-    return successResponse(
+  if (
+    appointment.status === "completed" ||
+    appointment.status === "cancelled"
+  ) {
+    return errorResponse(
       res,
-      appointment,
-      "Appointment completed successfully",
-      200,
+      `Cannot complete appointment with status: ${appointment.status}`,
+      400,
     );
-  } catch (error) {
-    return errorResponse(res, error.message, 500);
   }
+
+  appointment.status = "completed";
+  appointment.lastUpdatedBy = req.user.role;
+  if (notes) appointment.notes = notes;
+
+  await appointment.save();
+
+  return successResponse(
+    res,
+    appointment,
+    "Appointment completed successfully",
+    200,
+  );
 });
 
 // @desc Get appointments by date range
 // @route  GET /api/appointments/date-range
 // @access Private
 export const getAppointmentsByDateRange = asyncHandler(async (req, res) => {
-  try {
-    const { startDate, endDate } = req.query;
-    const { role, id } = req.user;
+  const { startDate, endDate } = req.query;
+  const { role, id } = req.user;
 
-    if (!startDate || !endDate) {
-      return errorResponse(res, "Start date and end date are required", 400);
-    }
-
-    // Parse the date strings as IST midnight using fromZonedTime
-    // e.g. "2025-10-31" → 2025-10-30T18:30:00.000Z (IST midnight in UTC)
-    // fromZonedTime correctly handles DST boundaries, unlike addDays on a UTC date
-    const startUTC = fromZonedTime(`${startDate}T00:00:00`, IST_TIMEZONE);
-
-    // End of the end date — use the start of the NEXT day in IST
-    // so $lt catches every appointment on the end date itself
-    const endUTC = fromZonedTime(`${endDate}T00:00:00`, IST_TIMEZONE);
-    endUTC.setDate(endUTC.getDate() + 1);
-
-    const query = {
-      appointmentDate: {
-        $gte: startUTC,
-        $lt: endUTC, // Use $lt to capture everything *before* the next day starts
-      },
-    };
-
-    // Filter by user role
-    if (role === "patient") {
-      query.patient = id;
-    } else if (role === "doctor") {
-      query.doctor = id;
-    }
-    // Admin can see all appointments (no additional filter)
-
-    const appointments = await Appointment.find(query)
-      .populate("patient", "name email role")
-      .populate("doctor", "name email role")
-      .populate("doctorProfile", "specialization")
-      .sort({ appointmentDate: 1 });
-
-    return successResponse(
-      res,
-      appointments,
-      "Appointments retrieved successfully",
-      200,
-    );
-  } catch (error) {
-    return errorResponse(res, error.message, 500);
+  if (!startDate || !endDate) {
+    return errorResponse(res, "Start date and end date are required", 400);
   }
+
+  const startUTC = fromZonedTime(`${startDate}T00:00:00`, IST_TIMEZONE);
+  const endUTC = fromZonedTime(`${endDate}T00:00:00`, IST_TIMEZONE);
+  endUTC.setDate(endUTC.getDate() + 1);
+
+  const query = {
+    appointmentDate: { $gte: startUTC, $lt: endUTC },
+  };
+
+  if (role === "patient") query.patient = id;
+  else if (role === "doctor") query.doctor = id;
+
+  const appointments = await Appointment.find(query)
+    .populate("patient", "name email role")
+    .populate("doctor", "name email role")
+    .populate("doctorProfile", "specialization")
+    .sort({ appointmentDate: 1 });
+
+  return successResponse(
+    res,
+    appointments,
+    "Appointments retrieved successfully",
+    200,
+  );
 });
 
 // @desc Get appointment statistics
 // @route  GET /api/appointments/stats
 // @access Private (Admin/Doctor)
 export const getAppointmentStats = asyncHandler(async (req, res) => {
-  try {
-    const { role, id } = req.user;
+  const { role, id } = req.user;
 
-    let matchQuery = {};
-    if (role === "doctor") {
-      matchQuery.doctor = id;
-    }
+  let matchQuery = {};
+  if (role === "doctor") matchQuery.doctor = id;
 
-    const stats = await Appointment.aggregate([
-      { $match: matchQuery },
-      {
-        $group: {
-          _id: "$status",
-          count: { $sum: 1 },
-        },
-      },
-    ]);
+  const stats = await Appointment.aggregate([
+    { $match: matchQuery },
+    { $group: { _id: "$status", count: { $sum: 1 } } },
+  ]);
 
-    const totalAppointments = await Appointment.countDocuments(matchQuery);
+  const totalAppointments = await Appointment.countDocuments(matchQuery);
 
-    const statsFormatted = {
+  return successResponse(
+    res,
+    {
       total: totalAppointments,
       byStatus: stats.reduce((acc, stat) => {
         acc[stat._id] = stat.count;
         return acc;
       }, {}),
-    };
-
-    return successResponse(
-      res,
-      statsFormatted,
-      "Appointment statistics retrieved successfully",
-      200,
-    );
-  } catch (error) {
-    return errorResponse(res, error.message, 500);
-  }
+    },
+    "Appointment statistics retrieved successfully",
+    200,
+  );
 });

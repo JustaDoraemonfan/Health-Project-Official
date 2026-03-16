@@ -23,5 +23,5 @@ export function applyMiddleware(app) {
       credentials: true,
     }),
   );
-  if (NODE_ENV === "development") app.use(morgan("dev"));
+  if (NODE_ENV !== "production") app.use(morgan("dev"));
 }

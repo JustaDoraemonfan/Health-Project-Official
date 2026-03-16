@@ -1,7 +1,3 @@
-import earthquakeRoutes from "./earthquakeRoutes.js";
-// import { fetchEarthquakeData } from "./services/earthquakeService.js";
-// import cron from "node-cron";
-// import { startEarthquakeJob } from "./jobs/earthquakeJob.js";
 import authRoutes from "./authRoutes.js";
 import dashboardRoutes from "./dashboardRoutes.js";
 import patientRoutes from "./patientRoutes.js";
@@ -25,6 +21,7 @@ export function registerRoutes(app) {
   const routes = [
     ["/api/auth", authRoutes],
     ["/api/patients", patientRoutes],
+    ["/api/patients", AnalyzeRoutes], // /:patientId/analyze — same resource, same prefix
     ["/api/doctors", doctorRoutes],
     ["/api/frontline", frontlineRoutes],
     ["/api/profile", profileRoutes],
@@ -32,14 +29,12 @@ export function registerRoutes(app) {
     ["/api/symptoms", symptomRoutes],
     ["/api/prescriptions", prescriptionRoutes],
     ["/api/notes", notesRoutes],
-    ["/api/earthquakes", earthquakeRoutes],
     ["/api/reminders", reminderRoutes],
     ["/api/reminder-logs", reminderLogRoutes],
     ["/api/admin", adminRoutes],
     ["/api/profile-photo", profilePhotoRoutes],
     ["/api", statsRoutes],
     ["/api/dashboard", dashboardRoutes],
-    ["/api/patients", AnalyzeRoutes],
     ["/api/chat", chatRoutes],
   ];
 
