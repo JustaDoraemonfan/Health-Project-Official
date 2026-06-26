@@ -4,7 +4,7 @@ import { fileURLToPath } from "url";
 import { applyMiddleware } from "./middleware/index.js";
 import { registerRoutes } from "./routes/index.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
-import {  } from "./middleware/rateLimiter.js";
+import { generalLimiter } from "./middleware/rateLimiter.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
