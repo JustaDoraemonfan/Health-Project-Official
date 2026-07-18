@@ -1,4 +1,4 @@
-import { UserRole } from "../TSModels/User.js";
+import { UserRole } from "../Models/User.js";
 
 export interface AccessTokenPayload {
   id: string;

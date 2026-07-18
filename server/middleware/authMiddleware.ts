@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import type { Request, Response, NextFunction } from "express";
-import User, { type UserRole } from "../TSModels/User.js";
+import User, { type UserRole } from "../Models/User.js";
 import type { AccessTokenPayload } from "../types/jwt.js";
 
 export const authMiddleware = async (
