@@ -12,7 +12,6 @@ const s3 = new AWS.S3();
 
 const BUCKET = "healthymewebsite-verifications";
 
-// Allowed MIME types for symptom attachments
 const SYMPTOM_ALLOWED_MIMES = [
   "image/jpeg",
   "image/jpg",
@@ -20,7 +19,7 @@ const SYMPTOM_ALLOWED_MIMES = [
   "application/pdf",
   "application/msword",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-];
+] as const;
 
 export const upload = multer({
   storage: multerS3({
@@ -28,14 +27,17 @@ export const upload = multer({
     bucket: BUCKET,
     contentType: multerS3.AUTO_CONTENT_TYPE,
     metadata: (req, file, cb) => {
-      cb(null, { fieldName: file.fieldname });
+      cb(null, {
+        fieldName: file.fieldname,
+      });
     },
+
     key: (req, file, cb) => {
       cb(null, `doctor-verifications/${Date.now()}_${file.originalname}`);
     },
   }),
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB limit (optional)
+    fileSize: 5 * 1024 * 1024,
   },
 });
 
@@ -88,12 +90,11 @@ export const uploadSymptomFiles = multer({
         new Error(
           "Only images, PDF, and Word documents are allowed for symptoms",
         ),
-        false,
       );
     }
   },
   limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB — same as the old local config
+    fileSize: 10 * 1024 * 1024,
     files: 10,
   },
 });

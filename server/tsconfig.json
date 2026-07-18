@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    /* Loose mode for incremental migration — tighten later */
+    "strict": false,
+    "noImplicitAny": false,
+
+    /* Module system: matches Node ESM ("type": "module") + explicit .js import extensions */
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+
+    /* Allow .js files to coexist with .ts during migration */
+    "allowJs": true,
+    "checkJs": false,
+
+    /* Output */
+    "outDir": "./dist",
+    "rootDir": ".",
+    "sourceMap": true,
+
+    /* Misc safety nets that don't require full strict mode */
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["**/*.ts", "**/*.d.ts", "**/*.js"],
+  "exclude": ["node_modules", "dist", "uploads"]
+}
