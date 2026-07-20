@@ -2,11 +2,27 @@
 
 import "express";
 import type { UserDocument } from "../Models/User.js";
+import type { AdminDocument } from "../models/Admin.ts";
+
+interface AdminAction {
+  action: string;
+  timestamp: Date;
+  ip: string;
+}
 
 declare global {
   namespace Express {
     interface Request {
       user: UserDocument;
+      adminProfile: AdminDocument;
+      adminAction: AdminAction;
+
+      rateLimit: {
+        limit: number;
+        current: number;
+        remaining: number;
+        resetTime?: Date;
+      };
     }
   }
 }

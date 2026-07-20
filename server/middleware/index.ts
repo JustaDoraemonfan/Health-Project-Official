@@ -1,8 +1,9 @@
-import express from "express";
+import express, { type Express } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
+
 const NODE_ENV = process.env.NODE_ENV;
 
 const ALLOWED_ORIGINS = [
@@ -10,10 +11,11 @@ const ALLOWED_ORIGINS = [
   "https://health-project-official-y3y6.vercel.app",
 ];
 
-export function applyMiddleware(app) {
+export function applyMiddleware(app: Express): void {
   app.use(express.json());
   app.use(cookieParser());
   app.use(helmet());
+
   app.use(
     cors({
       origin: (origin, cb) =>
@@ -23,5 +25,8 @@ export function applyMiddleware(app) {
       credentials: true,
     }),
   );
-  if (NODE_ENV !== "production") app.use(morgan("dev"));
+
+  if (NODE_ENV !== "production") {
+    app.use(morgan("dev"));
+  }
 }

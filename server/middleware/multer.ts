@@ -1,30 +1,35 @@
-// middleware/multer.js
-// Local disk storage for prescriptions only.
-// Symptom file uploads are handled by uploadSymptomFiles in config/s3.js.
-
-import multer from "multer";
+import multer, { type FileFilterCallback } from "multer";
+import type { Request } from "express";
 import path from "path";
 import fs from "fs";
 
-const ensureDirectoryExists = (dir) => {
+interface AllowedFileTypes {
+  extensions: string[];
+  mimes: string[];
+  errorMessage: string;
+}
+
+const ensureDirectoryExists = (dir: string): void => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
 };
 
-const createFileFilter = (allowedTypes) => (req, file, cb) => {
-  const ext = path.extname(file.originalname).toLowerCase();
-  const mimeType = file.mimetype.toLowerCase();
+const createFileFilter =
+  (allowedTypes: AllowedFileTypes) =>
+  (req: Request, file: Express.Multer.File, cb: FileFilterCallback): void => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    const mimeType = file.mimetype.toLowerCase();
 
-  if (
-    !allowedTypes.extensions.includes(ext) ||
-    !allowedTypes.mimes.includes(mimeType)
-  ) {
-    return cb(new Error(allowedTypes.errorMessage), false);
-  }
+    if (
+      !allowedTypes.extensions.includes(ext) ||
+      !allowedTypes.mimes.includes(mimeType)
+    ) {
+      return cb(new Error(allowedTypes.errorMessage));
+    }
 
-  cb(null, true);
-};
+    cb(null, true);
+  };
 
 const prescriptionFileTypes = {
   extensions: [".jpg", ".jpeg", ".png", ".pdf"],
@@ -33,12 +38,12 @@ const prescriptionFileTypes = {
 };
 
 const prescriptionStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
+  destination: (req: Request, file: Express.Multer.File, cb) => {
     const uploadPath = "uploads/prescriptions/";
     ensureDirectoryExists(uploadPath);
     cb(null, uploadPath);
   },
-  filename: (req, file, cb) => {
+  filename: (req: Request, file: Express.Multer.File, cb) => {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
     const ext = path.extname(file.originalname);
     cb(null, uniqueSuffix + ext);

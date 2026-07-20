@@ -27,6 +27,8 @@ export interface Permissions {
   canSuspendAccounts: boolean;
 }
 
+export type Permission = keyof Permissions;
+
 export interface Activity {
   lastLogin: Date;
   lastAction?: string;
@@ -78,7 +80,7 @@ export interface AdminMethods {
   matchPassword(enteredPassword: string): Promise<boolean>;
 }
 
-export type AdminDocument = HydratedDocument<IAdmin, AdminMethods>;
+export type AdminDocument = HydratedDocument<IAdmin>;
 
 const adminSchema = new Schema<IAdmin, {}, AdminMethods>(
   {
