@@ -1,5 +1,5 @@
 import type { RequestHandler, Request, Response, NextFunction } from "express";
-import Admin, { type Permission } from "../models/Admin.js";
+import Admin, { type Permission } from "../Models/Admin.js";
 import { errorResponse } from "../utils/response.js";
 
 // Middleware to check if user is an admin

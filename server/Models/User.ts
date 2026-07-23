@@ -1,7 +1,7 @@
 import { Schema, model, HydratedDocument } from "mongoose";
 
 //Roles for HealthyMe Users
-export type UserRole = "patient" | "doctor" | "frontlineWorker" | "admin";
+export type UserRole = "patient" | "doctor" | "admin";
 
 export interface IUser {
   name: string;
@@ -36,7 +36,7 @@ const userSchema = new Schema<IUser>(
 
     role: {
       type: String,
-      enum: ["patient", "doctor", "frontlineWorker", "admin"],
+      enum: ["patient", "doctor", "admin"],
       default: "patient",
     },
 

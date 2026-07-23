@@ -12,14 +12,14 @@ const s3 = new AWS.S3();
 
 const BUCKET = "healthymewebsite-verifications";
 
-const SYMPTOM_ALLOWED_MIMES = [
+const SYMPTOM_ALLOWED_MIMES: readonly string[] = [
   "image/jpeg",
   "image/jpg",
   "image/png",
   "application/pdf",
   "application/msword",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-] as const;
+];
 
 export const upload = multer({
   storage: multerS3({

@@ -2,7 +2,7 @@
 
 import "express";
 import type { UserDocument } from "../Models/User.js";
-import type { AdminDocument } from "../models/Admin.ts";
+import type { AdminDocument } from "../Models/Admin.ts";
 
 interface AdminAction {
   action: string;
@@ -13,9 +13,9 @@ interface AdminAction {
 declare global {
   namespace Express {
     interface Request {
-      user: UserDocument;
-      adminProfile: AdminDocument;
-      adminAction: AdminAction;
+      user?: UserDocument;
+      adminProfile?: AdminDocument;
+      adminAction?: AdminAction;
 
       rateLimit: {
         limit: number;
