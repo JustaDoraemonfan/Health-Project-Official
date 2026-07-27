@@ -1,4 +1,4 @@
-import { UserRole } from "../Models/User.js";
+import { UserRole } from "./auth.js";
 
 export interface AccessTokenPayload {
   id: string;

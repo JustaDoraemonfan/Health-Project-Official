@@ -5,6 +5,15 @@ import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import mongoose from "mongoose";
 
+//Interfaces
+import {
+  type LoginRequest,
+  RegisterRequest,
+  CreateAdminRequest,
+} from "../types/request.js";
+import { type RefreshTokenPayload, AccessTokenPayload } from "../types/jwt.js";
+import { type GetUserProfileResponse } from "../types/response.js";
+
 //Models
 import User, { type UserRole, UserDocument } from "../Models/User.js";
 import Patient from "../Models/Patient.js";
@@ -17,67 +26,6 @@ import asyncHandler from "../middleware/asyncHandler.js";
 //Utils
 import { successResponse, errorResponse } from "../utils/response.js";
 import { nowInIST } from "../utils/dateUtils.js";
-
-//Interfaces
-interface JwtUser {
-  id: string;
-  role: UserRole;
-}
-
-interface LoginRequestBody {
-  email: string;
-  password: string;
-  expectedRole: UserRole;
-}
-
-interface RegisterRequestBody {
-  name: string;
-  email: string;
-  password: string;
-  role?: UserRole;
-
-  age?: number | string;
-  gender?: string;
-
-  phone?: string;
-  location?: string;
-
-  specialization?: string;
-}
-
-interface GetUserProfileResponse {
-  id: string;
-  name: string;
-  email: string;
-  role: UserRole;
-
-  adminDetails?: {
-    adminRole: string;
-    department: string;
-    permissions: {
-      canApproveDoctors: boolean;
-      canManageAdmins: boolean;
-      canViewAnalytics: boolean;
-      canSuspendAccounts: boolean;
-    };
-    isActive: boolean;
-    lastLogin: Date | null;
-    verificationsHandled: number;
-  };
-}
-
-interface RefreshTokenPayload {
-  id: string;
-}
-
-interface CreateAdminRequestBody {
-  name: string;
-  email: string;
-  password: string;
-
-  adminRole?: "superadmin" | "verifier" | "support";
-  department?: string;
-}
 
 //Helpers
 const hashToken = (token: string): string =>
@@ -101,13 +49,13 @@ const isValidEmail = (email: string): boolean =>
 const isValidPassword = (password: string): boolean =>
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{8,}$/.test(password);
 
-const getJwtUser = (user: UserDocument): JwtUser => ({
+const getJwtUser = (user: UserDocument): AccessTokenPayload => ({
   id: user.id,
   role: user.role,
 });
 
 //Access Tokens
-const generateAccessToken = (user: JwtUser): string => {
+const generateAccessToken = (user: AccessTokenPayload): string => {
   return jwt.sign(
     { id: user.id, role: user.role },
     process.env.JWT_SECRET as string,
@@ -117,7 +65,7 @@ const generateAccessToken = (user: JwtUser): string => {
   );
 };
 
-const generateRefreshToken = (user: Pick<JwtUser, "id">): string => {
+const generateRefreshToken = (user: Pick<AccessTokenPayload, "id">): string => {
   return jwt.sign({ id: user.id }, process.env.JWT_REFRESH_SECRET as string, {
     expiresIn: "30d",
   });
@@ -152,7 +100,7 @@ const issueTokens = async (
 };
 
 const getAdminPermissions = (
-  role: NonNullable<CreateAdminRequestBody["adminRole"]>,
+  role: NonNullable<CreateAdminRequest["adminRole"]>,
 ) => {
   switch (role) {
     case "superadmin":
@@ -183,7 +131,7 @@ const getAdminPermissions = (
 
 //Controllers
 export const registerUser = asyncHandler(
-  async (req: Request<{}, {}, RegisterRequestBody>, res: Response) => {
+  async (req: Request<{}, {}, RegisterRequest>, res: Response) => {
     const { name, email, password, role } = req.body;
     const normalizedEmail = email.trim().toLowerCase();
     const validationErrors = validateInput({ name, email, password });
@@ -284,7 +232,7 @@ export const registerUser = asyncHandler(
 );
 
 export const loginUser = asyncHandler(
-  async (req: Request<{}, {}, LoginRequestBody>, res: Response) => {
+  async (req: Request<{}, {}, LoginRequest>, res: Response) => {
     const { email, password, expectedRole } = req.body;
     const normalizedEmail = email.trim().toLowerCase();
     const validationErrors = validateInput({ email, password });
@@ -437,7 +385,7 @@ export const refreshAccessToken = asyncHandler(
 );
 
 export const createAdmin = asyncHandler(
-  async (req: Request<{}, {}, CreateAdminRequestBody>, res: Response) => {
+  async (req: Request<{}, {}, CreateAdminRequest>, res: Response) => {
     const { name, email, password, adminRole, department } = req.body;
     const normalizedEmail = email.trim().toLowerCase();
 
