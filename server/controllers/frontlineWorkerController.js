@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import FrontlineWorker from "../models/FWL.js";
+import FrontlineWorker from "../Models/FWL.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import { successResponse, errorResponse } from "../utils/response.js";
 
@@ -10,7 +10,7 @@ export const createFWL = asyncHandler(async (req, res) => {
     res,
     frontlineWorker,
     "Frontline Worker created successfully",
-    201
+    201,
   );
 });
 

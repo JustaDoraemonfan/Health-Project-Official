@@ -1,6 +1,6 @@
-import Patient from "../models/Patient.js";
-import Doctor from "../models/Doctor.js";
-import Frontline from "../models/FWL.js";
+import Patient from "../Models/Patient.js";
+import Doctor from "../Models/Doctor.js";
+import Frontline from "../Models/FWL.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import { successResponse } from "../utils/response.js";
 

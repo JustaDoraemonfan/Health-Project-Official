@@ -1,6 +1,6 @@
 import asyncHandler from "../../middleware/asyncHandler.js";
 import { successResponse, errorResponse } from "../../utils/response.js";
-import ReminderLog from "../../models/Medication/ReminderLog.js";
+import ReminderLog from "../../Models/Medication/ReminderLog.js";
 
 /**
  * @desc    Create a new reminder log (usually system-generated when reminder fires)

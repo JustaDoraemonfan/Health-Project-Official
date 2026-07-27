@@ -1,4 +1,4 @@
-import Prescription from "../models/Prescription.js";
+import Prescription from "../Models/Prescription.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import { successResponse, errorResponse } from "../utils/response.js";
 
@@ -28,7 +28,7 @@ export const uploadPrescription = asyncHandler(async (req, res) => {
     res,
     prescription,
     "Prescription uploaded successfully",
-    201
+    201,
   );
 });
 
@@ -45,7 +45,7 @@ export const getMyPrescriptions = asyncHandler(async (req, res) => {
   return successResponse(
     res,
     prescriptions,
-    "Prescriptions fetched successfully"
+    "Prescriptions fetched successfully",
   );
 });
 
@@ -59,12 +59,12 @@ export const getPatientPrescriptions = asyncHandler(async (req, res) => {
 
   const prescriptions = await Prescription.find({ patientId }).populate(
     "doctorId",
-    "name email"
+    "name email",
   );
 
   return successResponse(
     res,
     prescriptions,
-    "Patient prescriptions fetched successfully"
+    "Patient prescriptions fetched successfully",
   );
 });

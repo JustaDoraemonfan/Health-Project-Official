@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
-import Admin from "../models/Admin.js";
-import Doctor from "../models/Doctor.js";
-import User from "../models/User.js";
-import Patient from "../models/Patient.js";
-import FrontlineWorker from "../models/FWL.js";
+import Admin from "../Models/Admin.js";
+import Doctor from "../Models/Doctor.js";
+import User from "../Models/User.js";
+import Patient from "../Models/Patient.js";
+import FrontlineWorker from "../Models/FWL.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import { successResponse, errorResponse } from "../utils/response.js";
 import { getSignedUrl } from "../utils/s3Helper.js";

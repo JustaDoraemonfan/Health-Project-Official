@@ -1,4 +1,4 @@
-import Doctor from "../../models/Doctor.js";
+import Doctor from "../../Models/Doctor.js";
 import asyncHandler from "../../middleware/asyncHandler.js";
 import { successResponse, errorResponse } from "../../utils/response.js";
 

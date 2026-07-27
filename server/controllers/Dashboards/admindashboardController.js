@@ -1,6 +1,6 @@
 import asyncHandler from "../../middleware/asyncHandler.js";
 import { successResponse, errorResponse } from "../../utils/response.js";
-import Admin from "../../models/Admin.js";
+import Admin from "../../Models/Admin.js";
 
 // Admin Dashboard
 const getAdminDashboard = asyncHandler(async (req, res) => {

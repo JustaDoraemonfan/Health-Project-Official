@@ -1,5 +1,5 @@
-import Patient from "../../models/Patient.js";
-// import Appointment from "../../models/Appointment.js";
+import Patient from "../../Models/Patient.js";
+// import Appointment from "../../Models/Appointment.js";
 import asyncHandler from "../../middleware/asyncHandler.js";
 import { successResponse, errorResponse } from "../../utils/response.js";
 

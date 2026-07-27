@@ -1,6 +1,6 @@
 import asyncHandler from "../../middleware/asyncHandler.js";
 import { successResponse, errorResponse } from "../../utils/response.js";
-import Reminder from "../../models/Medication/Reminder.js";
+import Reminder from "../../Models/Medication/Reminder.js";
 
 // Import the new date functions
 // This path assumes 'utils' is two levels up, parallel to 'middleware' and 'models'
@@ -135,7 +135,7 @@ export const markAsTaken = asyncHandler(async (req, res) => {
     return successResponse(
       res,
       reminder,
-      `Already marked as taken for ${dateKey}`
+      `Already marked as taken for ${dateKey}`,
     );
   }
 

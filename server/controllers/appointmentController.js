@@ -1,7 +1,7 @@
-import Appointment from "../models/Appointment.js";
+import Appointment from "../Models/Appointment.js";
 import asyncHandler from "../middleware/asyncHandler.js";
-import Patient from "../models/Patient.js";
-import Doctor from "../models/Doctor.js";
+import Patient from "../Models/Patient.js";
+import Doctor from "../Models/Doctor.js";
 import { successResponse, errorResponse } from "../utils/response.js";
 import { fromZonedTime } from "date-fns-tz";
 import { IST_TIMEZONE, nowInIST } from "../utils/dateUtils.js";

@@ -1,5 +1,5 @@
-import Symptom from "../models/Symptom.js";
-import Patient from "../models/Patient.js";
+import Symptom from "../Models/Symptom.js";
+import Patient from "../Models/Patient.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import { successResponse, errorResponse } from "../utils/response.js";
 import { nowInIST } from "../utils/dateUtils.js";

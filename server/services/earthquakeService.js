@@ -1,7 +1,7 @@
 // services/earthquakeService.js
 import axios from "axios";
 import https from "https";
-import Earthquake from "../models/Earthquake.js";
+import Earthquake from "../Models/Earthquake.js";
 
 const USGS_FEED =
   "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
@@ -52,7 +52,7 @@ async function processEarthquakeFeatures(features) {
     await Earthquake.updateOne(
       { usgsId: id },
       { $set: quakeDoc },
-      { upsert: true }
+      { upsert: true },
     );
   }
 
@@ -71,7 +71,7 @@ export async function fetchEarthquakeData() {
     const features = data.features || [];
     const count = await processEarthquakeFeatures(features);
     console.log(
-      `✅ [Axios] Earthquake fetch complete: ${count} events in India processed.`
+      `✅ [Axios] Earthquake fetch complete: ${count} events in India processed.`,
     );
     return count;
   } catch (err) {

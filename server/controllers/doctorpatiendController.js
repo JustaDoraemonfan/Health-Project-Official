@@ -1,5 +1,5 @@
-import Doctor from "../models/Doctor.js";
-import Patient from "../models/Patient.js";
+import Doctor from "../Models/Doctor.js";
+import Patient from "../Models/Patient.js";
 import mongoose from "mongoose";
 import asyncHandler from "../middleware/asyncHandler.js";
 import { successResponse, errorResponse } from "../utils/response.js";

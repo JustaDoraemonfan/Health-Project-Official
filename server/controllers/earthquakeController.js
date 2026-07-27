@@ -1,5 +1,5 @@
 // controllers/earthquakeController.js
-import Earthquake from "../models/Earthquake.js";
+import Earthquake from "../Models/Earthquake.js";
 import { fetchEarthquakeData } from "../services/earthquakeService.js";
 
 // Trigger fetch manually

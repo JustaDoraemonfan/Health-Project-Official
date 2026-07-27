@@ -1,4 +1,4 @@
-import Patient from "../models/Patient.js";
+import Patient from "../Models/Patient.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import { successResponse, errorResponse } from "../utils/response.js";
 import { nowInIST } from "../utils/dateUtils.js";
