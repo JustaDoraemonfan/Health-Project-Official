@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import Doctor from "../Models/Doctor.js";
 import Patient from "../Models/Patient.js";
 import Notes from "../Models/Notes.js";
