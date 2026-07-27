@@ -1,4 +1,5 @@
 import { UserRole } from "./auth.js";
+import type { Availability } from "../Models/Doctor.js";
 
 //User in authController,
 export interface LoginRequest {
@@ -63,4 +64,20 @@ export interface UpdateDoctorRequest {
   certifications?: string[];
   about?: string;
   phone?: string;
+}
+
+export interface SetAvailabilityRequest {
+  availability: Availability[];
+}
+
+export interface SubmitVerificationRequest {
+  nmcRegistrationNumber: string;
+}
+
+//Used In Multer
+export interface MulterS3File extends Express.Multer.File {
+  location: string;
+  key: string;
+  bucket: string;
+  etag?: string;
 }
