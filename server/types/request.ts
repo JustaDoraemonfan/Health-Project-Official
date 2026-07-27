@@ -30,3 +30,37 @@ export interface CreateAdminRequest {
   adminRole?: "superadmin" | "verifier" | "support";
   department?: string;
 }
+
+//Used In PatientController
+export interface CreatePatientRequest {
+  userId: string;
+  age: number;
+  gender: "male" | "female" | "other";
+}
+
+//Used In DoctorController
+export interface CreateDoctorRequest {
+  userId: string;
+  specialization: string;
+
+  experience?: number;
+  location?: string;
+  education?: string;
+  languages?: string[];
+  consultationFee?: number;
+  certifications?: string[];
+  about?: string;
+  phone?: string;
+}
+
+export interface UpdateDoctorRequest {
+  specialization?: string;
+  experience?: number;
+  location?: string;
+  education?: string;
+  languages?: string[];
+  consultationFee?: number;
+  certifications?: string[];
+  about?: string;
+  phone?: string;
+}

@@ -5,16 +5,29 @@ import { type PatientDocument } from "../Models/Patient.js";
 import { type DoctorDocument } from "../Models/Doctor.js";
 import { type AdminDocument } from "../Models/Admin.js";
 
-export interface CurrentUserResponse {
+export interface BaseUserResponse {
   _id: Types.ObjectId;
   name: string;
   email: string;
-  role: UserRole;
-
-  doctorProfile?: DoctorDocument | null;
-  patientProfile?: PatientDocument | null;
-  adminProfile?: AdminDocument | null;
 }
+export interface DoctorUserResponse extends BaseUserResponse {
+  role: "doctor";
+  doctorProfile: DoctorDocument;
+}
+
+export interface PatientUserResponse extends BaseUserResponse {
+  role: "patient";
+  patientProfile: PatientDocument;
+}
+
+export interface AdminUserResponse extends BaseUserResponse {
+  role: "admin";
+  adminProfile: AdminDocument;
+}
+export type CurrentUserResponse =
+  | DoctorUserResponse
+  | PatientUserResponse
+  | AdminUserResponse;
 
 export interface GetUserProfileResponse {
   id: string;

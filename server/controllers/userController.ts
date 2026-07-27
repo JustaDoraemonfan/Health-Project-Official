@@ -1,25 +1,12 @@
-import type { Request, Response } from "express";
-
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import crypto from "crypto";
-import mongoose from "mongoose";
-import type { Types } from "mongoose";
-//Models
-import User, { type UserRole, UserDocument } from "../Models/User.js";
-import Patient, { type PatientDocument } from "../Models/Patient.js";
-import Doctor, { type DoctorDocument } from "../Models/Doctor.js";
-import Admin, { type AdminDocument } from "../Models/Admin.js";
+import Patient from "../Models/Patient.js";
+import Doctor from "../Models/Doctor.js";
+import Admin from "../Models/Admin.js";
 
 //Midlleware
 import asyncHandler from "../middleware/asyncHandler.js";
 
 //Utils
 import { successResponse, errorResponse } from "../utils/response.js";
-import { nowInIST } from "../utils/dateUtils.js";
-
-//Interface
-import { type CurrentUserResponse } from "../types/response.js";
 
 export const getCurrentUser = asyncHandler(async (req, res) => {
   if (!req.user) {
@@ -27,10 +14,68 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
   }
   const userId = req.user._id;
   const userRole = req.user.role;
-  const userData: CurrentUserResponse = {
-    _id: req.user._id,
-    name: req.user.name,
-    email: req.user.email,
-    role: req.user.role,
-  };
+
+  switch (userRole) {
+    case "doctor": {
+      const doctor = await Doctor.findOne({ userId })
+        .populate("userId", "name email role")
+        .select("-patients -appointments");
+
+      if (!doctor) {
+        return errorResponse(res, "Doctor Not Found", 401);
+      }
+
+      return successResponse(res, {
+        _id: req.user._id,
+        name: req.user.name,
+        email: req.user.email,
+        role: "doctor",
+        doctorProfile: doctor,
+      });
+    }
+    case "patient": {
+      const patient = await Patient.findOne({ userId })
+        .populate("userId", "name email role")
+        .populate({
+          path: "assignedDoctor",
+          select: "userId specialization experience consultationFee rating",
+          populate: { path: "userId", select: "name email" },
+        })
+        .select("-symptoms");
+
+      if (!patient) {
+        return errorResponse(res, "Patient Not Found", 401);
+      }
+
+      return successResponse(res, {
+        _id: req.user._id,
+        name: req.user.name,
+        email: req.user.email,
+        role: "patient",
+        patientProfile: patient,
+      });
+    }
+    case "admin": {
+      const admin = await Admin.findOne({ userId })
+        .populate("userId", "name email role")
+        .populate({
+          path: "handledVerifications.doctor",
+          select: "userId specialization verification.status",
+          populate: { path: "userId", select: "name email" },
+        })
+        .select("-auditTrail");
+      if (!admin) {
+        return errorResponse(res, "Admin Not Found", 401);
+      }
+      return successResponse(res, {
+        _id: req.user._id,
+        name: req.user.name,
+        email: req.user.email,
+        role: "admin",
+        adminProfile: admin,
+      });
+    }
+    default:
+      return errorResponse(res, "Invalid user role", 400);
+  }
 });
