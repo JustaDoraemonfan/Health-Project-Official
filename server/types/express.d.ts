@@ -1,6 +1,7 @@
 //d.ts - means its a declaration file
 
 import "express";
+import "multer";
 import type { UserDocument } from "../Models/User.js";
 import type { AdminDocument } from "../Models/Admin.ts";
 
@@ -10,13 +11,18 @@ interface AdminAction {
   ip: string;
 }
 
+interface FileSettings {
+  location: string;
+  key: string;
+}
+
 declare global {
   namespace Express {
     interface Request {
       user?: UserDocument;
       adminProfile?: AdminDocument;
       adminAction?: AdminAction;
-
+      file?: FileSettings;
       rateLimit: {
         limit: number;
         current: number;
@@ -26,4 +32,17 @@ declare global {
     }
   }
 }
+
+//Multer
+declare global {
+  namespace Express {
+    namespace Multer {
+      interface File {
+        location: string;
+        key: string;
+      }
+    }
+  }
+}
+
 export {};

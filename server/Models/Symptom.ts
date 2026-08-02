@@ -35,7 +35,7 @@ export interface ISymptom {
   category: SymptomCategory;
 
   attachments: Attachment[];
-
+  lastAnalyzed: Date;
   createdAt?: Date;
   updatedAt?: Date;
 }
