@@ -15,7 +15,7 @@ import { askGemini } from "../services/geminiService.js";
 
 const list = <T>(arr: T[] | undefined, fn: (item: T) => string): string =>
   arr?.length ? arr.map(fn).join(", ") : "None";
-
+ff
 export const analyzePatientProfile: RequestHandler = asyncHandler(
   async (req, res) => {
     const patient = await Patient.findOne({ userId: req.params.patientId })
