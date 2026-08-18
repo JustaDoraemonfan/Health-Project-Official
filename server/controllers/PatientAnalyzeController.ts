@@ -13,7 +13,7 @@ import { nowInIST } from "../utils/dateUtils.js";
 // Services
 import { askGemini } from "../services/geminiService.js";
 
-const list = <T>(arr: T[] | , fn: (item: T) => string): string =>
+const list = <T>(arr: T[] | undefined, fn: (item: T) => string): string =>
   arr?.length ? arr.map(fn).join(", ") : "None";
 
 export const analyzePatientProfile: RequestHandler = asyncHandler(
