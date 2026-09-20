@@ -1,33 +1,39 @@
 import type { RequestHandler } from "express";
 
-// Models
+//Models
+import type { IUser } from "../Models/User.js";
+import type { ISymptom } from "../Models/Symptom.js";
 import Patient from "../Models/Patient.js";
 
-// Middleware
+//Middleware
 import asyncHandler from "../middleware/asyncHandler.js";
-import { successResponse, errorResponse } from "../utils/response.js";
 
-// Utils
+//Utils
+import { successResponse, errorResponse } from "../utils/response.js";
 import { nowInIST } from "../utils/dateUtils.js";
 
-// Services
+//Services
 import { askGemini } from "../services/geminiService.js";
 
-const list = <T>(arr: T[] | undefined, fn: (item: T) => string): string =>
-  arr?.length ? arr.map(fn).join(", ") : "None";
+const formatList = <T>(
+  arr: readonly T[] | undefined,
+  fn: (item: T) => string,
+): string => (arr?.length ? arr.map(fn).join(", ") : "None");
 
-export const analyzePatientProfile: RequestHandler = asyncHandler(
-  async (req, res) => {
-    const patient = await Patient.findOne({ userId: req.params.patientId })
-      .populate("userId", "name email role")
-      .populate("symptoms", "description severity category onsetDate notes")
-      .populate({
-        path: "assignedDoctor",
-        populate: {
-          path: "userId",
-          select: "name email specialization experience consultationFee rating",
-        },
-      });
+interface AnalyzePatientParams {
+  patientId: string;
+}
+
+export const PatientAnalyzeController: RequestHandler<AnalyzePatientParams> =
+  asyncHandler(async (req, res) => {
+    const patient = await Patient.findOne({
+      userId: req.params.patientId,
+    })
+      .populate<{ userId: IUser }>("userId", "name email role")
+      .populate<{ symptoms: ISymptom[] }>(
+        "symptoms",
+        "description severity category onsetDate notes",
+      );
 
     if (!patient) {
       return errorResponse(res, "Patient not found", 404);
@@ -39,24 +45,27 @@ Summarize the case clearly and professionally (around 200–250 words).
 
 Patient Summary:
 - Name: ${patient.userId.name}
-- Age: ${patient.age || "Unknown"}
-- Gender: ${patient.gender || "Unknown"}
-- Blood Group: ${patient.bloodGroup || "N/A"}
-- Location: ${patient.location || "N/A"}
-- Ongoing Conditions: ${list(
+- Age: ${patient.age ?? "Unknown"}
+- Gender: ${patient.gender ?? "Unknown"}
+- Blood Group: ${patient.bloodGroup ?? "N/A"}
+- Location: ${patient.location ?? "N/A"}
+- Ongoing Conditions: ${formatList(
       patient.medicalHistory,
       (condition) => condition.condition,
     )}
-- Medications: ${list(patient.medications, (medication) => medication.name)}
+- Medications: ${formatList(
+      patient.medications,
+      (medication) => medication.name,
+    )}
 - Allergies: ${patient.allergies?.join(", ") || "None"}
-- Surgeries: ${list(patient.surgeries, (surgery) => surgery.name)}
+- Surgeries: ${formatList(patient.surgeries, (surgery) => surgery.name)}
 - Symptoms: ${
       patient.symptoms?.length
         ? patient.symptoms
             .map(
               (symptom) =>
                 `${symptom.category} (${symptom.severity}): ${
-                  symptom.description || "No details"
+                  symptom.description ?? "No details"
                 }`,
             )
             .join("; ")
@@ -75,10 +84,11 @@ Avoid emotional tone and unnecessary explanations.
 `;
 
     try {
-      let analysis = await askGemini(prompt);
+      const aiAnalysis = await askGemini(prompt);
 
-      analysis +=
-        "\n\nNote: This AI-generated analysis is for clinical support only. Final decisions should be based on professional medical judgment and diagnostic evaluation.";
+      const analysis = `${aiAnalysis}
+
+Note: This AI-generated analysis is for clinical support only. Final decisions should be based on professional medical judgment and diagnostic evaluation.`;
 
       return successResponse(
         res,
@@ -95,17 +105,13 @@ Avoid emotional tone and unnecessary explanations.
         },
         "Patient profile analysis generated successfully",
       );
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Error analyzing patient profile:", error);
 
       return errorResponse(
         res,
-        {
-          message:
-            "Unable to analyze patient data at this time. Please review manually.",
-        },
+        "Unable to analyze patient data at this time. Please review manually.",
         500,
       );
     }
-  },
-);
+  });
